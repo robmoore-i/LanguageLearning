@@ -7,8 +7,8 @@ import { BrowserRouter, Link, Route, Switch } from 'react-router-dom'
 import registerServiceWorker from "./registerServiceWorker"
 
 // Resources
-import globe from './images/globe.svg'
-import './styles/App.css'
+import globe from '../images/globe.svg'
+import '../styles/App.css'
 
 export function startApp() {
     ReactDOM.render(<App />, document.getElementById('root'))

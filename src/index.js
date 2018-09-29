@@ -2,6 +2,6 @@
 import './styles/index.css'
 
 // Main
-import {startApp} from './App'
+import {startApp} from './main/App'
 
 startApp()
