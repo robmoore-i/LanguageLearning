@@ -11,13 +11,14 @@ import '../styles/App.css'
 
 // Main
 import Home from './Home'
+import LessonMap from './LessonMap'
 
 export function startApp() {
     ReactDOM.render(<App />, document.getElementById('root'))
     registerServiceWorker()
 }
 
-class App extends Component {
+export default class App extends Component {
     render() {
         return (
             <div className="App">
@@ -31,17 +32,3 @@ class App extends Component {
         )
     }
 }
-
-class LessonMap extends Component {
-    render() {
-        return (
-            <div>
-                <p>
-                    This is the lesson map
-                </p>
-            </div>
-        )
-    }
-}
-
-export default App
