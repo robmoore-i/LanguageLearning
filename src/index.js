@@ -1,5 +1,7 @@
-import React from 'react';
-import './index.css';
-import {startApp} from './App';
+// Resources
+import './styles/index.css'
+
+// Main
+import {startApp} from './App'
 
 startApp()

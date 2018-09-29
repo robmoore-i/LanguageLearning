@@ -1,18 +1,18 @@
 // React
 import React, {Component} from 'react'
-import ReactDOM from "react-dom";
-import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
+import ReactDOM from "react-dom"
+import { BrowserRouter, Link, Route, Switch } from 'react-router-dom'
 
 // Service worker
-import registerServiceWorker from "./registerServiceWorker";
+import registerServiceWorker from "./registerServiceWorker"
 
 // Resources
-import globe from './globe.svg'
-import './App.css'
+import globe from './images/globe.svg'
+import './styles/App.css'
 
 export function startApp() {
-    ReactDOM.render(<App/>, document.getElementById('root'));
-    registerServiceWorker();
+    ReactDOM.render(<App />, document.getElementById('root'))
+    registerServiceWorker()
 }
 
 class App extends Component {
