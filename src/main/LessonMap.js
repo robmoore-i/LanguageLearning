@@ -19,7 +19,7 @@ export default class LessonMap extends Component {
     render() {
         let courseName = this.courseName()
 
-        let listMembers = this.state.lessonNames.map((_lessonName, i) => <p key={i}>abc</p>)
+        let listMembers = this.state.lessonNames.map((lessonName, i) => <p key={i}>{lessonName}</p>)
 
         return (
             <div className="Lesson-map">
