@@ -15,10 +15,10 @@ configureAdapter()
 it('shows the correct course name depending on the url', () => {
     let testServer = {fetchLessonNames: () => {return ["hello", "goodbye"]}}
     let testLessonMap = shallow(<LessonMap location="http://localhost:3000/courses/georgian" server={testServer} />)
-    let content = testLessonMap.find('p').first()
+    let content = testLessonMap.find('h1').first()
     let lessonMapText = content.children()
     let text = lessonMapText.map(child => child.text()).reduce((acc, cur) => acc + cur)
-    expect(text).toBe("This is a lesson map for the georgian course")
+    expect(text).toBe("Lesson Map: Georgian")
 })
 
 it('populates the lesson map with the lessons fetched from the server', () => {

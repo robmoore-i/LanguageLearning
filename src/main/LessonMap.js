@@ -18,14 +18,13 @@ export default class LessonMap extends Component {
 
     render() {
         let courseName = this.courseName()
-
+        let capitalise = (s => s[0].toUpperCase() + s.substring(1))
+        let capitalisedCourseName = capitalise(courseName)
         let listMembers = this.state.lessonNames.map((lessonName, i) => <p key={i}>{lessonName}</p>)
 
         return (
             <div className="Lesson-map">
-                <p>
-                    This is a lesson map for the {courseName} course
-                </p>
+                <h1>Lesson Map: {capitalisedCourseName}</h1>
                 <div className="Lesson-list">
                     {listMembers}
                 </div>
