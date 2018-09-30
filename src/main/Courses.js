@@ -1,5 +1,6 @@
 // React
 import React, {Component} from "react"
+import { Link } from 'react-router-dom'
 
 // Resources
 import '../styles/Courses.css'
@@ -9,33 +10,32 @@ import germany from '../images/flagGermany.svg'
 export default class Courses extends Component {
     render() {
         return [
-            <header className="Courses-header">
+            <header key="header" className="Courses-header">
                 <h1 className="Courses-title">Choose a course</h1>
             </header>,
 
-            <body className="Courses-body">
-                <div className="Courses-list">
-                    <CourseButton name="Georgian" src={georgia}/>
-                    <CourseButton name="German" src={germany}/>
-                </div>
-            </body>
+            <div key="body" className="Courses-list">
+                <CourseButton id="course-button-georgian" key="Georgian" name="Georgian" src={georgia}/>
+                <CourseButton id="course-button-german"   key="German"   name="German"   src={germany}/>
+            </div>
         ]
     }
 }
 
 class CourseButton extends Component {
     render() {
-        return [
+        let imageSrc = this.props.src
+        let capitalisedName = this.props.name
+        let courseName = capitalisedName.toLowerCase()
+        return (
             <div>
-                <a>
-                    <h3 className="Course-title">{this.props.name}</h3>
-                    <img className="Course-icon"
-                         alt={this.props.name}
-                         src={this.props.src}/>
-                </a>
-            </div>,
-            <br />,
-            <br />
-        ]
+                <h3 className="Course-title">{capitalisedName}</h3>
+                <Link id={"course-link-" + courseName} to={"courses/" + courseName}>
+                    <img className="Course-icon" alt={capitalisedName} src={imageSrc}/>
+                </Link>
+                <br/>
+                <br/>
+            </div>
+        )
     }
 }

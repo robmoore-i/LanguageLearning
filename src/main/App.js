@@ -12,6 +12,7 @@ import '../styles/App.css'
 // Main
 import Home from './Home'
 import Courses from './Courses'
+import LessonMap from './LessonMap'
 
 export function startApp() {
     ReactDOM.render(<App />, document.getElementById('root'))
@@ -25,7 +26,8 @@ export default class App extends Component {
                 <BrowserRouter>
                     <Switch>
                         <Route exact path="/" component={Home}/>
-                        <Route path="/courses" component={Courses}/>
+                        <Route exact path="/courses" component={Courses}/>
+                        <Route path="/courses" component={LessonMap}/>
                     </Switch>
                 </BrowserRouter>
             </div>
