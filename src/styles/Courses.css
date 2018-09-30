@@ -1,20 +1,20 @@
-/* LessonMap */
-.Lesson-map {
+/* Courses */
+.Courses-list {
     text-align: center;
 }
 
-.Lesson-map-header {
+.Courses-header {
     background-color: #222;
     height: 100px;
     padding: 20px;
     color: white;
 }
 
-.Lesson-map-title {
+.Courses-title {
     font-size: 3em;
 }
 
-.Lesson-map-body {
+.Courses-body {
     /*background-color: #c8aeb6;*/
     /*height: 500px;*/
     padding: 20px;

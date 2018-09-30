@@ -13,7 +13,7 @@ export default class Home extends Component {
                 <img src={globe} className="Home-logo" alt="logo"/>
                 <h1 className="Home-title">Melange</h1>
                 <h2 className="Home-description">Step-by-step language lessons in the browser</h2>
-                <Link id="lesson-map-link" to="lesson-map" className="Call-to-action-btn">Get Started</Link>
+                <Link id="courses-link" to="courses" className="Call-to-action-btn">Get Started</Link>
             </header>
         )
     }

@@ -19,10 +19,10 @@ it('renders without crashing', () => {
 })
 
 describe('routing from the home page', () => {
-    it('directs the user to the lesson map upon pressing the [Get Started] button', () => {
+    it('directs the user to the courses page upon pressing the [Get Started] button', () => {
         let testApp = mount(<App />)
-        let lessonMapLink = testApp.find('#lesson-map-link').first() //.last() also works?
-        followLink(lessonMapLink)
-        assertHasChild(testApp, '.Lesson-map')
+        let coursesLink = testApp.find('#courses-link').first() //.last() also works?
+        followLink(coursesLink)
+        assertHasChild(testApp, '.Courses-list')
     })
 })
