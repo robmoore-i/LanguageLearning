@@ -1,3 +1,37 @@
+/* LessonMap */
 .Lesson-map {
     text-align: center;
+}
+
+.Lesson-map-header {
+    background-color: #222;
+    height: 100px;
+    padding: 20px;
+    color: white;
+}
+
+.Lesson-map-title {
+    font-size: 3em;
+}
+
+.Lesson-map-body {
+    /*background-color: #c8aeb6;*/
+    /*height: 500px;*/
+    padding: 20px;
+}
+
+/*Course Button*/
+.Course-title {
+    white-space: nowrap;
+}
+
+.Course-icon {
+    height: 100px;
+    opacity: 0.75;
+    padding: 5px;
+    background-color: #222222;
+}
+.Course-icon:hover {
+    opacity: 1;
+    cursor: pointer;
 }
