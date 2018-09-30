@@ -14,6 +14,6 @@ configureAdapter()
 
 it('directs the user to /courses upon pressing the [Get Started] button', () => {
     let testHomePage = shallow(<Home />)
-    let coursesLink = testHomePage.find('#courses-link').last() //.last() also works?
+    let coursesLink = testHomePage.find('#courses-link').first() //.last() also works?
     expect(coursesLink.is('[to="courses"]')).toBe(true)
 })

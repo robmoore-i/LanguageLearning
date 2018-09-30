@@ -27,7 +27,7 @@ export default class App extends Component {
                     <Switch>
                         <Route exact path="/" component={Home}/>
                         <Route exact path="/courses" component={Courses}/>
-                        <Route path="/courses" component={LessonMap}/>
+                        <Route path="/courses/:course" render={() => <LessonMap location={window.location.href} />}/>
                     </Switch>
                 </BrowserRouter>
             </div>
