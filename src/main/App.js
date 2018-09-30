@@ -21,13 +21,14 @@ export function startApp() {
 
 export default class App extends Component {
     render() {
+        let server = {fetchLessonNames: () => {return ["hello", "goodbye"]}}
         return (
             <div className="App">
                 <BrowserRouter>
                     <Switch>
                         <Route exact path="/" component={Home}/>
                         <Route exact path="/courses" component={Courses}/>
-                        <Route path="/courses" render={() => <LessonMap location={window.location.href} />}/>
+                        <Route path="/courses" render={() => <LessonMap location={window.location.href} server={server}/>}/>
                     </Switch>
                 </BrowserRouter>
             </div>
