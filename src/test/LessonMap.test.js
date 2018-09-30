@@ -32,6 +32,6 @@ it('fills in the correct lesson data for the lessons of the lesson map', () => {
     let testServer = {fetchLessonNames: () => {return ["hello", "goodbye"]}}
     let testLessonMap = shallow(<LessonMap location="http://localhost:3000/courses/georgian" server={testServer} />)
     let lessonsList = testLessonMap.find('.Lesson-list').first()
-    expect(lessonsList.children().at(0).text()).toEqual("hello")
-    expect(lessonsList.children().at(1).text()).toEqual("goodbye")
+    expect(lessonsList.children().at(0).dive().text()).toEqual("hello")
+    expect(lessonsList.children().at(1).dive().text()).toEqual("goodbye")
 })
