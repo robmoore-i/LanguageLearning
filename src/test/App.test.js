@@ -4,13 +4,13 @@ import ReactDOM from 'react-dom'
 
 // Testing
 import { mount } from 'enzyme'
-import { followLink, assertHasChild } from './melange-test'
+import { followLink, assertHasChild } from './utils'
 
 // Main
 import App from '../main/App'
 
 // Enzyme react-adapter configuration
-import "./setup-test"
+import "./setup"
 
 it('renders without crashing', () => {
     const div = document.createElement('div')
