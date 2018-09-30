@@ -16,23 +16,23 @@ export default class LessonMap extends Component {
 
     render() {
         let courseName = this.courseName()
-        let listMembers = this.lessonNames.map(lessonName => <LessonButton key={lessonName} lessonName={lessonName} />)
+        let makeLessonButton = (lessonName => <LessonButton key={lessonName} lessonName={lessonName} />)
+        let lessonButtons = this.lessonNames.map(makeLessonButton)
 
-        return (
-            <div className="Lesson-map">
-                <h1>Choose a {courseName} lesson</h1>
-                <div className="Lesson-list">{listMembers}</div>
-            </div>
-        )
+        return [
+            <header key="header" className="Lesson-map-header">
+                <h1 className="Lesson-map-title">Choose a {courseName} lesson</h1>
+            </header>,
+
+            <div key="body" className="Lesson-list">{lessonButtons}</div>
+        ]
     }
 }
 
 class LessonButton extends Component {
     render() {
         return (
-            <div className="Lesson-button">
-                {this.props.lessonName}
-            </div>
+            <div className="Lesson-button">{this.props.lessonName}</div>
         )
     }
 }

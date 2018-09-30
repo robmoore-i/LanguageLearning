@@ -1,8 +1,17 @@
-.Lesson-map {
-    text-align: center;
+.Lesson-map-header {
+    background-color: #222;
+    height: 70px;
+    padding: 20px;
+    color: white;
+}
+
+.Lesson-map-title {
+    font-size: 2em;
 }
 
 .Lesson-list {
+    text-align: center;
+    padding: 20px;
 }
 
 .Lesson-button {
