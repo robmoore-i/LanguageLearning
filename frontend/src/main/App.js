@@ -10,6 +10,7 @@ import registerServiceWorker from "./registerServiceWorker"
 import '../styles/App.css'
 
 // Main
+import server from './server'
 import Home from './Home'
 import Courses from './Courses'
 import LessonMap from './LessonMap'
@@ -21,7 +22,6 @@ export function startApp() {
 
 export default class App extends Component {
     render() {
-        let server = {fetchLessonNames: () => {return ["hello", "goodbye"]}}
         return (
             <div className="App">
                 <BrowserRouter>
