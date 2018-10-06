@@ -22,9 +22,10 @@ def lesson_names():
 
 
 def lesson_names_options():
-    options = requests.options("http://localhost:8000/lessonnames")
+    headers = { "access-control-request-method": "GET" , "access-control-request-headers": "Content-Type" }
+    options = requests.options("http://localhost:8000/lessonnames", headers=headers)
     assert_that(options.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:3000")
-    assert_that(options.headers["Access-Control-Allow-Methods"]).is_equal_to("GET, POST")
+    assert_that(options.headers["Access-Control-Allow-Methods"]).is_equal_to("GET")
     assert_that(options.headers["Access-Control-Allow-Headers"]).is_equal_to("Content-Type")
     assert_that(options.status_code).is_equal_to(200)
 

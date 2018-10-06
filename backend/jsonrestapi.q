@@ -44,9 +44,15 @@ okHeader:"HTTP/1.x 200 OK"
 
 // CORS headers
 corsAllowOrigin:"Access-Control-Allow-Origin: ",.config.frontendOrigin
-corsAllowMethods:"Access-Control-Allow-Methods: GET, POST"
-corsAllowHeaders:"Access-Control-Allow-Headers: Content-Type"
-corsHeaders:corsAllowOrigin,"\r\n",corsAllowMethods,"\r\n",corsAllowHeaders
+corsAllowMethods:{"Access-Control-Allow-Methods: ",x}
+corsAllowHeaders:{"Access-Control-Allow-Headers: ",x}
+corsHeaders:{[methods;headers]
+  corsAllowOrigin,"\r\n",corsAllowMethods[methods],"\r\n",corsAllowHeaders[headers]}
+
+// HTTP OPTIONS generic preflight response: "The frontend can do whatever it wants."
+// See: https://stackoverflow.com/questions/10636611/how-does-access-control-allow-origin-header-work
+preflightResponse:{[methods;headers]
+  okHeader,"\r\n",corsHeaders[methods;headers],"\r\n\r\n"}
 
 // The header for a JSON resposne
 jsonHeader:"Content- Type:application/json"
@@ -55,27 +61,29 @@ jsonHeader:"Content- Type:application/json"
 setAuthCookieHeader:{"Set-Cookie: sid=",x}
 
 // Create a JSON response from a Q object
-jsonResponse:{okHeader,"\r\n",jsonHeader,"\r\n",corsHeaders,"\r\n\r\n",.j.j x}
+jsonResponse:{okHeader,"\r\n",jsonHeader,"\r\n\r\n",.j.j x}
 
 // Create a JSON response from a Q object including a cookie
 authenticatedJsonResponse:{okHeader,"\r\n",jsonHeader,"\r\n",setAuthCookieHeader[x],"\r\n\r\n",.j.j y}
-
-// HTTP OPTIONS generic response: "The frontend can do whatever it wants."
-optionsResponse:okHeader,"\r\n",corsHeaders,"\r\n\r\n"
 
 // Start listening using the current endpoints on the given port
 listen:{[p]
   .z.ph::{
     getreq::.get.request x;
     f:.get.endpoints["/",last "/" vs getreq.url];
-    $[ null f ; jsonResponse "none" ; f getreq ]};
+    getres::$[ null f ; jsonResponse "none" ; f getreq ];
+    getres};
   .z.pp::{
     postreq::.post.request x;
     f:.post.endpoints["/",last "/" vs postreq.url];
-    $[ null f ; jsonResponse "none" ; f postreq ]};
+    postres::$[ null f ; jsonResponse "none" ; f postreq ];
+    postres};
   .z.pm::{
-    optreq::x;
-    optionsResponse};
+    optreq::`path`headers!(x 1;x 2);
+    method:optreq[`headers;`$"access-control-request-method"];
+    headers:optreq[`headers;`$"access-control-request-headers"];
+    optres::preflightResponse[method;headers];
+    optres};
   system "p ",string p;}
 
 ////// RESPONSE
