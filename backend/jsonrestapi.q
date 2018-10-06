@@ -42,8 +42,11 @@ serve:{[path;f]endpoints,: .jra.addEndpoint[endpoints;path;f];}
 // HTTP 200 OK
 okHeader:"HTTP/1.x 200 OK"
 
-// The header for allowing responses to the server
-corsHeader:"Access-Control-Allow-Origin: ",.config.frontendOrigin
+// CORS headers
+corsAllowOrigin:"Access-Control-Allow-Origin: ",.config.frontendOrigin
+corsAllowMethods:"Access-Control-Allow-Methods: GET, POST"
+corsAllowHeaders:"Access-Control-Allow-Headers: Content-Type"
+corsHeaders:corsAllowOrigin,"\r\n",corsAllowMethods,"\r\n",corsAllowHeaders
 
 // The header for a JSON resposne
 jsonHeader:"Content- Type:application/json"
@@ -52,16 +55,13 @@ jsonHeader:"Content- Type:application/json"
 setAuthCookieHeader:{"Set-Cookie: sid=",x}
 
 // Create a JSON response from a Q object
-jsonResponse:{okHeader,"\r\n",jsonHeader,"\r\n",corsHeader,"\r\n\r\n",.j.j x}
+jsonResponse:{okHeader,"\r\n",jsonHeader,"\r\n",corsHeaders,"\r\n\r\n",.j.j x}
 
 // Create a JSON response from a Q object including a cookie
 authenticatedJsonResponse:{okHeader,"\r\n",jsonHeader,"\r\n",setAuthCookieHeader[x],"\r\n\r\n",.j.j y}
 
-// HTTP CORS OPTIONS
-corsAllowOrigin:"Access-Control-Allow-Origin: ",.config.frontendOrigin
-corsAllowMethods:"Access-Control-Allow-Methods: GET, POST"
-corsAllowHeaders:"Access-Control-Allow-Headers: Content-Type"
-optionsResponse:okHeader,"\r\n",corsAllowOrigin,"\r\n",corsAllowMethods,"\r\n",corsAllowHeaders,"\r\n\r\n"
+// HTTP OPTIONS generic response: "The frontend can do whatever it wants."
+optionsResponse:okHeader,"\r\n",corsHeaders,"\r\n\r\n"
 
 // Start listening using the current endpoints on the given port
 listen:{[p]
