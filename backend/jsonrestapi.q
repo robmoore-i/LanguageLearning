@@ -1,3 +1,5 @@
+\l config.q
+
 ////// ALL REQUESTS
 
 \d .jra
@@ -37,13 +39,11 @@ serve:{[path;f]endpoints,: .jra.addEndpoint[endpoints;path;f];}
 
 \d .jra
 
-serverOrigin:"http://localhost:3000"
-
 // HTTP 200 OK
 okHeader:"HTTP/1.x 200 OK"
 
 // The header for allowing responses to the server
-corsHeader:"Access-Control-Allow-Origin: ",serverOrigin
+corsHeader:"Access-Control-Allow-Origin: ",.config.frontendOrigin
 
 // The header for a JSON resposne
 jsonHeader:"Content- Type:application/json"
@@ -58,7 +58,7 @@ jsonResponse:{okHeader,"\r\n",jsonHeader,"\r\n",corsHeader,"\r\n\r\n",.j.j x}
 authenticatedJsonResponse:{okHeader,"\r\n",jsonHeader,"\r\n",setAuthCookieHeader[x],"\r\n\r\n",.j.j y}
 
 // HTTP CORS OPTIONS
-corsAllowOrigin:"Access-Control-Allow-Origin: ",serverOrigin
+corsAllowOrigin:"Access-Control-Allow-Origin: ",.config.frontendOrigin
 corsAllowMethods:"Access-Control-Allow-Methods: GET, POST"
 corsAllowHeaders:"Access-Control-Allow-Headers: Content-Type"
 optionsResponse:okHeader,"\r\n",corsAllowOrigin,"\r\n",corsAllowMethods,"\r\n",corsAllowHeaders,"\r\n\r\n"
