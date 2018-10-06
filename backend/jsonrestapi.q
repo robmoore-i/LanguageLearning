@@ -58,7 +58,6 @@ jsonResponse:{okHeader,"\r\n",jsonHeader,"\r\n",corsHeader,"\r\n\r\n",.j.j x}
 authenticatedJsonResponse:{okHeader,"\r\n",jsonHeader,"\r\n",setAuthCookieHeader[x],"\r\n\r\n",.j.j y}
 
 // HTTP CORS OPTIONS
-optionsHeader:{[path]"OPTIONS ",path," HTTP/1.x"}
 corsAllowOrigin:"Access-Control-Allow-Origin: ",serverOrigin
 corsAllowMethods:"Access-Control-Allow-Methods: GET, POST"
 corsAllowHeaders:"Access-Control-Allow-Headers: Content-Type"
