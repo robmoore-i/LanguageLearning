@@ -2,10 +2,15 @@
 
 Why not
 
+# Doing some TDD with React
+
+Fun and helps me understand what to aim for when working with the various
+*interesting* design patterns I find out in the wild.
+
 # This app
 
 I combine my favourite parts of Duolingo and Quizlet to create an app for
-professional learners.
+pro learners.
 
 ## Name
 
