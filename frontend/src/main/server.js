@@ -1,6 +1,6 @@
 const server = {
     fetchLessonNames: () => {
-        return ["hello", "goodbye"]
+        return ["hello", "what are you called?"]
     },
 }
 
