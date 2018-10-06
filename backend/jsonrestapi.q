@@ -37,17 +37,32 @@ serve:{[path;f]endpoints,: .jra.addEndpoint[endpoints;path;f];}
 
 \d .jra
 
-// The header for a JSON resposne
-jsonHeader:"HTTP/1.x 200 OK\r\nContent- Type:application/json\r\n\r\n"
+serverOrigin:"http://localhost:3000"
 
-// The header for a JSON response including a cookie
-authenticatedJsonHeader:{"HTTP/1.x 200 OK\r\nContent- Type:application/json\r\nSet-Cookie: sid=",x,"\r\n\r\n"}
+// HTTP 200 OK
+okHeader:"HTTP/1.x 200 OK"
+
+// The header for allowing responses to the server
+corsHeader:"Access-Control-Allow-Origin: ",serverOrigin
+
+// The header for a JSON resposne
+jsonHeader:"Content- Type:application/json"
+
+// The header for sending an authentication cookie
+setAuthCookieHeader:{"Set-Cookie: sid=",x}
 
 // Create a JSON response from a Q object
-jsonResponse:{jsonHeader,.j.j x}
+jsonResponse:{okHeader,"\r\n",jsonHeader,"\r\n",corsHeader,"\r\n\r\n",.j.j x}
 
 // Create a JSON response from a Q object including a cookie
-authenticatedJsonResponse:{authenticatedJsonHeader[x],.j.j y}
+authenticatedJsonResponse:{okHeader,"\r\n",jsonHeader,"\r\n",setAuthCookieHeader[x],"\r\n\r\n",.j.j y}
+
+// HTTP CORS OPTIONS
+optionsHeader:{[path]"OPTIONS ",path," HTTP/1.x"}
+corsAllowOrigin:"Access-Control-Allow-Origin: ",serverOrigin
+corsAllowMethods:"Access-Control-Allow-Methods: GET, POST"
+corsAllowHeaders:"Access-Control-Allow-Headers: Content-Type"
+optionsResponse:okHeader,"\r\n",corsAllowOrigin,"\r\n",corsAllowMethods,"\r\n",corsAllowHeaders,"\r\n\r\n"
 
 // Start listening using the current endpoints on the given port
 listen:{[p]
@@ -59,6 +74,9 @@ listen:{[p]
     postreq::.post.request x;
     f:.post.endpoints["/",last "/" vs postreq.url];
     $[ null f ; jsonResponse "none" ; f postreq ]};
+  .z.pm::{
+    optreq::x;
+    optionsResponse};
   system "p ",string p;}
 
 ////// RESPONSE
