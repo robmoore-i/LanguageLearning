@@ -23,6 +23,17 @@ let mockServer = lessonNames => {
     }
 }
 
+let mockSlowServer = lessonNames => {
+    return {
+        fetchLessonNames: () => {
+            return new Promise(async resolve => {
+                await sleep(500)
+                resolve(lessonNames)
+            })
+        }
+    }
+}
+
 let dummyServer = mockServer([])
 
 it('shows the correct course name depending on the url', async () => {
@@ -111,4 +122,19 @@ it('shows correct link text for lesson names with spaces or punctuation', async 
     let lessonButton = lessonsList.children().at(0).dive()
 
     expect(lessonButton.childAt(0).text()).toEqual("A lesson that shouldn't be in a url")
+})
+
+it('shows the loading screen before the content is fetched', () => {
+    // Given: The server is slow
+    let slowServer = mockSlowServer(["a", "b", "c"])
+
+    // When: I am on the lesson map page
+    let testLessonMap = shallow(<LessonMap location="http://localhost:3000/courses/thai" server={slowServer} />)
+
+    // Then: The page indicates that it is loading
+    let content = testLessonMap.find('h1').first()
+    let lessonMapText = content.children()
+    let text = lessonMapText.map(child => child.text()).reduce((acc, cur) => acc + cur)
+
+    expect(text).toBe("Loading thai lessons")
 })
