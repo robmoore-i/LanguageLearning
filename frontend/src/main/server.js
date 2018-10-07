@@ -7,7 +7,8 @@ const server = {
     },
 
     fetchLesson: (lessonNameInUrl) => {
-        return new Promise(resolve => resolve({name: "Hello!"}))
+        return fetch(config.backendOrigin + "/lesson/" + lessonNameInUrl)
+            .then(response => response.json())
     }
 }
 
