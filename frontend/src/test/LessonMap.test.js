@@ -5,7 +5,7 @@ import {shallow} from 'enzyme'
 // Main
 import LessonMap from '../main/LessonMap'
 // Enzyme react-adapter configuration & others
-import {configureAdapter, sleep} from "./setup"
+import {configureAdapter, sleep} from "./utils"
 
 configureAdapter()
 

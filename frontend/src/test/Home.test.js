@@ -8,7 +8,7 @@ import { shallow } from 'enzyme'
 import Home from '../main/Home'
 
 // Enzyme react-adapter configuration
-import {configureAdapter} from "./setup"
+import {configureAdapter} from "./utils"
 
 configureAdapter()
 
