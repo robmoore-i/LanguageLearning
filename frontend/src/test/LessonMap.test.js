@@ -30,11 +30,15 @@ let mockSlowServer = lessonNames => {
     }
 }
 
+async function shallowRenderLessonMap(course, server) {
+    let lessonMap = shallow(<LessonMap location={"http://localhost:3000/courses/" + course} server={server} />)
+    await sleep(mockServerLoadTimeMs)
+    return lessonMap
+}
+
 it('shows the correct course name depending on the url', async () => {
     // Given: I am on the lesson map page for Thai
-    let dummyServer = mockServer([])
-    let testLessonMap = shallow(<LessonMap location="http://localhost:3000/courses/thai" server={dummyServer} />)
-    await sleep(mockServerLoadTimeMs)
+    let testLessonMap = await shallowRenderLessonMap("thai", mockServer([]))
 
     // When: I look around the page
     let content = testLessonMap.find('h1').first()
@@ -50,8 +54,7 @@ it('populates the lesson map with the lessons fetched from the server', async ()
     let testServer = mockServer(["hello", "goodbye"])
 
     // When: I am on the lesson map page
-    let testLessonMap = shallow(<LessonMap location="http://localhost:3000/courses/georgian" server={testServer} />)
-    await sleep(mockServerLoadTimeMs)
+    let testLessonMap = await shallowRenderLessonMap("georgian", testServer)
 
     // Then: I see the two available lessons on the lesson list
     let lessonsList = testLessonMap.find('.Lesson-list').first()
@@ -63,8 +66,7 @@ it('fills in the correct lesson data for the lessons of the lesson map', async (
     let testServer = mockServer(["a", "b"])
 
     // When: I am on the lesson map page
-    let testLessonMap = shallow(<LessonMap location="http://localhost:3000/courses/german" server={testServer} />)
-    await sleep(mockServerLoadTimeMs)
+    let testLessonMap = await shallowRenderLessonMap("german", testServer)
 
     // Then: I see the names of the two lessons on the lesson list
     let lessonsList = testLessonMap.find('.Lesson-list').first()
@@ -77,8 +79,7 @@ it('creates links to lessons from the provided lesson data', async () => {
     let testServer = mockServer(["doge", "pepe"])
 
     // When: I am on the lesson map page
-    let testLessonMap = shallow(<LessonMap location="http://localhost:3000/courses/spanish" server={testServer} />)
-    await sleep(mockServerLoadTimeMs)
+    let testLessonMap = await shallowRenderLessonMap("spanish", testServer)
 
     // Then: The links go to the appropriate lessons
     let lessonsList = testLessonMap.find('.Lesson-list').first()
@@ -94,8 +95,7 @@ it('homogenises lesson names which have spaces or punctuation', async () => {
     let testServer = mockServer(["A lesson that shouldn't be in a url"])
 
     // When: I am on the lesson map page
-    let testLessonMap = shallow(<LessonMap location="http://localhost:3000/courses/edgecases" server={testServer} />)
-    await sleep(mockServerLoadTimeMs)
+    let testLessonMap = await shallowRenderLessonMap("edgecases", testServer)
 
     // Then: The link is sensibly cleaned up
     let lessonsList = testLessonMap.find('.Lesson-list').first()
@@ -109,8 +109,7 @@ it('shows correct link text for lesson names with spaces or punctuation', async 
     let testServer = mockServer(["A lesson that shouldn't be in a url"])
 
     // When: I am on the lesson map page
-    let testLessonMap = shallow(<LessonMap location="http://localhost:3000/courses/edgecases" server={testServer} />)
-    await sleep(mockServerLoadTimeMs)
+    let testLessonMap = await shallowRenderLessonMap("edgecases", testServer)
 
     // Then: The text on the link button is still the same as the real lesson name
     let lessonsList = testLessonMap.find('.Lesson-list').first()
@@ -119,12 +118,12 @@ it('shows correct link text for lesson names with spaces or punctuation', async 
     expect(lessonButton.childAt(0).text()).toEqual("A lesson that shouldn't be in a url")
 })
 
-it('shows the loading screen before the content is fetched', () => {
+it('shows the loading screen before the content is fetched', async () => {
     // Given: The server is slow
     let slowServer = mockSlowServer(["a", "b", "c"])
 
     // When: I am on the lesson map page
-    let testLessonMap = shallow(<LessonMap location="http://localhost:3000/courses/thai" server={slowServer} />)
+    let testLessonMap = await shallowRenderLessonMap("thai", slowServer)
 
     // Then: The page indicates that it is loading
     let content = testLessonMap.find('h1').first()
