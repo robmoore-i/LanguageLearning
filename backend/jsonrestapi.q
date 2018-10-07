@@ -55,7 +55,7 @@ preflightResponse:{[methods;headers]
   okHeader,"\r\n",corsHeaders[methods;headers],"\r\n\r\n"}
 
 // The header for a JSON resposne
-jsonHeader:"Content- Type:application/json"
+jsonHeader:"Content-Type: application/json"
 
 // The header for sending an authentication cookie
 setAuthCookieHeader:{"Set-Cookie: sid=",x}
