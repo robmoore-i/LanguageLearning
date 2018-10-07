@@ -12,11 +12,26 @@ import {configureAdapter} from "./setup"
 
 configureAdapter()
 
-let dummyServer = {fetchLessonNames: () => {return []}}
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-it('shows the correct course name depending on the url', () => {
+let mockServerLoadTimeMs = 1
+
+let mockServer = mockedResult => {
+    return {
+        fetchLessonNames: () => {
+            return new Promise(resolve => resolve(mockedResult))
+        }
+    }
+}
+
+let dummyServer = mockServer([])
+
+it('shows the correct course name depending on the url', async () => {
     // Given: I am on the lesson map page for Thai
     let testLessonMap = shallow(<LessonMap location="http://localhost:3000/courses/thai" server={dummyServer} />)
+    await sleep(mockServerLoadTimeMs)
 
     // When: I look around the page
     let content = testLessonMap.find('h1').first()
@@ -27,24 +42,26 @@ it('shows the correct course name depending on the url', () => {
     expect(text).toBe("Choose a thai lesson")
 })
 
-it('populates the lesson map with the lessons fetched from the server', () => {
+it('populates the lesson map with the lessons fetched from the server', async () => {
     // Given: There are two lessons available on the server
-    let testServer = {fetchLessonNames: () => {return ["hello", "goodbye"]}}
+    let testServer = mockServer(["hello", "goodbye"])
 
     // When: I am on the lesson map page
     let testLessonMap = shallow(<LessonMap location="http://localhost:3000/courses/georgian" server={testServer} />)
+    await sleep(mockServerLoadTimeMs)
 
     // Then: I see the two available lessons on the lesson list
     let lessonsList = testLessonMap.find('.Lesson-list').first()
     expect(lessonsList.children()).toHaveLength(2)
 })
 
-it('fills in the correct lesson data for the lessons of the lesson map', () => {
+it('fills in the correct lesson data for the lessons of the lesson map', async () => {
     // Given: There are two lessons available on the server, named 'a' and 'b'
-    let testServer = {fetchLessonNames: () => {return ["a", "b"]}}
+    let testServer = mockServer(["a", "b"])
 
     // When: I am on the lesson map page
     let testLessonMap = shallow(<LessonMap location="http://localhost:3000/courses/german" server={testServer} />)
+    await sleep(mockServerLoadTimeMs)
 
     // Then: I see the names of the two lessons on the lesson list
     let lessonsList = testLessonMap.find('.Lesson-list').first()
@@ -52,12 +69,13 @@ it('fills in the correct lesson data for the lessons of the lesson map', () => {
     expect(lessonsList.children().at(1).dive().childAt(0).text()).toEqual("b")
 })
 
-it('creates links to lessons from the provided lesson data', () => {
+it('creates links to lessons from the provided lesson data', async () => {
     // Given: There are two lessons available on the server, named 'doge' and 'pepe'
-    let testServer = {fetchLessonNames: () => {return ["doge", "pepe"]}}
+    let testServer = mockServer(["doge", "pepe"])
 
     // When: I am on the lesson map page
     let testLessonMap = shallow(<LessonMap location="http://localhost:3000/courses/spanish" server={testServer} />)
+    await sleep(mockServerLoadTimeMs)
 
     // Then: The links go to the appropriate lessons
     let lessonsList = testLessonMap.find('.Lesson-list').first()
@@ -68,12 +86,13 @@ it('creates links to lessons from the provided lesson data', () => {
     expect(pepeLessonButton.is('[to="spanish/pepe"]')).toBe(true)
 })
 
-it('homogenises lesson names which have spaces or punctuation', () => {
+it('homogenises lesson names which have spaces or punctuation', async () => {
     // Given: There is a lesson available on the server whose name ought not to be put in a url as-is.
-    let testServer = {fetchLessonNames: () => {return ["A lesson that shouldn't be in a url"]}}
+    let testServer = mockServer(["A lesson that shouldn't be in a url"])
 
     // When: I am on the lesson map page
     let testLessonMap = shallow(<LessonMap location="http://localhost:3000/courses/edgecases" server={testServer} />)
+    await sleep(mockServerLoadTimeMs)
 
     // Then: The link is sensibly cleaned up
     let lessonsList = testLessonMap.find('.Lesson-list').first()
@@ -82,12 +101,13 @@ it('homogenises lesson names which have spaces or punctuation', () => {
     expect(lessonButton.is('[to="edgecases/A_lesson_that_shouldnt_be_in_a_url"]')).toBe(true)
 })
 
-it('shows correct link text for lesson names with spaces or punctuation', () => {
+it('shows correct link text for lesson names with spaces or punctuation', async () => {
     // Given: There is a lesson available on the server whose name ought not to be put in a url as-is.
-    let testServer = {fetchLessonNames: () => {return ["A lesson that shouldn't be in a url"]}}
+    let testServer = mockServer(["A lesson that shouldn't be in a url"])
 
     // When: I am on the lesson map page
     let testLessonMap = shallow(<LessonMap location="http://localhost:3000/courses/edgecases" server={testServer} />)
+    await sleep(mockServerLoadTimeMs)
 
     // Then: The text on the link button is still the same as the real lesson name
     let lessonsList = testLessonMap.find('.Lesson-list').first()
