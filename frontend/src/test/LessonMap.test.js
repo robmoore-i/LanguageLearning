@@ -1,12 +1,9 @@
 // React
 import React from 'react'
-
 // Testing
-import { shallow } from 'enzyme'
-
+import {shallow} from 'enzyme'
 // Main
 import LessonMap from '../main/LessonMap'
-
 // Enzyme react-adapter configuration
 import {configureAdapter} from "./setup"
 
@@ -18,10 +15,10 @@ function sleep(ms) {
 
 let mockServerLoadTimeMs = 1
 
-let mockServer = mockedResult => {
+let mockServer = lessonNames => {
     return {
         fetchLessonNames: () => {
-            return new Promise(resolve => resolve(mockedResult))
+            return new Promise(resolve => resolve(lessonNames))
         }
     }
 }
