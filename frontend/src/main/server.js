@@ -7,7 +7,7 @@ const server = {
     },
 
     fetchLesson: () => {
-
+        return new Promise(resolve => resolve({name: "Hello!"}))
     }
 }
 

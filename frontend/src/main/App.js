@@ -14,6 +14,7 @@ import server from './server'
 import Home from './Home'
 import Courses from './Courses'
 import LessonMap from './LessonMap'
+import Lesson from './Lesson'
 
 export function startApp() {
     ReactDOM.render(<App />, document.getElementById('root'))
@@ -28,10 +29,24 @@ export default class App extends Component {
                     <Switch>
                         <Route exact path="/" component={Home}/>
                         <Route exact path="/courses" component={Courses}/>
-                        <Route path="/courses" render={() => <LessonMap location={window.location.href} server={server}/>}/>
+                        <Route exact path="/courses/:course" component={MatchedLessonMap} />
+                        <Route path="/courses/:course/:lesson" component={MatchedLesson} />
                     </Switch>
                 </BrowserRouter>
             </div>
         )
     }
+}
+
+const MatchedLessonMap = ({ match }) => {
+    return (
+        <LessonMap location={"http://localhost:3000/courses/" + match.params.course} server={server}/>
+    )
+}
+
+const MatchedLesson = ({ match }) => {
+    console.log("matched lesson", match)
+    return (
+        <Lesson location={"http://localhost:3000/courses/" + match.params.course + "/" + match.params.lesson} server={server}/>
+    )
 }
