@@ -28,7 +28,7 @@ export default class Lesson extends Component {
 
     renderLoading() {
         return (
-            <div>Loading {this.courseName}: {this.state.lessonName}</div>
+            <h1>Loading {this.courseName}: {this.state.lessonName}</h1>
         )
     }
 

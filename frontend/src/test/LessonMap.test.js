@@ -34,10 +34,9 @@ let mockSlowServer = lessonNames => {
     }
 }
 
-let dummyServer = mockServer([])
-
 it('shows the correct course name depending on the url', async () => {
     // Given: I am on the lesson map page for Thai
+    let dummyServer = mockServer([])
     let testLessonMap = shallow(<LessonMap location="http://localhost:3000/courses/thai" server={dummyServer} />)
     await sleep(mockServerLoadTimeMs)
 
