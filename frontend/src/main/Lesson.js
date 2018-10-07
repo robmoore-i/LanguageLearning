@@ -8,10 +8,10 @@ export default class Lesson extends Component {
         super(props)
 
         this.server = this.props.server
-        this.courseName = this.props.location.split('/')[4] // Extract course name from url
+        this.courseName = this.props.courseName
 
         this.state = {
-            lessonName: this.props.location.split('/')[5], // Temporarily extract lesson name from url
+            lessonName: this.props.lessonName, // Use lesson name in props as placeholder until server response.
             loaded: false
         }
     }

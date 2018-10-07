@@ -1,14 +1,11 @@
 // React
 import React, {Component} from 'react'
 import ReactDOM from "react-dom"
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
-
+import {BrowserRouter, Route, Switch} from 'react-router-dom'
 // Service worker
 import registerServiceWorker from "./registerServiceWorker"
-
 // Resources
 import '../styles/App.css'
-
 // Main
 import server from './server'
 import Home from './Home'
@@ -45,8 +42,7 @@ const MatchedLessonMap = ({ match }) => {
 }
 
 const MatchedLesson = ({ match }) => {
-    console.log("matched lesson", match)
     return (
-        <Lesson location={"http://localhost:3000/courses/" + match.params.course + "/" + match.params.lesson} server={server}/>
+        <Lesson courseName={match.params.course} lessonName={match.params.lesson} server={server}/>
     )
 }
