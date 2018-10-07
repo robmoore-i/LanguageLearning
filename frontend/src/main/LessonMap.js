@@ -9,7 +9,7 @@ export default class LessonMap extends Component {
         super(props)
 
         this.server = this.props.server
-        this.courseName = this.props.location.split('/')[4] // Extract course name from url
+        this.courseName = this.props.courseName
 
         this.state = {
             lessonNames: [],

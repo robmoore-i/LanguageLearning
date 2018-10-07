@@ -40,7 +40,7 @@ export default class App extends Component {
 
 const MatchedLessonMap = ({ match }) => {
     return (
-        <LessonMap location={"http://localhost:3000/courses/" + match.params.course} server={server}/>
+        <LessonMap courseName={match.params.course} server={server}/>
     )
 }
 

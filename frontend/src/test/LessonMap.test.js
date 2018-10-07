@@ -31,7 +31,7 @@ let mockSlowServer = lessonNames => {
 }
 
 async function shallowRenderLessonMap(course, server) {
-    let lessonMap = shallow(<LessonMap location={"http://localhost:3000/courses/" + course} server={server} />)
+    let lessonMap = shallow(<LessonMap courseName={course} server={server} />)
     await sleep(mockServerLoadTimeMs)
     return lessonMap
 }
