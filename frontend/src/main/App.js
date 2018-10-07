@@ -43,6 +43,6 @@ const MatchedLessonMap = ({ match }) => {
 
 const MatchedLesson = ({ match }) => {
     return (
-        <Lesson courseName={match.params.course} lessonName={match.params.lesson} server={server}/>
+        <Lesson courseName={match.params.course} lessonNameInUrl={match.params.lesson} server={server}/>
     )
 }

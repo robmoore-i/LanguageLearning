@@ -13,7 +13,7 @@ let mockServerLoadTimeMs = 1
 
 let mockServer = lesson => {
     return {
-        fetchLesson: () => {
+        fetchLesson: (lessonNameInUrl) => {
             return new Promise(resolve => resolve(lesson))
         }
     }
@@ -21,7 +21,7 @@ let mockServer = lesson => {
 
 let mockSlowServer = lesson => {
     return {
-        fetchLesson: () => {
+        fetchLesson: (lessonNameInUrl) => {
             return new Promise(async resolve => {
                 await sleep(500)
                 resolve(lesson)
@@ -30,8 +30,8 @@ let mockSlowServer = lesson => {
     }
 }
 
-async function shallowRenderLesson(course, lessonName, server) {
-    let lesson = shallow(<Lesson courseName={course} lessonName={lessonName} server={server} />)
+async function shallowRenderLesson(course, lessonNameInUrl, server) {
+    let lesson = shallow(<Lesson courseName={course} lessonNameInUrl={lessonNameInUrl} server={server} />)
     await sleep(mockServerLoadTimeMs)
     return lesson
 }

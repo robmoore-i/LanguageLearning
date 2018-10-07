@@ -6,7 +6,7 @@ const server = {
             .then(response => response.json())
     },
 
-    fetchLesson: () => {
+    fetchLesson: (lessonNameInUrl) => {
         return new Promise(resolve => resolve({name: "Hello!"}))
     }
 }

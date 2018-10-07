@@ -11,14 +11,14 @@ export default class Lesson extends Component {
         this.courseName = this.props.courseName
 
         this.state = {
-            lessonName: this.props.lessonName, // Use lesson name in props as placeholder until server response.
+            lessonName: this.props.lessonNameInUrl, // Placeholder until server response.
             loaded: false
         }
     }
 
     componentDidMount() {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within promise closure.
-        this.server.fetchLesson().then(lesson => {
+        this.server.fetchLesson(this.props.lessonNameInUrl).then(lesson => {
             setState({
                 lessonName: lesson.name,
                 loaded: true
