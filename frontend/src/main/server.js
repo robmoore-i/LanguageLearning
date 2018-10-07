@@ -5,6 +5,10 @@ const server = {
         return fetch(config.backendOrigin + "/lessonnames")
             .then(response => response.json())
     },
+
+    fetchLesson: () => {
+
+    }
 }
 
 export default server
