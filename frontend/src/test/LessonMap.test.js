@@ -4,14 +4,10 @@ import React from 'react'
 import {shallow} from 'enzyme'
 // Main
 import LessonMap from '../main/LessonMap'
-// Enzyme react-adapter configuration
-import {configureAdapter} from "./setup"
+// Enzyme react-adapter configuration & others
+import {configureAdapter, sleep} from "./setup"
 
 configureAdapter()
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
-}
 
 let mockServerLoadTimeMs = 1
 
