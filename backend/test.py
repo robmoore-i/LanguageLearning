@@ -21,6 +21,12 @@ def lesson_names():
     assert_that(res.json()).is_equal_to(["hello", "what are you called?"])
 
 
+def lesson():
+    res = requests.get("http://localhost:8000/lesson/hello")
+    assert_that(res.status_code).is_equal_to(200)
+    assert_that(res.json()).is_equal_to({"name": "hello"})
+
+
 def run_test(test_name, test):
     try:
         print("- " + test_name)
@@ -34,6 +40,7 @@ def run_test(test_name, test):
 
 def tests():
     run_test("lesson_names", lesson_names)
+    run_test("lesson", lesson)
 
 
 def main():
