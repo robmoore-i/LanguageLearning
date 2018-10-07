@@ -21,7 +21,7 @@ def lesson_names():
     assert_that(res.json()).is_equal_to(["hello", "what are you called?"])
 
 
-def lesson_names_options():
+def preflight_cors_request():
     headers = { "access-control-request-method": "GET" , "access-control-request-headers": "Content-Type" }
     options = requests.options("http://localhost:8000/lessonnames", headers=headers)
     assert_that(options.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:3000")
@@ -43,7 +43,7 @@ def run_test(test_name, test):
 
 def tests():
     run_test("lesson_names", lesson_names)
-    run_test("lesson_names_options", lesson_names_options)
+    run_test("preflight_cors_request", preflight_cors_request)
 
 
 def main():
