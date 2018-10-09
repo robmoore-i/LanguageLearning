@@ -1,11 +1,13 @@
+#!/usr/bin/python3
+
 import os
 import time
+import sys
 
 import requests
 from assertpy import assert_that
 
 QHOME = os.environ["QHOME"]
-
 
 def start_backend_q():
     os.system(QHOME + "/l32/q backend.q &")
@@ -43,16 +45,33 @@ def tests():
     run_test("lesson", lesson)
 
 
+usage = "USAGE: ./test.py [a|r]\na => don't start the server because it's (a)lready running.\nr => (r)un the server."
+
 def main():
-    print("=== starting backend ===")
-    start_backend_q()
-    time.sleep(1)
+    print("Running: " + str(sys.argv))
+
+    if len(sys.argv) != 2:
+        print(usage)
+        exit(1)
+    elif sys.argv[1] == "a": # 'a' is for 'already running'
+        start_backend = False
+    elif sys.argv[1] == "r": # 'r' is for 'run it yourself'
+        start_backend = True
+    else:
+        print(usage)
+        exit(1)
+
+    if start_backend:
+        print("=== starting backend ===")
+        start_backend_q()
+        time.sleep(1)
 
     print("=== starting tests ===")
     tests()
 
-    print("=== killing backend ===")
-    kill_backend_q()
+    if start_backend:
+        print("=== killing backend ===")
+        kill_backend_q()
 
     print("=== finished tests ===")
 
