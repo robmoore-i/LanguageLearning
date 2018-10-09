@@ -1,14 +1,16 @@
 import config from './config'
 
+function fetchJSON(url) {
+    return fetch(url).then(response => response.json())
+}
+
 const server = {
     fetchLessonNames: () => {
-        return fetch(config.backendOrigin + "/lessonnames")
-            .then(response => response.json())
+        return fetchJSON(config.backendOrigin + "/lessonnames")
     },
 
     fetchLesson: (lessonNameInUrl) => {
-        return fetch(config.backendOrigin + "/lesson/" + lessonNameInUrl)
-            .then(response => response.json())
+        return fetchJSON(config.backendOrigin + "/lesson/" + lessonNameInUrl)
     }
 }
 
