@@ -2,6 +2,8 @@
 import React, {Component} from "react";
 // Resources
 import '../styles/Lesson.css'
+// Main
+import Question from "./Question"
 
 export default class Lesson extends Component {
     constructor(props) {
@@ -33,7 +35,7 @@ export default class Lesson extends Component {
     }
 
     renderTranslationQuestion(q) {
-        // TODO
+        return <Question q={q} key="question"/>
     }
 
     renderLoaded() {
@@ -41,7 +43,7 @@ export default class Lesson extends Component {
         let capitalisedCourseName = capitalise(this.courseName)
         let q = {type: 0, given: "hello", answer: "გამარჯობა"}
         return [
-            <header className="Lesson-header">
+            <header className="Lesson-header" key="header">
                 <h1 className="Lesson-title">{capitalisedCourseName}: {this.state.lessonName}</h1>,
             </header>,
             this.renderTranslationQuestion(q)

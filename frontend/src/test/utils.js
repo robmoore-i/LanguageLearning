@@ -8,3 +8,7 @@ export function configureAdapter() {
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
+
+export function textBoxInputEvent(input) {
+    return {target: {value: input}}
+}
