@@ -3,7 +3,7 @@ import React, {Component} from "react";
 // Resources
 import '../styles/Lesson.css'
 // Main
-import Question from "./Question"
+import TranslationQuestion from "./TranslationQuestion"
 
 export default class Lesson extends Component {
     constructor(props) {
@@ -35,7 +35,7 @@ export default class Lesson extends Component {
     }
 
     renderTranslationQuestion(q) {
-        return <Question q={q} key="question"/>
+        return <TranslationQuestion q={q} key="question"/>
     }
 
     renderLoaded() {

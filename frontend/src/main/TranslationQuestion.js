@@ -6,7 +6,7 @@ import greentick from '../images/greentick.png'
 import redcross from '../images/redcross.png'
 import greyquestionmark from '../images/greyquestionmark.png'
 
-export default class Question extends Component {
+export default class TranslationQuestion extends Component {
     constructor(props) {
         super(props)
 
