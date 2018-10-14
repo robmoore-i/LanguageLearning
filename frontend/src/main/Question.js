@@ -27,6 +27,9 @@ export default class Question extends Component {
     render() {
         return [
             <h1 id="question-title" key="question-title">{"Translate \"" + this.props.q.given + "\""}</h1>,
+            <div key="question-result-mark" id={this.state.markResult.id}>
+                <img src={this.state.markResult.img} width="100" height="100" />
+            </div>,
             <input id="answer-input-textbox" key="answer-input-textbox" type="text"
                    onChange={(event) => {
                        this.setState({currentAnswer: event.target.value})
@@ -36,10 +39,7 @@ export default class Question extends Component {
                         this.setState({markResult: this.markAnswer(this.state.currentAnswer)})
                     }}>
                 Mark
-            </button>,
-            <div key="question-result-mark" id={this.state.markResult.id}>
-                <img src={this.state.markResult.img} width="100" height="100" />
-            </div>
+            </button>
         ]
     }
 }
