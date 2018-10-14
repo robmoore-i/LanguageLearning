@@ -32,4 +32,18 @@ describe('Translation questions', () => {
 
         expect(testTQ.find("#question-result-correct").exists()).toBe(true)
     })
+
+    it('Marks an incorrect answer as incorrect', () => {
+        let q = {type: 0, given: "hello", answer: "გამარჯობა"}
+        let testTQ = mount(<Question q={q} />)
+
+        let inputBox = testTQ.find("#answer-input-textbox")
+        let testInput = "memes"
+        inputBox.simulate("change", textBoxInputEvent(testInput))
+
+        let markButton = testTQ.find("#submit-for-marking-button")
+        markButton.simulate("click")
+
+        expect(testTQ.find("#question-result-incorrect").exists()).toBe(true)
+    })
 })

@@ -14,7 +14,11 @@ export default class Question extends Component {
     }
 
     markAnswer(answer) {
-        return Mark.CORRECT
+        if (answer === this.props.q.answer) {
+            return Mark.CORRECT
+        } else {
+            return Mark.INCORRECT
+        }
     }
 
     render() {
@@ -29,7 +33,7 @@ export default class Question extends Component {
             <button id="submit-for-marking-button"
                     key="submit-for-marking-button"
                     onClick={() => {
-                        this.setState({markResult: this.markAnswer(this.currentAnswer)})
+                        this.setState({markResult: this.markAnswer(this.state.currentAnswer)})
                     }}>
                 Mark
             </button>,
