@@ -27,14 +27,11 @@ export default class Question extends Component {
     render() {
         return [
             <h1 id="question-title" key="question-title">{"Translate \"" + this.props.q.given + "\""}</h1>,
-            <input id="answer-input-textbox"
-                   key="answer-input-textbox"
-                   type="text"
+            <input id="answer-input-textbox" key="answer-input-textbox" type="text"
                    onChange={(event) => {
                        this.setState({currentAnswer: event.target.value})
                     }}/>,
-            <button id="submit-for-marking-button"
-                    key="submit-for-marking-button"
+            <button id="submit-for-marking-button" key="submit-for-marking-button"
                     onClick={() => {
                         this.setState({markResult: this.markAnswer(this.state.currentAnswer)})
                     }}>
