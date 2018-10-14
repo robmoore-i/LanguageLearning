@@ -17,7 +17,9 @@ export default class TranslationQuestion extends Component {
     }
 
     markAnswer(answer) {
-        if (answer === this.props.q.answer) {
+        if (answer === "") {
+            return Mark.UNMARKED
+        } else if (answer === this.props.q.answer) {
             return Mark.CORRECT
         } else {
             return Mark.INCORRECT

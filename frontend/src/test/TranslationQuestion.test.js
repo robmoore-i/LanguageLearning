@@ -45,3 +45,15 @@ it('Marks an incorrect answer as incorrect', () => {
 
     expect(testTQ.find("#question-result-incorrect").exists()).toBe(true)
 })
+
+it('Wont mark an empty string as an answer', () => {
+    let q = {type: 0, given: "hello", answer: "გამარჯობა"}
+    let testTQ = mount(<TranslationQuestion q={q} />)
+
+    let markButton = testTQ.find("#submit-for-marking-button")
+    markButton.simulate("click")
+
+    expect(testTQ.find("#question-result-incorrect").exists()).toBe(false)
+    expect(testTQ.find("#question-result-correct").exists()).toBe(false)
+    expect(testTQ.find("#question-result-unmarked").exists()).toBe(true)
+})
