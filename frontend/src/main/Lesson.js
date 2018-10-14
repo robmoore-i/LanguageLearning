@@ -34,10 +34,6 @@ export default class Lesson extends Component {
         )
     }
 
-    renderTranslationQuestion(q) {
-        return <TranslationQuestion q={q} key="question"/>
-    }
-
     renderLoaded() {
         let capitalise = (s => s[0].toUpperCase() + s.substring(1))
         let capitalisedCourseName = capitalise(this.courseName)
@@ -46,7 +42,7 @@ export default class Lesson extends Component {
             <header className="Lesson-header" key="header">
                 <h1 className="Lesson-title">{capitalisedCourseName}: {this.state.lessonName}</h1>,
             </header>,
-            this.renderTranslationQuestion(q)
+            <TranslationQuestion q={q} key="question"/>
         ]
     }
 
