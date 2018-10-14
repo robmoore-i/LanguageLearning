@@ -2,6 +2,9 @@
 import React, {Component} from "react";
 // Resources
 import '../styles/Question.css'
+import greentick from '../images/greentick.png'
+import redcross from '../images/redcross.png'
+import greyquestionmark from '../images/greyquestionmark.png'
 
 export default class Question extends Component {
     constructor(props) {
@@ -37,22 +40,25 @@ export default class Question extends Component {
                     }}>
                 Mark
             </button>,
-            <span key="question-result-mark" id={this.state.markResult.id}/>
+            <div key="question-result-mark" id={this.state.markResult.id}>
+                <img src={this.state.markResult.img} width="100" height="100" />
+            </div>
         ]
     }
 }
 
 let Mark = (() => {
-    function Mark(i, id) {
+    function Mark(i, id, img) {
         return {
             i: i,
-            id: id
+            id: id,
+            img: img
         }
     }
 
     return {
-        UNMARKED:  Mark(0, "question-result-unmarked"),
-        CORRECT:   Mark(1, "question-result-correct"),
-        INCORRECT: Mark(2, "question-result-incorrect")
+        UNMARKED:  Mark(0, "question-result-unmarked",  greyquestionmark),
+        CORRECT:   Mark(1, "question-result-correct",   greentick),
+        INCORRECT: Mark(2, "question-result-incorrect", redcross)
     }
 })()
