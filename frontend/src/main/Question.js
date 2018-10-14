@@ -48,17 +48,16 @@ export default class Question extends Component {
 }
 
 let Mark = (() => {
-    function Mark(i, id, img) {
+    function Mark(id, img) {
         return {
-            i: i,
             id: id,
             img: img
         }
     }
 
     return {
-        UNMARKED:  Mark(0, "question-result-unmarked",  greyquestionmark),
-        CORRECT:   Mark(1, "question-result-correct",   greentick),
-        INCORRECT: Mark(2, "question-result-incorrect", redcross)
+        UNMARKED:  Mark("question-result-unmarked",  greyquestionmark),
+        CORRECT:   Mark("question-result-correct",   greentick),
+        INCORRECT: Mark("question-result-incorrect", redcross)
     }
 })()
