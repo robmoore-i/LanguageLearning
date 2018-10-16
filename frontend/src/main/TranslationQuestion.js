@@ -54,17 +54,8 @@ export default class TranslationQuestion extends Component {
     }
 }
 
-let Mark = (() => {
-    function Mark(id, img) {
-        return {
-            id: id,
-            img: img
-        }
-    }
-
-    return {
-        UNMARKED:  Mark("question-result-unmarked",  greyquestionmark),
-        CORRECT:   Mark("question-result-correct",   greentick),
-        INCORRECT: Mark("question-result-incorrect", redcross)
-    }
-})()
+let Mark = {
+    UNMARKED:  {id: "question-result-unmarked",  img: greyquestionmark},
+    CORRECT:   {id: "question-result-correct",   img: greentick},
+    INCORRECT: {id: "question-result-incorrect", img: redcross}
+}
