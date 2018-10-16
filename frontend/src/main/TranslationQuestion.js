@@ -28,7 +28,7 @@ export default class TranslationQuestion extends Component {
 
     render() {
         return [
-            <br />,
+            <br key="header--break--question-title"/>,
             <div id="question-title" key="question-title">
                 <span id="question-title-instruction">What is the translation of</span>
                 <span id="question-title-given">{this.props.q.given}</span>
@@ -36,11 +36,12 @@ export default class TranslationQuestion extends Component {
                     <img src={this.state.markResult.img} className="question-result" alt="mark-result-status" />
                 </span>
             </div>,
-            <br />,
-            <input id="answer-input-textbox" key="answer-input-textbox" type="text"
+            <br key="question-title--break--textarea"/>,
+            <textarea id="answer-input-textbox" rows="5" cols="50" key="answer-input-textbox"
                    onChange={(event) => {
                        this.setState({currentAnswer: event.target.value})
                     }}/>,
+            <br key="textarea--break--submit-button"/>,
             <button id="submit-for-marking-button" key="submit-for-marking-button"
                     onClick={() => {
                         this.setState({markResult: this.markAnswer(this.state.currentAnswer)})
