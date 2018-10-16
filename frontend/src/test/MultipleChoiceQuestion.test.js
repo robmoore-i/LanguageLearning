@@ -70,3 +70,15 @@ it('Marks an incorrect answer as incorrect', () => {
     expect(testMCQ.find("#question-result-incorrect").exists()).toBe(true)
     expect(testMCQ.find("#question-result-correct").exists()).toBe(false)
 })
+
+it('Doesnt mark if no answer is given', () => {
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
+
+    let markButton = testMCQ.find("#submit-for-marking-button")
+    markButton.simulate("click")
+
+    expect(testMCQ.find("#question-result-incorrect").exists()).toBe(false)
+    expect(testMCQ.find("#question-result-correct").exists()).toBe(false)
+    expect(testMCQ.find("#question-result-unmarked").exists()).toBe(true)
+})

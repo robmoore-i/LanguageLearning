@@ -29,7 +29,9 @@ export default class MultipleChoiceQuestion extends Component {
     }
 
     mark(choice) {
-        if (choice === this.props.q.answer) {
+        if (choice === Choices.NONE) {
+            return Mark.UNMARKED
+        } else if (choice === this.props.q.answer) {
             return Mark.CORRECT
         } else {
             return Mark.INCORRECT
