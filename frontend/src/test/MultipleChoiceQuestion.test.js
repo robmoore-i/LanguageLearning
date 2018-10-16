@@ -57,3 +57,16 @@ it('Marks a correct answer as correct', () => {
 
     expect(testMCQ.find("#question-result-correct").exists()).toBe(true)
 })
+
+it('Marks an incorrect answer as incorrect', () => {
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
+
+    testMCQ.find("#choicebox-c").simulate("change", {})
+
+    let markButton = testMCQ.find("#submit-for-marking-button")
+    markButton.simulate("click")
+
+    expect(testMCQ.find("#question-result-incorrect").exists()).toBe(true)
+    expect(testMCQ.find("#question-result-correct").exists()).toBe(false)
+})
