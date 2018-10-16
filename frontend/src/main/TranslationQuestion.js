@@ -2,9 +2,8 @@
 import React, {Component} from "react";
 // Resources
 import '../styles/TranslationQuestion.css'
-import greentick from '../images/greentick.png'
-import redcross from '../images/redcross.png'
-import greyquestionmark from '../images/greyquestionmark.png'
+// Main
+import Mark from "./Mark"
 
 export default class TranslationQuestion extends Component {
     constructor(props) {
@@ -16,7 +15,7 @@ export default class TranslationQuestion extends Component {
         }
     }
 
-    markAnswer(answer) {
+    mark(answer) {
         if (answer === "") {
             return Mark.UNMARKED
         } else if (answer === this.props.q.answer) {
@@ -46,16 +45,10 @@ export default class TranslationQuestion extends Component {
             </div>,
             <a id="submit-for-marking-button" key="submit-for-marking-button"
                     onClick={() => {
-                        this.setState({markResult: this.markAnswer(this.state.currentAnswer)})
+                        this.setState({markResult: this.mark(this.state.currentAnswer)})
                     }}>
                 Mark
             </a>
         ]
     }
-}
-
-let Mark = {
-    UNMARKED:  {id: "question-result-unmarked",  img: greyquestionmark},
-    CORRECT:   {id: "question-result-correct",   img: greentick},
-    INCORRECT: {id: "question-result-incorrect", img: redcross}
 }

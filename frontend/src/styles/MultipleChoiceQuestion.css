@@ -1,0 +1,26 @@
+#question-title {
+    font-size: 2em;
+}
+
+.question-result {
+    width: 30px;
+    height: 30px;
+    padding: 0 10px;
+}
+
+#submit-for-marking-button {
+    font-size: 24px;
+    color: black;
+    background-color: #4ecf43;
+    opacity: 0.9;
+    padding: 14px 25px;
+    border-radius: 10px;
+    transition-timing-function: ease-out;
+    transition-property: background-color;
+    transition-duration: 0.2s;
+    transition-delay: 0s;
+}
+#submit-for-marking-button:hover {
+    background-color: #52fb26;
+    cursor: pointer;
+}
