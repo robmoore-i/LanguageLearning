@@ -15,3 +15,13 @@ it('Shows the question of a translation question', () => {
 
     expect(testMCQ.find("#question-title").text()).toBe("Which of these sounds like \"i\" in English?")
 })
+
+it('Shows the four choices', () => {
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
+    let testMCQ = shallow(<MultipleChoiceQuestion q={q} />)
+
+    expect(testMCQ.find("#choice-a").text()).toBe("ა")
+    expect(testMCQ.find("#choice-b").text()).toBe("ო")
+    expect(testMCQ.find("#choice-c").text()).toBe("უ")
+    expect(testMCQ.find("#choice-d").text()).toBe("ი")
+})
