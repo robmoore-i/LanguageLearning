@@ -1,7 +1,7 @@
 // React
 import React, {Component} from "react";
 // Resources
-import '../styles/Question.css'
+import '../styles/TranslationQuestion.css'
 import greentick from '../images/greentick.png'
 import redcross from '../images/redcross.png'
 import greyquestionmark from '../images/greyquestionmark.png'
@@ -28,7 +28,8 @@ export default class TranslationQuestion extends Component {
 
     render() {
         return [
-            <h1 id="question-title" key="question-title">{"Translate \"" + this.props.q.given + "\""}</h1>,
+            <h1 id="question-title-instruction" key="question-title-instruction">Translate</h1>,
+            <h1 id="question-title-given" key="question-title-given">{this.props.q.given}</h1>,
             <div key="question-result-mark" id={this.state.markResult.id}>
                 <img src={this.state.markResult.img} alt="mark-result-status" width="100" height="100" />
             </div>,
