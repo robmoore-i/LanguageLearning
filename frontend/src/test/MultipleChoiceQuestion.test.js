@@ -1,7 +1,7 @@
 // React
 import React from 'react'
 // Testing
-import {shallow} from 'enzyme'
+import {mount, shallow} from 'enzyme'
 // Main
 import MultipleChoiceQuestion from '../main/MultipleChoiceQuestion'
 // Enzyme react-adapter configuration & others
@@ -25,3 +25,14 @@ it('Shows the four choices', () => {
     expect(testMCQ.find("#choice-c").text()).toBe("უ")
     expect(testMCQ.find("#choice-d").text()).toBe("ი")
 })
+
+// it('Cannot check both choices A and B', () => {
+//     let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
+//     let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
+//
+//     testMCQ.find("#choicebox-a").simulate("click")
+//     testMCQ.find("#choicebox-b").simulate("click")
+//
+//     expect(testMCQ.find("#choicebox-a").props().checked).toBe(false)
+//     expect(testMCQ.find("#choicebox-b").props().checked).toBe(true)
+// })

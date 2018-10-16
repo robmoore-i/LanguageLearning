@@ -15,16 +15,23 @@ export default class MultipleChoiceQuestion extends Component {
             c: this.props.q.c,
             d: this.props.q.d,
         }
-        return [
-            <span id="question-title">{"Which of these " + this.props.q.question + "?"}</span>,
-            <div>
-                <input type="radio" checked /><span id="choice-a">{choices.a}</span>
-                <input type="radio"/><span id="choice-b">{choices.b}</span>
-                <br />
-                <input type="radio"/><span id="choice-c">{choices.c}</span>
-                <input type="radio"/><span id="choice-d">{choices.d}</span>
-            </div>
 
+        let MultipleChoiceCheckBox = (whichChoice) => {
+            let choiceValue = choices[whichChoice]
+            return [
+                <input id={"choicebox-" + whichChoice} type="radio" key="checkbox"/>,
+                <span id={"choice-" + whichChoice} key="choiceValue">{choiceValue}</span>
+            ]
+        }
+
+        return [
+            <span id="question-title" key="question-title">{"Which of these " + this.props.q.question + "?"}</span>,
+            <div key="choices">
+                {MultipleChoiceCheckBox("a")}
+                {MultipleChoiceCheckBox("b")}
+                {MultipleChoiceCheckBox("c")}
+                {MultipleChoiceCheckBox("d")}
+            </div>
         ]
     }
 }
