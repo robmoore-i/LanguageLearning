@@ -6,10 +6,14 @@ import '../styles/MultipleChoiceQuestion.css'
 export default class MultipleChoiceQuestion extends Component {
     constructor(props) {
         super(props)
+
+        this.state = {
+            activeChoice: Choices.NONE
+        }
     }
 
     render() {
-        let choices = {
+        let choiceValues = {
             a: this.props.q.a,
             b: this.props.q.b,
             c: this.props.q.c,
@@ -17,21 +21,34 @@ export default class MultipleChoiceQuestion extends Component {
         }
 
         let MultipleChoiceCheckBox = (whichChoice) => {
-            let choiceValue = choices[whichChoice]
             return [
-                <input id={"choicebox-" + whichChoice} type="radio" key="checkbox"/>,
-                <span id={"choice-" + whichChoice} key="choiceValue">{choiceValue}</span>
+                <input id={"choicebox-" + whichChoice}
+                       type="radio"
+                       key="checkbox"
+                       checked={this.state.activeChoice === whichChoice}
+                       onChange={() => {
+                           this.setState({activeChoice: whichChoice})
+                       }}/>,
+                <span id={"choice-" + whichChoice} key="choiceValue">{choiceValues[whichChoice]}</span>
             ]
         }
 
         return [
             <span id="question-title" key="question-title">{"Which of these " + this.props.q.question + "?"}</span>,
             <div key="choices">
-                {MultipleChoiceCheckBox("a")}
-                {MultipleChoiceCheckBox("b")}
-                {MultipleChoiceCheckBox("c")}
-                {MultipleChoiceCheckBox("d")}
+                {MultipleChoiceCheckBox(Choices.A)}
+                {MultipleChoiceCheckBox(Choices.B)}
+                {MultipleChoiceCheckBox(Choices.C)}
+                {MultipleChoiceCheckBox(Choices.D)}
             </div>
         ]
     }
+}
+
+const Choices = {
+    NONE: "!",
+    A: "a",
+    B: "b",
+    C: "c",
+    D: "d",
 }

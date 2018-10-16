@@ -26,13 +26,22 @@ it('Shows the four choices', () => {
     expect(testMCQ.find("#choice-d").text()).toBe("ი")
 })
 
-// it('Cannot check both choices A and B', () => {
-//     let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
-//     let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
-//
-//     testMCQ.find("#choicebox-a").simulate("click")
-//     testMCQ.find("#choicebox-b").simulate("click")
-//
-//     expect(testMCQ.find("#choicebox-a").props().checked).toBe(false)
-//     expect(testMCQ.find("#choicebox-b").props().checked).toBe(true)
-// })
+it('Can select a choice', () => {
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
+    let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
+
+    testMCQ.find("#choicebox-a").simulate("change", {})
+
+    expect(testMCQ.find("#choicebox-a").props().checked).toBe(true)
+})
+
+it('Can select only one choice at a time', () => {
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
+    let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
+
+    testMCQ.find("#choicebox-a").simulate("change", {})
+    testMCQ.find("#choicebox-b").simulate("change", {})
+
+    expect(testMCQ.find("#choicebox-a").props().checked).toBe(false)
+    expect(testMCQ.find("#choicebox-b").props().checked).toBe(true)
+})
