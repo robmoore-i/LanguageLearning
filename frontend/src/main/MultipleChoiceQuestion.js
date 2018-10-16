@@ -12,27 +12,27 @@ export default class MultipleChoiceQuestion extends Component {
         }
     }
 
-    render() {
-        let MultipleChoiceCheckBox = (whichChoice) => {
-            return [
-                <input id={"choicebox-" + whichChoice}
-                       type="radio"
-                       key="checkbox"
-                       checked={this.state.activeChoice === whichChoice}
-                       onChange={() => {
-                           this.setState({activeChoice: whichChoice})
-                       }}/>,
-                <span id={"choice-" + whichChoice} key="choiceValue">{this.props.q[whichChoice]}</span>
-            ]
-        }
+    MultipleChoiceCheckBox(whichChoice) {
+        return [
+            <input id={"choicebox-" + whichChoice}
+                   type="radio"
+                   key="checkbox"
+                   checked={this.state.activeChoice === whichChoice}
+                   onChange={() => {
+                       this.setState({activeChoice: whichChoice})
+                   }}/>,
+            <span id={"choice-" + whichChoice} key="choiceValue">{this.props.q[whichChoice]}</span>
+        ]
+    }
 
+    render() {
         return [
             <span id="question-title" key="question-title">{"Which of these " + this.props.q.question + "?"}</span>,
             <div key="choices">
-                {MultipleChoiceCheckBox(Choices.A)}
-                {MultipleChoiceCheckBox(Choices.B)}
-                {MultipleChoiceCheckBox(Choices.C)}
-                {MultipleChoiceCheckBox(Choices.D)}
+                {this.MultipleChoiceCheckBox(Choices.A)}
+                {this.MultipleChoiceCheckBox(Choices.B)}
+                {this.MultipleChoiceCheckBox(Choices.C)}
+                {this.MultipleChoiceCheckBox(Choices.D)}
             </div>
         ]
     }
