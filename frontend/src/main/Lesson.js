@@ -3,7 +3,7 @@ import React, {Component} from "react";
 // Resources
 import '../styles/Lesson.css'
 // Main
-import TranslationQuestion from "./TranslationQuestion"
+import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 
 export default class Lesson extends Component {
     constructor(props) {
@@ -37,12 +37,12 @@ export default class Lesson extends Component {
     renderLoaded() {
         let capitalise = (s => s[0].toUpperCase() + s.substring(1))
         let capitalisedCourseName = capitalise(this.courseName)
-        let q = {type: 0, given: "hello", answer: "გამარჯობა"}
+        let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
         return [
             <header className="Lesson-header" key="header">
                 <h1 className="Lesson-title">{capitalisedCourseName}: {this.state.lessonName}</h1>,
             </header>,
-            <TranslationQuestion q={q} key="question"/>
+            <MultipleChoiceQuestion q={q} key="question"/>
         ]
     }
 
