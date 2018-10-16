@@ -13,13 +13,6 @@ export default class MultipleChoiceQuestion extends Component {
     }
 
     render() {
-        let choiceValues = {
-            a: this.props.q.a,
-            b: this.props.q.b,
-            c: this.props.q.c,
-            d: this.props.q.d,
-        }
-
         let MultipleChoiceCheckBox = (whichChoice) => {
             return [
                 <input id={"choicebox-" + whichChoice}
@@ -29,7 +22,7 @@ export default class MultipleChoiceQuestion extends Component {
                        onChange={() => {
                            this.setState({activeChoice: whichChoice})
                        }}/>,
-                <span id={"choice-" + whichChoice} key="choiceValue">{choiceValues[whichChoice]}</span>
+                <span id={"choice-" + whichChoice} key="choiceValue">{this.props.q[whichChoice]}</span>
             ]
         }
 
