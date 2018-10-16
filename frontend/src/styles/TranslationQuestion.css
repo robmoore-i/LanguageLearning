@@ -1,0 +1,27 @@
+#question-title {
+    font-size: 2em;
+}
+
+#question-title-instruction {
+    display: inline;
+    padding: 7px 25px;
+}
+
+#question-title-given {
+    display: inline;
+    border-radius: 10px;
+    background: #abad5f;
+    padding: 7px 25px;
+}
+
+.question-result {
+    width: 30px;
+    height: 30px;
+    padding: 0 10px;
+}
+
+#answer-input-textbox {
+}
+
+#submit-for-marking-button {
+}

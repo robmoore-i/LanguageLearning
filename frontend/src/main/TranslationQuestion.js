@@ -28,11 +28,15 @@ export default class TranslationQuestion extends Component {
 
     render() {
         return [
-            <h1 id="question-title-instruction" key="question-title-instruction">Translate</h1>,
-            <h1 id="question-title-given" key="question-title-given">{this.props.q.given}</h1>,
-            <div key="question-result-mark" id={this.state.markResult.id}>
-                <img src={this.state.markResult.img} alt="mark-result-status" width="100" height="100" />
+            <br />,
+            <div id="question-title" key="question-title">
+                <span id="question-title-instruction">What is the translation of</span>
+                <span id="question-title-given">{this.props.q.given}</span>
+                <span id={this.state.markResult.id}>
+                    <img src={this.state.markResult.img} className="question-result" alt="mark-result-status" />
+                </span>
             </div>,
+            <br />,
             <input id="answer-input-textbox" key="answer-input-textbox" type="text"
                    onChange={(event) => {
                        this.setState({currentAnswer: event.target.value})
