@@ -41,13 +41,15 @@ export default class TranslationQuestion extends Component {
                    onChange={(event) => {
                        this.setState({currentAnswer: event.target.value})
                     }}/>,
-            <br key="textarea--break--submit-button"/>,
-            <button id="submit-for-marking-button" key="submit-for-marking-button"
+            <div key="textarea--break--submit-button">
+                <br />
+            </div>,
+            <a id="submit-for-marking-button" key="submit-for-marking-button"
                     onClick={() => {
                         this.setState({markResult: this.markAnswer(this.state.currentAnswer)})
                     }}>
                 Mark
-            </button>
+            </a>
         ]
     }
 }
