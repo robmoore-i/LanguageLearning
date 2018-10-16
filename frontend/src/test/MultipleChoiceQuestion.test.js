@@ -20,10 +20,10 @@ it('Shows the four choices', () => {
     let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testMCQ = shallow(<MultipleChoiceQuestion q={q} />)
 
-    expect(testMCQ.find("#choice-a").text()).toBe("ა")
-    expect(testMCQ.find("#choice-b").text()).toBe("ო")
-    expect(testMCQ.find("#choice-c").text()).toBe("უ")
-    expect(testMCQ.find("#choice-d").text()).toBe("ი")
+    expect(testMCQ.find("#choiceValue-a").text()).toBe("ა")
+    expect(testMCQ.find("#choiceValue-b").text()).toBe("ო")
+    expect(testMCQ.find("#choiceValue-c").text()).toBe("უ")
+    expect(testMCQ.find("#choiceValue-d").text()).toBe("ი")
 })
 
 it('Can select a choice', () => {

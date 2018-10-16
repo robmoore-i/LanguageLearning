@@ -12,16 +12,16 @@ export default class MultipleChoiceQuestion extends Component {
         }
     }
 
-    MultipleChoiceCheckBox(whichChoice) {
+    MultipleChoiceCheckBox(choice) {
         return [
-            <input id={"choicebox-" + whichChoice}
+            <input id={"choicebox-" + choice}
                    type="radio"
                    key="checkbox"
-                   checked={this.state.activeChoice === whichChoice}
+                   checked={this.state.activeChoice === choice}
                    onChange={() => {
-                       this.setState({activeChoice: whichChoice})
+                       this.setState({activeChoice: choice})
                    }}/>,
-            <span id={"choice-" + whichChoice} key="choiceValue">{this.props.q[whichChoice]}</span>
+            <span id={"choiceValue-" + choice} key="choiceValue">{this.props.q[choice]}</span>
         ]
     }
 
