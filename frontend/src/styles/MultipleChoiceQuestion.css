@@ -8,6 +8,16 @@
     padding: 0 10px;
 }
 
+#question {
+    padding: 7px 5px;
+}
+
+.choice {
+    display: inline;
+    padding: 5px 15px;
+    font-size: 1.5em;
+}
+
 #submit-for-marking-button {
     font-size: 24px;
     color: black;
