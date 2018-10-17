@@ -12,10 +12,46 @@
     padding: 7px 5px;
 }
 
-.choice {
+.choice-unchecked {
     display: inline;
     padding: 5px 15px;
     font-size: 1.5em;
+    width: 0.875em;
+    height: 0.875em;
+    margin: 0.25em 0.5em 0.25em 0.25em;
+    border-radius: 0.25em;
+
+    border: 0.0625em solid rgb(192, 192, 192);
+    background: rgb(224, 224, 224);
+    background-image: -moz-linear-gradient(rgb(240, 240, 240), rgb(224, 224, 224));
+    background-image: -ms-linear-gradient(rgb(240, 240, 240), rgb(224, 224, 224));
+    background-image: -o-linear-gradient(rgb(240, 240, 240), rgb(224, 224, 224));
+    background-image: -webkit-linear-gradient(rgb(240, 240, 240), rgb(224, 224, 224));
+    background-image: linear-gradient(rgb(240, 240, 240), rgb(224, 224, 224));
+    vertical-align: bottom;
+}
+.choice-checked {
+    display: inline;
+    padding: 5px 15px;
+    font-size: 1.5em;
+    width: 0.875em;
+    height: 0.875em;
+    margin: 0.25em 0.5em 0.25em 0.25em;
+    border-radius: 0.25em;
+
+    border: 0.0625em solid rgb(115, 153, 77);
+    background: rgb(153, 204, 102);
+    background-image: -moz-linear-gradient(rgb(179, 217, 140), rgb(153, 204, 102));
+    background-image: -ms-linear-gradient(rgb(179, 217, 140), rgb(153, 204, 102));
+    background-image: -o-linear-gradient(rgb(179, 217, 140), rgb(153, 204, 102));
+    background-image: -webkit-linear-gradient(rgb(179, 217, 140), rgb(153, 204, 102));
+    background-image: linear-gradient(rgb(179, 217, 140), rgb(153, 204, 102));
+}
+.choice:hover {
+    cursor: pointer;
+}
+.choice > input:hover {
+    cursor: pointer;
 }
 
 #submit-for-marking-button {

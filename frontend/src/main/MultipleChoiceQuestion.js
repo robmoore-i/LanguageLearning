@@ -16,15 +16,19 @@ export default class MultipleChoiceQuestion extends Component {
     }
 
     MultipleChoiceCheckBox(choice) {
+        let checked = this.state.activeChoice === choice
+        let className = checked ? "choice-checked" : "choice-unchecked"
         return (
-            <div className="choice">
+            <div id={"choice-" + choice}
+                 className={"choice " + className}
+                 onClick={() => {
+                     this.setState({activeChoice: choice})
+                 }}>
                 <input id={"choicebox-" + choice}
                        type="radio"
                        key="checkbox"
-                       checked={this.state.activeChoice === choice}
-                       onChange={() => {
-                           this.setState({activeChoice: choice})
-                       }}/>
+                       checked={checked}
+                       onChange={() => {} /* This removes a warning about having a `checked` prop without an `onChange` handler.*/}/>
                 <span id={"choiceValue-" + choice} key="choiceValue">{this.props.q[choice]}</span>
             </div>
         )
