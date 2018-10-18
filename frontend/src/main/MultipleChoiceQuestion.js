@@ -46,7 +46,7 @@ export default class MultipleChoiceQuestion extends Component {
 
     submitForMarkingButton() {
         return (
-            <a id="submit-for-marking-button" key="submit-for-marking-button"
+            <a id="submit-for-marking-button" className="mcq-button" key="submit-for-marking-button"
                onClick={() => {
                    this.setState({markResult: this.mark(this.state.activeChoice)})
                }}>
@@ -57,7 +57,7 @@ export default class MultipleChoiceQuestion extends Component {
 
     continueButton() {
         return (
-            <a id="continue-button" key="continue-button"
+            <a id="continue-button" className="mcq-button" key="continue-button"
                onClick={() => {
 
                }}>
