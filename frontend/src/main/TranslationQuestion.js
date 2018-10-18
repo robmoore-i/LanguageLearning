@@ -1,9 +1,11 @@
 // React
-import React, {Component} from "react";
+import React, {Component} from "react"
 // Resources
+import '../styles/Question.css'
 import '../styles/TranslationQuestion.css'
 // Main
 import Mark from "./Mark"
+import {submitForMarkingButton, continueButton} from "./Question"
 
 export default class TranslationQuestion extends Component {
     constructor(props) {
@@ -26,25 +28,14 @@ export default class TranslationQuestion extends Component {
     }
 
     submitForMarkingButton() {
-        return (
-            <a id="submit-for-marking-button" className="tq-button" key="submit-for-marking-button"
-               onClick={() => {
-                   this.setState({markResult: this.mark(this.state.currentAnswer)})
-               }}>
-                Mark
-            </a>
-        )
+        const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
+        const markResult = this.mark(this.state.currentAnswer)
+        let onClick = () => {setState({markResult: markResult})}
+        return submitForMarkingButton(onClick)
     }
 
     continueButton() {
-        return (
-            <a id="continue-button" className="tq-button" key="continue-button"
-               onClick={() => {
-                   this.props.completionListener()
-               }}>
-                Continue
-            </a>
-        )
+        return continueButton(this.props.completionListener)
     }
 
     button() {

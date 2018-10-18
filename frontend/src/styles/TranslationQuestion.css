@@ -28,20 +28,3 @@
     border-style: groove;
     background-color: aliceblue;
 }
-
-.tq-button {
-    font-size: 24px;
-    color: black;
-    background-color: #4ecf43;
-    opacity: 0.9;
-    padding: 14px 25px;
-    border-radius: 10px;
-    transition-timing-function: ease-out;
-    transition-property: background-color;
-    transition-duration: 0.2s;
-    transition-delay: 0s;
-}
-.tq-button:hover {
-    background-color: #52fb26;
-    cursor: pointer;
-}
