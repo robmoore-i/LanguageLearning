@@ -14,7 +14,7 @@ export default class Lesson extends Component {
         this.courseName = this.props.courseName
 
         let tq = {type: 0, given: "hello", answer: "გამარჯობა"}
-        let TQ = <TranslationQuestion q={tq} key="question"/>
+        let TQ = <TranslationQuestion q={tq} key="question" completionListener={this.questionCompleted()}/>
 
         let mcq = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
         let MCQ = <MultipleChoiceQuestion q={mcq} key="question" completionListener={this.questionCompleted()} />
@@ -48,7 +48,13 @@ export default class Lesson extends Component {
     }
 
     currentQuestion() {
-        return this.questions[this.state.currentQuestionIndex]
+        if (this.state.currentQuestionIndex > 1) {
+            return (
+                <div>Ya Dun m8</div>
+            )
+        } else {
+            return this.questions[this.state.currentQuestionIndex]
+        }
     }
 
     renderLoading() {

@@ -29,7 +29,7 @@
     background-color: aliceblue;
 }
 
-#submit-for-marking-button {
+.tq-button {
     font-size: 24px;
     color: black;
     background-color: #4ecf43;
@@ -41,7 +41,7 @@
     transition-duration: 0.2s;
     transition-delay: 0s;
 }
-#submit-for-marking-button:hover {
+.tq-button:hover {
     background-color: #52fb26;
     cursor: pointer;
 }
