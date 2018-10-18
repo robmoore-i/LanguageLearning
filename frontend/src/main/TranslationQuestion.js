@@ -34,15 +34,11 @@ export default class TranslationQuestion extends Component {
         return submitForMarkingButton(onClick)
     }
 
-    continueButton() {
-        return continueButton(this.props.completionListener)
-    }
-
     button() {
         if (this.state.markResult === Mark.UNMARKED) {
             return this.submitForMarkingButton()
         } else {
-            return this.continueButton()
+            return continueButton(this.props.completionListener)
         }
     }
 
