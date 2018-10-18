@@ -42,7 +42,7 @@ export default class Lesson extends Component {
             <header className="Lesson-header" key="header">
                 <h1 className="Lesson-title">{capitalisedCourseName}: {this.state.lessonName}</h1>,
             </header>,
-            <MultipleChoiceQuestion q={q} key="question"/>
+            <MultipleChoiceQuestion q={q} key="question" completionListener={() => {}} />
         ]
     }
 

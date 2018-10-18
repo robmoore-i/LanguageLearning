@@ -59,7 +59,7 @@ export default class MultipleChoiceQuestion extends Component {
         return (
             <a id="continue-button" className="mcq-button" key="continue-button"
                onClick={() => {
-
+                   this.props.completionListener()
                }}>
                 Continue
             </a>

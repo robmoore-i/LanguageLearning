@@ -94,3 +94,15 @@ it('Transforms submit button into continue button after correct answer', () => {
     expect(testMCQ.find("#submit-for-marking-button").exists()).toBe(false)
     expect(testMCQ.find("#continue-button").exists()).toBe(true)
 })
+
+it('Calls the question completion listener when question answered correctly', () => {
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let questionCompleted = jest.fn()
+    let testMCQ = mount(<MultipleChoiceQuestion q={q} completionListener={questionCompleted} />)
+
+    testMCQ.find("#choice-d").simulate("click")
+    testMCQ.find("#submit-for-marking-button").simulate("click")
+    testMCQ.find("#continue-button").simulate("click")
+
+    expect(questionCompleted).toHaveBeenCalled()
+})
