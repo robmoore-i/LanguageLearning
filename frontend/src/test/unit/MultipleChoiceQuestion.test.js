@@ -3,9 +3,9 @@ import React from 'react'
 // Testing
 import {mount, shallow} from 'enzyme'
 // Main
-import MultipleChoiceQuestion, {Choices} from '../main/MultipleChoiceQuestion'
+import MultipleChoiceQuestion, {Choices} from '../../main/MultipleChoiceQuestion'
 // Enzyme react-adapter configuration & others
-import {configureAdapter} from "./utils"
+import {configureAdapter} from "../utils"
 
 configureAdapter()
 

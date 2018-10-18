@@ -3,7 +3,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 // Main
-import App from '../main/App'
+import App from '../../main/App'
 
 it('renders without crashing', () => {
     const div = document.createElement('div')

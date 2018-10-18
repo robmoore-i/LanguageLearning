@@ -3,9 +3,9 @@ import React from 'react'
 // Testing
 import {mount, shallow} from 'enzyme'
 // Main
-import TranslationQuestion from '../main/TranslationQuestion'
+import TranslationQuestion from '../../main/TranslationQuestion'
 // Enzyme react-adapter configuration & others
-import {configureAdapter, textBoxInputEvent} from "./utils"
+import {configureAdapter, textBoxInputEvent} from "../utils"
 
 configureAdapter()
 

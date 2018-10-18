@@ -3,9 +3,9 @@ import React from 'react'
 // Testing
 import {shallow} from 'enzyme'
 // Main
-import Lesson from '../main/Lesson'
+import Lesson from '../../main/Lesson'
 // Enzyme react-adapter configuration & others
-import {configureAdapter, sleep} from "./utils"
+import {configureAdapter, sleep} from "../utils"
 
 configureAdapter()
 

@@ -5,10 +5,10 @@ import React from 'react'
 import { shallow } from 'enzyme'
 
 // Main
-import Courses from '../main/Courses'
+import Courses from '../../main/Courses'
 
 // Enzyme react-adapter configuration
-import {configureAdapter} from "./utils"
+import {configureAdapter} from "../utils"
 
 configureAdapter()
 
