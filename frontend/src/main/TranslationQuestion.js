@@ -25,6 +25,36 @@ export default class TranslationQuestion extends Component {
         }
     }
 
+    submitForMarkingButton() {
+        return (
+            <a id="submit-for-marking-button" className="tq-button" key="submit-for-marking-button"
+               onClick={() => {
+                   this.setState({markResult: this.mark(this.state.currentAnswer)})
+               }}>
+                Mark
+            </a>
+        )
+    }
+
+    continueButton() {
+        return (
+            <a id="continue-button" className="tq-button" key="continue-button"
+               onClick={() => {
+                   this.props.completionListener()
+               }}>
+                Continue
+            </a>
+        )
+    }
+
+    button() {
+        if (this.state.markResult === Mark.UNMARKED) {
+            return this.submitForMarkingButton()
+        } else {
+            return this.continueButton()
+        }
+    }
+
     render() {
         return [
             <br key="header--break--question-title"/>,
@@ -43,12 +73,7 @@ export default class TranslationQuestion extends Component {
             <div key="textarea--break--submit-button">
                 <br />
             </div>,
-            <a id="submit-for-marking-button" key="submit-for-marking-button"
-                    onClick={() => {
-                        this.setState({markResult: this.mark(this.state.currentAnswer)})
-                    }}>
-                Mark
-            </a>
+            this.button()
         ]
     }
 }

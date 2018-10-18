@@ -56,3 +56,30 @@ it('Wont mark an empty string as an answer', () => {
     expect(testTQ.find("#question-result-correct").exists()).toBe(false)
     expect(testTQ.find("#question-result-unmarked").exists()).toBe(true)
 })
+
+it('Transforms submit button into continue button after correct answer', () => {
+    let correctAnswer = "გამარჯობა"
+
+    let q = {type: 0, given: "hello", answer: correctAnswer}
+    let testTQ = mount(<TranslationQuestion q={q} />)
+
+    testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
+    testTQ.find("#submit-for-marking-button").simulate("click")
+
+    expect(testTQ.find("#submit-for-marking-button").exists()).toBe(false)
+    expect(testTQ.find("#continue-button").exists()).toBe(true)
+})
+
+it('Calls the question completion listener when question answered correctly', () => {
+    let correctAnswer = "გამარჯობა"
+
+    let questionCompleted = jest.fn()
+    let q = {type: 0, given: "hello", answer: correctAnswer}
+    let testTQ = mount(<TranslationQuestion q={q} completionListener={questionCompleted} />)
+
+    testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
+    testTQ.find("#submit-for-marking-button").simulate("click")
+    testTQ.find("#continue-button").simulate("click")
+
+    expect(questionCompleted).toHaveBeenCalled()
+})
