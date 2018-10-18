@@ -82,3 +82,15 @@ it('Doesnt mark if no answer is given', () => {
     expect(testMCQ.find("#question-result-correct").exists()).toBe(false)
     expect(testMCQ.find("#question-result-unmarked").exists()).toBe(true)
 })
+
+it('Transforms submit button into continue button after correct answer', () => {
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
+
+    testMCQ.find("#choice-d").simulate("click")
+    let markButton = testMCQ.find("#submit-for-marking-button")
+    markButton.simulate("click")
+
+    expect(testMCQ.find("#submit-for-marking-button").exists()).toBe(false)
+    expect(testMCQ.find("#continue-button").exists()).toBe(true)
+})

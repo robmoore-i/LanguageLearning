@@ -44,6 +44,36 @@ export default class MultipleChoiceQuestion extends Component {
         }
     }
 
+    submitForMarkingButton() {
+        return (
+            <a id="submit-for-marking-button" key="submit-for-marking-button"
+               onClick={() => {
+                   this.setState({markResult: this.mark(this.state.activeChoice)})
+               }}>
+                Mark
+            </a>
+        )
+    }
+
+    continueButton() {
+        return (
+            <a id="continue-button" key="continue-button"
+               onClick={() => {
+
+               }}>
+                Continue
+            </a>
+        )
+    }
+
+    button() {
+        if (this.state.markResult === Mark.UNMARKED) {
+            return this.submitForMarkingButton()
+        } else {
+            return this.continueButton()
+        }
+    }
+
     render() {
         return [
             <br key="header--break--question-title"/>,
@@ -64,12 +94,7 @@ export default class MultipleChoiceQuestion extends Component {
                 <br />
                 <br />
             </div>,
-            <a id="submit-for-marking-button" key="submit-for-marking-button"
-               onClick={() => {
-                   this.setState({markResult: this.mark(this.state.activeChoice)})
-               }}>
-                Mark
-            </a>
+            this.button()
         ]
     }
 }
