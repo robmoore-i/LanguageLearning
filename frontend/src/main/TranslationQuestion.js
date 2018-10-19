@@ -30,8 +30,8 @@ export default class TranslationQuestion extends Component {
     submitForMarkingButton() {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
         const markResult = this.mark(this.state.currentAnswer)
-        let onClick = () => {setState({markResult: markResult})}
-        return submitForMarkingButton(onClick)
+        let setMark = () => {setState({markResult: markResult})}
+        return submitForMarkingButton(setMark)
     }
 
     button() {
