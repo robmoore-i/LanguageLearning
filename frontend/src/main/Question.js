@@ -21,3 +21,8 @@ export function continueButton(completionListener) {
         </a>
     )
 }
+
+export const QuestionTypes = {
+    TRANSLATION: 0,
+    MULTIPLE_CHOICE: 1
+}

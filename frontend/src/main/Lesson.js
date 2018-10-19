@@ -5,6 +5,7 @@ import '../styles/Lesson.css'
 // Main
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion"
 import TranslationQuestion from "./TranslationQuestion"
+import {QuestionTypes} from "./Question";
 
 export default class Lesson extends Component {
     constructor(props) {
@@ -42,7 +43,8 @@ export default class Lesson extends Component {
     }
 
     currentQuestion() {
-        if (this.state.currentQuestionIndex > 1) {
+        let maxIndex = this.state.questions.length - 1
+        if (this.state.currentQuestionIndex > maxIndex) {
             return (
                 <div key="ya dun">Ya Dun m8</div>
             )
@@ -52,14 +54,13 @@ export default class Lesson extends Component {
     }
 
     renderQuestion(q) {
-        if (q.type === 0) {
-            return <TranslationQuestion q={q} key="question" completionListener={this.questionCompleted()}/>
-        } else if (q.type === 1) {
-            return <MultipleChoiceQuestion q={q} key="question" completionListener={this.questionCompleted()} />
-        } else {
-            return (
-                <div>Can't render that question pal</div>
-            )
+        switch (q.type) {
+            case QuestionTypes.TRANSLATION:
+                return <TranslationQuestion q={q} key="question" completionListener={this.questionCompleted()}/>
+            case QuestionTypes.MULTIPLE_CHOICE:
+                return <MultipleChoiceQuestion q={q} key="question" completionListener={this.questionCompleted()} />
+            default:
+                return <div key="sorry pal">Can't render that question pal</div>
         }
     }
 
