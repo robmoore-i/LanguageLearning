@@ -17,7 +17,7 @@ export function continueButton(completionListener) {
     return (
         <a id="continue-button" className="mark-continue-button" key="continue-button"
            onClick={completionListener}>
-            Continue
+           Continue
         </a>
     )
 }
