@@ -38,7 +38,7 @@ async function shallowRenderLesson(course, lessonNameInUrl, server) {
 
 it('shows the lesson name from the lesson data', async () => {
     // Given: I am on the lesson map page for the Japanese lesson called hello
-    let testServer = mockServer({name: "Hello!"})
+    let testServer = mockServer({name: "Hello!", questions: [{type: -1}]})
     let testLesson = await shallowRenderLesson("japanese", "hello", testServer)
 
     // When: I look at the title

@@ -13,18 +13,11 @@ export default class Lesson extends Component {
         this.server = this.props.server
         this.courseName = this.props.courseName
 
-        let tq = {type: 0, given: "hello", answer: "გამარჯობა"}
-        let TQ = <TranslationQuestion q={tq} key="question" completionListener={this.questionCompleted()}/>
-
-        let mcq = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
-        let MCQ = <MultipleChoiceQuestion q={mcq} key="question" completionListener={this.questionCompleted()} />
-
-        this.questions = [MCQ, TQ]
-
         this.state = {
             lessonName: this.props.lessonNameInUrl, // Placeholder until server response.
             loaded: false,
-            currentQuestionIndex: 0
+            currentQuestionIndex: 0,
+            questions: []
         }
     }
 
@@ -33,6 +26,7 @@ export default class Lesson extends Component {
         this.server.fetchLesson(this.props.lessonNameInUrl).then(lesson => {
             setState({
                 lessonName: lesson.name,
+                questions: lesson.questions,
                 loaded: true
             })
         })
@@ -50,10 +44,22 @@ export default class Lesson extends Component {
     currentQuestion() {
         if (this.state.currentQuestionIndex > 1) {
             return (
-                <div>Ya Dun m8</div>
+                <div key="ya dun">Ya Dun m8</div>
             )
         } else {
-            return this.questions[this.state.currentQuestionIndex]
+            return this.renderQuestion(this.state.questions[this.state.currentQuestionIndex])
+        }
+    }
+
+    renderQuestion(q) {
+        if (q.type === 0) {
+            return <TranslationQuestion q={q} key="question" completionListener={this.questionCompleted()}/>
+        } else if (q.type === 1) {
+            return <MultipleChoiceQuestion q={q} key="question" completionListener={this.questionCompleted()} />
+        } else {
+            return (
+                <div>Can't render that question pal</div>
+            )
         }
     }
 
