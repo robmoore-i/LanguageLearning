@@ -45,9 +45,7 @@ export default class Lesson extends Component {
     currentQuestion() {
         let maxIndex = this.state.questions.length - 1
         if (this.state.currentQuestionIndex > maxIndex) {
-            return (
-                <div key="ya dun">Ya Dun m8</div>
-            )
+            return <div key="ya dun">Ya Dun m8</div>
         } else {
             return this.renderQuestion(this.state.questions[this.state.currentQuestionIndex])
         }
