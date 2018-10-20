@@ -150,3 +150,16 @@ it('Disables typing into the text area once the correction is typed out', () => 
 
     expect(testTQ.find("#answer-input-textbox").prop("readOnly")).toEqual(true)
 })
+
+it('Disables typing into the text area if a correct answer is marked', () => {
+    let correctAnswer = "გამარჯობა"
+
+    let questionCompleted = jest.fn()
+    let q = {type: 0, given: "hello", answer: correctAnswer}
+    let testTQ = mount(<TranslationQuestion q={q} completionListener={questionCompleted}/>)
+
+    testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
+    testTQ.find("#submit-for-marking-button").simulate("click")
+
+    expect(testTQ.find("#answer-input-textbox").prop("readOnly")).toEqual(true)
+})
