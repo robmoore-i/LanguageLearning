@@ -13,7 +13,7 @@ mcq:{[question;a;b;c;d;answer]`type`question`a`b`c`d`answer!(1;question;a;b;c;d;
 letterSoundsLikeiMCQ:mcq["sounds like \"i\" in English";"ა";"ო";"უ";"ი";"d"]
 
 // Lesson
-helloLesson:`name`questions!("hello";(letterSoundsLikeiMCQ;helloTQ))
+helloLesson:`name`questions!("hello";(helloTQ;letterSoundsLikeiMCQ))
 
 .get.serve["/lesson/:lessonName";
     .res.ok {[req]
