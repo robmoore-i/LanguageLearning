@@ -14,3 +14,12 @@
     background-color: #52fb26;
     cursor: pointer;
 }
+
+.mark-continue-button-disabled {
+    font-size: 24px;
+    color: black;
+    background-color: #cfbfcd;
+    opacity: 0.9;
+    padding: 14px 25px;
+    border-radius: 10px;
+}
