@@ -64,11 +64,13 @@ export default class TranslationQuestion extends Component {
         let prompt = null
         if (this.state.correctionPrompt) {
             prompt = [
+                <div key="question-title--break--correction-prompt">
+                    <br />
+                </div>,
                 <div key="correction-prompt">
                     <span id="correction-prompt">Type out the correct answer</span>
                     <span id="correction-answer">{this.props.q.answer}</span>
-                </div>,
-                <br key="correction-prompt--break--question-title" />
+                </div>
             ]
         }
         return (
