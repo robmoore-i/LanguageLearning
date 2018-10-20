@@ -136,3 +136,17 @@ it('Enables the previously disabled continue button when the correction is typed
 
     expect(testTQ.find("#continue-button").is(".mark-continue-button")).toEqual(true)
 })
+
+it('Disables typing into the text area once the correction is typed out', () => {
+    let correctAnswer = "გამარჯობა"
+
+    let questionCompleted = jest.fn()
+    let q = {type: 0, given: "hello", answer: correctAnswer}
+    let testTQ = mount(<TranslationQuestion q={q} completionListener={questionCompleted}/>)
+
+    testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
+    testTQ.find("#submit-for-marking-button").simulate("click")
+    testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
+
+    expect(testTQ.find("#answer-input-textbox").prop("readOnly")).toEqual(true)
+})

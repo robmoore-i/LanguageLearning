@@ -100,8 +100,9 @@ export default class TranslationQuestion extends Component {
         } else {
             onChange = (event) => {this.setState({currentAnswer: event.target.value})}
         }
+        let readOnly = this.state.corrected
         return (
-            <textarea id="answer-input-textbox" rows="5" cols="50" key="answer-input-textbox"
+            <textarea id="answer-input-textbox" rows="5" cols="50" readOnly={readOnly} key="answer-input-textbox"
                       onChange={onChange}/>
         )
     }
