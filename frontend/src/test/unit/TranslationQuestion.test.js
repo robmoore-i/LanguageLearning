@@ -123,7 +123,7 @@ it('Doesnt call the completion listener when disabled continue button is clicked
     expect(questionCompleted).toHaveBeenCalledTimes(0)
 })
 
-it('Disabled continue button becomes enabled when the correction is typed out', () => {
+it('Enables the previously disabled continue button when the correction is typed out', () => {
     let correctAnswer = "გამარჯობა"
 
     let questionCompleted = jest.fn()
