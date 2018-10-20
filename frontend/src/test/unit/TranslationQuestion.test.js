@@ -84,11 +84,9 @@ it('Calls the question completion listener when question answered correctly', ()
     expect(questionCompleted).toHaveBeenCalled()
 })
 
-it('Continue button is disabled until correction is provided when question answered incorrectly', () => {
-    let correctAnswer = "გამარჯობა"
-
+it('Disables continue button when question answered incorrectly', () => {
     let questionCompleted = jest.fn()
-    let q = {type: 0, given: "hello", answer: correctAnswer}
+    let q = {type: 0, given: "hello", answer: "გამარჯობა"}
     let testTQ = mount(<TranslationQuestion q={q} completionListener={questionCompleted} />)
 
     testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
@@ -96,4 +94,18 @@ it('Continue button is disabled until correction is provided when question answe
 
     expect(testTQ.find("#continue-button").is(".mark-continue-button-disabled")).toEqual(true)
     expect(testTQ.find("#continue-button").is(".mark-continue-button")).toEqual(false)
+})
+
+it('Prompts for correction when question answered incorrectly', () => {
+    let correctAnswer = "გამარჯობა"
+
+    let questionCompleted = jest.fn()
+    let q = {type: 0, given: "hello", answer: correctAnswer}
+    let testTQ = mount(<TranslationQuestion q={q} completionListener={questionCompleted}/>)
+
+    testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
+    testTQ.find("#submit-for-marking-button").simulate("click")
+
+    expect(testTQ.find("#correction-prompt").text()).toEqual("Type out the correct answer")
+    expect(testTQ.find("#correction-answer").text()).toEqual(correctAnswer)
 })
