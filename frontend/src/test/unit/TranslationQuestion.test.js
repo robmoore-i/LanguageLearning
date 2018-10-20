@@ -70,7 +70,7 @@ it('Transforms submit button into continue button after correct answer', () => {
     expect(testTQ.find("#continue-button").exists()).toBe(true)
 })
 
-it('Calls the question completion listener when question answered correctly', () => {
+it('Calls the question completion listener after clicking continue when question answered correctly', () => {
     let correctAnswer = "გამარჯობა"
 
     let questionCompleted = jest.fn()

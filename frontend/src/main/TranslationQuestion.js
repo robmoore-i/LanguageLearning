@@ -12,99 +12,9 @@ export default class TranslationQuestion extends Component {
         super(props)
 
         this.state = {
-            markResult: Mark.UNMARKED,
             currentAnswer: "",
-            correctionPrompt: false,
-            corrected: false
+            transitionState: TransitionState.UNMARKED
         }
-    }
-
-    mark(answer) {
-        if (answer === "") {
-            return Mark.UNMARKED
-        } else if (answer === this.props.q.answer) {
-            return Mark.CORRECT
-        } else {
-            return Mark.INCORRECT
-        }
-    }
-
-    submitForMarkingButton() {
-        const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
-        const markResult = this.mark(this.state.currentAnswer)
-
-        // Issue
-        // It is inefficient to be re-rendering the submitForMarkingButton everytime the currentAnswer changes
-        let setMark
-        if (markResult === Mark.CORRECT) {
-            setMark = () => {setState({markResult: Mark.CORRECT})}
-        } else if (markResult === Mark.INCORRECT) {
-            setMark = () => {
-                setState({
-                    markResult: Mark.INCORRECT,
-                    correctionPrompt: true
-                })
-            }
-        }
-
-        return submitForMarkingButton(setMark)
-    }
-
-    button() {
-        if (this.state.markResult === Mark.UNMARKED) {
-            return this.submitForMarkingButton()
-        } else if (this.state.markResult === Mark.CORRECT || this.state.corrected) {
-            return continueButton(this.props.completionListener, true)
-        } else {
-            return continueButton(() => {}, false)
-        }
-    }
-
-    correctionPrompt() {
-        return [
-            <div key="question-title--break--correction-prompt">
-                <br />
-            </div>,
-            <div key="correction-prompt">
-                <span id="correction-prompt">Type out the correct answer</span>
-                <span id="correction-answer">{this.props.q.answer}</span>
-            </div>
-        ]
-    }
-
-    questionHeader() {
-        let prompt = this.state.correctionPrompt ? this.correctionPrompt() : null
-        return (
-            <div id="question-header" key="question-header">
-                <span id="question-instruction">What is the translation of</span>
-                <span id="question-given">{this.props.q.given}</span>
-                <span id={this.state.markResult.id}>
-                    <img src={this.state.markResult.img} className="question-result" alt="mark-result-status" />
-                </span>
-                {prompt}
-            </div>
-        )
-    }
-
-    answerInputTextBox() {
-        let onChange
-        if (this.state.correctionPrompt) {
-            onChange = (event) => {
-                if (event.target.value === this.props.q.answer) {
-                    this.setState({
-                        currentAnswer: event.target.value,
-                        corrected: true
-                    })
-                }
-            }
-        } else {
-            onChange = (event) => {this.setState({currentAnswer: event.target.value})}
-        }
-        let readOnly = this.state.corrected || this.state.markResult === Mark.CORRECT
-        return (
-            <textarea id="answer-input-textbox" rows="5" cols="50" readOnly={readOnly} key="answer-input-textbox"
-                      onChange={onChange}/>
-        )
     }
 
     render() {
@@ -124,4 +34,111 @@ export default class TranslationQuestion extends Component {
             this.button()
         ]
     }
+
+    questionHeader() {
+        let prompt = this.inCorrectingState() ? this.correctionPrompt() : null
+        return (
+            <div id="question-header" key="question-header">
+                <span id="question-instruction">What is the translation of</span>
+                <span id="question-given">{this.props.q.given}</span>
+                <span id={this.markResult().id}>
+                    <img src={this.markResult().img} className="question-result" alt="mark-result-status" />
+                </span>
+                {prompt}
+            </div>
+        )
+    }
+
+    inCorrectingState() {
+        let correctingStates = [TransitionState.INCORRECT, TransitionState.CORRECTED]
+        return correctingStates.includes(this.state.transitionState)
+    }
+
+    correctionPrompt() {
+        return [
+            <div key="question-title--break--correction-prompt">
+                <br />
+            </div>,
+            <div key="correction-prompt">
+                <span id="correction-prompt">Type out the correct answer</span>
+                <span id="correction-answer">{this.props.q.answer}</span>
+            </div>
+        ]
+    }
+
+    markResult() {
+        let numStates = Object.keys(TransitionState).length
+        let mapping = Array(numStates)
+
+        mapping[TransitionState.UNMARKED]  = Mark.UNMARKED
+        mapping[TransitionState.CORRECT]   = Mark.CORRECT
+        mapping[TransitionState.INCORRECT] = Mark.INCORRECT
+        mapping[TransitionState.CORRECTED] = Mark.INCORRECT
+
+        return mapping[this.state.transitionState]
+    }
+
+    answerInputTextBox() {
+        let onChange
+        if (this.inCorrectingState()) {
+            onChange = (event) => {
+                if (event.target.value === this.props.q.answer) {
+                    this.setState({transitionState: TransitionState.CORRECTED})
+                }
+            }
+        } else {
+            onChange = (event) => {this.setState({currentAnswer: event.target.value})}
+        }
+        return (
+            <textarea id="answer-input-textbox" rows="5" cols="50" readOnly={this.inDoneState()} key="answer-input-textbox"
+                      onChange={onChange}/>
+        )
+    }
+
+    inDoneState() {
+        let doneStates = [TransitionState.CORRECT, TransitionState.CORRECTED]
+        return doneStates.includes(this.state.transitionState)
+    }
+
+    mark(answer) {
+        if (answer === "") {
+            return Mark.UNMARKED
+        } else if (answer === this.props.q.answer) {
+            return Mark.CORRECT
+        } else {
+            return Mark.INCORRECT
+        }
+    }
+
+    button() {
+        if (this.state.transitionState === TransitionState.UNMARKED) {
+            return this.submitForMarkingButton()
+        } else if (this.inDoneState()) {
+            return continueButton(this.props.completionListener, true)
+        } else {
+            return continueButton(() => {}, false) // disabled continue button
+        }
+    }
+
+    submitForMarkingButton() {
+        const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
+
+        // Issue
+        // It is inefficient to be re-rendering the submitForMarkingButton everytime the currentAnswer changes
+        switch (this.mark(this.state.currentAnswer)) {
+            case Mark.CORRECT:
+                return submitForMarkingButton(() => {setState({transitionState: TransitionState.CORRECT})})
+            case Mark.INCORRECT:
+                return submitForMarkingButton(() => {setState({transitionState: TransitionState.INCORRECT})})
+            default:
+                return submitForMarkingButton(() => {})
+        }
+    }
+}
+
+const TransitionState = {
+    UNMARKED: 0,
+    CORRECT: 1,
+    INCORRECT: 3,
+    CORRECTED: 4
 }
