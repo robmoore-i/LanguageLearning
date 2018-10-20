@@ -93,7 +93,6 @@ it('Disables continue button when question answered incorrectly', () => {
     testTQ.find("#submit-for-marking-button").simulate("click")
 
     expect(testTQ.find("#continue-button").is(".mark-continue-button-disabled")).toEqual(true)
-    expect(testTQ.find("#continue-button").is(".mark-continue-button")).toEqual(false)
 })
 
 it('Prompts for correction when question answered incorrectly', () => {
@@ -122,4 +121,18 @@ it('Doesnt call the completion listener when disabled continue button is clicked
     testTQ.find("#continue-button").simulate("click")
 
     expect(questionCompleted).toHaveBeenCalledTimes(0)
+})
+
+it('Disabled continue button becomes enabled when the correction is typed out', () => {
+    let correctAnswer = "გამარჯობა"
+
+    let questionCompleted = jest.fn()
+    let q = {type: 0, given: "hello", answer: correctAnswer}
+    let testTQ = mount(<TranslationQuestion q={q} completionListener={questionCompleted}/>)
+
+    testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
+    testTQ.find("#submit-for-marking-button").simulate("click")
+    testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
+
+    expect(testTQ.find("#continue-button").is(".mark-continue-button")).toEqual(true)
 })

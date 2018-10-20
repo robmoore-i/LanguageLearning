@@ -14,7 +14,8 @@ export default class TranslationQuestion extends Component {
         this.state = {
             markResult: Mark.UNMARKED,
             currentAnswer: "",
-            correctionPrompt: false
+            correctionPrompt: false,
+            corrected: false
         }
     }
 
@@ -52,7 +53,7 @@ export default class TranslationQuestion extends Component {
     button() {
         if (this.state.markResult === Mark.UNMARKED) {
             return this.submitForMarkingButton()
-        } else if (this.state.markResult === Mark.CORRECT) {
+        } else if (this.state.markResult === Mark.CORRECT || this.state.corrected) {
             return continueButton(this.props.completionListener, true)
         } else {
             return continueButton(() => {}, false)
@@ -82,11 +83,22 @@ export default class TranslationQuestion extends Component {
     }
 
     answerInputTextBox() {
+        let onChange
+        if (this.state.correctionPrompt) {
+            onChange = (event) => {
+                if (event.target.value === this.props.q.answer) {
+                    this.setState({
+                        currentAnswer: event.target.value,
+                        corrected: true
+                    })
+                }
+            }
+        } else {
+            onChange = (event) => {this.setState({currentAnswer: event.target.value})}
+        }
         return (
             <textarea id="answer-input-textbox" rows="5" cols="50" key="answer-input-textbox"
-                      onChange={(event) => {
-                          this.setState({currentAnswer: event.target.value})
-                      }}/>
+                      onChange={onChange}/>
         )
     }
 
