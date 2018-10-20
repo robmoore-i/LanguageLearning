@@ -55,7 +55,7 @@ export default class TranslationQuestion extends Component {
         } else if (this.state.markResult === Mark.CORRECT) {
             return continueButton(this.props.completionListener, true)
         } else {
-            return continueButton(this.props.completionListener, false)
+            return continueButton(() => {}, false)
         }
     }
 

@@ -109,3 +109,17 @@ it('Prompts for correction when question answered incorrectly', () => {
     expect(testTQ.find("#correction-prompt").text()).toEqual("Type out the correct answer")
     expect(testTQ.find("#correction-answer").text()).toEqual(correctAnswer)
 })
+
+it('Doesnt call the completion listener when disabled continue button is clicked', () => {
+    let correctAnswer = "გამარჯობა"
+
+    let questionCompleted = jest.fn()
+    let q = {type: 0, given: "hello", answer: correctAnswer}
+    let testTQ = mount(<TranslationQuestion q={q} completionListener={questionCompleted}/>)
+
+    testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
+    testTQ.find("#submit-for-marking-button").simulate("click")
+    testTQ.find("#continue-button").simulate("click")
+
+    expect(questionCompleted).toHaveBeenCalledTimes(0)
+})
