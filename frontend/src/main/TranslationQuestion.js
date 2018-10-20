@@ -60,20 +60,21 @@ export default class TranslationQuestion extends Component {
         }
     }
 
-    questionTitle() {
+    questionHeader() {
         let prompt = null
         if (this.state.correctionPrompt) {
-            prompt = (
-                <div>
+            prompt = [
+                <div key="correction-prompt">
                     <span id="correction-prompt">Type out the correct answer</span>
                     <span id="correction-answer">{this.props.q.answer}</span>
-                </div>
-            )
+                </div>,
+                <br key="correction-prompt--break--question-title" />
+            ]
         }
         return (
-            <div id="question-title" key="question-title">
-                <span id="question-title-instruction">What is the translation of</span>
-                <span id="question-title-given">{this.props.q.given}</span>
+            <div id="question-header" key="question-header">
+                <span id="question-instruction">What is the translation of</span>
+                <span id="question-given">{this.props.q.given}</span>
                 <span id={this.state.markResult.id}>
                     <img src={this.state.markResult.img} className="question-result" alt="mark-result-status" />
                 </span>
@@ -104,9 +105,9 @@ export default class TranslationQuestion extends Component {
 
     render() {
         return [
-            <br key="header--break--question-title"/>,
+            <br key="lesson-header--break--question-title"/>,
 
-            this.questionTitle(),
+            this.questionHeader(),
 
             <br key="question-title--break--textarea"/>,
 

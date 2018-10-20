@@ -13,8 +13,8 @@ it('Shows the question of a translation question', () => {
     let q = {type: 0, given: "hello", answer: "გამარჯობა"}
     let testTQ = shallow(<TranslationQuestion q={q} />)
 
-    expect(testTQ.find("#question-title-instruction").text()).toBe("What is the translation of")
-    expect(testTQ.find("#question-title-given").text()).toBe("hello")
+    expect(testTQ.find("#question-instruction").text()).toBe("What is the translation of")
+    expect(testTQ.find("#question-given").text()).toBe("hello")
 })
 
 it('Marks a correct answer as correct', () => {

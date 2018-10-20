@@ -1,13 +1,13 @@
-#question-title {
+#question-header {
     font-size: 2em;
 }
 
-#question-title-instruction {
+#question-instruction {
     display: inline;
     padding: 7px 25px;
 }
 
-#question-title-given {
+#question-given {
     display: inline;
     border-radius: 10px;
     background: #abad5f;
@@ -27,4 +27,16 @@
     border-radius: 10px;
     border-style: groove;
     background-color: aliceblue;
+}
+
+#correction-prompt {
+    display: inline;
+    padding: 7px 25px;
+}
+
+#correction-answer {
+    display: inline;
+    border-radius: 10px;
+    background: #313dad;
+    padding: 7px 25px;
 }
