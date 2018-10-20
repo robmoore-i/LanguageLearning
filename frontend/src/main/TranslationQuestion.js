@@ -5,7 +5,7 @@ import '../styles/Question.css'
 import '../styles/TranslationQuestion.css'
 // Main
 import Mark from "./Mark"
-import {submitForMarkingButton, continueButton} from "./Question"
+import {submitForMarkingButton, continueButton, disabledContinueButton} from "./Question"
 
 export default class TranslationQuestion extends Component {
     constructor(props) {
@@ -100,23 +100,13 @@ export default class TranslationQuestion extends Component {
         return doneStates.includes(this.state.transitionState)
     }
 
-    mark(answer) {
-        if (answer === "") {
-            return Mark.UNMARKED
-        } else if (answer === this.props.q.answer) {
-            return Mark.CORRECT
-        } else {
-            return Mark.INCORRECT
-        }
-    }
-
     button() {
         if (this.state.transitionState === TransitionState.UNMARKED) {
             return this.submitForMarkingButton()
         } else if (this.inDoneState()) {
-            return continueButton(this.props.completionListener, true)
+            return continueButton(this.props.completionListener)
         } else {
-            return continueButton(() => {}, false) // disabled continue button
+            return disabledContinueButton
         }
     }
 
@@ -132,6 +122,16 @@ export default class TranslationQuestion extends Component {
                 return submitForMarkingButton(() => {setState({transitionState: TransitionState.INCORRECT})})
             default:
                 return submitForMarkingButton(() => {})
+        }
+    }
+
+    mark(answer) {
+        if (answer === "") {
+            return Mark.UNMARKED
+        } else if (answer === this.props.q.answer) {
+            return Mark.CORRECT
+        } else {
+            return Mark.INCORRECT
         }
     }
 }

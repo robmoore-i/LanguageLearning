@@ -13,7 +13,7 @@ export function submitForMarkingButton(setMark) {
     )
 }
 
-export function continueButton(completionListener, enabled) {
+function _continueButton(completionListener, enabled) {
     let className = enabled ? "mark-continue-button" : "mark-continue-button-disabled"
     return (
         <a id="continue-button" className={className} key="continue-button"
@@ -22,6 +22,12 @@ export function continueButton(completionListener, enabled) {
         </a>
     )
 }
+
+export function continueButton(completionListener) {
+    return _continueButton(completionListener, true)
+}
+
+export const disabledContinueButton = _continueButton(() => {}, false)
 
 export const QuestionTypes = {
     TRANSLATION: 0,
