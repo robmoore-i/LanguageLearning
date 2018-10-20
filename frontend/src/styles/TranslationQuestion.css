@@ -29,6 +29,10 @@
     background-color: aliceblue;
 }
 
+#answer-input-textbox:read-only {
+    background-color: #a2ffa5;
+}
+
 #correction-prompt {
     display: inline;
     padding: 7px 25px;
