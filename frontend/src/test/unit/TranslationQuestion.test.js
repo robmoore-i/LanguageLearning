@@ -83,3 +83,17 @@ it('Calls the question completion listener when question answered correctly', ()
 
     expect(questionCompleted).toHaveBeenCalled()
 })
+
+it('Continue button is disabled until correction is provided when question answered incorrectly', () => {
+    let correctAnswer = "გამარჯობა"
+
+    let questionCompleted = jest.fn()
+    let q = {type: 0, given: "hello", answer: correctAnswer}
+    let testTQ = mount(<TranslationQuestion q={q} completionListener={questionCompleted} />)
+
+    testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
+    testTQ.find("#submit-for-marking-button").simulate("click")
+
+    expect(testTQ.find("#continue-button").is(".mark-continue-button-disabled")).toEqual(true)
+    expect(testTQ.find("#continue-button").is(".mark-continue-button")).toEqual(false)
+})

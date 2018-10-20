@@ -57,7 +57,7 @@ export default class MultipleChoiceQuestion extends Component {
         if (this.state.markResult === Mark.UNMARKED) {
             return this.submitForMarkingButton()
         } else {
-            return continueButton(this.props.completionListener)
+            return continueButton(this.props.completionListener, true)
         }
     }
 

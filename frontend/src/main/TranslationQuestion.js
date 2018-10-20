@@ -38,7 +38,9 @@ export default class TranslationQuestion extends Component {
         if (this.state.markResult === Mark.UNMARKED) {
             return this.submitForMarkingButton()
         } else {
-            return continueButton(this.props.completionListener)
+            let answerWasCorrect = this.state.markResult === Mark.CORRECT
+            let userCanContinue = answerWasCorrect
+            return continueButton(this.props.completionListener, userCanContinue)
         }
     }
 

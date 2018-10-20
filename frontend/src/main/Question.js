@@ -13,9 +13,10 @@ export function submitForMarkingButton(setMark) {
     )
 }
 
-export function continueButton(completionListener) {
+export function continueButton(completionListener, enabled) {
+    let className = enabled ? "mark-continue-button" : "mark-continue-button-disabled"
     return (
-        <a id="continue-button" className="mark-continue-button" key="continue-button"
+        <a id="continue-button" className={className} key="continue-button"
            onClick={completionListener}>
            Continue
         </a>
