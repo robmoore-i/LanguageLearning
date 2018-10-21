@@ -13,8 +13,10 @@ it('Shows the question of a translation question', () => {
     let q = {type: 0, given: "hello", answer: "გამარჯობა"}
     let testTQ = shallow(<TranslationQuestion q={q} />)
 
-    expect(testTQ.find("#question-instruction").text()).toBe("What is the translation of")
-    expect(testTQ.find("#question-given").text()).toBe("hello")
+    // Note: The trailing spaces are important, because when copy-pasting the given text, when I double click it,
+    //       it should highlight only that, not the word "of" or the image as though they were joined.
+    expect(testTQ.find("#question-instruction").text()).toBe("What is the translation of ")
+    expect(testTQ.find("#question-given").text()).toBe("hello ")
 })
 
 it('Marks a correct answer as correct', () => {

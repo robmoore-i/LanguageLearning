@@ -39,8 +39,8 @@ export default class TranslationQuestion extends Component {
         let prompt = this.inCorrectingState() ? this.correctionPrompt() : null
         return (
             <div id="question-header" key="question-header">
-                <span id="question-instruction">What is the translation of</span>
-                <span id="question-given">{this.props.q.given}</span>
+                <span id="question-instruction">What is the translation of </span>
+                <span id="question-given">{this.props.q.given} </span>
                 <span id={this.markResult().id}>
                     <img src={this.markResult().img} className="question-result" alt="mark-result-status" />
                 </span>
