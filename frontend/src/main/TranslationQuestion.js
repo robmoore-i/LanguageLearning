@@ -36,22 +36,17 @@ export default class TranslationQuestion extends Component {
     }
 
     questionHeader() {
-        let prompt = this.inCorrectingState() ? this.correctionPrompt() : null
+        let prompt = this.state.transitionState.isCorrectingState() ? this.correctionPrompt() : null
         return (
             <div id="question-header" key="question-header">
                 <span id="question-instruction">What is the translation of </span>
                 <span id="question-given">{this.props.q.given} </span>
-                <span id={this.markResult().id}>
-                    <img src={this.markResult().img} className="question-result" alt="mark-result-status" />
+                <span id={this.state.transitionState.mark.id}>
+                    <img src={this.state.transitionState.mark.img} className="question-result" alt="mark-result-status" />
                 </span>
                 {prompt}
             </div>
         )
-    }
-
-    inCorrectingState() {
-        let correctingStates = [TransitionState.INCORRECT, TransitionState.CORRECTED]
-        return correctingStates.includes(this.state.transitionState)
     }
 
     correctionPrompt() {
@@ -66,21 +61,9 @@ export default class TranslationQuestion extends Component {
         ]
     }
 
-    markResult() {
-        let numStates = Object.keys(TransitionState).length
-        let mapping = Array(numStates)
-
-        mapping[TransitionState.UNMARKED]  = Mark.UNMARKED
-        mapping[TransitionState.CORRECT]   = Mark.CORRECT
-        mapping[TransitionState.INCORRECT] = Mark.INCORRECT
-        mapping[TransitionState.CORRECTED] = Mark.INCORRECT
-
-        return mapping[this.state.transitionState]
-    }
-
     answerInputTextBox() {
         let onChange
-        if (this.inCorrectingState()) {
+        if (this.state.transitionState.isCorrectingState()) {
             onChange = (event) => {
                 if (event.target.value === this.props.q.answer) {
                     this.setState({transitionState: TransitionState.CORRECTED})
@@ -90,23 +73,18 @@ export default class TranslationQuestion extends Component {
             onChange = (event) => {this.setState({currentAnswer: event.target.value})}
         }
         return (
-            <textarea id="answer-input-textbox" rows="5" cols="50" readOnly={this.inDoneState()} key="answer-input-textbox"
+            <textarea id="answer-input-textbox" rows="5" cols="50" readOnly={this.state.transitionState.isDoneState()} key="answer-input-textbox"
                       onChange={onChange}/>
         )
     }
 
-    inDoneState() {
-        let doneStates = [TransitionState.CORRECT, TransitionState.CORRECTED]
-        return doneStates.includes(this.state.transitionState)
-    }
-
     button() {
-        switch(this.state.transitionState) {
-            case TransitionState.UNMARKED:
+        switch(this.state.transitionState.id) {
+            case TransitionState.IDs.UNMARKED:
                 return this.submitForMarkingButton()
-            case TransitionState.CORRECT:
+            case TransitionState.IDs.CORRECT:
                 return continueButton(this.props.onCorrect)
-            case TransitionState.CORRECTED:
+            case TransitionState.IDs.CORRECTED:
                 return continueButton(this.props.onIncorrect)
             default:
                 return disabledContinueButton
@@ -117,7 +95,7 @@ export default class TranslationQuestion extends Component {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
 
         // Issue
-        // It is inefficient to be re-rendering the submitForMarkingButton everytime the currentAnswer changes
+        // It is inefficient to be re-rendering the submitForMarkingButton every time the currentAnswer changes
         switch (this.mark(this.state.currentAnswer)) {
             case Mark.CORRECT:
                 return submitForMarkingButton(() => {setState({transitionState: TransitionState.CORRECT})})
@@ -139,9 +117,35 @@ export default class TranslationQuestion extends Component {
     }
 }
 
-const TransitionState = {
-    UNMARKED: 0,
-    CORRECT: 1,
-    INCORRECT: 3,
-    CORRECTED: 4
-}
+// Encapsulates the state transition diagram representing the behaviour of a TranslationQuestion.
+const TransitionState = (() => {
+    const TransitionStateIds = {
+        UNMARKED: 0,
+        CORRECT: 1,
+        INCORRECT: 3,
+        CORRECTED: 4,
+    }
+
+    function init(id, mark) {
+        return {
+            mark: mark,
+            id: id,
+
+            isDoneState: () => {
+                return id === TransitionStateIds.CORRECT || id === TransitionStateIds.CORRECTED
+            },
+
+            isCorrectingState: () => {
+                return id === TransitionStateIds.INCORRECT || id === TransitionStateIds.CORRECTED
+            }
+        }
+    }
+
+    return {
+        UNMARKED:  init(TransitionStateIds.UNMARKED,  Mark.UNMARKED),
+        CORRECT:   init(TransitionStateIds.CORRECT,   Mark.CORRECT),
+        INCORRECT: init(TransitionStateIds.INCORRECT, Mark.INCORRECT),
+        CORRECTED: init(TransitionStateIds.CORRECTED, Mark.INCORRECT),
+        IDs: TransitionStateIds
+    }
+})()
