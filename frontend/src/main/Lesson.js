@@ -35,48 +35,12 @@ export default class Lesson extends Component {
         })
     }
 
-    questionCompletionHandlers() {
-        const setState = this.setState.bind(this) // Bind 'this' reference for use within callback
-        return {
-            onCorrect: () => {
-                setState((state) => {return {currentQuestionIndex: state.currentQuestionIndex + 1}})
-            },
-
-            onIncorrect: () => {
-                setState((state) => {
-                    return {
-                        currentQuestionIndex: state.currentQuestionIndex + 1,
-                        questions: state.questions.concat([state.questions[state.currentQuestionIndex]])
-                    }
-                })
-            }
+    render() {
+        if (this.state.loaded) {
+            return this.renderLoaded()
+        } else {
+            return this.renderLoading()
         }
-    }
-
-    renderQuestion(q) {
-        let completionHandlers = this.questionCompletionHandlers()
-        let props = {
-            q: q,
-            key: "questionID-" + this.state.currentQuestionIndex,
-            onCorrect: completionHandlers.onCorrect,
-            onIncorrect: completionHandlers.onIncorrect
-        }
-        switch (q.type) {
-            case QuestionTypes.TRANSLATION:
-                return <TranslationQuestion {... props} />
-            case QuestionTypes.MULTIPLE_CHOICE:
-                // Note - the uniqueness of 'key' here is crucial. If it's not unique (aka doesn't take currentQuestionIndex into account)
-                //        then it will not be re-rendered upon completion if the next question is also an MCQ.
-                return <MultipleChoiceQuestion {... props} />
-            default:
-                return <div key="sorry pal">Can't render that question pal</div>
-        }
-    }
-
-    renderLoading() {
-        return (
-            <h1>Loading {this.courseName}: {this.state.lessonName}</h1>
-        )
     }
 
     renderLoaded() {
@@ -99,11 +63,47 @@ export default class Lesson extends Component {
         ]
     }
 
-    render() {
-        if (this.state.loaded) {
-            return this.renderLoaded()
-        } else {
-            return this.renderLoading()
+    renderQuestion(q) {
+        let completionHandlers = this.questionCompletionHandlers()
+        let props = {
+            q: q,
+            key: "questionID-" + this.state.currentQuestionIndex,
+            onCorrect: completionHandlers.onCorrect,
+            onIncorrect: completionHandlers.onIncorrect
         }
+        switch (q.type) {
+            case QuestionTypes.TRANSLATION:
+                return <TranslationQuestion {... props} />
+            case QuestionTypes.MULTIPLE_CHOICE:
+                // Note - the uniqueness of 'key' here is crucial. If it's not unique (aka doesn't take currentQuestionIndex into account)
+                //        then it will not be re-rendered upon completion if the next question is also an MCQ.
+                return <MultipleChoiceQuestion {... props} />
+            default:
+                return <div key="sorry pal">Can't render that question pal</div>
+        }
+    }
+
+    questionCompletionHandlers() {
+        const setState = this.setState.bind(this) // Bind 'this' reference for use within callback
+        return {
+            onCorrect: () => {
+                setState((state) => {return {currentQuestionIndex: state.currentQuestionIndex + 1}})
+            },
+
+            onIncorrect: () => {
+                setState((state) => {
+                    return {
+                        currentQuestionIndex: state.currentQuestionIndex + 1,
+                        questions: state.questions.concat([state.questions[state.currentQuestionIndex]])
+                    }
+                })
+            }
+        }
+    }
+
+    renderLoading() {
+        return (
+            <h1>Loading {this.courseName}: {this.state.lessonName}</h1>
+        )
     }
 }
