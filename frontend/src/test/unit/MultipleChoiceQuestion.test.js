@@ -128,3 +128,14 @@ it('Shows the correction for after answering incorrectly', () => {
 
     expect(testMCQ.find("#choice-d").is(".choice-correction")).toBe(true)
 })
+
+it('Clicking checkboxes after marking doesnt change the active choice', () => {
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let testMCQ = mount(<MultipleChoiceQuestion q={q} onIncorrect={() => {}} />)
+
+    testMCQ.find("#choice-b").simulate("click")
+    testMCQ.find("#submit-for-marking-button").simulate("click")
+    testMCQ.find("#choice-a").simulate("click")
+
+    expect(testMCQ.state("activeChoice")).toEqual(Choices.B)
+})

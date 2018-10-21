@@ -20,13 +20,17 @@ export default class MultipleChoiceQuestion extends Component {
     MultipleChoiceCheckBox(choice) {
         let checked = this.state.activeChoice === choice
         let checkClass = checked ? "choice-checked" : "choice-unchecked"
+
+        // It's a correction if this checkbox is the correct answer and the question has been marked with a result of incorrect.
         let correctionClass = (choice === this.props.q.answer && this.state.markResult === Mark.INCORRECT) ? "choice-correction" : ""
+
+        // If it hasn't been marked, clicking the choice changes the choice, otherwise it does nothing.
+        let onClick = this.state.markResult === Mark.UNMARKED ? () => {this.setState({activeChoice: choice})} : () => {}
+
         return (
             <div id={"choice-" + choice}
                  className={"choice" + " " + checkClass + " " + correctionClass}
-                 onClick={() => {
-                     this.setState({activeChoice: choice})
-                 }}>
+                 onClick={onClick}>
                 <input id={"choicebox-" + choice}
                        type="radio"
                        key="checkbox"
