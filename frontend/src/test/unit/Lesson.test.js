@@ -92,3 +92,14 @@ it('Completes when the the incorrect then correct completion handlers are called
     expect(testLesson.state("questions").length).toEqual(2)
     expect(testLesson.state("currentQuestionIndex")).toEqual(2)
 })
+
+it('Shows the lesson stats page when all questions are complete', async () => {
+    let dummyQuestion = {type: -1}
+    let testServer = mockServer({name: "Hello!", questions: [dummyQuestion, dummyQuestion, dummyQuestion, dummyQuestion]})
+    let testLesson = mount(<Lesson courseName="georgian" lessonNameInUrl="hello" server={testServer} />)
+    testLesson.setState({currentQuestionIndex: 4}) // No more questions
+    await sleep(mockServerLoadTimeMs)
+    testLesson.update()
+
+    expect(testLesson.find("#lesson-accuracy").text()).toEqual("Accuracy: 100%")
+})

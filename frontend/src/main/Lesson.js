@@ -53,7 +53,7 @@ export default class Lesson extends Component {
 
     renderCurrentQuestion() {
         if (this.state.currentQuestionIndex >= this.state.questions.length) {
-            return <div key="ya dun">Ya Dun m8</div>
+            return <div id="lesson-accuracy" key="lesson-accuracy">Accuracy: 100%</div>
         } else {
             return this.renderQuestion(this.state.questions[this.state.currentQuestionIndex])
         }
