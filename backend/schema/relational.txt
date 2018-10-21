@@ -1,0 +1,26 @@
+=== Entity-Relationship diagram ===
+
+Lesson 1-* Production *-* Variable 1-* Value
+
+=== Definitions ===
+
+Lesson:     A lesson with a name and a list of productions
+
+Production: A mapping from one value to another, making use of any number of
+            variables
+
+Variable:   A symbol representing a type of value used in productions
+
+Value:      A value that a given variable can take
+
+=== Schema ===
+
+Lesson: id, name
+
+Production: id, lesson-id, production-variable-id, mapping
+
+Production-Variable: id, production-id, variable-id
+
+Variable: id, production-variable-id, symbolic-name
+
+Value: variable-id, value
