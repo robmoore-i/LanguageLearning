@@ -35,10 +35,19 @@ export default class Lesson extends Component {
 
     questionCompleted() {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within callback
-        return () => {
-            setState((state) => {
-                return {currentQuestionIndex: state.currentQuestionIndex + 1}
-            })
+        return (needsRepetition) => {
+            if (needsRepetition) {
+                setState((state) => {
+                    return {
+                        currentQuestionIndex: state.currentQuestionIndex + 1,
+                        questions: state.questions.concat([state.questions[state.currentQuestionIndex]])
+                    }
+                })
+            } else {
+                setState((state) => {
+                    return {currentQuestionIndex: state.currentQuestionIndex + 1}
+                })
+            }
         }
     }
 

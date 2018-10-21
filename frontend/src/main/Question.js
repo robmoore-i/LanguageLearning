@@ -17,7 +17,10 @@ function _continueButton(completionListener, enabled) {
     let className = enabled ? "mark-continue-button" : "mark-continue-button-disabled"
     return (
         <a id="continue-button" className={className} key="continue-button"
-           onClick={completionListener}>
+           onClick={() => {
+               let needsRepetition = false
+               completionListener(needsRepetition)
+           }}>
            Continue
         </a>
     )

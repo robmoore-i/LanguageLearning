@@ -1,7 +1,7 @@
 // React
 import React from 'react'
 // Testing
-import {shallow} from 'enzyme'
+import {shallow, mount} from 'enzyme'
 // Main
 import Lesson from '../../main/Lesson'
 // Enzyme react-adapter configuration & others
@@ -36,8 +36,8 @@ async function shallowRenderLesson(course, lessonNameInUrl, server) {
     return lesson
 }
 
-it('shows the lesson name from the lesson data', async () => {
-    // Given: I am on the lesson map page for the Japanese lesson called hello
+it('Shows the lesson name from the lesson data', async () => {
+    // Given: I am in a Japanese lesson called hello
     let testServer = mockServer({name: "Hello!", questions: [{type: -1}]})
     let testLesson = await shallowRenderLesson("japanese", "hello", testServer)
 
@@ -49,11 +49,11 @@ it('shows the lesson name from the lesson data', async () => {
     expect(text).toBe("Japanese: Hello!")
 })
 
-it('shows the loading screen while loading', async () => {
+it('Shows the loading screen while loading', async () => {
     // Given: The server is slow
     let slowServer = mockSlowServer({name: "boxing"})
 
-    // When: I am on the lesson map page
+    // When: I am in a lesson
     let testLesson = await shallowRenderLesson("thai", "boxing", slowServer)
 
     // Then: The page indicates that it is loading
@@ -61,4 +61,18 @@ it('shows the loading screen while loading', async () => {
     let text = title.children().map(child => child.text()).reduce((acc, cur) => acc + cur)
 
     expect(text).toBe("Loading thai: boxing")
+})
+
+it('Adds questions which are answered incorrectly back into the questions list', async () => {
+    let tq = {type: 0, given: "hello", answer: "გამარჯობა"}
+    let testServer = mockServer({name: "Hello!", questions: [tq]})
+    let testLesson = mount(<Lesson courseName="georgian" lessonNameInUrl="hello" server={testServer} />)
+    await sleep(mockServerLoadTimeMs)
+    testLesson.update()
+
+    let questionCompleted = testLesson.instance().questionCompleted()
+    let repeatQuestion = true
+    questionCompleted(repeatQuestion)
+
+    expect(testLesson.state("questions").length).toEqual(2)
 })
