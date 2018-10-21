@@ -17,31 +17,6 @@ export default class MultipleChoiceQuestion extends Component {
         }
     }
 
-    MultipleChoiceCheckBox(choice) {
-        let checked = this.state.activeChoice === choice
-        let checkClass = checked ? "choice-checked" : "choice-unchecked"
-
-        let isCorrectAnswer = choice === this.props.q.answer
-        let questionHasBeenMarkedIncorrect = this.state.markResult === Mark.INCORRECT
-        let correctionClass = (isCorrectAnswer && questionHasBeenMarkedIncorrect) ? "choice-correction" : ""
-
-        let hasBeenMarked = this.state.markResult !== Mark.UNMARKED
-        let onClick = hasBeenMarked ? () => {} : () => {this.setState({activeChoice: choice})}
-
-        return (
-            <div id={"choice-" + choice}
-                 className={"choice" + " " + checkClass + " " + correctionClass}
-                 onClick={onClick}>
-                <input id={"choicebox-" + choice}
-                       type="radio"
-                       key="checkbox"
-                       checked={checked}
-                       onChange={() => {} /* This removes a warning about having a `checked` prop without an `onChange` handler.*/}/>
-                <span id={"choiceValue-" + choice} key="choiceValue">{this.props.q[choice]}</span>
-            </div>
-        )
-    }
-
     mark(choice) {
         if (choice === Choices.NONE) {
             return Mark.UNMARKED
@@ -83,10 +58,10 @@ export default class MultipleChoiceQuestion extends Component {
             </div>,
             <br key="question-title--break--choices" />,
             <div key="choices">
-                {this.MultipleChoiceCheckBox(Choices.A)}
-                {this.MultipleChoiceCheckBox(Choices.B)}
-                {this.MultipleChoiceCheckBox(Choices.C)}
-                {this.MultipleChoiceCheckBox(Choices.D)}
+                {MultipleChoiceCheckBox(Choices.A, this)}
+                {MultipleChoiceCheckBox(Choices.B, this)}
+                {MultipleChoiceCheckBox(Choices.C, this)}
+                {MultipleChoiceCheckBox(Choices.D, this)}
             </div>,
             <div key="choices--break--submit-button">
                 <br />
@@ -103,4 +78,48 @@ export const Choices = {
     B: "b",
     C: "c",
     D: "d",
+}
+
+function MultipleChoiceCheckBox(choice, MCQ) {
+    let checked = MCQ.state.activeChoice === choice
+
+    function classes() {
+        let classes = ["choice"]
+
+        if (checked) {
+            classes.push("choice-checked")
+        } else {
+            classes.push("choice-unchecked")
+        }
+
+        let isCorrectAnswer = choice === MCQ.props.q.answer
+        let questionHasBeenMarkedIncorrect = MCQ.state.markResult === Mark.INCORRECT
+        if (isCorrectAnswer && questionHasBeenMarkedIncorrect) {
+            classes.push("choice-correction")
+        }
+
+        return classes
+    }
+
+    function onClick() {
+        let hasBeenMarked = MCQ.state.markResult !== Mark.UNMARKED
+        if (hasBeenMarked) {
+            return () => {}
+        } else {
+            return () => {MCQ.setState({activeChoice: choice})}
+        }
+    }
+
+    return (
+        <div id={"choice-" + choice}
+             className={classes().join(" ")}
+             onClick={onClick()}>
+            <input id={"choicebox-" + choice}
+                   type="radio"
+                   key="checkbox"
+                   checked={checked}
+                   onChange={() => {} /* This removes a warning about having a `checked` prop without an `onChange` handler.*/}/>
+            <span id={"choiceValue-" + choice} key="choiceValue">{MCQ.props.q[choice]}</span>
+        </div>
+    )
 }
