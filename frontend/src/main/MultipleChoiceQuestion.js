@@ -19,10 +19,11 @@ export default class MultipleChoiceQuestion extends Component {
 
     MultipleChoiceCheckBox(choice) {
         let checked = this.state.activeChoice === choice
-        let className = checked ? "choice-checked" : "choice-unchecked"
+        let checkClass = checked ? "choice-checked" : "choice-unchecked"
+        let correctionClass = (choice === this.props.q.answer && this.state.markResult === Mark.INCORRECT) ? "choice-correction" : ""
         return (
             <div id={"choice-" + choice}
-                 className={"choice " + className}
+                 className={"choice" + " " + checkClass + " " + correctionClass}
                  onClick={() => {
                      this.setState({activeChoice: choice})
                  }}>
