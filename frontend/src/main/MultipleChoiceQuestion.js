@@ -17,36 +17,6 @@ export default class MultipleChoiceQuestion extends Component {
         }
     }
 
-    mark(choice) {
-        if (choice === Choices.NONE) {
-            return Mark.UNMARKED
-        } else if (choice === this.props.q.answer) {
-            return Mark.CORRECT
-        } else {
-            return Mark.INCORRECT
-        }
-    }
-
-    submitForMarkingButton() {
-        const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
-        const markResult = this.mark(this.state.activeChoice)
-        let onClick = () => {setState({markResult: markResult})}
-        return submitForMarkingButton(onClick)
-    }
-
-    button() {
-        switch (this.state.markResult) {
-            case Mark.UNMARKED:
-                return this.submitForMarkingButton()
-            case Mark.CORRECT:
-                return continueButton(this.props.onCorrect)
-            case Mark.INCORRECT:
-                return continueButton(this.props.onIncorrect)
-            default:
-                throw new Error("MCQ - button(): state->markResult is not any of the three Mark instances.")
-        }
-    }
-
     render() {
         return [
             <br key="header--break--question-title"/>,
@@ -69,6 +39,36 @@ export default class MultipleChoiceQuestion extends Component {
             </div>,
             this.button()
         ]
+    }
+
+    button() {
+        switch (this.state.markResult) {
+            case Mark.UNMARKED:
+                return this.submitForMarkingButton()
+            case Mark.CORRECT:
+                return continueButton(this.props.onCorrect)
+            case Mark.INCORRECT:
+                return continueButton(this.props.onIncorrect)
+            default:
+                throw new Error("MCQ - button(): state->markResult is not any of the three Mark instances.")
+        }
+    }
+
+    submitForMarkingButton() {
+        const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
+        const markResult = this.mark(this.state.activeChoice)
+        let onClick = () => {setState({markResult: markResult})}
+        return submitForMarkingButton(onClick)
+    }
+
+    mark(choice) {
+        if (choice === Choices.NONE) {
+            return Mark.UNMARKED
+        } else if (choice === this.props.q.answer) {
+            return Mark.CORRECT
+        } else {
+            return Mark.INCORRECT
+        }
     }
 }
 
