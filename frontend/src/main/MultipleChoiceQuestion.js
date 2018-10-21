@@ -54,12 +54,15 @@ export default class MultipleChoiceQuestion extends Component {
     }
 
     button() {
-        if (this.state.markResult === Mark.UNMARKED) {
-            return this.submitForMarkingButton()
-        } else if (this.state.markResult === Mark.CORRECT) {
-            return continueButton(this.props.onCorrect)
-        } else if (this.state.markResult === Mark.INCORRECT) {
-            return continueButton(this.props.onIncorrect)
+        switch (this.state.markResult) {
+            case Mark.UNMARKED:
+                return this.submitForMarkingButton()
+            case Mark.CORRECT:
+                return continueButton(this.props.onCorrect)
+            case Mark.INCORRECT:
+                return continueButton(this.props.onIncorrect)
+            default:
+                throw new Error("MCQ - button(): state->markResult is not any of the three Mark instances.")
         }
     }
 

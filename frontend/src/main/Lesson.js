@@ -66,7 +66,7 @@ export default class Lesson extends Component {
             case QuestionTypes.TRANSLATION:
                 return <TranslationQuestion q={q} key="question" onCorrect={completionHandlers.onCorrect} onIncorrect={completionHandlers.onIncorrect} />
             case QuestionTypes.MULTIPLE_CHOICE:
-                return <MultipleChoiceQuestion q={q} key="question" completionListener={completionHandlers.onCorrect} />
+                return <MultipleChoiceQuestion q={q} key="question" onCorrect={completionHandlers.onCorrect} onIncorrect={completionHandlers.onIncorrect} />
             default:
                 return <div key="sorry pal">Can't render that question pal</div>
         }

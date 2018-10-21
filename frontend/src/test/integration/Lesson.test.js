@@ -40,7 +40,7 @@ it('can advance through an MCQ and TQ', async () => {
     expect(testLesson.find("div").text()).toEqual("Ya Dun m8")
 })
 
-it('can repeats a TQ if answered incorrectly', async () => {
+it('can repeats TQ and MCQ if answered incorrectly', async () => {
     let tq = {type: 0, given: "hello", answer: "გამარჯობა"}
     let mcq = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testServer = mockServer({name: "Hello!", questions: [tq, mcq]})
@@ -54,13 +54,18 @@ it('can repeats a TQ if answered incorrectly', async () => {
     testLesson.find("#answer-input-textbox").simulate("change", textBoxInputEvent("გამარჯობა"))
     testLesson.find("#continue-button").simulate("click")
 
-    // MCQ
-    testLesson.find("#choice-d").simulate("click")
+    // MCQ Incorrect
+    testLesson.find("#choice-c").simulate("click")
     testLesson.find("#submit-for-marking-button").simulate("click")
     testLesson.find("#continue-button").simulate("click")
 
     // TQ Repeated
     testLesson.find("#answer-input-textbox").simulate("change", textBoxInputEvent("გამარჯობა"))
+    testLesson.find("#submit-for-marking-button").simulate("click")
+    testLesson.find("#continue-button").simulate("click")
+
+    // MCQ Repeated
+    testLesson.find("#choice-d").simulate("click")
     testLesson.find("#submit-for-marking-button").simulate("click")
     testLesson.find("#continue-button").simulate("click")
 
