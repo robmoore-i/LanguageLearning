@@ -118,3 +118,13 @@ it('Calls the onIncorrect completion handler when question answered incorrectly'
 
     expect(questionCompletedIncorrectly).toHaveBeenCalled()
 })
+
+it('Shows the correction for after answering incorrectly', () => {
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let testMCQ = mount(<MultipleChoiceQuestion q={q} onIncorrect={() => {}} />)
+
+    testMCQ.find("#choice-b").simulate("click")
+    testMCQ.find("#submit-for-marking-button").simulate("click")
+
+    expect(testMCQ.find("#choice-d").is(".choice-correction")).toBe(true)
+})
