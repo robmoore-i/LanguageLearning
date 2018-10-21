@@ -33,19 +33,19 @@ export default class Lesson extends Component {
         })
     }
 
-    questionCompleted() {
+    questionCompletionHandlers() {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within callback
-        return (needsRepetition) => {
-            if (needsRepetition) {
+        return {
+            onCorrect: () => {
+                setState((state) => {return {currentQuestionIndex: state.currentQuestionIndex + 1}})
+            },
+
+            onIncorrect: () => {
                 setState((state) => {
                     return {
                         currentQuestionIndex: state.currentQuestionIndex + 1,
                         questions: state.questions.concat([state.questions[state.currentQuestionIndex]])
                     }
-                })
-            } else {
-                setState((state) => {
-                    return {currentQuestionIndex: state.currentQuestionIndex + 1}
                 })
             }
         }
@@ -61,11 +61,12 @@ export default class Lesson extends Component {
     }
 
     renderQuestion(q) {
+        let completionHandlers = this.questionCompletionHandlers()
         switch (q.type) {
             case QuestionTypes.TRANSLATION:
-                return <TranslationQuestion q={q} key="question" onCorrect={this.questionCompleted()} onIncorrect={this.questionCompleted()} />
+                return <TranslationQuestion q={q} key="question" onCorrect={completionHandlers.onCorrect} onIncorrect={completionHandlers.onIncorrect} />
             case QuestionTypes.MULTIPLE_CHOICE:
-                return <MultipleChoiceQuestion q={q} key="question" completionListener={this.questionCompleted()} />
+                return <MultipleChoiceQuestion q={q} key="question" completionListener={completionHandlers.onCorrect} />
             default:
                 return <div key="sorry pal">Can't render that question pal</div>
         }

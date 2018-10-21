@@ -70,9 +70,8 @@ it('Adds questions which are answered incorrectly back into the questions list',
     await sleep(mockServerLoadTimeMs)
     testLesson.update()
 
-    let questionCompleted = testLesson.instance().questionCompleted()
-    let repeatQuestion = true
-    questionCompleted(repeatQuestion)
+    let completionHandlers = testLesson.instance().questionCompletionHandlers()
+    completionHandlers.onIncorrect()
 
     expect(testLesson.state("questions").length).toEqual(2)
 })
