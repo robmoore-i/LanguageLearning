@@ -70,8 +70,9 @@ export default class Lesson extends Component {
         let accuracyTo1dpString = (Math.round(10 * accuracyPercentage) / 10).toString()
         return (
             <div key="lesson-stats">
-                <span id="lesson-accuracy">{"Accuracy: " + accuracyTo1dpString + "%"}</span>
-                <span id="lesson-time">{"Time taken: " + lessonTime + " seconds"}</span>
+                <div id="lesson-accuracy">{"Accuracy: " + accuracyTo1dpString + "%"}</div>
+                <div id="lesson-time">{"Time taken: " + lessonTime + " seconds"}</div>
+                <a id="back-to-lessonmap-button" href={"/courses/" + this.courseName}>Back to Lesson Map</a>
             </div>
         )
     }

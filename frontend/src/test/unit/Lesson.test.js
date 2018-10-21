@@ -138,3 +138,14 @@ it('Truncates lesson accuracy to 1dp on the lesson stats page', async () => {
     expect(lessonStats.props.children[0].props.children).toEqual("Accuracy: 67.7%")
     expect(lessonStats.props.children[1].props.children).toEqual("Time taken: 55.3 seconds")
 })
+
+it('Has a button to go back to the lesson map after completing a lesson', async () => {
+    let dummyQuestion = {type: -1}
+    let testServer = mockServer({name: "Hello!", questions: [dummyQuestion, dummyQuestion, dummyQuestion, dummyQuestion]})
+    let testLesson = mount(<Lesson courseName="arabic" lessonNameInUrl="hello" server={testServer} />)
+    testLesson.setState({currentQuestionIndex: 6})
+    await sleep(mockServerLoadTimeMs)
+    testLesson.update()
+
+    expect(testLesson.find("#back-to-lessonmap-button").is('[href="/courses/arabic"]')).toBe(true)
+})
