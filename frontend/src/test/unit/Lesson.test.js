@@ -126,3 +126,15 @@ it('Shows the lesson time on the lesson stats page', async () => {
     expect(lessonStats.props.children[0].props.children).toEqual("Accuracy: 85.3%")
     expect(lessonStats.props.children[1].props.children).toEqual("Time taken: 100 seconds")
 })
+
+it('Truncates lesson accuracy to 1dp on the lesson stats page', async () => {
+    let dummyQuestion = {type: -1}
+    let testServer = mockServer({name: "Hello!", questions: [dummyQuestion, dummyQuestion, dummyQuestion, dummyQuestion]})
+    let testLesson = shallow(<Lesson courseName="georgian" lessonNameInUrl="hello" server={testServer} />)
+    await sleep(mockServerLoadTimeMs)
+
+    let lessonStats = testLesson.instance().renderLessonStats(67.6666666666666667, 55.3)
+
+    expect(lessonStats.props.children[0].props.children).toEqual("Accuracy: 67.7%")
+    expect(lessonStats.props.children[1].props.children).toEqual("Time taken: 55.3 seconds")
+})
