@@ -64,13 +64,19 @@ export default class Lesson extends Component {
 
     renderQuestion(q) {
         let completionHandlers = this.questionCompletionHandlers()
+        let props = {
+            q: q,
+            key: "questionID-" + this.state.currentQuestionIndex,
+            onCorrect: completionHandlers.onCorrect,
+            onIncorrect: completionHandlers.onIncorrect
+        }
         switch (q.type) {
             case QuestionTypes.TRANSLATION:
-                return <TranslationQuestion q={q} key={"questionID-" + this.state.currentQuestionIndex} onCorrect={completionHandlers.onCorrect} onIncorrect={completionHandlers.onIncorrect} />
+                return <TranslationQuestion {... props} />
             case QuestionTypes.MULTIPLE_CHOICE:
                 // Note - the uniqueness of 'key' here is crucial. If it's not unique (aka doesn't take currentQuestionIndex into account)
                 //        then it will not be re-rendered upon completion if the next question is  also an MCQ.
-                return <MultipleChoiceQuestion q={q} key={"questionID-" + this.state.currentQuestionIndex} onCorrect={completionHandlers.onCorrect} onIncorrect={completionHandlers.onIncorrect} />
+                return <MultipleChoiceQuestion {... props} />
             default:
                 return <div key="sorry pal">Can't render that question pal</div>
         }
