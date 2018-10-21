@@ -37,7 +37,7 @@ it('can advance through an MCQ and TQ', async () => {
     testLesson.find("#submit-for-marking-button").simulate("click")
     testLesson.find("#continue-button").simulate("click")
 
-    expect(testLesson.find("div").text()).toEqual("Ya Dun m8")
+    expect(testLesson.find("div").text()).toEqual("Accuracy: 100%")
 })
 
 it('can repeats TQ and MCQ if answered incorrectly', async () => {
@@ -69,7 +69,7 @@ it('can repeats TQ and MCQ if answered incorrectly', async () => {
     testLesson.find("#submit-for-marking-button").simulate("click")
     testLesson.find("#continue-button").simulate("click")
 
-    expect(testLesson.find("div").text()).toEqual("Ya Dun m8")
+    expect(testLesson.find("div").text()).toEqual("Accuracy: 50%")
 })
 
 it('Repeats a question even if its the last question', async () => {
@@ -89,6 +89,5 @@ it('Repeats a question even if its the last question', async () => {
     testLesson.find("#submit-for-marking-button").simulate("click")
     testLesson.find("#continue-button").simulate("click")
 
-
-    expect(testLesson.find("div").text()).toEqual("Ya Dun m8")
+    expect(testLesson.find("div").text()).toEqual("Accuracy: 50%")
 })

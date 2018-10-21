@@ -18,7 +18,8 @@ export default class Lesson extends Component {
             lessonName: this.props.lessonNameInUrl, // Placeholder until server response.
             loaded: false,
             currentQuestionIndex: 0,
-            questions: []
+            questions: [],
+            numQuestions: -1 // Cause something note-worthily weird in the case of premature usage in an accuracy calculation.
         }
     }
 
@@ -28,6 +29,7 @@ export default class Lesson extends Component {
             setState({
                 lessonName: lesson.name,
                 questions: lesson.questions,
+                numQuestions: lesson.questions.length,
                 loaded: true
             })
         })
@@ -53,7 +55,8 @@ export default class Lesson extends Component {
 
     renderCurrentQuestion() {
         if (this.state.currentQuestionIndex >= this.state.questions.length) {
-            return <div id="lesson-accuracy" key="lesson-accuracy">Accuracy: 100%</div>
+            let accuracyPercentage = 100 * this.state.numQuestions / this.state.currentQuestionIndex
+            return <div id="lesson-accuracy" key="lesson-accuracy">{"Accuracy: " + accuracyPercentage + "%"}</div>
         } else {
             return this.renderQuestion(this.state.questions[this.state.currentQuestionIndex])
         }

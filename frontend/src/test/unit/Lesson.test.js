@@ -103,3 +103,14 @@ it('Shows the lesson stats page when all questions are complete', async () => {
 
     expect(testLesson.find("#lesson-accuracy").text()).toEqual("Accuracy: 100%")
 })
+
+it('Accurately shows a lesson accuracy of less than 100% when appropriate', async () => {
+    let dummyQuestion = {type: -1}
+    let testServer = mockServer({name: "Hello!", questions: [dummyQuestion, dummyQuestion, dummyQuestion, dummyQuestion]})
+    let testLesson = mount(<Lesson courseName="georgian" lessonNameInUrl="hello" server={testServer} />)
+    testLesson.setState({currentQuestionIndex: 10}) // Answered 10 times but only 4 questions were sent by the server.
+    await sleep(mockServerLoadTimeMs)
+    testLesson.update()
+
+    expect(testLesson.find("#lesson-accuracy").text()).toEqual("Accuracy: 40%")
+})
