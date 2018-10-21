@@ -75,3 +75,20 @@ it('Adds questions which are answered incorrectly back into the questions list',
 
     expect(testLesson.state("questions").length).toEqual(2)
 })
+
+it('Completes when the the incorrect then correct completion handlers are called', async () => {
+    let tq = {type: 0, given: "hello", answer: "გამარჯობა"}
+    let testServer = mockServer({name: "Hello!", questions: [tq]})
+    let testLesson = mount(<Lesson courseName="georgian" lessonNameInUrl="hello" server={testServer} />)
+    await sleep(mockServerLoadTimeMs)
+    testLesson.update()
+
+    let completionHandlers = testLesson.instance().questionCompletionHandlers()
+    completionHandlers.onIncorrect()
+    testLesson.update()
+    let completionHandlers2 = testLesson.instance().questionCompletionHandlers()
+    completionHandlers2.onCorrect()
+
+    expect(testLesson.state("questions").length).toEqual(2)
+    expect(testLesson.state("currentQuestionIndex")).toEqual(2)
+})

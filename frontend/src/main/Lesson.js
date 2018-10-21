@@ -51,9 +51,8 @@ export default class Lesson extends Component {
         }
     }
 
-    currentQuestion() {
-        let maxIndex = this.state.questions.length - 1
-        if (this.state.currentQuestionIndex > maxIndex) {
+    renderCurrentQuestion() {
+        if (this.state.currentQuestionIndex >= this.state.questions.length) {
             return <div key="ya dun">Ya Dun m8</div>
         } else {
             return this.renderQuestion(this.state.questions[this.state.currentQuestionIndex])
@@ -64,9 +63,11 @@ export default class Lesson extends Component {
         let completionHandlers = this.questionCompletionHandlers()
         switch (q.type) {
             case QuestionTypes.TRANSLATION:
-                return <TranslationQuestion q={q} key="question" onCorrect={completionHandlers.onCorrect} onIncorrect={completionHandlers.onIncorrect} />
+                return <TranslationQuestion q={q} key={"questionID-" + this.state.currentQuestionIndex} onCorrect={completionHandlers.onCorrect} onIncorrect={completionHandlers.onIncorrect} />
             case QuestionTypes.MULTIPLE_CHOICE:
-                return <MultipleChoiceQuestion q={q} key="question" onCorrect={completionHandlers.onCorrect} onIncorrect={completionHandlers.onIncorrect} />
+                // Note - the uniqueness of 'key' here is crucial. If it's not unique (aka doesn't take currentQuestionIndex into account)
+                //        then it will not be re-rendered upon completion if the next question is  also an MCQ.
+                return <MultipleChoiceQuestion q={q} key={"questionID-" + this.state.currentQuestionIndex} onCorrect={completionHandlers.onCorrect} onIncorrect={completionHandlers.onIncorrect} />
             default:
                 return <div key="sorry pal">Can't render that question pal</div>
         }
@@ -85,7 +86,7 @@ export default class Lesson extends Component {
             <header className="Lesson-header" key="header">
                 <h1 className="Lesson-title">{capitalisedCourseName}: {this.state.lessonName}</h1>,
             </header>,
-            this.currentQuestion()
+            this.renderCurrentQuestion()
         ]
     }
 
