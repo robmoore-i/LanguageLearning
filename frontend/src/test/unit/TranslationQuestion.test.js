@@ -103,7 +103,9 @@ it('Prompts for correction when question answered incorrectly', () => {
     testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
     testTQ.find("#submit-for-marking-button").simulate("click")
 
-    expect(testTQ.find("#correction-prompt").text()).toEqual("Type out the correct answer")
+    // Note: The trailing space is important, because when copy-pasting the correct, when I double click the answer,
+    //       it should highlight only the correction, not the word "answer" as well, as though they were joined.
+    expect(testTQ.find("#correction-prompt").text()).toEqual("Type out the correct answer ")
     expect(testTQ.find("#correction-answer").text()).toEqual(correctAnswer)
 })
 

@@ -60,7 +60,7 @@ export default class TranslationQuestion extends Component {
                 <br />
             </div>,
             <div key="correction-prompt">
-                <span id="correction-prompt">Type out the correct answer</span>
+                <span id="correction-prompt">Type out the correct answer </span>
                 <span id="correction-answer">{this.props.q.answer}</span>
             </div>
         ]
