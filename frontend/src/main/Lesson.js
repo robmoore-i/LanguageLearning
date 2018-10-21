@@ -19,7 +19,8 @@ export default class Lesson extends Component {
             loaded: false,
             currentQuestionIndex: 0,
             questions: [],
-            numQuestions: -1 // Cause something note-worthily weird in the case of premature usage in an accuracy calculation.
+            numQuestions: -1, // Cause something note-worthily weird in the case of premature usage in an accuracy calculation.
+            startTime: (new Date())
         }
     }
 
@@ -30,7 +31,8 @@ export default class Lesson extends Component {
                 lessonName: lesson.name,
                 questions: lesson.questions,
                 numQuestions: lesson.questions.length,
-                loaded: true
+                loaded: true,
+                startTime: (new Date())
             })
         })
     }
@@ -50,7 +52,8 @@ export default class Lesson extends Component {
         let mainContent
         if (this.state.currentQuestionIndex >= this.state.questions.length) {
             let accuracyPercentage = 100 * this.state.numQuestions / this.state.currentQuestionIndex
-            mainContent = this.renderLessonStats(accuracyPercentage, 100.0)
+            let lessonTimeSeconds = ((new Date()).getTime() - this.state.startTime.getTime()) / 1000
+            mainContent = this.renderLessonStats(accuracyPercentage, lessonTimeSeconds)
         } else {
             mainContent = this.renderQuestion(this.state.questions[this.state.currentQuestionIndex])
         }
