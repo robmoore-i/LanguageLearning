@@ -75,7 +75,7 @@ export default class Lesson extends Component {
                 return <TranslationQuestion {... props} />
             case QuestionTypes.MULTIPLE_CHOICE:
                 // Note - the uniqueness of 'key' here is crucial. If it's not unique (aka doesn't take currentQuestionIndex into account)
-                //        then it will not be re-rendered upon completion if the next question is  also an MCQ.
+                //        then it will not be re-rendered upon completion if the next question is also an MCQ.
                 return <MultipleChoiceQuestion {... props} />
             default:
                 return <div key="sorry pal">Can't render that question pal</div>
