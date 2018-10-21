@@ -53,15 +53,6 @@ export default class Lesson extends Component {
         }
     }
 
-    renderCurrentQuestion() {
-        if (this.state.currentQuestionIndex >= this.state.questions.length) {
-            let accuracyPercentage = 100 * this.state.numQuestions / this.state.currentQuestionIndex
-            return <div id="lesson-accuracy" key="lesson-accuracy">{"Accuracy: " + accuracyPercentage + "%"}</div>
-        } else {
-            return this.renderQuestion(this.state.questions[this.state.currentQuestionIndex])
-        }
-    }
-
     renderQuestion(q) {
         let completionHandlers = this.questionCompletionHandlers()
         let props = {
@@ -91,11 +82,20 @@ export default class Lesson extends Component {
     renderLoaded() {
         let capitalise = (s => s[0].toUpperCase() + s.substring(1))
         let capitalisedCourseName = capitalise(this.courseName)
+
+        let mainContent
+        if (this.state.currentQuestionIndex >= this.state.questions.length) {
+            let accuracyPercentage = 100 * this.state.numQuestions / this.state.currentQuestionIndex
+            mainContent = <div id="lesson-accuracy" key="lesson-accuracy">{"Accuracy: " + accuracyPercentage + "%"}</div>
+        } else {
+            mainContent = this.renderQuestion(this.state.questions[this.state.currentQuestionIndex])
+        }
+
         return [
             <header className="Lesson-header" key="header">
                 <h1 className="Lesson-title">{capitalisedCourseName}: {this.state.lessonName}</h1>,
             </header>,
-            this.renderCurrentQuestion()
+            mainContent
         ]
     }
 
