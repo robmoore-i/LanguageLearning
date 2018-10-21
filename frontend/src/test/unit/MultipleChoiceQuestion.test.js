@@ -95,14 +95,26 @@ it('Transforms submit button into continue button after correct answer', () => {
     expect(testMCQ.find("#continue-button").exists()).toBe(true)
 })
 
-it('Calls the question completion listener when question answered correctly', () => {
+it('Calls the onCorrect completion handler when question answered correctly', () => {
     let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
-    let questionCompleted = jest.fn()
-    let testMCQ = mount(<MultipleChoiceQuestion q={q} completionListener={questionCompleted} />)
+    let questionCompletedCorrectly = jest.fn()
+    let testMCQ = mount(<MultipleChoiceQuestion q={q} onCorrect={questionCompletedCorrectly} />)
 
     testMCQ.find("#choice-d").simulate("click")
     testMCQ.find("#submit-for-marking-button").simulate("click")
     testMCQ.find("#continue-button").simulate("click")
 
-    expect(questionCompleted).toHaveBeenCalled()
+    expect(questionCompletedCorrectly).toHaveBeenCalled()
+})
+
+it('Calls the onIncorrect completion handler when question answered incorrectly', () => {
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let questionCompletedIncorrectly = jest.fn()
+    let testMCQ = mount(<MultipleChoiceQuestion q={q} onIncorrect={questionCompletedIncorrectly} />)
+
+    testMCQ.find("#choice-b").simulate("click")
+    testMCQ.find("#submit-for-marking-button").simulate("click")
+    testMCQ.find("#continue-button").simulate("click")
+
+    expect(questionCompletedIncorrectly).toHaveBeenCalled()
 })
