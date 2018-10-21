@@ -103,8 +103,10 @@ export default class TranslationQuestion extends Component {
     button() {
         if (this.state.transitionState === TransitionState.UNMARKED) {
             return this.submitForMarkingButton()
-        } else if (this.inDoneState()) {
-            return continueButton(this.props.completionListener)
+        } else if (this.state.transitionState === TransitionState.CORRECT) {
+            return continueButton(this.props.onCorrect)
+        } else if (this.state.transitionState === TransitionState.CORRECTED) {
+            return continueButton(this.props.onIncorrect)
         } else {
             return disabledContinueButton
         }

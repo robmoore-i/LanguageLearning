@@ -70,24 +70,23 @@ it('Transforms submit button into continue button after correct answer', () => {
     expect(testTQ.find("#continue-button").exists()).toBe(true)
 })
 
-it('Calls the question completion listener after clicking continue when question answered correctly', () => {
+it('Calls the onCorrect completion listener after clicking continue when question answered correctly', () => {
     let correctAnswer = "გამარჯობა"
 
-    let questionCompleted = jest.fn()
+    let questionCompletedCorrectly = jest.fn()
     let q = {type: 0, given: "hello", answer: correctAnswer}
-    let testTQ = mount(<TranslationQuestion q={q} completionListener={questionCompleted} />)
+    let testTQ = mount(<TranslationQuestion q={q} onCorrect={questionCompletedCorrectly} />)
 
     testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
     testTQ.find("#submit-for-marking-button").simulate("click")
     testTQ.find("#continue-button").simulate("click")
 
-    expect(questionCompleted).toHaveBeenCalled()
+    expect(questionCompletedCorrectly).toHaveBeenCalled()
 })
 
 it('Disables continue button when question answered incorrectly', () => {
-    let questionCompleted = jest.fn()
     let q = {type: 0, given: "hello", answer: "გამარჯობა"}
-    let testTQ = mount(<TranslationQuestion q={q} completionListener={questionCompleted} />)
+    let testTQ = mount(<TranslationQuestion q={q} completionListener={() => {}} />)
 
     testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
     testTQ.find("#submit-for-marking-button").simulate("click")
@@ -98,9 +97,8 @@ it('Disables continue button when question answered incorrectly', () => {
 it('Prompts for correction when question answered incorrectly', () => {
     let correctAnswer = "გამარჯობა"
 
-    let questionCompleted = jest.fn()
     let q = {type: 0, given: "hello", answer: correctAnswer}
-    let testTQ = mount(<TranslationQuestion q={q} completionListener={questionCompleted}/>)
+    let testTQ = mount(<TranslationQuestion q={q} completionListener={()=>{}} />)
 
     testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
     testTQ.find("#submit-for-marking-button").simulate("click")
@@ -109,26 +107,27 @@ it('Prompts for correction when question answered incorrectly', () => {
     expect(testTQ.find("#correction-answer").text()).toEqual(correctAnswer)
 })
 
-it('Doesnt call the completion listener when disabled continue button is clicked', () => {
+it('Doesnt call either the onCorrect or onIncorrect completion listeners when disabled continue button is clicked', () => {
     let correctAnswer = "გამარჯობა"
 
-    let questionCompleted = jest.fn()
+    let questionCompletedCorrectly = jest.fn()
+    let questionCompletedIncorrectly = jest.fn()
     let q = {type: 0, given: "hello", answer: correctAnswer}
-    let testTQ = mount(<TranslationQuestion q={q} completionListener={questionCompleted}/>)
+    let testTQ = mount(<TranslationQuestion q={q} onCorrect={questionCompletedCorrectly} onIncorrect={questionCompletedIncorrectly} />)
 
     testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
     testTQ.find("#submit-for-marking-button").simulate("click")
     testTQ.find("#continue-button").simulate("click")
 
-    expect(questionCompleted).toHaveBeenCalledTimes(0)
+    expect(questionCompletedCorrectly).toHaveBeenCalledTimes(0)
+    expect(questionCompletedIncorrectly).toHaveBeenCalledTimes(0)
 })
 
 it('Enables the previously disabled continue button when the correction is typed out', () => {
     let correctAnswer = "გამარჯობა"
 
-    let questionCompleted = jest.fn()
     let q = {type: 0, given: "hello", answer: correctAnswer}
-    let testTQ = mount(<TranslationQuestion q={q} completionListener={questionCompleted}/>)
+    let testTQ = mount(<TranslationQuestion q={q} completionListener={() => {}} />)
 
     testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
     testTQ.find("#submit-for-marking-button").simulate("click")
@@ -140,9 +139,8 @@ it('Enables the previously disabled continue button when the correction is typed
 it('Disables typing into the text area once the correction is typed out', () => {
     let correctAnswer = "გამარჯობა"
 
-    let questionCompleted = jest.fn()
     let q = {type: 0, given: "hello", answer: correctAnswer}
-    let testTQ = mount(<TranslationQuestion q={q} completionListener={questionCompleted}/>)
+    let testTQ = mount(<TranslationQuestion q={q} completionListener={() => {}}/>)
 
     testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
     testTQ.find("#submit-for-marking-button").simulate("click")
@@ -154,12 +152,26 @@ it('Disables typing into the text area once the correction is typed out', () => 
 it('Disables typing into the text area if a correct answer is marked', () => {
     let correctAnswer = "გამარჯობა"
 
-    let questionCompleted = jest.fn()
     let q = {type: 0, given: "hello", answer: correctAnswer}
-    let testTQ = mount(<TranslationQuestion q={q} completionListener={questionCompleted}/>)
+    let testTQ = mount(<TranslationQuestion q={q} completionListener={() => {}}/>)
 
     testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
     testTQ.find("#submit-for-marking-button").simulate("click")
 
     expect(testTQ.find("#answer-input-textbox").prop("readOnly")).toEqual(true)
+})
+
+it('Calls the onIncorrect completion listener after clicking continue when question answered incorrectly, then corrected', () => {
+    let correctAnswer = "გამარჯობა"
+
+    let questionCompletedIncorrectly = jest.fn()
+    let q = {type: 0, given: "hello", answer: correctAnswer}
+    let testTQ = mount(<TranslationQuestion q={q} onIncorrect={questionCompletedIncorrectly} />)
+
+    testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
+    testTQ.find("#submit-for-marking-button").simulate("click")
+    testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
+    testTQ.find("#continue-button").simulate("click")
+
+    expect(questionCompletedIncorrectly).toHaveBeenCalled()
 })
