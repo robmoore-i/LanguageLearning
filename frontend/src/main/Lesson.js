@@ -50,7 +50,7 @@ export default class Lesson extends Component {
         let mainContent
         if (this.state.currentQuestionIndex >= this.state.questions.length) {
             let accuracyPercentage = 100 * this.state.numQuestions / this.state.currentQuestionIndex
-            mainContent = <div id="lesson-accuracy" key="lesson-accuracy">{"Accuracy: " + accuracyPercentage + "%"}</div>
+            mainContent = this.renderLessonStats(accuracyPercentage)
         } else {
             mainContent = this.renderQuestion(this.state.questions[this.state.currentQuestionIndex])
         }
@@ -61,6 +61,10 @@ export default class Lesson extends Component {
             </header>,
             mainContent
         ]
+    }
+
+    renderLessonStats(accuracyPercentage) {
+        return <div id="lesson-accuracy" key="lesson-accuracy">{"Accuracy: " + accuracyPercentage + "%"}</div>
     }
 
     renderQuestion(q) {
