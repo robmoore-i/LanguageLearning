@@ -63,7 +63,7 @@ export default class Lesson extends Component {
     renderQuestion(q) {
         switch (q.type) {
             case QuestionTypes.TRANSLATION:
-                return <TranslationQuestion q={q} key="question" completionListener={this.questionCompleted()}/>
+                return <TranslationQuestion q={q} key="question" onCorrect={this.questionCompleted()} onIncorrect={this.questionCompleted()} />
             case QuestionTypes.MULTIPLE_CHOICE:
                 return <MultipleChoiceQuestion q={q} key="question" completionListener={this.questionCompleted()} />
             default:
