@@ -1,5 +1,5 @@
 const ProductionVariable = {
-    NAME: "name"
+    NAME: (n) => "name-" + String(n),
 }
 
 export default ProductionVariable
