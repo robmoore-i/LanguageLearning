@@ -27,3 +27,20 @@ it('Can make a translation question with multiple constant inputs', () => {
     expect(tq.given).toEqual("Hello Iris, I'm called Andris")
     expect(tq.answer).toEqual("გამარჯობა Iris, მე მქვია Andris")
 })
+
+it('Can make a translation question with multiple non-constant inputs', () => {
+    let tp = TranslationProduction(
+        (article, adj, noun) => "That is "  + article.english + " " + adj.english + " " + noun.english,
+        (article, adj, noun) => "Das ist " + article.german + " " + adj.german + " " + noun.german,
+        [ProductionVariable.ARTICLE, ProductionVariable.ADJECTIVE, ProductionVariable.NOUN])
+    let input = ObjectBuilder()
+        .put(ProductionVariable.ARTICLE, {english: "a", german: "ein"})
+        .put(ProductionVariable.ADJECTIVE, {english: "good", german: "gute"})
+        .put(ProductionVariable.NOUN, {english: "key", german: "Schlüssel"})
+        .build()
+    let tq = tp.using(input)
+
+    expect(tq.type).toEqual(0)
+    expect(tq.given).toEqual("That is a good key")
+    expect(tq.answer).toEqual("Das ist ein gute Schlüssel")
+})
