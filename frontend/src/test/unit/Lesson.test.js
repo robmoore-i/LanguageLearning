@@ -177,3 +177,17 @@ it('Makes its own TQs using productions sent by server', async () => {
     let expectedQuestions = [makeExpectedTQ("Imogen"), makeExpectedTQ("Simon")]
     expect(testLesson.state().questions).toEqual(expectedQuestions)
 })
+
+it('Makes its own TQs using productions sent by server with only one input', async () => {
+    let tp = TranslationProduction((name) => "Hello " + name, (name) => "გამარჯობა " + name, [ProductionVariable.NAME])
+    let input = ObjectBuilder().put(ProductionVariable.NAME, "Rob").build()
+    let testServer = mockServerProductions({name: "Hello!", productionInputsPairs: {productions: [tp], inputs: [[input]]}})
+
+    let testLesson = mount(<Lesson courseName="georgian" lessonNameInUrl="hello" server={testServer} fromProductions={true} />)
+    await sleep(mockServerLoadTimeMs)
+    testLesson.update()
+
+    let makeExpectedTQ = (name) => {return {type: 0, given: "Hello " + name, answer: "გამარჯობა " + name}}
+    let expectedQuestions = [makeExpectedTQ("Rob")]
+    expect(testLesson.state().questions).toEqual(expectedQuestions)
+})

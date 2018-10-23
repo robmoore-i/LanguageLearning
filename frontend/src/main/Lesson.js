@@ -32,10 +32,19 @@ export default class Lesson extends Component {
                 let productions = lesson.productionInputsPairs.productions
                 let inputs = lesson.productionInputsPairs.inputs
 
-                let q1 = productions[0].using(inputs[0][0])
-                let q2 = productions[0].using(inputs[0][1])
+                if (productions.length !== inputs.length) {
+                    throw new Error("Lesson.componentDidMount: Productions and Inputs from server have unequal lengths - cannot make questions")
+                }
 
-                let questions = [q1, q2]
+                let questions = []
+
+                for (let i = 0; i < inputs.length; i++) {
+                    const input = inputs[i];
+                    const production = productions[i]
+                    for (let j = 0; j < input.length; j++) {
+                        questions.push(production.using(input[j]))
+                    }
+                }
 
                 setState({
                     lessonName: lesson.name,
