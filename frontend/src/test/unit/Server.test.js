@@ -1,7 +1,7 @@
 import {TranslationProduction} from "../../main/TranslationProduction";
 import {ObjectBuilder} from "../../main/ObjectBuilder";
 import ProductionVariable from "../../main/ProductionVariable";
-import {LocalServer} from "../../main/server";
+import {LocalServer} from "../../main/Server";
 
 it('Creates questions itself when sent productions from the server', () => {
     let tp = TranslationProduction((name) => "Hello " + name, (name) => "გამარჯობა " + name, [ProductionVariable.NAME])

@@ -7,7 +7,7 @@ import registerServiceWorker from "./registerServiceWorker"
 // Resources
 import '../styles/App.css'
 // Main
-import {defaultServer} from './server'
+import {defaultServer} from './Server'
 import Home from './Home'
 import Courses from './Courses'
 import LessonMap from './LessonMap'
