@@ -6,6 +6,9 @@ import {shallow, mount} from 'enzyme'
 import Lesson from '../../main/Lesson'
 // Enzyme react-adapter configuration & others
 import {configureAdapter, sleep} from "../utils"
+import {ObjectBuilder} from "../../main/ObjectBuilder";
+import ProductionVariable from "../../main/ProductionVariable";
+import {TranslationProduction} from "../../main/TranslationProduction";
 
 configureAdapter()
 
@@ -15,17 +18,6 @@ let mockServer = lesson => {
     return {
         fetchLesson: (lessonNameInUrl) => {
             return new Promise(resolve => resolve(lesson))
-        }
-    }
-}
-
-let mockSlowServer = lesson => {
-    return {
-        fetchLesson: (lessonNameInUrl) => {
-            return new Promise(async resolve => {
-                await sleep(500)
-                resolve(lesson)
-            })
         }
     }
 }
@@ -49,7 +41,20 @@ it('Shows the lesson name from the lesson data', async () => {
     expect(text).toBe("Japanese: Hello!")
 })
 
+
+
 it('Shows the loading screen while loading', async () => {
+    let mockSlowServer = lesson => {
+        return {
+            fetchLesson: (lessonNameInUrl) => {
+                return new Promise(async resolve => {
+                    await sleep(500)
+                    resolve(lesson)
+                })
+            }
+        }
+    }
+
     // Given: The server is slow
     let slowServer = mockSlowServer({name: "boxing"})
 
@@ -148,4 +153,27 @@ it('Has a button to go back to the lesson map after completing a lesson', async 
     testLesson.update()
 
     expect(testLesson.find("#back-to-lessonmap-button").is('[href="/courses/arabic"]')).toBe(true)
+})
+
+let mockServerProductions = lesson => {
+    return {
+        fetchLessonProductions: (lessonNameInUrl) => {
+            return new Promise(resolve => resolve(lesson))
+        }
+    }
+}
+
+it('Makes its own TQs using productions sent by server', async () => {
+    let tp = TranslationProduction((name) => "Hello " + name, (name) => "გამარჯობა " + name, [ProductionVariable.NAME])
+    let input1 = ObjectBuilder().put(ProductionVariable.NAME, "Imogen").build()
+    let input2 = ObjectBuilder().put(ProductionVariable.NAME, "Simon").build()
+    let testServer = mockServerProductions({name: "Hello!", productionInputsPairs: {productions: [tp], inputs: [[input1, input2]]}})
+
+    let testLesson = mount(<Lesson courseName="georgian" lessonNameInUrl="hello" server={testServer} fromProductions={true} />)
+    await sleep(mockServerLoadTimeMs)
+    testLesson.update()
+
+    let makeExpectedTQ = (name) => {return {type: 0, given: "Hello " + name, answer: "გამარჯობა " + name}}
+    let expectedQuestions = [makeExpectedTQ("Imogen"), makeExpectedTQ("Simon")]
+    expect(testLesson.state().questions).toEqual(expectedQuestions)
 })
