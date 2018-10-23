@@ -1,7 +1,7 @@
 import {TranslationProduction} from "../../main/TranslationProduction";
 import {ObjectBuilder} from "../../main/ObjectBuilder";
 import ProductionVariable from "../../main/ProductionVariable";
-import {Server} from "../../main/server";
+import {LocalServer} from "../../main/server";
 
 it('Creates questions itself when sent productions from the server', () => {
     let tp = TranslationProduction((name) => "Hello " + name, (name) => "გამარჯობა " + name, [ProductionVariable.NAME])
@@ -19,7 +19,7 @@ it('Creates questions itself when sent productions from the server', () => {
             ))
         }
     }
-    let testServer = Server(mockFetcher)
+    let testServer = LocalServer(mockFetcher)
 
     testServer.fetchLesson("some_lesson").then(lesson => {
         expect(lesson.name).toEqual("Hello!")
@@ -40,7 +40,7 @@ it('Returns the sent questions when sent questions explicitly', () => {
             ))
         }
     }
-    let testServer = Server(mockFetcher)
+    let testServer = LocalServer(mockFetcher)
 
     testServer.fetchLesson("ayylmao").then(lesson => {
         expect(lesson.name).toEqual("Server Stuff")
@@ -54,7 +54,7 @@ it('Returns lesson names as given by server', () => {
             return new Promise(resolve => resolve(["A", "B", "C"]))
         }
     }
-    let testServer = Server(mockFetcher)
+    let testServer = LocalServer(mockFetcher)
 
     testServer.fetchLessonNames().then(lessonNames => {
         expect(lessonNames).toEqual(["A", "B", "C"])

@@ -1,35 +1,19 @@
 import config from './config'
 
-function fetchJSON(url) {
-    return fetch(url).then(response => response.json())
-}
-
-const server = {
-    fetchLessonNames: () => {
-        return fetchJSON(config.backendOrigin + "/lessonnames")
-    },
-
-    fetchLesson: (lessonNameInUrl) => {
-        return fetchJSON(config.backendOrigin + "/lesson/" + lessonNameInUrl)
-    }
-}
-
-export default server
-
-const DefaultFetcher = {
+const defaultFetcher = {
     fetchJSON: (url) => {
         return fetch(url).then(response => response.json())
     }
 }
 
-export function Server(fetcher) {
+function Server(backendOrigin, fetcher) {
     return {
         fetchLessonNames: () => {
-            return fetcher.fetchJSON(config.backendOrigin + "/lessonnames")
+            return fetcher.fetchJSON(backendOrigin + "/lessonnames")
         },
 
         fetchLesson: (lessonNameInUrl) => {
-            return fetcher.fetchJSON(config.backendOrigin + "/lesson/" + lessonNameInUrl).then(lesson => {
+            return fetcher.fetchJSON(backendOrigin + "/lesson/" + lessonNameInUrl).then(lesson => {
                 if ("productionInputsPairs" in lesson) {
                     let productions = lesson.productionInputsPairs.productions
                     let inputs = lesson.productionInputsPairs.inputs
@@ -62,4 +46,5 @@ export function Server(fetcher) {
     }
 }
 
-export const DefaultServer = Server(DefaultFetcher)
+export const LocalServer = (fetcher) => Server(config.backendOrigin, fetcher)
+export const defaultServer = LocalServer(defaultFetcher)

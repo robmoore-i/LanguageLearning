@@ -7,7 +7,7 @@ import registerServiceWorker from "./registerServiceWorker"
 // Resources
 import '../styles/App.css'
 // Main
-import server from './server'
+import {defaultServer} from './server'
 import Home from './Home'
 import Courses from './Courses'
 import LessonMap from './LessonMap'
@@ -37,12 +37,12 @@ export default class App extends Component {
 
 const MatchedLessonMap = ({ match }) => {
     return (
-        <LessonMap courseName={match.params.course} server={server}/>
+        <LessonMap courseName={match.params.course} server={defaultServer}/>
     )
 }
 
 const MatchedLesson = ({ match }) => {
     return (
-        <Lesson courseName={match.params.course} lessonNameInUrl={match.params.lesson} server={server}/>
+        <Lesson courseName={match.params.course} lessonNameInUrl={match.params.lesson} server={defaultServer}/>
     )
 }
