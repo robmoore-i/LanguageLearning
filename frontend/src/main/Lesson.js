@@ -26,45 +26,15 @@ export default class Lesson extends Component {
 
     componentDidMount() {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within promise closure.
-
-        if (this.props.fromProductions) {
-            this.server.fetchLessonProductions(this.props.lessonNameInUrl).then(lesson => {
-                let productions = lesson.productionInputsPairs.productions
-                let inputs = lesson.productionInputsPairs.inputs
-
-                if (productions.length !== inputs.length) {
-                    throw new Error("Lesson.componentDidMount: Productions and Inputs from server have unequal lengths - cannot make questions")
-                }
-
-                let questions = []
-
-                for (let i = 0; i < inputs.length; i++) {
-                    const input = inputs[i];
-                    const production = productions[i]
-                    for (let j = 0; j < input.length; j++) {
-                        questions.push(production.using(input[j]))
-                    }
-                }
-
-                setState({
-                    lessonName: lesson.name,
-                    questions: questions,
-                    numQuestions: questions.length,
-                    loaded: true,
-                    startTime: (new Date())
-                })
+        this.server.fetchLesson(this.props.lessonNameInUrl).then(lesson => {
+            setState({
+                lessonName: lesson.name,
+                questions: lesson.questions,
+                numQuestions: lesson.questions.length,
+                loaded: true,
+                startTime: (new Date())
             })
-        } else {
-            this.server.fetchLesson(this.props.lessonNameInUrl).then(lesson => {
-                setState({
-                    lessonName: lesson.name,
-                    questions: lesson.questions,
-                    numQuestions: lesson.questions.length,
-                    loaded: true,
-                    startTime: (new Date())
-                })
-            })
-        }
+        })
     }
 
     render() {
