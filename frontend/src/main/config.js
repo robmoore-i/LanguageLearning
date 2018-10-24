@@ -1,5 +1,5 @@
 const config = {
-    backendOrigin: "http://localhost:8000"
+    localBackendOrigin: "http://localhost:8000"
 }
 
 export default config

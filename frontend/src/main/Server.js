@@ -46,5 +46,5 @@ function Server(backendOrigin, fetcher) {
     }
 }
 
-export const LocalServer = (fetcher) => Server(config.backendOrigin, fetcher)
+export const LocalServer = (fetcher) => Server(config.localBackendOrigin, fetcher)
 export const defaultServer = LocalServer(defaultFetcher)
