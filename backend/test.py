@@ -1,10 +1,19 @@
 #!/usr/bin/python3
 
+import os
 import time
 import sys
 
 import requests
 from assertpy import assert_that
+
+def start_backend():
+    os.system("./bin/src &")
+
+
+def stop_backend():
+    os.system("pkill -f ./bin/src")
+
 
 def lesson_names():
     res = requests.get("http://localhost:8000/lessonnames")
@@ -52,24 +61,24 @@ def main():
         print(usage)
         exit(1)
     elif sys.argv[1] == "a": # 'a' is for 'already running'
-        start_backend = False
+        start_server = False
     elif sys.argv[1] == "r": # 'r' is for 'run it yourself'
-        start_backend = True
+        start_server = True
     else:
         print(usage)
         exit(1)
 
-    if start_backend:
+    if start_server:
         print("=== starting backend ===")
-        exit(1)
+        start_backend()
         time.sleep(1)
 
     print("=== starting tests ===")
     tests()
 
-    if start_backend:
+    if start_server:
         print("=== killing backend ===")
-        exit(1)
+        stop_backend()
 
     print("=== finished tests ===")
 
