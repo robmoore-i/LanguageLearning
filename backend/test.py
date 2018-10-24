@@ -1,32 +1,30 @@
 #!/usr/bin/python3
 
-import os
 import time
 import sys
 
 import requests
 from assertpy import assert_that
 
-QHOME = os.environ["QHOME"]
-
-def start_backend_q():
-    os.system(QHOME + "/l32/q backend.q &")
-
-
-def kill_backend_q():
-    os.system("pkill -f \"" + QHOME + "/l32/q backend.q\"")
-
-
 def lesson_names():
     res = requests.get("http://localhost:8000/lessonnames")
     assert_that(res.status_code).is_equal_to(200)
     assert_that(res.json()).is_equal_to(["hello", "what are you called?"])
+    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:3000")
 
 
 def lesson():
     res = requests.get("http://localhost:8000/lesson/hello")
     assert_that(res.status_code).is_equal_to(200)
-    assert_that(res.json()).is_equal_to({"name": "hello"})
+    assert_that(res.json()).is_equal_to(
+        {
+            'name': 'hello',
+            'questions': [
+                {'type': 0, 'given': 'hello', 'answer': 'გამარჯობა'},
+                {'type': 1, 'question': 'sounds like "i" in English', 'a': 'ა', 'b': 'ო', 'c': 'უ', 'd': 'ი', 'answer': 'd'}
+            ]
+        })
+    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:3000")
 
 
 def run_test(test_name, test):
@@ -63,7 +61,7 @@ def main():
 
     if start_backend:
         print("=== starting backend ===")
-        start_backend_q()
+        exit(1)
         time.sleep(1)
 
     print("=== starting tests ===")
@@ -71,7 +69,7 @@ def main():
 
     if start_backend:
         print("=== killing backend ===")
-        kill_backend_q()
+        exit(1)
 
     print("=== finished tests ===")
 
