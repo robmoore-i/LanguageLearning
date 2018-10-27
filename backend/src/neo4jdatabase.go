@@ -120,7 +120,7 @@ func parseCourse(node graph.Node) Course {
 		panic("neo4jdatabase:parseCourse")
 	}
 
-	return Course{Name: name, Image: bytes}
+	return Course{Name: name, Image: string(bytes)}
 }
 
 func QueryCourses() []Course {

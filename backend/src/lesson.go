@@ -13,7 +13,7 @@ type JsonEncodable interface {
 
 type Course struct {
 	Name   	string  `json:"name"`
-	Image  	[]byte	`json:"image"`
+	Image  	string	`json:"image"`
 }
 
 // Lesson
