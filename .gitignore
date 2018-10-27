@@ -1,3 +1,4 @@
 .idea/
 frontend.log
 backend.log
+resetdb.sh
