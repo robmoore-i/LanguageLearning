@@ -5,16 +5,19 @@ import {LocalServer} from "../../main/Server";
 
 it('Creates questions itself when sent productions from the server', () => {
     let tp = TranslationProduction((name) => "Hello " + name, (name) => "გამარჯობა " + name, [ProductionVariable.NAME])
-    let input = ObjectBuilder().put(ProductionVariable.NAME, "Rob").build()
+    let input1 = ObjectBuilder().put(ProductionVariable.NAME, "Imogen").build()
+    let input2 = ObjectBuilder().put(ProductionVariable.NAME, "Simon").build()
     let mockFetcher = {
         postJSON: (url, body) => {
             return new Promise(resolve => resolve(
                 {
                     name: "Hello!",
-                    productionInputsPairs: {
-                        productions: [tp],
-                        inputs: [[input]]
-                    }
+                    productions: [
+                        {
+                            production: tp,
+                            inputs: [input1, input2]
+                        }
+                    ]
                 }
             ))
         }
@@ -23,7 +26,7 @@ it('Creates questions itself when sent productions from the server', () => {
 
     testServer.fetchLesson("some lesson").then(lesson => {
         expect(lesson.name).toEqual("Hello!")
-        expect(lesson.questions).toEqual([tp.using(input)])
+        expect(lesson.questions).toEqual([tp.using(input1), tp.using(input2)])
     })
 })
 
