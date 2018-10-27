@@ -25,16 +25,17 @@ def lesson_names():
 def lesson():
     payload = {"lessonName": "Hello"}
     res = requests.post("http://localhost:8000/lesson", json=payload)
+
     assert_that(res.status_code).is_equal_to(200)
-    assert_that(res.json()).is_equal_to(
-        {
-            'name': 'Hello',
-            'questions': [
-                {'type': 0, 'given': 'Hello', 'answer': 'გამარჯობა'},
-                {'type': 1, 'question': 'sounds like "i" in English', 'a': 'ა', 'b': 'ო', 'c': 'უ', 'd': 'ი', 'answer': 'd'}
-            ]
-        })
     assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:3000")
+
+    resJson = res.json()
+    assert_that(resJson["name"]).is_equal_to("Hello")
+    assert_that(sorted(resJson["questions"], key=lambda q: q["type"])).is_equal_to([
+        {'type': 0, 'given': 'Hello', 'answer': 'გამარჯობა'},
+        {'type': 1, 'question': 'sounds like "i" in English', 'a': 'ა', 'b': 'ო', 'c': 'უ', 'd': 'ი', 'answer': 'd'}
+    ])
+    assert_that(sorted(resJson.keys())).is_equal_to(["name", "questions"])
 
 
 def run_test(test_name, test):
