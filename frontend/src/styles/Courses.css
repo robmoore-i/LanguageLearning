@@ -1,4 +1,3 @@
-/* Courses */
 .Courses-list {
     text-align: center;
 }
@@ -16,20 +15,4 @@
 
 .Courses-list {
     padding: 20px;
-}
-
-/*Course Button*/
-.Course-title {
-    white-space: nowrap;
-}
-
-.Course-icon {
-    height: 100px;
-    opacity: 0.75;
-    padding: 5px;
-    background-color: #222222;
-}
-.Course-icon:hover {
-    opacity: 1;
-    cursor: pointer;
 }
