@@ -13,57 +13,38 @@ var (
 	neo4jURL = strings.Join([]string{"bolt://", neo4jUser, ":", neo4jPw, "@localhost:7687"}, "")
 )
 
-func performQuery(cypher string, params map[string]interface{}) driver.Rows {
+func performQuery(cypher string, params map[string]interface{}) (driver.Rows, driver.Conn, driver.Stmt) {
 	// Open connection
 	db, err := driver.NewDriver().OpenNeo(neo4jURL)
 	if err != nil {
 		log.Printf("Error opening neo4j connection")
-		panic("neo4jdatabase:QueryLesson")
+		db.Close()
+		panic("neo4jdatabase:performQuery")
 	}
-	defer db.Close()
 
 	// Create statement
 	stmt, err := db.PrepareNeo(cypher)
 	if err != nil {
 		log.Printf("Error preparing cypher query statement")
-		panic("neo4jdatabase:QueryLesson")
+		stmt.Close()
+		panic("neo4jdatabase:performQuery")
 	}
-	defer stmt.Close()
 
 	// Perform query
 	rows, err := stmt.QueryNeo(params)
 	if err != nil {
 		log.Printf("Error performing query")
-		panic("neo4jdatabase:QueryLesson")
+		panic("neo4jdatabase:performQuery")
 	}
 
-	return rows
+	return rows, db, stmt
 }
 
 func QueryLessonNames() []string {
-	// Open connection
-	db, err := driver.NewDriver().OpenNeo(neo4jURL)
-	if err != nil {
-		log.Printf("Error opening neo4j connection")
-		panic("neo4jdatabase:QueryLesson")
-	}
-	defer db.Close()
-
-	// Create statement
 	cypher := `MATCH (n:Lesson) RETURN n.name`
-	stmt, err := db.PrepareNeo(cypher)
-	if err != nil {
-		log.Printf("Error preparing cypher query statement")
-		panic("neo4jdatabase:QueryLesson")
-	}
+	rows, db, stmt := performQuery(cypher, nil)
+	defer db.Close()
 	defer stmt.Close()
-
-	// Perform query
-	rows, err := stmt.QueryNeo(nil)
-	if err != nil {
-		log.Printf("Error performing query")
-		panic("neo4jdatabase:QueryLesson")
-	}
 
 	// Extract data
 	var lessonNames []string
@@ -106,29 +87,11 @@ func parseQuestion(node graph.Node) JsonEncodable {
 }
 
 func QueryLesson(lessonName string) Lesson {
-	// Open connection
-	db, err := driver.NewDriver().OpenNeo(neo4jURL)
-	if err != nil {
-		log.Printf("Error opening neo4j connection")
-		panic("neo4jdatabase:QueryLesson")
-	}
-	defer db.Close()
-
-	// Create statement
 	cypher := `MATCH (n:Lesson {name: {name}})-[:HAS_QUESTION]->(q) RETURN q`
-	stmt, err := db.PrepareNeo(cypher)
-	if err != nil {
-		log.Printf("Error preparing cypher query statement")
-		panic("neo4jdatabase:QueryLesson")
-	}
+	params := map[string]interface{}{"name": lessonName}
+	rows, db, stmt := performQuery(cypher, params)
+	defer db.Close()
 	defer stmt.Close()
-
-	// Perform query
-	rows, err := stmt.QueryNeo(map[string]interface{}{"name": lessonName})
-	if err != nil {
-		log.Printf("Error performing query")
-		panic("neo4jdatabase:QueryLesson")
-	}
 
 	// Extract data
 	var questions []JsonEncodable
