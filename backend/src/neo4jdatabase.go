@@ -109,18 +109,26 @@ func QueryLesson(lessonName string) Lesson {
 	return Lesson{Name: lessonName, Questions: questions}
 }
 
+func parseImageType(filename string) string {
+	fileExt := filename[len(filename) - 3:] // The last 3 characters
+	return fileExt
+}
+
 func parseCourse(node graph.Node) Course {
 	p := node.Properties
 	name := p["name"].(string)
 	relPath := p["image"].(string)
 	path := strings.Join([]string{imagesPath, relPath}, "")
+
+	imgType := parseImageType(relPath)
+
 	bytes, err := ioutil.ReadFile(path)
 	if err != nil {
 		log.Printf("Couldn't read course image from path %#v", path)
 		panic("neo4jdatabase:parseCourse")
 	}
 
-	return Course{Name: name, Image: string(bytes)}
+	return Course{Name: name, Image: string(bytes), ImageType: imgType}
 }
 
 func QueryCourses() []Course {

@@ -12,8 +12,9 @@ type JsonEncodable interface {
 // Course
 
 type Course struct {
-	Name   	string  `json:"name"`
-	Image  	string	`json:"image"`
+	Name   		string  `json:"name"`
+	Image  		string	`json:"image"`
+	ImageType  	string	`json:"imageType"`
 }
 
 // Lesson

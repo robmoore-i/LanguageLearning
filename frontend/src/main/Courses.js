@@ -24,7 +24,9 @@ export default class Courses extends Component {
 
     courseButtons() {
         return this.state.courses.map(course => {
-            return <CourseButton id={"course-button-" + course.name} key={course.name} courseName={course.name} src={course.image} />
+            return <CourseButton id={"course-button-" + course.name} key={course.name}
+                                 courseName={course.name}
+                                 image={{type: course.imageType, src: course.image}} />
         })
     }
 
@@ -44,7 +46,14 @@ export default class Courses extends Component {
 class CourseButton extends Component {
     constructor(props) {
         super(props)
-        this.svgB64 = btoa(this.props.src)
+        this.img = this.readImg(this.props.image)
+    }
+
+    readImg(image) {
+        if (image.type === "svg") {
+            let svgB64 = btoa(image.src)
+            return <img className="Course-icon" alt={this.props.courseName} src={"data:image/svg+xml;base64," + svgB64} />
+        }
     }
 
     render() {
@@ -52,7 +61,7 @@ class CourseButton extends Component {
             <div>
                 <h3 className="Course-title">{this.props.courseName}</h3>
                 <a id={"course-link-" + this.props.courseName} href={"courses/" + this.props.courseName}>
-                    <img className="Course-icon" alt={this.props.courseName} src={"data:image/svg+xml;base64," + this.svgB64} />
+                    {this.img}
                 </a>
                 <br/>
                 <br/>
