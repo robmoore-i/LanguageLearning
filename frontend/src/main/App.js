@@ -25,7 +25,7 @@ export default class App extends Component {
                 <BrowserRouter>
                     <Switch>
                         <Route exact path="/" component={Home}/>
-                        <Route exact path="/courses" component={Courses}/>
+                        <Route exact path="/courses" component={AllCourses}/>
                         <Route exact path="/courses/:course" component={MatchedLessonMap} />
                         <Route path="/courses/:course/:lesson" component={MatchedLesson} />
                     </Switch>
@@ -33,6 +33,12 @@ export default class App extends Component {
             </div>
         )
     }
+}
+
+const AllCourses = () => {
+    return (
+        <Courses />
+    )
 }
 
 const MatchedLessonMap = ({ match }) => {
