@@ -4,9 +4,15 @@ import ProductionVariable from "../../main/ProductionVariable";
 import {LocalServer} from "../../main/Server";
 
 it('Creates questions itself when sent productions from the server', () => {
-    let tp = TranslationProduction((name) => "Hello " + name, (name) => "გამარჯობა " + name, [ProductionVariable.NAME])
-    let input1 = ObjectBuilder().put(ProductionVariable.NAME, "Imogen").build()
-    let input2 = ObjectBuilder().put(ProductionVariable.NAME, "Simon").build()
+    let jsonTP = {
+        given: "(name) => \"Hello \" + name",
+        answer: "(name) => \"გამარჯობა \" + name",
+        variables: [ProductionVariable.NAME]
+    }
+
+    let input1 = ObjectBuilder().put(ProductionVariable.NAME, "Imogen").build() // {name: Imogen}
+    let input2 = ObjectBuilder().put(ProductionVariable.NAME, "Simon").build()  // (name: Simon}
+
     let mockFetcher = {
         postJSON: (url, body) => {
             return new Promise(resolve => resolve(
@@ -14,7 +20,7 @@ it('Creates questions itself when sent productions from the server', () => {
                     name: "Hello!",
                     productions: [
                         {
-                            production: tp,
+                            production: jsonTP,
                             inputs: [input1, input2]
                         }
                     ]
@@ -24,9 +30,10 @@ it('Creates questions itself when sent productions from the server', () => {
     }
     let testServer = LocalServer(mockFetcher)
 
+    let expectedProduction = TranslationProduction((name) => "Hello " + name, (name) => "გამარჯობა " + name, [ProductionVariable.NAME])
     testServer.fetchLesson("some lesson").then(lesson => {
         expect(lesson.name).toEqual("Hello!")
-        expect(lesson.questions).toEqual([tp.using(input1), tp.using(input2)])
+        expect(lesson.questions).toEqual([expectedProduction.using(input1), expectedProduction.using(input2)])
     })
 })
 

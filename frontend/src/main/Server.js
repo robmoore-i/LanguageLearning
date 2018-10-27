@@ -1,5 +1,7 @@
 // Main
 import config from './config'
+import {TranslationProduction} from "./TranslationProduction";
+import ProductionVariable from "./ProductionVariable";
 
 const defaultFetcher = {
     getJSON: (url) => {
@@ -27,8 +29,10 @@ function Server(backendOrigin, fetcher) {
 
                     let questions = []
                     pairs.forEach((pair) => {
+                        let p = pair.production
+                        let tp = TranslationProduction(eval(p.given), eval(p.answer), p.variables)
                         pair.inputs.forEach((input) => {
-                            questions.push(pair.production.using(input))
+                            questions.push(tp.using(input))
                         })
                     })
 
