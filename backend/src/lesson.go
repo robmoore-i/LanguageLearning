@@ -13,7 +13,7 @@ type JsonEncodable interface {
 
 type Lesson struct {
 	Name      string          `json:"name"`
-	Questions [2]JsonEncodable `json:"questions"`
+	Questions []JsonEncodable `json:"questions"`
 }
 
 // MCQ

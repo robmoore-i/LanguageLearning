@@ -115,5 +115,5 @@ func QueryLesson(lessonName string) Lesson {
 		row, _, err = rows.NextNeo()
 	}
 
-	return Lesson{Name: lessonName, Questions: [2]JsonEncodable{questions[0], questions[1]}}
+	return Lesson{Name: lessonName, Questions: questions}
 }
