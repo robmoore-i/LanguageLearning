@@ -5,12 +5,15 @@ import (
 	"log"
 	"strings"
 	"github.com/johnnadratowski/golang-neo4j-bolt-driver/structures/graph"
+	"io/ioutil"
 )
 
 var (
 	neo4jUser = "neo4j"
 	neo4jPw = "zuhlke"
 	neo4jURL = strings.Join([]string{"bolt://", neo4jUser, ":", neo4jPw, "@localhost:7687"}, "")
+
+	imagesPath = "/home/rob/Documents/language/melange/database/images/"
 )
 
 func performQuery(cypher string, params map[string]interface{}) (driver.Rows, driver.Conn, driver.Stmt) {
@@ -104,4 +107,37 @@ func QueryLesson(lessonName string) Lesson {
 	}
 
 	return Lesson{Name: lessonName, Questions: questions}
+}
+
+func parseCourse(node graph.Node) Course {
+	p := node.Properties
+	name := p["name"].(string)
+	relPath := p["image"].(string)
+	path := strings.Join([]string{imagesPath, relPath}, "")
+	bytes, err := ioutil.ReadFile(path)
+	if err != nil {
+		log.Printf("Couldn't read course image from path %#v", path)
+		panic("neo4jdatabase:parseCourse")
+	}
+
+	return Course{Name: name, Image: bytes}
+}
+
+func QueryCourses() []Course {
+	cypher := `MATCH (c:Course) RETURN c`
+	rows, db, stmt := performQuery(cypher, nil)
+	defer db.Close()
+	defer stmt.Close()
+
+	// Extract data
+	var courses []Course
+	row, _, err := rows.NextNeo()
+	for row != nil && err == nil {
+		node := row[0].(graph.Node)
+		parsedCourse := parseCourse(node)
+		courses = append(courses, parsedCourse)
+		row, _, err = rows.NextNeo()
+	}
+
+	return courses
 }

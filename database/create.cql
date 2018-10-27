@@ -5,7 +5,7 @@ MATCH (n) DETACH DELETE n;
 MATCH (n) DELETE (n);
 
 // Georgian Course
-CREATE (hello:Lesson {name: "Hello"})<-[:HAS_LESSON]-(georgian:Course {name: "Georgian"})-[:HAS_LESSON]->(whatAreYouCalled:Lesson {name: "What are you called?"})
+CREATE (hello:Lesson {name: "Hello"})<-[:HAS_LESSON]-(georgian:Course {name: "Georgian", image: "flagGeorgia.svg"})-[:HAS_LESSON]->(whatAreYouCalled:Lesson {name: "What are you called?"})
 RETURN georgian,hello,whatAreYouCalled;
 
 // Georgian Lesson: Hello

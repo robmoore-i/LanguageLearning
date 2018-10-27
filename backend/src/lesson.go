@@ -9,6 +9,13 @@ type JsonEncodable interface {
 	encode(w http.ResponseWriter) error
 }
 
+// Course
+
+type Course struct {
+	Name   	string  `json:"name"`
+	Image  	[]byte	`json:"image"`
+}
+
 // Lesson
 
 type Lesson struct {
@@ -29,7 +36,7 @@ type MultipleChoiceQuestion struct {
 }
 
 func NewMCQ(question string, a string, b string, c string, d string, answer string,) MultipleChoiceQuestion {
-	mcq := MultipleChoiceQuestion{Type: 1, Question:question, A:a, B:b, C:c, D:d, Answer:answer}
+	mcq := MultipleChoiceQuestion{Type: 1, Question: question, A: a, B: b, C: c, D: d, Answer: answer}
 	return mcq
 }
 
@@ -46,7 +53,7 @@ type TranslationQuestion struct {
 }
 
 func NewTQ(given string, answer string) TranslationQuestion {
-	tq := TranslationQuestion{Type: 0, Given:given, Answer:answer}
+	tq := TranslationQuestion{Type: 0, Given: given, Answer: answer}
 	return tq
 }
 

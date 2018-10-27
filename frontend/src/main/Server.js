@@ -25,7 +25,7 @@ function Server(backendOrigin, fetcher) {
         },
 
         fetchLesson: (lessonName) => {
-            return fetcher.postJSON(backendOrigin + "/lesson", {"lessonName": lessonName}).then(lesson => {
+            return fetcher.postJSON(backendOrigin + "/lesson", {lessonName: lessonName}).then(lesson => {
                 if ("productionInputsPairs" in lesson) {
                     let productions = lesson.productionInputsPairs.productions
                     let inputs = lesson.productionInputsPairs.inputs
@@ -57,6 +57,7 @@ function Server(backendOrigin, fetcher) {
         },
 
         fetchCourses: () => {
+            // return fetcher.getJSON(backendOrigin + "/courses")
             return new Promise(resolve => resolve([{name:"Georgian", image: georgia}, {name: "German", image: germany}]))
         }
     }

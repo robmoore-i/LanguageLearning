@@ -43,3 +43,16 @@ func GetLesson(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 }
+
+func GetCourses(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
+	courses := QueryCourses()
+
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(courses); err != nil {
+		panic(err)
+	}
+}
