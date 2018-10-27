@@ -37,7 +37,7 @@ export default class App extends Component {
 
 const AllCourses = () => {
     return (
-        <Courses />
+        <Courses server={defaultServer} />
     )
 }
 

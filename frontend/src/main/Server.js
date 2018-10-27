@@ -49,6 +49,10 @@ function Server(backendOrigin, fetcher) {
                     }
                 }
             })
+        },
+
+        fetchCourseNames: () => {
+            return new Promise(resolve => resolve(["Georgian", "German"]))
         }
     }
 }

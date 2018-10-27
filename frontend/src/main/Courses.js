@@ -1,13 +1,29 @@
 // React
 import React, {Component} from "react"
-import { Link } from 'react-router-dom'
-
 // Resources
 import '../styles/Courses.css'
 import georgia from '../images/flagGeorgia.svg'
 import germany from '../images/flagGermany.svg'
 
 export default class Courses extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            courseNames: [],
+            loaded: false
+        }
+    }
+
+    componentDidMount() {
+        const setState = this.setState.bind(this) // Bind 'this' reference for use within promise closure.
+        this.props.server.fetchCourseNames().then(courseNames => {
+            setState({
+                courseNames: courseNames,
+                loaded: true
+            })
+        })
+    }
+
     render() {
         return [
             <header key="header" className="Courses-header">
@@ -30,9 +46,9 @@ class CourseButton extends Component {
         return (
             <div>
                 <h3 className="Course-title">{capitalisedName}</h3>
-                <Link id={"course-link-" + courseName} to={"courses/" + courseName}>
+                <a id={"course-link-" + courseName} href={"courses/" + courseName}>
                     <img className="Course-icon" alt={capitalisedName} src={imageSrc}/>
-                </Link>
+                </a>
                 <br/>
                 <br/>
             </div>
