@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"github.com/gorilla/mux"
 )
 
 func GetLessonNames(w http.ResponseWriter, r *http.Request) {
@@ -23,15 +24,12 @@ func GetLesson(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-	tq := NewTQ("hello", "გამარჯობა")
-	mcq := NewMCQ("sounds like \"i\" in English", "ა", "ო", "უ", "ი", "d")
-
-	questions := [...]JsonEncodable{tq, mcq}
-
-	l := Lesson{Name:"hello", Questions: questions}
+	vars := mux.Vars(r)
+	lessonName := vars["lessonName"]
+	lesson := QueryLesson(lessonName)
 
 	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(l); err != nil {
+	if err := json.NewEncoder(w).Encode(lesson); err != nil {
 		panic(err)
 	}
 }
