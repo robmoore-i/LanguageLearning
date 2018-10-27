@@ -29,7 +29,7 @@ def lesson():
         {
             'name': 'hello',
             'questions': [
-                {'type': 0, 'given': 'hello', 'answer': 'გამარჯობა'},
+                {'type': 0, 'given': 'Hello', 'answer': 'გამარჯობა'},
                 {'type': 1, 'question': 'sounds like "i" in English', 'a': 'ა', 'b': 'ო', 'c': 'უ', 'd': 'ი', 'answer': 'd'}
             ]
         })
@@ -44,7 +44,6 @@ def run_test(test_name, test):
         print("fail\n\t" + str(e))
     except Exception as e:
         print("error\n\t" + str(e))
-
 
 
 def tests():

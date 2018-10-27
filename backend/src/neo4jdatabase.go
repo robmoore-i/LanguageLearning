@@ -76,8 +76,6 @@ func parseQuestion(node graph.Node) JsonEncodable {
 		log.Printf("Couldn't find any appropriate question type label on node %#v", node)
 		panic("neo4jdatabase:parseQuestion")
 	}
-
-	return NewTQ("hello", "გამარჯობა")
 }
 
 func QueryLesson(lessonName string) Lesson {
