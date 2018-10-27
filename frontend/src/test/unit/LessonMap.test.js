@@ -90,7 +90,7 @@ it('creates links to lessons from the provided lesson data', async () => {
     expect(pepeLessonButton.is('[to="spanish/pepe"]')).toBe(true)
 })
 
-it('homogenises lesson names which have spaces or punctuation', async () => {
+it('encodes lesson names which have spaces or punctuation', async () => {
     // Given: There is a lesson available on the server whose name ought not to be put in a url as-is.
     let testServer = mockServer(["A lesson that shouldn't be in a url"])
 
@@ -101,7 +101,7 @@ it('homogenises lesson names which have spaces or punctuation', async () => {
     let lessonsList = testLessonMap.find('.Lesson-list').first()
     let lessonButton = lessonsList.children().at(0).dive()
 
-    expect(lessonButton.is('[to="edgecases/A_lesson_that_shouldnt_be_in_a_url"]')).toBe(true)
+    expect(lessonButton.is('[to="edgecases/A%20lesson%20that%20shouldn\'t%20be%20in%20a%20url"]')).toBe(true)
 })
 
 it('shows correct link text for lesson names with spaces or punctuation', async () => {

@@ -59,7 +59,7 @@ export default class Lesson extends Component {
 
         return [
             <header className="Lesson-header" key="header">
-                <h1 className="Lesson-title">{capitalisedCourseName}: {this.state.lessonName}</h1>,
+                <h1 className="Lesson-title">{capitalisedCourseName}: {this.lessonName}</h1>,
             </header>,
             mainContent
         ]
@@ -125,7 +125,7 @@ export default class Lesson extends Component {
 
     renderLoading() {
         return (
-            <h1>Loading {this.courseName}: {this.state.lessonName}</h1>
+            <h1>Loading {this.courseName}: {this.lessonName}</h1>
         )
     }
 }
