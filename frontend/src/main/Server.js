@@ -1,19 +1,26 @@
 import config from './config'
 
 const defaultFetcher = {
-    fetchJSON: (url) => {
+    getJSON: (url) => {
         return fetch(url).then(response => response.json())
+    },
+
+    postJSON: (url, body) => {
+        return fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(body)
+        }).then(response => response.json())
     }
 }
 
 function Server(backendOrigin, fetcher) {
     return {
         fetchLessonNames: () => {
-            return fetcher.fetchJSON(backendOrigin + "/lessonnames")
+            return fetcher.getJSON(backendOrigin + "/lessonnames")
         },
 
-        fetchLesson: (lessonNameInUrl) => {
-            return fetcher.fetchJSON(backendOrigin + "/lesson/" + lessonNameInUrl).then(lesson => {
+        fetchLesson: (lessonName) => {
+            return fetcher.postJSON(backendOrigin + "/lesson", {"lessonName": lessonName}).then(lesson => {
                 if ("productionInputsPairs" in lesson) {
                     let productions = lesson.productionInputsPairs.productions
                     let inputs = lesson.productionInputsPairs.inputs

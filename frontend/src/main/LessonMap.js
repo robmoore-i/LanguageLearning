@@ -58,23 +58,10 @@ export default class LessonMap extends Component {
 }
 
 class LessonButton extends Component {
-    cleanupLessonName(lessonName) {
-        let isNotAlphanumeric = c => /[^a-zA-Z]/.test(c)
-        return lessonName.split("").map((c) => {
-            if (c === " ") {
-                return "_"
-            } else if (isNotAlphanumeric(c)) {
-                return ""
-            } else {
-                return c
-            }
-        }).join("")
-    }
-
     render() {
         let lessonName = this.props.lessonName
-        let lessonNameForURL = this.cleanupLessonName(lessonName)
-        let linkTo = this.props.courseName + "/" + lessonNameForURL
+        let encodedLessonName = encodeURIComponent(lessonName)
+        let linkTo = this.props.courseName + "/" + encodedLessonName
         return (
             <Link className="Lesson-button" to={linkTo}>
                 {lessonName}

@@ -13,22 +13,21 @@ export default class Lesson extends Component {
 
         this.server = this.props.server
         this.courseName = this.props.courseName
+        this.lessonName = decodeURIComponent(this.props.encodedLessonName)
 
         this.state = {
-            lessonName: this.props.lessonNameInUrl, // Placeholder until server response.
             loaded: false,
             currentQuestionIndex: 0,
             questions: [],
-            numQuestions: -1, // Cause something note-worthily weird in the case of premature usage in an accuracy calculation.
+            numQuestions: -1, // -1 will cause something note-worthily weird in the case of premature usage in an accuracy calculation.
             startTime: (new Date())
         }
     }
 
     componentDidMount() {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within promise closure.
-        this.server.fetchLesson(this.props.lessonNameInUrl).then(lesson => {
+        this.server.fetchLesson(this.lessonName).then(lesson => {
             setState({
-                lessonName: lesson.name,
                 questions: lesson.questions,
                 numQuestions: lesson.questions.length,
                 loaded: true,
