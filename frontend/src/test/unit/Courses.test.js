@@ -52,7 +52,7 @@ it('Directs the user to courses/german upon pressing the [german flag]', async (
     expect(germanCourseLink.is('[href="courses/german"]')).toBe(true)
 })
 
-it('Requests the list of courses from the server', async () => {
+it('Requests the list of course names from the server', async () => {
     let testServer = mockServer(["Georgian", "German"])
     const spyFetch = jest.spyOn(testServer, "fetchCourseNames")
 
