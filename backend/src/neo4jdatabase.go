@@ -41,7 +41,7 @@ func performQuery(cypher string, params map[string]interface{}) (driver.Rows, dr
 }
 
 func QueryLessonNames() []string {
-	cypher := `MATCH (n:Lesson) RETURN n.name`
+	cypher := `MATCH (l:Lesson) RETURN l.name`
 	rows, db, stmt := performQuery(cypher, nil)
 	defer db.Close()
 	defer stmt.Close()
@@ -87,7 +87,7 @@ func parseQuestion(node graph.Node) JsonEncodable {
 }
 
 func QueryLesson(lessonName string) Lesson {
-	cypher := `MATCH (n:Lesson {name: {name}})-[:HAS_QUESTION]->(q) RETURN q`
+	cypher := `MATCH (l:Lesson {name: {name}})-[:HAS_QUESTION]->(q) RETURN q`
 	params := map[string]interface{}{"name": lessonName}
 	rows, db, stmt := performQuery(cypher, params)
 	defer db.Close()
