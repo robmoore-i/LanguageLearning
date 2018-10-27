@@ -1,7 +1,3 @@
-// Resources for stubs
-import georgia from '../images/flagGeorgia.svg'
-import germany from '../images/flagGermany.svg'
-
 // Main
 import config from './config'
 
@@ -57,8 +53,7 @@ function Server(backendOrigin, fetcher) {
         },
 
         fetchCourses: () => {
-            // return fetcher.getJSON(backendOrigin + "/courses")
-            return new Promise(resolve => resolve([{name:"Georgian", image: georgia}, {name: "German", image: germany}]))
+            return fetcher.getJSON(backendOrigin + "/courses")
         }
     }
 }

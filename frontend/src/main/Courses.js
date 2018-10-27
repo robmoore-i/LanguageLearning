@@ -42,13 +42,17 @@ export default class Courses extends Component {
 }
 
 class CourseButton extends Component {
+    constructor(props) {
+        super(props)
+        this.svgB64 = btoa(this.props.src)
+    }
+
     render() {
-        let imageSrc = this.props.src
         return (
             <div>
                 <h3 className="Course-title">{this.props.courseName}</h3>
                 <a id={"course-link-" + this.props.courseName} href={"courses/" + this.props.courseName}>
-                    <img className="Course-icon" alt={this.props.courseName} src={imageSrc}/>
+                    <img className="Course-icon" alt={this.props.courseName} src={"data:image/svg+xml;base64," + this.svgB64} />
                 </a>
                 <br/>
                 <br/>
