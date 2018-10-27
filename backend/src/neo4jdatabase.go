@@ -13,9 +13,32 @@ var (
 	neo4jURL = strings.Join([]string{"bolt://", neo4jUser, ":", neo4jPw, "@localhost:7687"}, "")
 )
 
-//func performQuery(cypher string, params map[string]interface{}) driver.Rows {
-//
-//}
+func performQuery(cypher string, params map[string]interface{}) driver.Rows {
+	// Open connection
+	db, err := driver.NewDriver().OpenNeo(neo4jURL)
+	if err != nil {
+		log.Printf("Error opening neo4j connection")
+		panic("neo4jdatabase:QueryLesson")
+	}
+	defer db.Close()
+
+	// Create statement
+	stmt, err := db.PrepareNeo(cypher)
+	if err != nil {
+		log.Printf("Error preparing cypher query statement")
+		panic("neo4jdatabase:QueryLesson")
+	}
+	defer stmt.Close()
+
+	// Perform query
+	rows, err := stmt.QueryNeo(params)
+	if err != nil {
+		log.Printf("Error performing query")
+		panic("neo4jdatabase:QueryLesson")
+	}
+
+	return rows
+}
 
 func QueryLessonNames() []string {
 	// Open connection
