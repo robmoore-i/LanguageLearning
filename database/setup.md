@@ -4,4 +4,4 @@
 
 2. Run Neo4J: `neo4j console`
 
-3. Populate the database: `cypher-shell -u {user} -p {password} < create.cql` 
+3. Populate the database: `reset-db.sh {user} {password}` 
