@@ -18,16 +18,17 @@ def stop_backend():
 def lesson_names():
     res = requests.get("http://localhost:8000/lessonnames")
     assert_that(res.status_code).is_equal_to(200)
-    assert_that(res.json()).is_equal_to(["hello", "what are you called?"])
+    assert_that(res.json()).is_equal_to(["Hello", "What are you called?"])
     assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:3000")
 
 
 def lesson():
-    res = requests.get("http://localhost:8000/lesson/hello")
+    payload = {"lessonName": "Hello"}
+    res = requests.post("http://localhost:8000/lesson", json=payload)
     assert_that(res.status_code).is_equal_to(200)
     assert_that(res.json()).is_equal_to(
         {
-            'name': 'hello',
+            'name': 'Hello',
             'questions': [
                 {'type': 0, 'given': 'Hello', 'answer': 'გამარჯობა'},
                 {'type': 1, 'question': 'sounds like "i" in English', 'a': 'ა', 'b': 'ო', 'c': 'უ', 'd': 'ი', 'answer': 'd'}

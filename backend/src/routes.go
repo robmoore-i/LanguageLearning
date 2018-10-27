@@ -20,8 +20,8 @@ var routes = Routes{
 	},
 	Route{
 		"Lesson",
-		"GET",
-		"/lesson/{lessonName}",
+		"POST",
+		"/lesson",
 		GetLesson,
 	},
 }
