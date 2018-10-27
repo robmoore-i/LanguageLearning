@@ -2,25 +2,29 @@
 import React, {Component} from "react"
 // Resources
 import '../styles/Courses.css'
-import georgia from '../images/flagGeorgia.svg'
-import germany from '../images/flagGermany.svg'
 
 export default class Courses extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            courseNames: [],
+            courses: [],
             loaded: false
         }
     }
 
     componentDidMount() {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within promise closure.
-        this.props.server.fetchCourseNames().then(courseNames => {
+        this.props.server.fetchCourses().then(courses => {
             setState({
-                courseNames: courseNames,
+                courses: courses,
                 loaded: true
             })
+        })
+    }
+
+    courseButtons() {
+        return this.state.courses.map(course => {
+            return <CourseButton id={"course-button-" + course.name} key={course.name} courseName={course.name} src={course.image} />
         })
     }
 
@@ -31,8 +35,7 @@ export default class Courses extends Component {
             </header>,
 
             <div key="body" className="Courses-list">
-                <CourseButton id="course-button-georgian" key="Georgian" name="Georgian" src={georgia}/>
-                <CourseButton id="course-button-german"   key="German"   name="German"   src={germany}/>
+                {this.courseButtons()}
             </div>
         ]
     }
@@ -41,13 +44,11 @@ export default class Courses extends Component {
 class CourseButton extends Component {
     render() {
         let imageSrc = this.props.src
-        let capitalisedName = this.props.name
-        let courseName = capitalisedName.toLowerCase()
         return (
             <div>
-                <h3 className="Course-title">{capitalisedName}</h3>
-                <a id={"course-link-" + courseName} href={"courses/" + courseName}>
-                    <img className="Course-icon" alt={capitalisedName} src={imageSrc}/>
+                <h3 className="Course-title">{this.props.courseName}</h3>
+                <a id={"course-link-" + this.props.courseName} href={"courses/" + this.props.courseName}>
+                    <img className="Course-icon" alt={this.props.courseName} src={imageSrc}/>
                 </a>
                 <br/>
                 <br/>

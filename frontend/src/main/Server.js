@@ -1,3 +1,8 @@
+// Resources for stubs
+import georgia from '../images/flagGeorgia.svg'
+import germany from '../images/flagGermany.svg'
+
+// Main
 import config from './config'
 
 const defaultFetcher = {
@@ -51,8 +56,8 @@ function Server(backendOrigin, fetcher) {
             })
         },
 
-        fetchCourseNames: () => {
-            return new Promise(resolve => resolve(["Georgian", "German"]))
+        fetchCourses: () => {
+            return new Promise(resolve => resolve([{name:"Georgian", image: georgia}, {name: "German", image: germany}]))
         }
     }
 }

@@ -16,8 +16,8 @@ let mockServerLoadTimeMs = 1
 
 let mockServer = courseNames => {
     return {
-        fetchCourseNames: () => {
-            return new Promise(resolve => resolve(courseNames))
+        fetchCourses: () => {
+            return new Promise(resolve => resolve([{name:"Georgian", image: -1}, {name: "German", image: -2}]))
         }
     }
 }
@@ -29,32 +29,28 @@ async function fullRenderCourses(server) {
 }
 
 it('Directs the user to courses/georgian upon pressing the [georgian flag]', async () => {
-    // Given: I am on the courses page
     let testServer = mockServer(["Georgian", "German"])
     let testCoursesPage = await fullRenderCourses(testServer)
+    testCoursesPage.update()
 
-    // When: I press the georgian course button
-    let georgianCourseLink = testCoursesPage.find('#course-link-georgian').first()
+    let georgianCourseLink = testCoursesPage.find('#course-link-Georgian')
 
-    // Then: I am redirected to /courses/georgian
-    expect(georgianCourseLink.is('[href="courses/georgian"]')).toBe(true)
+    expect(georgianCourseLink.is('[href="courses/Georgian"]')).toBe(true)
 })
 
 it('Directs the user to courses/german upon pressing the [german flag]', async () => {
-    // Given: I am on the courses page
     let testServer = mockServer(["Georgian", "German"])
     let testCoursesPage = await fullRenderCourses(testServer)
+    testCoursesPage.update()
 
-    // When: I press the german course button
-    let germanCourseLink = testCoursesPage.find('#course-link-german').first()
+    let germanCourseLink = testCoursesPage.find('#course-link-German')
 
-    // Then: I am redirected to /courses/german
-    expect(germanCourseLink.is('[href="courses/german"]')).toBe(true)
+    expect(germanCourseLink.is('[href="courses/German"]')).toBe(true)
 })
 
 it('Requests the list of course names from the server', async () => {
     let testServer = mockServer(["Georgian", "German"])
-    const spyFetch = jest.spyOn(testServer, "fetchCourseNames")
+    const spyFetch = jest.spyOn(testServer, "fetchCourses")
 
     let _testCoursesPage = await fullRenderCourses(testServer)
 
