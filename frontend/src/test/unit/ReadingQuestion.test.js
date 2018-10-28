@@ -139,3 +139,19 @@ it('Shows corrections for questions answered incorrectly', () => {
     expect(testRQ.find("#question-correction-1").exists()).toBe(false)
     expect(testRQ.find("#question-correction-2").text()).toEqual("Vlad")
 })
+
+it('The continue button appears after marking', () => {
+    let q = {
+        type: 2,
+        source: "Vlad went to the kitchen and got some cake",
+        questions: [
+            {given: "Where did Vlad go?", answer: "Kitchen"}
+        ]
+    }
+    let testRQ = mount(<ReadingQuestion q={q} />)
+
+    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Wrong"))
+    testRQ.find("#submit-for-marking-button").simulate("click")
+
+    expect(testRQ.find("#continue-button").exists()).toBe(true)
+})

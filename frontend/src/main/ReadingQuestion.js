@@ -3,7 +3,7 @@ import React, {Component} from "react"
 // Resources
 import '../styles/Question.css'
 import Mark from "./Mark";
-import {submitForMarkingButton} from "./Question";
+import {continueButton, submitForMarkingButton} from "./Question";
 
 export default class ReadingQuestion extends Component {
     constructor(props) {
@@ -40,12 +40,17 @@ export default class ReadingQuestion extends Component {
     }
 
     button() {
-        const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
-        return submitForMarkingButton(() => {
-            setState({
-                marked: true,
-                marks: this.markAnswers()})
-        })
+        if (!this.state.marked) {
+            const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
+            return submitForMarkingButton(() => {
+                setState({
+                    marked: true,
+                    marks: this.markAnswers()
+                })
+            })
+        } else {
+            return continueButton(() => {})
+        }
     }
 
     // Matches currentAnswers against this.props.q.questions
