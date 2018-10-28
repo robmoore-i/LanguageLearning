@@ -24,7 +24,6 @@ func QueryCourses() []Course {
 	defer conn.Close()
 	defer stmt.Close()
 
-	// Extract data
 	var courses []Course
 	row, _, err := rows.NextNeo()
 	for row != nil && err == nil {
@@ -67,7 +66,6 @@ func QueryLessonNames() []string {
 	defer conn.Close()
 	defer stmt.Close()
 
-	// Extract data
 	var lessonNames []string
 	row, _, err := rows.NextNeo()
 	for row != nil && err == nil {
@@ -86,7 +84,6 @@ func QueryLesson(lessonName string) Lesson {
 	defer conn.Close()
 	defer stmt.Close()
 
-	// Extract data
 	var questions []JsonEncodable
 	row, _, err := rows.NextNeo()
 	for row != nil && err == nil {
