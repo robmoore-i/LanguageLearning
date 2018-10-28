@@ -18,8 +18,8 @@ export default class ReadingQuestion extends Component {
 
     render() {
         return [
-            <div id="question-source" key="question-source">
-                {this.props.q.source}
+            <div id="question-extract" key="question-extract">
+                {this.props.q.extract}
             </div>,
             <div key="questions">
                 {this.questions()}

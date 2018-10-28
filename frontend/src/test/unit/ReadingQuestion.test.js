@@ -12,7 +12,7 @@ configureAdapter()
 it('Shows the source', () => {
     let q = {
         type: 2,
-        source: "Vlad went to the kitchen and got some cake",
+        extract: "Vlad went to the kitchen and got some cake",
         questions: [
             {given: "Where did Vlad go?", answer: "Kitchen"},
             {given: "What did he get there?", answer: "Cake"}
@@ -20,13 +20,13 @@ it('Shows the source', () => {
     }
     let testRQ = shallow(<ReadingQuestion q={q} />)
 
-    expect(testRQ.find("#question-source").text()).toBe("Vlad went to the kitchen and got some cake")
+    expect(testRQ.find("#question-extract").text()).toBe("Vlad went to the kitchen and got some cake")
 })
 
 it('Shows all the questions', () => {
     let q = {
         type: 2,
-        source: "Vlad went to the kitchen and got some cake",
+        extract: "Vlad went to the kitchen and got some cake",
         questions: [
             {given: "Where did Vlad go?", answer: "Kitchen"},
             {given: "What did he get there?", answer: "Cake"}
@@ -55,7 +55,7 @@ let assertIncorrect = (rq, i) => {
 it('Marks correct answers as correct', () => {
     let q = {
         type: 2,
-        source: "Vlad went to the kitchen and got some cake",
+        extract: "Vlad went to the kitchen and got some cake",
         questions: [
             {given: "Where did Vlad go?", answer: "Kitchen"},
             {given: "What did he get there?", answer: "Cake"}
@@ -74,7 +74,7 @@ it('Marks correct answers as correct', () => {
 it('Marks incorrect answers as incorrect', () => {
     let q = {
         type: 2,
-        source: "Vlad went to the kitchen and got some cake",
+        extract: "Vlad went to the kitchen and got some cake",
         questions: [
             {given: "Where did Vlad go?", answer: "Kitchen"},
             {given: "What did he get there?", answer: "Cake"}
@@ -93,7 +93,7 @@ it('Marks incorrect answers as incorrect', () => {
 it('Marks questions separately', () => {
     let q = {
         type: 2,
-        source: "Vlad went to the kitchen and got some cake",
+        extract: "Vlad went to the kitchen and got some cake",
         questions: [
             {given: "Where did Vlad go?", answer: "Kitchen"},
             {given: "What did he get there?", answer: "Cake"},
@@ -121,7 +121,7 @@ it('Marks questions separately', () => {
 it('Shows corrections for questions answered incorrectly', () => {
     let q = {
         type: 2,
-        source: "Vlad went to the kitchen and got some cake",
+        extract: "Vlad went to the kitchen and got some cake",
         questions: [
             {given: "Where did Vlad go?", answer: "Kitchen"},
             {given: "What did he get there?", answer: "Cake"},
@@ -143,7 +143,7 @@ it('Shows corrections for questions answered incorrectly', () => {
 it('The continue button appears after marking', () => {
     let q = {
         type: 2,
-        source: "Vlad went to the kitchen and got some cake",
+        extract: "Vlad went to the kitchen and got some cake",
         questions: [
             {given: "Where did Vlad go?", answer: "Kitchen"}
         ]
