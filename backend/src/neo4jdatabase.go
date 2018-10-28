@@ -16,37 +16,48 @@ var (
 	imagesPath = "/home/rob/Documents/language/melange/database/images/"
 )
 
-func performQuery(cypher string, params map[string]interface{}) (driver.Rows, driver.Conn, driver.Stmt) {
-	// Open connection
-	db, err := driver.NewDriver().OpenNeo(neo4jURL)
+func openConnection() driver.Conn {
+	conn, err := driver.NewDriver().OpenNeo(neo4jURL)
 	if err != nil {
 		log.Printf("Error opening neo4j connection")
-		db.Close()
-		panic("neo4jdatabase:performQuery")
+		conn.Close()
+		panic("neo4jdatabase:openConnection")
 	}
+	return conn
+}
 
-	// Create statement
-	stmt, err := db.PrepareNeo(cypher)
+func prepareStatement(conn driver.Conn, cypher string) driver.Stmt {
+	stmt, err := conn.PrepareNeo(cypher)
 	if err != nil {
 		log.Printf("Error preparing cypher query statement")
-		stmt.Close()
-		panic("neo4jdatabase:performQuery")
+		panic("neo4jdatabase:prepareStatement")
 	}
+	return stmt
+}
 
-	// Perform query
+func executeStatement(stmt driver.Stmt, params map[string]interface{}) driver.Rows {
 	rows, err := stmt.QueryNeo(params)
 	if err != nil {
 		log.Printf("Error performing query")
-		panic("neo4jdatabase:performQuery")
+		panic("neo4jdatabase:executeStatement")
 	}
+	return rows
+}
 
-	return rows, db, stmt
+func performQuery(cypher string, params map[string]interface{}) (driver.Rows, driver.Conn, driver.Stmt) {
+	conn := openConnection()
+
+	stmt := prepareStatement(conn, cypher)
+
+	rows := executeStatement(stmt, params)
+
+	return rows, conn, stmt
 }
 
 func QueryLessonNames() []string {
 	cypher := `MATCH (l:Lesson) RETURN l.name`
-	rows, db, stmt := performQuery(cypher, nil)
-	defer db.Close()
+	rows, conn, stmt := performQuery(cypher, nil)
+	defer conn.Close()
 	defer stmt.Close()
 
 	// Extract data
@@ -78,6 +89,36 @@ func parseMCQ(node graph.Node) JsonEncodable {
 	return NewMCQ(p["question"].(string), p["a"].(string), p["b"].(string), p["c"].(string), p["d"].(string), p["answer"].(string))
 }
 
+//func parseRQ(node graph.Node, conn driver.Conn) JsonEncodable {
+//	p := node.Properties
+//	extract := p["extract"].(string)
+//
+//	log.Printf("RQ has extract %#v", extract)
+//
+//	// Create statement
+//	cypher := "MATCH (rq:ReadingQuestion {`extract`: {extract})-[:HAS_SUBQUESTION]->(q:ReadingSubQuestion) RETURN q"
+//	params := map[string]interface{}{"extract": extract}
+//	rows, conn, stmt := performQuery(cypher, params)
+//	defer conn.Close()
+//	defer stmt.Close()
+//
+//	var questions []ReadingSubQuestion
+//	row, _, err := rows.NextNeo()
+//	for row != nil && err == nil {
+//		node := row[0].(graph.Node)
+//		parsedSubQuestion := parseRSQ(node)
+//		questions = append(questions, parsedSubQuestion)
+//		row, _, err = rows.NextNeo()
+//	}
+//
+//	return NewRQ(extract, questions)
+//}
+//
+//func parseRSQ(node graph.Node) ReadingSubQuestion {
+//	p := node.Properties
+//	return NewRSQ(p["given"].(string), p["answer"].(string))
+//}
+
 func parseQuestion(node graph.Node) JsonEncodable {
 	if hasLabel(node, "TranslationQuestion") {
 		return parseTQ(node)
@@ -87,13 +128,16 @@ func parseQuestion(node graph.Node) JsonEncodable {
 		log.Printf("Couldn't find any appropriate question type label on node %#v", node)
 		panic("neo4jdatabase:parseQuestion")
 	}
+	//else if hasLabel(node, "ReadingQuestion") {
+	//	return parseRQ(node)
+	//}
 }
 
 func QueryLesson(lessonName string) Lesson {
 	cypher := `MATCH (l:Lesson {name: {name}})-[:HAS_QUESTION]->(q) RETURN q`
 	params := map[string]interface{}{"name": lessonName}
-	rows, db, stmt := performQuery(cypher, params)
-	defer db.Close()
+	rows, conn, stmt := performQuery(cypher, params)
+	defer conn.Close()
 	defer stmt.Close()
 
 	// Extract data
@@ -133,8 +177,8 @@ func parseCourse(node graph.Node) Course {
 
 func QueryCourses() []Course {
 	cypher := `MATCH (c:Course) RETURN c`
-	rows, db, stmt := performQuery(cypher, nil)
-	defer db.Close()
+	rows, conn, stmt := performQuery(cypher, nil)
+	defer conn.Close()
 	defer stmt.Close()
 
 	// Extract data

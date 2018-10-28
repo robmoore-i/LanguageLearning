@@ -61,3 +61,36 @@ func NewTQ(given string, answer string) TranslationQuestion {
 func (q TranslationQuestion) encode(w http.ResponseWriter) error {
 	return json.NewEncoder(w).Encode(q)
 }
+
+// RQ
+
+type ReadingQuestion struct {
+	Type    	int    					`json:"type"`
+	Extract		string 					`json:"extract"`
+	Questions   []ReadingSubQuestion 	`json:"questions"`
+}
+
+func NewRQ(extract string, questions []ReadingSubQuestion) ReadingQuestion {
+	rq := ReadingQuestion{Extract:extract, Questions:questions}
+	return rq
+}
+
+func (q ReadingQuestion) encode(w http.ResponseWriter) error {
+	return json.NewEncoder(w).Encode(q)
+}
+
+// RSQ
+
+type ReadingSubQuestion struct {
+	Given     string `json:"given"`
+	Answer    string `json:"answer"`
+}
+
+func NewRSQ(given string, answer string) ReadingSubQuestion {
+	rsq := ReadingSubQuestion{Given: given, Answer: answer}
+	return rsq
+}
+
+func (q ReadingSubQuestion) encode(w http.ResponseWriter) error {
+	return json.NewEncoder(w).Encode(q)
+}
