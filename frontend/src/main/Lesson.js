@@ -31,14 +31,8 @@ export default class Lesson extends Component {
             let qs = lesson.questions
 
             // Add rq to front
-            qs.unshift({
-                type: 2,
-                extract: "Vlad went to the kitchen and got some cake",
-                questions: [
-                    {given: "Where did Vlad go?", answer: "Kitchen"},
-                    {given: "What did he get there?", answer: "Cake"}
-                ]
-            })
+            // let rq = {type: 2, extract: "Vlad went to the kitchen and got some cake", questions: [{given: "Where did Vlad go?", answer: "Kitchen"}, {given: "What did he get there?", answer: "Cake"}]}
+            // qs.unshift(rq)
             setState({
                 questions: qs,
                 numQuestions: qs.length,

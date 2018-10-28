@@ -2,9 +2,10 @@
 import React, {Component} from "react"
 // Resources
 import '../styles/Question.css'
+import '../styles/ReadingQuestion.css'
 // Main
 import Mark from "./Mark"
-import {continueButton, submitForMarkingButton} from "./Question"
+import {submitForMarkingButton, continueButton} from "./Question"
 
 export default class ReadingQuestion extends Component {
     constructor(props) {

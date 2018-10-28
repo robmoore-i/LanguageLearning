@@ -19,7 +19,7 @@ let mockServer = lesson => {
     }
 }
 
-it('can advance through an MCQ and TQ', async () => {
+it('can advance through an MCQ and a TQ', async () => {
     let mcq = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let tq = {type: 0, given: "hello", answer: "გამარჯობა"}
     let testServer = mockServer({name: "Hello!", questions: [mcq, tq]})
