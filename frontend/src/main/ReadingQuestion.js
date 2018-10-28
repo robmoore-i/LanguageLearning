@@ -20,7 +20,9 @@ export default class ReadingQuestion extends Component {
 
     render() {
         return [
-            <br key="lesson-header--break--extract" />,
+            <br key="lesson-header--break--prompt" />,
+            <div id="read-the-extract-prompt" >Read the text, then answer the questions below</div>,
+            <br key="prompt--break--extract" />,
             <div id="question-extract" key="question-extract">
                 {this.props.q.extract}
             </div>,

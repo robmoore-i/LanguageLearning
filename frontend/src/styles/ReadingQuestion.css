@@ -1,5 +1,16 @@
+#read-the-extract-prompt {
+    font-size: 1.5em;
+    margin: auto;
+    max-width: 650px;
+    border-radius: 10px;
+    border-style: none;
+}
 #question-extract {
     font-size: 1.5em;
+    border-radius: 10px;
+    border-style: groove;
+    margin: auto;
+    max-width: 650px;
 }
 
 .question-header {
