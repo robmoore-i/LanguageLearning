@@ -31,35 +31,12 @@ export default class ReadingQuestion extends Component {
     questions() {
         const setState = this.setState.bind(this)
         return this.props.q.questions.map((q, i) => {
-            return this.PosedQuestion(i, q, this.state.marks[i], setState)
+            return <PosedQuestion id={"posed-question-" + String(i)} key={"posed-question-" + String(i)}
+                                  i={i}
+                                  question={q}
+                                  mark={this.state.marks[i]}
+                                  setParentState={setState} />
         })
-    }
-
-    // The (i)th posed question, (q), about the extract
-    PosedQuestion(i, q, mark, setParentState) {
-        return [
-            <div id={"question-given-" + String(i)} key={"question-given-" + String(i)}>
-                {q.given}
-            </div>,
-            <span id={mark.id + "-" + String(i)} key={mark.id + "-" + String(i)}>
-                    <img src={mark.img} className="question-result" alt="mark-result-status" />
-            </span>,
-            this.answerInputTextBox(i, setParentState)
-        ]
-    }
-
-    answerInputTextBox(i, setParentState) {
-        let onChange = (event) => {
-            setParentState((state) => {
-                let newAnswers = state.currentAnswers
-                newAnswers[i] = event.target.value
-                return {currentAnswers: newAnswers}
-            })
-        }
-
-        return <textarea id={"answer-input-textbox-" + String(i)} key={"answer-input-textbox-" + String(i)}
-                                      rows="5" cols="50"
-                                      onChange={onChange}/>;
     }
 
     button() {
@@ -84,5 +61,35 @@ export default class ReadingQuestion extends Component {
             }
         }
         return marks
+    }
+}
+
+// The (i)th posed question, (question), about the extract. Shows the given (mark) and changing the textbox
+// makes a call to (setParentState) to update the parent-level list of answers.
+class PosedQuestion extends React.Component {
+    render() {
+        return [
+            <div id={"question-given-" + String(this.props.i)} key={"question-given-" + String(this.props.i)}>
+                {this.props.question.given}
+            </div>,
+            <span id={this.props.mark.id + "-" + String(this.props.i)} key={this.props.mark.id + "-" + String(this.props.i)}>
+                    <img src={this.props.mark.img} className="question-result" alt="mark-result-status" />
+            </span>,
+            this.answerInputTextBox(this.props.i, this.props.setParentState)
+        ]
+    }
+
+    answerInputTextBox(i, setParentState) {
+        let onChange = (event) => {
+            setParentState((state) => {
+                let newAnswers = state.currentAnswers
+                newAnswers[i] = event.target.value
+                return {currentAnswers: newAnswers}
+            })
+        }
+
+        return <textarea id={"answer-input-textbox-" + String(i)} key={"answer-input-textbox-" + String(i)}
+                         rows="5" cols="50"
+                         onChange={onChange}/>;
     }
 }

@@ -34,8 +34,8 @@ it('Shows all the questions', () => {
     }
     let testRQ = shallow(<ReadingQuestion q={q} />)
 
-    expect(testRQ.find("#question-given-0").text()).toBe("Where did Vlad go?")
-    expect(testRQ.find("#question-given-1").text()).toBe("What did he get there?")
+    expect(testRQ.find("#posed-question-0").dive().find("#question-given-0").text()).toBe("Where did Vlad go?")
+    expect(testRQ.find("#posed-question-1").dive().find("#question-given-1").text()).toBe("What did he get there?")
 })
 
 // Asserts that the (i)th posed question in the reading question(rq) is correct
