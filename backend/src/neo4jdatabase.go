@@ -135,8 +135,7 @@ func parseRQ(node graph.Node) JsonEncodable {
 	p := node.Properties
 	extract := p["extract"].(string)
 
-	//cypher := "MATCH (rq:ReadingQuestion {extract: {extract})-[:HAS_SUBQUESTION]->(q:ReadingSubQuestion) RETURN q"
-	cypher := "MATCH (rsq:ReadingSubQuestion) RETURN rsq"
+	cypher := "MATCH (rq:ReadingQuestion {`extract`: {extract}})-[:HAS_SUBQUESTION]->(q:ReadingSubQuestion) RETURN q"
 	params := map[string]interface{}{"extract": extract}
 	rows, conn, stmt := performQuery(cypher, params)
 	defer conn.Close()
