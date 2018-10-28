@@ -1,7 +1,5 @@
 // Main
 import config from './config'
-import {TranslationProduction} from "./TranslationProduction";
-import ProductionVariable from "./ProductionVariable";
 
 const defaultFetcher = {
     getJSON: (url) => {
@@ -24,27 +22,9 @@ function Server(backendOrigin, fetcher) {
 
         fetchLesson: (lessonName) => {
             return fetcher.postJSON(backendOrigin + "/lesson", {lessonName: lessonName}).then(lesson => {
-                if ("productions" in lesson) {
-                    let pairs = lesson.productions
-
-                    let questions = []
-                    pairs.forEach((pair) => {
-                        let p = pair.production
-                        let tp = TranslationProduction(eval(p.given), eval(p.answer), p.variables)
-                        pair.inputs.forEach((input) => {
-                            questions.push(tp.using(input))
-                        })
-                    })
-
-                    return {
-                        name: lesson.name,
-                        questions: questions
-                    }
-                } else {
-                    return {
-                        name: lesson.name,
-                        questions: lesson.questions
-                    }
+                return {
+                    name: lesson.name,
+                    questions: lesson.questions
                 }
             })
         },

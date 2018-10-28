@@ -6,9 +6,6 @@ import {shallow, mount} from 'enzyme'
 import Lesson from '../../main/Lesson'
 // Enzyme react-adapter configuration & others
 import {configureAdapter, sleep} from "../utils"
-import {ObjectBuilder} from "../../main/ObjectBuilder";
-import ProductionVariable from "../../main/ProductionVariable";
-import {TranslationProduction} from "../../main/TranslationProduction";
 
 configureAdapter()
 
