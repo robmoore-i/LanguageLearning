@@ -20,8 +20,14 @@ export default class ReadingQuestion extends Component {
 
     render() {
         return [
+            <br key="lesson-header--break--extract" />,
             <div id="question-extract" key="question-extract">
                 {this.props.q.extract}
+            </div>,
+            <div key="extract--break--questions">
+                <br />
+                <br />
+                <br />
             </div>,
             <div key="questions">
                 {this.questions()}
