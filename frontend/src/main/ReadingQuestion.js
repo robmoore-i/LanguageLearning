@@ -98,6 +98,7 @@ class PosedQuestion extends React.Component {
     correction() {
         return (
             <div id={"question-correction-" + String(this.props.i)} key={"question-correction-" + String(this.props.i)}>
+                {this.props.question.answer}
             </div>
         )
     }

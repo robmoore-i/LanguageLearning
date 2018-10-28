@@ -135,7 +135,7 @@ it('Shows corrections for questions answered incorrectly', () => {
     testRQ.find("#answer-input-textbox-2").simulate("change", textBoxInputEvent("Wrong"))
     testRQ.find("#submit-for-marking-button").simulate("click")
 
-    expect(testRQ.find("#question-correction-0").exists()).toBe(true)
+    expect(testRQ.find("#question-correction-0").text()).toEqual("Kitchen")
     expect(testRQ.find("#question-correction-1").exists()).toBe(false)
-    expect(testRQ.find("#question-correction-2").exists()).toBe(true)
+    expect(testRQ.find("#question-correction-2").text()).toEqual("Vlad")
 })
