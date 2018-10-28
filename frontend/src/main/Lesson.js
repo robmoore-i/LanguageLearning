@@ -6,6 +6,7 @@ import '../styles/Lesson.css'
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion"
 import TranslationQuestion from "./TranslationQuestion"
 import {QuestionTypes} from "./Question";
+import ReadingQuestion from "./ReadingQuestion";
 
 export default class Lesson extends Component {
     constructor(props) {
@@ -27,9 +28,20 @@ export default class Lesson extends Component {
     componentDidMount() {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within promise closure.
         this.server.fetchLesson(this.lessonName).then(lesson => {
+            let qs = lesson.questions
+
+            // Add rq to front
+            qs.unshift({
+                type: 2,
+                source: "Vlad went to the kitchen and got some cake",
+                questions: [
+                    {given: "Where did Vlad go?", answer: "Kitchen"},
+                    {given: "What did he get there?", answer: "Cake"}
+                ]
+            })
             setState({
-                questions: lesson.questions,
-                numQuestions: lesson.questions.length,
+                questions: qs,
+                numQuestions: qs.length,
                 loaded: true,
                 startTime: (new Date())
             })
@@ -100,6 +112,8 @@ export default class Lesson extends Component {
                 // Note - the uniqueness of 'key' here is crucial. If it's not unique (aka doesn't take currentQuestionIndex into account)
                 //        then it will not be re-rendered upon completion if the next question is also an MCQ.
                 return <MultipleChoiceQuestion {... genericQuestionProps} />
+            case QuestionTypes.READING:
+                return <ReadingQuestion q={q} key={"questionIndex-" + this.state.currentQuestionIndex} />
             default:
                 return <div key="sorry pal">Can't render that question pal</div>
         }

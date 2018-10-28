@@ -83,9 +83,10 @@ class PosedQuestion extends React.Component {
 
     answerInputTextBox() {
         let onChange = (event) => {
+            let answer = event.target.value
             this.props.setParentState((state) => {
                 let newAnswers = state.currentAnswers
-                newAnswers[this.props.i] = event.target.value
+                newAnswers[this.props.i] = answer
                 return {currentAnswers: newAnswers}
             })
         }
