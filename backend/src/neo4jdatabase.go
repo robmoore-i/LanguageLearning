@@ -28,7 +28,7 @@ func QueryCourses() []Course {
 	var courses []Course
 	row, _, err := rows.NextNeo()
 	for row != nil && err == nil {
-		node := row[0].(graph.Node)
+		node := onlyNode(row)
 		parsedCourse := parseCourse(node)
 		courses = append(courses, parsedCourse)
 		row, _, err = rows.NextNeo()
@@ -90,7 +90,7 @@ func QueryLesson(lessonName string) Lesson {
 	var questions []JsonEncodable
 	row, _, err := rows.NextNeo()
 	for row != nil && err == nil {
-		node := row[0].(graph.Node)
+		node := onlyNode(row)
 		parsedQuestion := parseQuestion(node)
 		questions = append(questions, parsedQuestion)
 		row, _, err = rows.NextNeo()
@@ -144,7 +144,7 @@ func parseRQ(node graph.Node) JsonEncodable {
 	var questions []ReadingSubQuestion
 	row, _, err := rows.NextNeo()
 	for row != nil && err == nil {
-		node := row[0].(graph.Node)
+		node := onlyNode(row)
 		parsedSubQuestion := parseRSQ(node)
 		questions = append(questions, parsedSubQuestion)
 		row, _, err = rows.NextNeo()
@@ -193,4 +193,9 @@ func performQuery(cypher string, params map[string]interface{}) (driver.Rows, dr
 	stmt := prepareStatement(conn, cypher)
 	rows := executeStatement(stmt, params)
 	return rows, conn, stmt
+}
+
+func onlyNode(row []interface{}) graph.Node {
+	node := row[0].(graph.Node)
+	return node
 }
