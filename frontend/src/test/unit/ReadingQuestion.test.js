@@ -155,3 +155,21 @@ it('The continue button appears after marking', () => {
 
     expect(testRQ.find("#continue-button").exists()).toBe(true)
 })
+
+it('Calls the onCompletion prop when clicking continue', () => {
+    let q = {
+        type: 2,
+        extract: "Vlad went to the kitchen and got some cake",
+        questions: [
+            {given: "Where did Vlad go?", answer: "Kitchen"}
+        ]
+    }
+    let spyOnCompletion = jest.fn()
+    let testRQ = mount(<ReadingQuestion q={q} onCompletion={spyOnCompletion} />)
+
+    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Kitchen"))
+    testRQ.find("#submit-for-marking-button").simulate("click")
+    testRQ.find("#continue-button").simulate("click")
+
+    expect(spyOnCompletion).toHaveBeenCalled()
+})

@@ -113,7 +113,10 @@ export default class Lesson extends Component {
                 //        then it will not be re-rendered upon completion if the next question is also an MCQ.
                 return <MultipleChoiceQuestion {... genericQuestionProps} />
             case QuestionTypes.READING:
-                return <ReadingQuestion q={q} key={"questionIndex-" + this.state.currentQuestionIndex} />
+                return <ReadingQuestion
+                    key={"questionIndex-" + this.state.currentQuestionIndex}
+                    q={q}
+                    onCompletion={genericQuestionProps.onCorrect} />
             default:
                 return <div key="sorry pal">Can't render that question pal</div>
         }

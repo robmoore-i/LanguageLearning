@@ -50,7 +50,7 @@ export default class ReadingQuestion extends Component {
                 })
             })
         } else {
-            return continueButton(() => {})
+            return continueButton(this.props.onCompletion)
         }
     }
 
