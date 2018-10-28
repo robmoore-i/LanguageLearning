@@ -1,6 +1,10 @@
 import {LocalServer} from "../../main/Server";
 
-it('Returns the sent questions when sent questions explicitly', () => {
+
+// Note: Currently the RQ is manually prepended to the fetched lessons so I can quickly bring it up for styling changes.
+//       Once that's sorted I'll sort this test.
+it('Returns the sent questions when sent questions explicitly', async () => {
+    let rq = {type: 2, extract: "Vlad went to the kitchen and got some cake", questions: [{given: "Where did Vlad go?", answer: "Kitchen"}, {given: "What did he get there?", answer: "Cake"}]}
     let mcq = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let tq = {type: 0, given: "hello", answer: "გამარჯობა"}
     let mockFetcher = {
@@ -15,13 +19,15 @@ it('Returns the sent questions when sent questions explicitly', () => {
     }
     let testServer = LocalServer(mockFetcher)
 
-    testServer.fetchLesson("ayylmao").then(lesson => {
-        expect(lesson.name).toEqual("Server Stuff")
-        expect(lesson.questions).toEqual([mcq, tq])
+    let fetchedLesson = undefined
+    await testServer.fetchLesson("ayylmao").then(lesson => {
+        fetchedLesson = lesson
     })
+    expect(fetchedLesson.name).toEqual("Server Stuff")
+    expect(fetchedLesson.questions).toEqual([rq, mcq, tq])
 })
 
-it('Returns lesson names as given by server', () => {
+it('Returns lesson names as given by server', async () => {
     let mockFetcher = {
         getJSON: (url) => {
             return new Promise(resolve => resolve(["A", "B", "C"]))
@@ -29,7 +35,9 @@ it('Returns lesson names as given by server', () => {
     }
     let testServer = LocalServer(mockFetcher)
 
-    testServer.fetchLessonNames().then(lessonNames => {
-        expect(lessonNames).toEqual(["A", "B", "C"])
+    let fetchedLessonNames = undefined
+    await testServer.fetchLessonNames().then(lessonNames => {
+        fetchedLessonNames = lessonNames
     })
+    expect(fetchedLessonNames).toEqual(["A", "B", "C"])
 })

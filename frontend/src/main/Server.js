@@ -22,9 +22,12 @@ function Server(backendOrigin, fetcher) {
 
         fetchLesson: (lessonName) => {
             return fetcher.postJSON(backendOrigin + "/lesson", {lessonName: lessonName}).then(lesson => {
+                let qs = lesson.questions
+                let rq = {type: 2, extract: "Vlad went to the kitchen and got some cake", questions: [{given: "Where did Vlad go?", answer: "Kitchen"}, {given: "What did he get there?", answer: "Cake"}]}
+                qs.unshift(rq)
                 return {
                     name: lesson.name,
-                    questions: lesson.questions
+                    questions: qs
                 }
             })
         },

@@ -28,14 +28,9 @@ export default class Lesson extends Component {
     componentDidMount() {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within promise closure.
         this.server.fetchLesson(this.lessonName).then(lesson => {
-            let qs = lesson.questions
-
-            // Add rq to front
-            // let rq = {type: 2, extract: "Vlad went to the kitchen and got some cake", questions: [{given: "Where did Vlad go?", answer: "Kitchen"}, {given: "What did he get there?", answer: "Cake"}]}
-            // qs.unshift(rq)
             setState({
-                questions: qs,
-                numQuestions: qs.length,
+                questions: lesson.questions,
+                numQuestions: lesson.questions.length,
                 loaded: true,
                 startTime: (new Date())
             })
