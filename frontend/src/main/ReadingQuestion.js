@@ -29,13 +29,14 @@ export default class ReadingQuestion extends Component {
     }
 
     questions() {
+        const setState = this.setState.bind(this)
         return this.props.q.questions.map((q, i) => {
-            return this.PosedQuestion(i, q, this.state.marks[i])
+            return this.PosedQuestion(i, q, this.state.marks[i], setState)
         })
     }
 
     // The (i)th posed question, (q), about the extract
-    PosedQuestion(i, q, mark) {
+    PosedQuestion(i, q, mark, setParentState) {
         return [
             <div id={"question-given-" + String(i)} key={"question-given-" + String(i)}>
                 {q.given}
@@ -43,13 +44,13 @@ export default class ReadingQuestion extends Component {
             <span id={mark.id + "-" + String(i)} key={mark.id + "-" + String(i)}>
                     <img src={mark.img} className="question-result" alt="mark-result-status" />
             </span>,
-            this.answerInputTextBox(i)
+            this.answerInputTextBox(i, setParentState)
         ]
     }
 
-    answerInputTextBox(i) {
+    answerInputTextBox(i, setParentState) {
         let onChange = (event) => {
-            this.setState((state) => {
+            setParentState((state) => {
                 let newAnswers = state.currentAnswers
                 newAnswers[i] = event.target.value
                 return {currentAnswers: newAnswers}
