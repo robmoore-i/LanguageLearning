@@ -4,9 +4,9 @@ import React from 'react'
 import {mount} from 'enzyme'
 // Main
 import Lesson from '../../main/Lesson'
+import {encodeUrl} from "../../main/App"
 // Enzyme react-adapter configuration & others
 import {configureAdapter, sleep, textBoxInputEvent} from "../utils"
-import {encodeUrl} from "../../main/App";
 
 configureAdapter()
 
