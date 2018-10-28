@@ -1,8 +1,5 @@
 import {LocalServer} from "../../main/Server";
 
-
-// Note: Currently the RQ is manually prepended to the fetched lessons so I can quickly bring it up for styling changes.
-//       Once that's sorted I'll sort this test.
 it('Returns the sent questions when sent questions explicitly', async () => {
     let rq = {type: 2, extract: "Vlad went to the kitchen and got some cake", questions: [{given: "Where did Vlad go?", answer: "Kitchen"}, {given: "What did he get there?", answer: "Cake"}]}
     let mcq = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
@@ -12,7 +9,7 @@ it('Returns the sent questions when sent questions explicitly', async () => {
             return new Promise(resolve => resolve(
                 {
                     name: "Server Stuff",
-                    questions: [mcq, tq]
+                    questions: [rq, mcq, tq]
                 }
             ))
         }
