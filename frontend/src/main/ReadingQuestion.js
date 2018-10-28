@@ -30,33 +30,33 @@ export default class ReadingQuestion extends Component {
 
     questions() {
         return this.props.q.questions.map((q, i) => {
-            return this.PosedQuestion(i, q)
+            return this.PosedQuestion(i, q, this.state.marks[i])
         })
     }
 
     // The (i)th posed question, (q), about the extract
-    PosedQuestion(i, q) {
+    PosedQuestion(i, q, mark) {
         return [
             <div id={"question-given-" + String(i)} key={"question-given-" + String(i)}>
                 {q.given}
             </div>,
-            <span id={this.state.marks[i].id + "-" + String(i)} key={this.state.marks[i].id + "-" + String(i)}>
-                    <img src={this.state.marks[i].img} className="question-result" alt="mark-result-status" />
+            <span id={mark.id + "-" + String(i)} key={mark.id + "-" + String(i)}>
+                    <img src={mark.img} className="question-result" alt="mark-result-status" />
             </span>,
             this.answerInputTextBox(i)
         ]
     }
 
-    answerInputTextBox(n) {
+    answerInputTextBox(i) {
         let onChange = (event) => {
             this.setState((state) => {
                 let newAnswers = state.currentAnswers
-                newAnswers[n] = event.target.value
+                newAnswers[i] = event.target.value
                 return {currentAnswers: newAnswers}
             })
         }
 
-        return <textarea id={"answer-input-textbox-" + String(n)} key={"answer-input-textbox-" + String(n)}
+        return <textarea id={"answer-input-textbox-" + String(i)} key={"answer-input-textbox-" + String(i)}
                                       rows="5" cols="50"
                                       onChange={onChange}/>;
     }
