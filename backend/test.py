@@ -52,31 +52,31 @@ def courses():
     assert_that(sorted(georgian.keys())).is_equal_to(["image", "imageType", "name"])
 
 
-# def readingQuestion():
-#     payload = {"lessonName": "Colours"}
-#     res = requests.post("http://localhost:8000/lesson", json=payload)
-#
-#     assert_that(res.status_code).is_equal_to(200)
-#     assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:3000")
-#
-#     resJson = res.json()
-#     assert_that(resJson["name"]).is_equal_to("Colours")
-#     questions = resJson["questions"]
-#     assert_that(len(questions)).is_equal_to(1)
-#     assert_that(questions).is_equal_to(
-#         {"type": 2,
-#          "extract": "მატარებელი ლურჯია და მანქანა წითელი არის",
-#          "questions": [
-#              {
-#                  "given": "What colour is the train?",
-#                  "answer": "blue"
-#              },
-#              {
-#                  "given": "What colour is the car?",
-#                  "answer": "red"
-#              }]
-#          })
-#     assert_that(sorted(resJson.keys())).is_equal_to(["name", "questions"])
+def readingQuestion():
+    payload = {"lessonName": "Colours"}
+    res = requests.post("http://localhost:8000/lesson", json=payload)
+
+    assert_that(res.status_code).is_equal_to(200)
+    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:3000")
+
+    resJson = res.json()
+    assert_that(resJson["name"]).is_equal_to("Colours")
+    questions = resJson["questions"]
+    assert_that(len(questions)).is_equal_to(1)
+    assert_that(questions).is_equal_to(
+        [{"type": 2,
+         "extract": "მატარებელი ლურჯია და მანქანა წითელი არის",
+         "questions": [
+             {
+                 "given": "What colour is the train?",
+                 "answer": "blue"
+             },
+             {
+                 "given": "What colour is the car?",
+                 "answer": "red"
+             }]
+         }])
+    assert_that(sorted(resJson.keys())).is_equal_to(["name", "questions"])
 
 
 def run_test(test_name, test):
@@ -93,7 +93,7 @@ def tests():
     run_test("lesson_names", lesson_names)
     run_test("lesson", lesson)
     run_test("courses", courses)
-    #run_test("readingQuestion", readingQuestion)
+    run_test("readingQuestion", readingQuestion)
 
 
 usage = "USAGE: ./test.py [a|r]\na => don't start the server because it's (a)lready running.\nr => (r)un the server."

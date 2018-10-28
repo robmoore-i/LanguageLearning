@@ -71,7 +71,7 @@ type ReadingQuestion struct {
 }
 
 func NewRQ(extract string, questions []ReadingSubQuestion) ReadingQuestion {
-	rq := ReadingQuestion{Extract:extract, Questions:questions}
+	rq := ReadingQuestion{Type: 2, Extract: extract, Questions: questions}
 	return rq
 }
 
