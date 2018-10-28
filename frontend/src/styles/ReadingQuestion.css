@@ -29,5 +29,7 @@
 
 .question-correction {
     display: inline;
+    border-radius: 10px;
+    background: #313dad;
     padding: 7px 25px;
 }

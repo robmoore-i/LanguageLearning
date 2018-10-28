@@ -26,6 +26,7 @@ export default class ReadingQuestion extends Component {
             <div key="questions">
                 {this.questions()}
             </div>,
+            <br key="questions--break--button" />,
             this.button()
         ]
     }
@@ -85,8 +86,8 @@ class PosedQuestion extends React.Component {
                 <span id={this.props.mark.id + "-" + String(this.props.i)} key={this.props.mark.id + "-" + String(this.props.i)}>
                     <img src={this.props.mark.img} className="question-result-img" alt="mark-result-status" />
                 </span>
+                {correction}
             </div>,
-            correction,
             <br key={"question-header--break--textarea-" + String(this.props.i)} />,
             this.answerInputTextBox(),
             <br key={"low-side-break-" + String(this.props.i)} />,
