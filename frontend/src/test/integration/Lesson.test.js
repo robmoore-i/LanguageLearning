@@ -6,6 +6,7 @@ import {mount} from 'enzyme'
 import Lesson from '../../main/Lesson'
 // Enzyme react-adapter configuration & others
 import {configureAdapter, sleep, textBoxInputEvent} from "../utils"
+import {encodeUrl} from "../../main/App";
 
 configureAdapter()
 
@@ -23,7 +24,7 @@ it('can advance through an MCQ and a TQ', async () => {
     let mcq = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let tq = {type: 0, given: "hello", answer: "გამარჯობა"}
     let testServer = mockServer({name: "Hello!", questions: [mcq, tq]})
-    let testLesson = mount(<Lesson courseName="georgian" lessonNameInUrl="hello" server={testServer} />)
+    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} />)
     await sleep(mockServerLoadTimeMs)
     testLesson.update()
 
@@ -44,7 +45,7 @@ it('can repeats TQ and MCQ if answered incorrectly', async () => {
     let tq = {type: 0, given: "hello", answer: "გამარჯობა"}
     let mcq = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testServer = mockServer({name: "Hello!", questions: [tq, mcq]})
-    let testLesson = mount(<Lesson courseName="georgian" lessonNameInUrl="hello" server={testServer} />)
+    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} />)
     await sleep(mockServerLoadTimeMs)
     testLesson.update()
 
@@ -75,7 +76,7 @@ it('can repeats TQ and MCQ if answered incorrectly', async () => {
 it('Repeats a question even if its the last question', async () => {
     let mcq = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testServer = mockServer({name: "Hello!", questions: [mcq]})
-    let testLesson = mount(<Lesson courseName="georgian" lessonNameInUrl="hello" server={testServer} />)
+    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} />)
     await sleep(mockServerLoadTimeMs)
     testLesson.update()
 
@@ -96,7 +97,7 @@ it('Gets a reasonably accurate reading on the lesson time', async () => {
     let mcq = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let tq = {type: 0, given: "hello", answer: "გამარჯობა"}
     let testServer = mockServer({name: "Hello!", questions: [mcq, tq]})
-    let testLesson = mount(<Lesson courseName="georgian" lessonNameInUrl="hello" server={testServer} />)
+    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} />)
     await sleep(mockServerLoadTimeMs)
     testLesson.update()
 

@@ -3,10 +3,11 @@ import React, {Component} from "react"
 // Resources
 import '../styles/Lesson.css'
 // Main
+import {decodeUrl} from "./App"
+import {QuestionTypes} from "./Question"
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion"
 import TranslationQuestion from "./TranslationQuestion"
-import {QuestionTypes} from "./Question";
-import ReadingQuestion from "./ReadingQuestion";
+import ReadingQuestion from "./ReadingQuestion"
 
 export default class Lesson extends Component {
     constructor(props) {
@@ -14,7 +15,7 @@ export default class Lesson extends Component {
 
         this.server = this.props.server
         this.courseName = this.props.courseName
-        this.lessonName = decodeURIComponent(this.props.encodedLessonName)
+        this.lessonName = decodeUrl(this.props.encodedLessonName)
 
         this.state = {
             loaded: false,

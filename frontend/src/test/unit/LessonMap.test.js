@@ -101,7 +101,7 @@ it('encodes lesson names which have spaces or punctuation', async () => {
     let lessonsList = testLessonMap.find('.Lesson-list').first()
     let lessonButton = lessonsList.children().at(0).dive()
 
-    expect(lessonButton.is('[to="edgecases/A%20lesson%20that%20shouldn\'t%20be%20in%20a%20url"]')).toBe(true)
+    expect(lessonButton.is('[to="edgecases/A_lesson_that_shouldn\'t_be_in_a_url"]')).toBe(true)
 })
 
 it('shows correct link text for lesson names with spaces or punctuation', async () => {

@@ -52,3 +52,11 @@ const MatchedLesson = ({ match }) => {
         <Lesson courseName={match.params.course} encodedLessonName={match.params.lesson} server={defaultServer}/>
     )
 }
+
+export function encodeUrl(string) {
+    return encodeURIComponent(string.split(" ").join("_"))
+}
+
+export function decodeUrl(url) {
+    return decodeURIComponent(url.split("_").join(" "))
+}
