@@ -1,3 +1,1 @@
-./build.sh && ./install.sh
-echo "Running"
-./start.sh
+./assemble.sh && echo "Running" && ./start.sh
