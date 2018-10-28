@@ -68,6 +68,7 @@ export default class ReadingQuestion extends Component {
 // makes a call to (setParentState) to update the parent-level list of answers.
 class PosedQuestion extends React.Component {
     render() {
+        let correction = this.props.mark === Mark.INCORRECT ? this.correction() : null
         return [
             <div id={"question-given-" + String(this.props.i)} key={"question-given-" + String(this.props.i)}>
                 {this.props.question.given}
@@ -75,21 +76,29 @@ class PosedQuestion extends React.Component {
             <span id={this.props.mark.id + "-" + String(this.props.i)} key={this.props.mark.id + "-" + String(this.props.i)}>
                     <img src={this.props.mark.img} className="question-result" alt="mark-result-status" />
             </span>,
-            this.answerInputTextBox(this.props.i, this.props.setParentState)
+            this.answerInputTextBox(),
+            correction
         ]
     }
 
-    answerInputTextBox(i, setParentState) {
+    answerInputTextBox() {
         let onChange = (event) => {
-            setParentState((state) => {
+            this.props.setParentState((state) => {
                 let newAnswers = state.currentAnswers
-                newAnswers[i] = event.target.value
+                newAnswers[this.props.i] = event.target.value
                 return {currentAnswers: newAnswers}
             })
         }
 
-        return <textarea id={"answer-input-textbox-" + String(i)} key={"answer-input-textbox-" + String(i)}
+        return <textarea id={"answer-input-textbox-" + String(this.props.i)} key={"answer-input-textbox-" + String(this.props.i)}
                          rows="5" cols="50"
                          onChange={onChange}/>;
+    }
+
+    correction() {
+        return (
+            <div id={"question-correction-" + String(this.props.i)} key={"question-correction-" + String(this.props.i)}>
+            </div>
+        )
     }
 }

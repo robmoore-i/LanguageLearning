@@ -117,3 +117,25 @@ it('Marks questions separately', () => {
     assertCorrect(testRQ, 3)
     assertIncorrect(testRQ, 4)
 })
+
+it('Shows corrections for questions answered incorrectly', () => {
+    let q = {
+        type: 2,
+        source: "Vlad went to the kitchen and got some cake",
+        questions: [
+            {given: "Where did Vlad go?", answer: "Kitchen"},
+            {given: "What did he get there?", answer: "Cake"},
+            {given: "What's this guy's name again?", answer: "Vlad"}
+        ]
+    }
+    let testRQ = mount(<ReadingQuestion q={q} />)
+
+    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Wrong"))
+    testRQ.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
+    testRQ.find("#answer-input-textbox-2").simulate("change", textBoxInputEvent("Wrong"))
+    testRQ.find("#submit-for-marking-button").simulate("click")
+
+    expect(testRQ.find("#question-correction-0").exists()).toBe(true)
+    expect(testRQ.find("#question-correction-1").exists()).toBe(false)
+    expect(testRQ.find("#question-correction-2").exists()).toBe(true)
+})
