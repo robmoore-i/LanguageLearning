@@ -15,6 +15,7 @@ export default class ReadingQuestion extends Component {
             marks: (new Array(this.props.q.questions.length)).fill(Mark.UNMARKED)
         }
     }
+
     render() {
         return [
             <div id="question-source" key="question-source">
