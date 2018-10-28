@@ -33,7 +33,7 @@ export default class Lesson extends Component {
             // Add rq to front
             qs.unshift({
                 type: 2,
-                source: "Vlad went to the kitchen and got some cake",
+                extract: "Vlad went to the kitchen and got some cake",
                 questions: [
                     {given: "Where did Vlad go?", answer: "Kitchen"},
                     {given: "What did he get there?", answer: "Cake"}
