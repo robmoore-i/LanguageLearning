@@ -12,7 +12,7 @@ export default class Home extends Component {
             <header className="Home-header">
                 <img src={globe} className="Home-logo" alt="logo"/>
                 <h1 className="Home-title">Melange</h1>
-                <h2 className="Home-description">Step-by-step language lessons in the browser</h2>
+                <h2 className="Home-description">Fast learning in the browser</h2>
                 <Link id="courses-link" to="courses" className="Call-to-action-btn">Get Started</Link>
             </header>
         )
