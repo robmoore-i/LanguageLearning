@@ -13,7 +13,13 @@ MATCH (hello:Lesson {name: "Hello"})
 CREATE (tq:Question:TranslationQuestion {given: "Hello", answer: "გამარჯობა"})<-[:HAS_QUESTION]-(hello)-[:HAS_QUESTION]->(mcq:Question:MultipleChoiceQuestion {question: "sounds like \"i\" in English", a: "ა",b:"ო", c:"უ", d:"ი", answer: "d"})
 RETURN hello,tq,mcq;
 
-// Georgian Lesson: What are you called
+// Georgian Lesson: What are you called?
 MATCH (whatAreYouCalled:Lesson {name: "What are you called?"})
 CREATE (tq:Question:TranslationQuestion {given: "What are you called?", answer: "შენ რა გქვია?"})<-[:HAS_QUESTION]-(whatAreYouCalled)-[:HAS_QUESTION]->(mcq:Question:MultipleChoiceQuestion {question: "sounds like \"s\" in English", a: "წ",b:"ა", c:"ს", d:"დ", answer: "c"})
 RETURN whatAreYouCalled,tq,mcq;
+
+// Georgian Lesson: Colours
+MATCH (georgian: Course) WHERE georgian.name = "Georgian"
+CREATE (rq:Question:ReadingQuestion {`extract`: "მატარებელი ლურჯია და მანქანა წითელი არის"})<-[:HAS_QUESTION]-(trains:Lesson {name: "Colours"})<-[:HAS_LESSON]-(georgian)
+CREATE (rsq1:ReadingSubQuestion {given:"What colour is the train?", answer:"blue"})<-[:HAS_SUBQUESTION]-(rq)-[:HAS_SUBQUESTION]->(rsq2:ReadingSubQuestion {given: "What colour is the car?", answer: "red"})
+RETURN georgian,trains,rq,rsq1,rsq2;
