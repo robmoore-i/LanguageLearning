@@ -1,0 +1,33 @@
+#question-extract {
+}
+
+.question-header {
+    font-size: 2em;
+}
+
+.question-given {
+    display: inline;
+    border-radius: 10px;
+    background: #abad5f;
+    padding: 7px 25px;
+}
+
+.question-result-img {
+    width: 30px;
+    height: 30px;
+    padding: 0 10px;
+}
+
+.answer-input-textbox {
+    resize: none;
+    font-size: 20px;
+    padding: 10px 10px;
+    border-radius: 10px;
+    border-style: groove;
+    background-color: aliceblue;
+}
+
+.question-correction {
+    display: inline;
+    padding: 7px 25px;
+}

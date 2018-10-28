@@ -71,20 +71,25 @@ export default class ReadingQuestion extends Component {
     }
 }
 
-// The (i)th posed question, (question), about the extract. Shows the given (mark) and changing the textbox
+// The (i)th posed (question) about the extract. Shows the given (mark) and changing the textbox
 // makes a call to (setParentState) to update the parent-level list of answers.
 class PosedQuestion extends React.Component {
     render() {
         let correction = this.props.mark === Mark.INCORRECT ? this.correction() : null
         return [
-            <div id={"question-given-" + String(this.props.i)} key={"question-given-" + String(this.props.i)}>
-                {this.props.question.given}
+            <br key={"top-side-break-" + String(this.props.i)} />,
+            <div className="question-header" id={"question-header-" + String(this.props.i)} key={"question-header-" + String(this.props.i)}>
+                <div className="question-given" id={"question-given-" + String(this.props.i)} key={"question-given-" + String(this.props.i)}>
+                    {this.props.question.given}
+                </div>
+                <span id={this.props.mark.id + "-" + String(this.props.i)} key={this.props.mark.id + "-" + String(this.props.i)}>
+                    <img src={this.props.mark.img} className="question-result-img" alt="mark-result-status" />
+                </span>
             </div>,
-            <span id={this.props.mark.id + "-" + String(this.props.i)} key={this.props.mark.id + "-" + String(this.props.i)}>
-                    <img src={this.props.mark.img} className="question-result" alt="mark-result-status" />
-            </span>,
+            correction,
+            <br key={"question-header--break--textarea-" + String(this.props.i)} />,
             this.answerInputTextBox(),
-            correction
+            <br key={"low-side-break-" + String(this.props.i)} />,
         ]
     }
 
@@ -98,14 +103,14 @@ class PosedQuestion extends React.Component {
             })
         }
 
-        return <textarea id={"answer-input-textbox-" + String(this.props.i)} key={"answer-input-textbox-" + String(this.props.i)}
+        return <textarea className="answer-input-textbox" id={"answer-input-textbox-" + String(this.props.i)} key={"answer-input-textbox-" + String(this.props.i)}
                          rows="5" cols="50"
                          onChange={onChange}/>;
     }
 
     correction() {
         return (
-            <div id={"question-correction-" + String(this.props.i)} key={"question-correction-" + String(this.props.i)}>
+            <div className="question-correction" id={"question-correction-" + String(this.props.i)} key={"question-correction-" + String(this.props.i)}>
                 {this.props.question.answer}
             </div>
         )
