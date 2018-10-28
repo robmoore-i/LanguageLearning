@@ -1,1 +1,3 @@
-./build.sh && ./install.sh
+cd src
+go build && go install
+cd ..
