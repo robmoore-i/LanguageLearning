@@ -99,7 +99,7 @@ it('Shows the lesson stats page when all questions are complete', async () => {
     let dummyQuestion = {type: -1}
     let testServer = mockServer({name: "Hello!", questions: [dummyQuestion, dummyQuestion, dummyQuestion, dummyQuestion]})
     let testLesson = mount(<Lesson courseName="georgian" encodedLessonName="hello" server={testServer} />)
-    testLesson.setState({currentQuestionIndex: 4}) // No more questions
+    testLesson.setState({currentQuestionIndex: 4, correct: 4, incorrect: 0})
     await sleep(mockServerLoadTimeMs)
     testLesson.update()
 
@@ -110,7 +110,7 @@ it('Accurately shows a lesson accuracy of less than 100% when appropriate', asyn
     let dummyQuestion = {type: -1}
     let testServer = mockServer({name: "Hello!", questions: [dummyQuestion, dummyQuestion, dummyQuestion, dummyQuestion]})
     let testLesson = mount(<Lesson courseName="georgian" encodedLessonName="hello" server={testServer} />)
-    testLesson.setState({currentQuestionIndex: 10}) // Answered 10 times but only 4 questions were sent by the server.
+    testLesson.setState({currentQuestionIndex: 10, correct: 4, incorrect: 6})
     await sleep(mockServerLoadTimeMs)
     testLesson.update()
 

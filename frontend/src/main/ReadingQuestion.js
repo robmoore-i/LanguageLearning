@@ -5,7 +5,7 @@ import '../styles/Question.css'
 import '../styles/ReadingQuestion.css'
 // Main
 import Mark from "./Mark"
-import {submitForMarkingButton, continueButton} from "./Question"
+import {submitForMarkingButton, continueButtonWithArg} from "./Question"
 
 export default class ReadingQuestion extends Component {
     constructor(props) {
@@ -59,8 +59,10 @@ export default class ReadingQuestion extends Component {
                     marks: this.markAnswers()
                 })
             })
+        } else if (this.state.marks.every((mark) => mark === Mark.CORRECT)) {
+            return continueButtonWithArg(this.props.onCompletion, true)
         } else {
-            return continueButton(this.props.onCompletion)
+            return continueButtonWithArg(this.props.onCompletion, false)
         }
     }
 

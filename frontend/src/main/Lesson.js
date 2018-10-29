@@ -22,7 +22,9 @@ export default class Lesson extends Component {
             currentQuestionIndex: 0,
             questions: [],
             numQuestions: -1, // -1 will cause something note-worthily weird in the case of premature usage in an accuracy calculation.
-            startTime: (new Date())
+            startTime: (new Date()),
+            correct: 0,
+            incorrect: 0
         }
     }
 
@@ -52,7 +54,7 @@ export default class Lesson extends Component {
 
         let mainContent
         if (this.state.currentQuestionIndex >= this.state.questions.length) {
-            let accuracyPercentage = 100 * this.state.numQuestions / this.state.currentQuestionIndex
+            let accuracyPercentage = 100 * this.state.correct / (this.state.correct + this.state.incorrect)
             let lessonTimeSeconds = ((new Date()).getTime() - this.state.startTime.getTime()) / 1000
             mainContent = this.renderLessonStats(accuracyPercentage, lessonTimeSeconds)
         } else {
@@ -93,7 +95,8 @@ export default class Lesson extends Component {
             q: q,
             key: "questionIndex-" + this.state.currentQuestionIndex,
             onCorrect: completionHandlers.onCorrect,
-            onIncorrect: completionHandlers.onIncorrect
+            onIncorrect: completionHandlers.onIncorrect,
+            onCompletion: completionHandlers.onCompletion
         }
         switch (q.type) {
             case QuestionTypes.TRANSLATION:
@@ -106,7 +109,7 @@ export default class Lesson extends Component {
                 return <ReadingQuestion
                     key={"questionIndex-" + this.state.currentQuestionIndex}
                     q={q}
-                    onCompletion={genericQuestionProps.onCorrect} />
+                    onCompletion={genericQuestionProps.onCompletion} />
             default:
                 return <div key="sorry pal">Can't render that question pal</div>
         }
@@ -116,14 +119,38 @@ export default class Lesson extends Component {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within callback
         return {
             onCorrect: () => {
-                setState((state) => {return {currentQuestionIndex: state.currentQuestionIndex + 1}})
+                setState((state) => {
+                    return {
+                        currentQuestionIndex: state.currentQuestionIndex + 1,
+                        correct: state.correct + 1
+                    }
+                })
             },
 
             onIncorrect: () => {
                 setState((state) => {
                     return {
                         currentQuestionIndex: state.currentQuestionIndex + 1,
-                        questions: state.questions.concat([state.questions[state.currentQuestionIndex]])
+                        questions: state.questions.concat([state.questions[state.currentQuestionIndex]]),
+                        incorrect: state.incorrect + 1
+                    }
+                })
+            },
+
+            onCompletion: (correct) => {
+                setState((state) => {
+                    if (correct) {
+                        return {
+                            currentQuestionIndex: state.currentQuestionIndex + 1,
+                            correct: state.correct + 1
+                        }
+                    } else {
+                        return {
+                            // Add a question to the head of the queue
+                            currentQuestionIndex: state.currentQuestionIndex + 2,
+                            questions: [state.questions[state.currentQuestionIndex]].concat(state.questions),
+                            incorrect: state.incorrect + 1
+                        }
                     }
                 })
             }
