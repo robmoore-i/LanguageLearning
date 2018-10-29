@@ -29,10 +29,9 @@ export function continueButton(completionListener) {
     return _continueButton(completionListener, true)
 }
 
-function _continueButtonWithArg(completionListener, enabled, arg) {
-    let className = enabled ? "mark-continue-button" : "mark-continue-button-disabled"
+function _continueButtonWithArg(completionListener, arg) {
     return (
-        <a id="continue-button" className={className} key="continue-button"
+        <a id="continue-button" className="mark-continue-button" key="continue-button"
            onClick={() => {
                completionListener(arg)
            }}>
@@ -42,7 +41,7 @@ function _continueButtonWithArg(completionListener, enabled, arg) {
 }
 
 export function continueButtonWithArg(completionListener, arg) {
-    return _continueButtonWithArg(completionListener, true, arg)
+    return _continueButtonWithArg(completionListener, arg)
 }
 
 export const disabledContinueButton = _continueButton(() => {}, false)
