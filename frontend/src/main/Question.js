@@ -29,21 +29,6 @@ export function continueButton(completionListener) {
     return _continueButton(completionListener, true)
 }
 
-function _continueButtonWithArg(completionListener, arg) {
-    return (
-        <a id="continue-button" className="mark-continue-button" key="continue-button"
-           onClick={() => {
-               completionListener(arg)
-           }}>
-            Continue
-        </a>
-    )
-}
-
-export function continueButtonWithArg(completionListener, arg) {
-    return _continueButtonWithArg(completionListener, arg)
-}
-
 export const disabledContinueButton = _continueButton(() => {}, false)
 
 export const QuestionTypes = {
