@@ -6,7 +6,7 @@ import {mount} from 'enzyme'
 import Lesson from '../../main/Lesson'
 import {encodeUrl} from "../../main/App"
 // Enzyme react-adapter configuration & others
-import {configureAdapter, sleep, textBoxInputEvent} from "../utils"
+import {configureAdapter, sleep, textBoxInputEvent, questionSubmitAndContinue} from "../utils"
 
 configureAdapter()
 
@@ -30,13 +30,11 @@ it('can advance through an MCQ and a TQ', async () => {
 
     // MCQ
     testLesson.find("#choice-d").simulate("click")
-    testLesson.find("#submit-for-marking-button").simulate("click")
-    testLesson.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testLesson)
 
     // TQ
     testLesson.find("#answer-input-textbox").simulate("change", textBoxInputEvent("გამარჯობა"))
-    testLesson.find("#submit-for-marking-button").simulate("click")
-    testLesson.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testLesson)
 
     expect(testLesson.find("#lesson-accuracy").text()).toEqual("Accuracy: 100%")
 })
@@ -57,18 +55,15 @@ it('can repeats TQ and MCQ if answered incorrectly', async () => {
 
     // MCQ Incorrect
     testLesson.find("#choice-c").simulate("click")
-    testLesson.find("#submit-for-marking-button").simulate("click")
-    testLesson.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testLesson)
 
     // TQ Repeated
     testLesson.find("#answer-input-textbox").simulate("change", textBoxInputEvent("გამარჯობა"))
-    testLesson.find("#submit-for-marking-button").simulate("click")
-    testLesson.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testLesson)
 
     // MCQ Repeated
     testLesson.find("#choice-d").simulate("click")
-    testLesson.find("#submit-for-marking-button").simulate("click")
-    testLesson.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testLesson)
 
     expect(testLesson.find("#lesson-accuracy").text()).toEqual("Accuracy: 50%")
 })
@@ -82,13 +77,11 @@ it('Repeats a question even if its the last question', async () => {
 
     // MCQ Incorrect
     testLesson.find("#choice-c").simulate("click")
-    testLesson.find("#submit-for-marking-button").simulate("click")
-    testLesson.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testLesson)
 
     // MCQ Repeated
     testLesson.find("#choice-d").simulate("click")
-    testLesson.find("#submit-for-marking-button").simulate("click")
-    testLesson.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testLesson)
 
     expect(testLesson.find("#lesson-accuracy").text()).toEqual("Accuracy: 50%")
 })
@@ -107,13 +100,11 @@ it('Gets a reasonably accurate reading on the lesson time', async () => {
 
     // MCQ
     testLesson.find("#choice-d").simulate("click")
-    testLesson.find("#submit-for-marking-button").simulate("click")
-    testLesson.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testLesson)
 
     // TQ
     testLesson.find("#answer-input-textbox").simulate("change", textBoxInputEvent("გამარჯობა"))
-    testLesson.find("#submit-for-marking-button").simulate("click")
-    testLesson.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testLesson)
 
     let text = testLesson.find("#lesson-time").text()
     let num = Number(text.split(" ")[2])
@@ -131,18 +122,15 @@ it('Records if an RQ was answered incorrectly without repeating it', async () =>
     testLesson.update()
 
     // RQ
-    testLesson.find("#submit-for-marking-button").simulate("click")
-    testLesson.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testLesson)
 
     // MCQ
     testLesson.find("#choice-d").simulate("click")
-    testLesson.find("#submit-for-marking-button").simulate("click")
-    testLesson.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testLesson)
 
     // TQ
     testLesson.find("#answer-input-textbox").simulate("change", textBoxInputEvent("გამარჯობა"))
-    testLesson.find("#submit-for-marking-button").simulate("click")
-    testLesson.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testLesson)
 
     expect(testLesson.find("#lesson-accuracy").text()).toEqual("Accuracy: 66.7%")
 })
@@ -165,18 +153,15 @@ it('Records the correctness of reading subquestions when determining overall acc
     testLesson.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Kitchen"))
     testLesson.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
     testLesson.find("#answer-input-textbox-2").simulate("change", textBoxInputEvent("Wrong"))
-    testLesson.find("#submit-for-marking-button").simulate("click")
-    testLesson.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testLesson)
 
     // MCQ
     testLesson.find("#choice-d").simulate("click")
-    testLesson.find("#submit-for-marking-button").simulate("click")
-    testLesson.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testLesson)
 
     // TQ
     testLesson.find("#answer-input-textbox").simulate("change", textBoxInputEvent("გამარჯობა"))
-    testLesson.find("#submit-for-marking-button").simulate("click")
-    testLesson.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testLesson)
 
     expect(testLesson.find("#lesson-accuracy").text()).toEqual("Accuracy: 80%")
 })

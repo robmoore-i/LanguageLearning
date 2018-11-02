@@ -12,3 +12,8 @@ export function sleep(ms) {
 export function textBoxInputEvent(input) {
     return {target: {value: input}}
 }
+
+export function questionSubmitAndContinue(componentWrapper) {
+  componentWrapper.find("#submit-for-marking-button").simulate("click")
+  componentWrapper.find("#continue-button").simulate("click")
+}
