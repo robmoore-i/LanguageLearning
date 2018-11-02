@@ -178,7 +178,7 @@ it('Calls the onIncorrect completion listener after clicking continue when quest
     expect(questionCompletedIncorrectly).toHaveBeenCalled()
 })
 
-it('Calls the onIncorrect completion listener after clicking continue when question answered incorrectly, then corrected', () => {
+it('Ignores whitespace, case and question mark when marking', () => {
     let correctAnswer = "What are you called?"
 
     let questionCompletedCorrectly = jest.fn()
