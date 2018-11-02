@@ -18,7 +18,7 @@ def stop_backend():
 def lesson_names():
     res = requests.get("http://localhost:8000/lessonnames")
     assert_that(res.status_code).is_equal_to(200)
-    assert_that(res.json()).is_equal_to(["Colours", "Hello", "What are you called?"])
+    assert_that(sorted(res.json())).is_equal_to(sorted(["Colours", "Hello", "What are you called?"]))
     assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:3000")
 
 

@@ -9,10 +9,6 @@ import (
 )
 
 var (
-	neo4jUser = "neo4j"
-	neo4jPw = "zuhlke"
-	neo4jURL = strings.Join([]string{"bolt://", neo4jUser, ":", neo4jPw, "@localhost:7687"}, "")
-
 	imagesPath = "/home/rob/Documents/language/melange/database/images/"
 )
 
@@ -158,7 +154,7 @@ func parseRSQ(node graph.Node) ReadingSubQuestion {
 // ====== Common =========
 
 func openConnection() driver.Conn {
-	conn, err := driver.NewDriver().OpenNeo(neo4jURL)
+	conn, err := driver.NewDriver().OpenNeo(Neo4jURL)
 	if err != nil {
 		log.Printf("Error opening neo4j connection")
 		conn.Close()
