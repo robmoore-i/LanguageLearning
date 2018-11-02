@@ -5,7 +5,7 @@ import {mount, shallow} from 'enzyme'
 // Main
 import ReadingQuestion from '../../main/ReadingQuestion'
 // Enzyme react-adapter configuration & others
-import {configureAdapter, textBoxInputEvent} from "../utils"
+import {configureAdapter, textBoxInputEvent, questionSubmitAndContinue} from "../utils"
 
 configureAdapter()
 
@@ -168,8 +168,7 @@ it('Calls the onCompletion prop when clicking continue', () => {
     let testRQ = mount(<ReadingQuestion q={q} onCompletion={spyOnCompletion} />)
 
     testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Kitchen"))
-    testRQ.find("#submit-for-marking-button").simulate("click")
-    testRQ.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testRQ)
 
     expect(spyOnCompletion).toHaveBeenCalled()
 })
