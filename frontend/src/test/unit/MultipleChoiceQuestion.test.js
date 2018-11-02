@@ -5,7 +5,7 @@ import {mount, shallow} from 'enzyme'
 // Main
 import MultipleChoiceQuestion, {Choices} from '../../main/MultipleChoiceQuestion'
 // Enzyme react-adapter configuration & others
-import {configureAdapter} from "../utils"
+import {configureAdapter, questionSubmitAndContinue} from "../utils"
 
 configureAdapter()
 
@@ -52,8 +52,7 @@ it('Marks a correct answer as correct', () => {
 
     testMCQ.find("#choice-d").simulate("click")
 
-    let markButton = testMCQ.find("#submit-for-marking-button")
-    markButton.simulate("click")
+    testMCQ.find("#submit-for-marking-button").simulate("click")
 
     expect(testMCQ.find("#question-result-correct").exists()).toBe(true)
 })
@@ -64,8 +63,7 @@ it('Marks an incorrect answer as incorrect', () => {
 
     testMCQ.find("#choice-c").simulate("click")
 
-    let markButton = testMCQ.find("#submit-for-marking-button")
-    markButton.simulate("click")
+    testMCQ.find("#submit-for-marking-button").simulate("click")
 
     expect(testMCQ.find("#question-result-incorrect").exists()).toBe(true)
     expect(testMCQ.find("#question-result-correct").exists()).toBe(false)
@@ -75,8 +73,7 @@ it('Doesnt mark if no answer is given', () => {
     let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
     let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
 
-    let markButton = testMCQ.find("#submit-for-marking-button")
-    markButton.simulate("click")
+    testMCQ.find("#submit-for-marking-button").simulate("click")
 
     expect(testMCQ.find("#question-result-incorrect").exists()).toBe(false)
     expect(testMCQ.find("#question-result-correct").exists()).toBe(false)
@@ -88,8 +85,8 @@ it('Transforms submit button into continue button after correct answer', () => {
     let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
 
     testMCQ.find("#choice-d").simulate("click")
-    let markButton = testMCQ.find("#submit-for-marking-button")
-    markButton.simulate("click")
+
+    testMCQ.find("#submit-for-marking-button").simulate("click")
 
     expect(testMCQ.find("#submit-for-marking-button").exists()).toBe(false)
     expect(testMCQ.find("#continue-button").exists()).toBe(true)
@@ -101,8 +98,7 @@ it('Calls the onCorrect completion handler when question answered correctly', ()
     let testMCQ = mount(<MultipleChoiceQuestion q={q} onCorrect={questionCompletedCorrectly} />)
 
     testMCQ.find("#choice-d").simulate("click")
-    testMCQ.find("#submit-for-marking-button").simulate("click")
-    testMCQ.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testMCQ)
 
     expect(questionCompletedCorrectly).toHaveBeenCalled()
 })
@@ -113,8 +109,7 @@ it('Calls the onIncorrect completion handler when question answered incorrectly'
     let testMCQ = mount(<MultipleChoiceQuestion q={q} onIncorrect={questionCompletedIncorrectly} />)
 
     testMCQ.find("#choice-b").simulate("click")
-    testMCQ.find("#submit-for-marking-button").simulate("click")
-    testMCQ.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testMCQ)
 
     expect(questionCompletedIncorrectly).toHaveBeenCalled()
 })
@@ -134,8 +129,7 @@ it('Clicking checkboxes after marking doesnt change the active choice', () => {
     let testMCQ = mount(<MultipleChoiceQuestion q={q} onIncorrect={() => {}} />)
 
     testMCQ.find("#choice-b").simulate("click")
-    testMCQ.find("#submit-for-marking-button").simulate("click")
-    testMCQ.find("#choice-a").simulate("click")
+    questionSubmitAndContinue(testMCQ)
 
     expect(testMCQ.state("activeChoice")).toEqual(Choices.B)
 })
