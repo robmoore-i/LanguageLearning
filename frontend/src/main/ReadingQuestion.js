@@ -5,7 +5,7 @@ import '../styles/Question.css'
 import '../styles/ReadingQuestion.css'
 // Main
 import Mark from "./Mark"
-import {submitForMarkingButton, continueButton} from "./Question"
+import {submitForMarkingButton, continueButton, formatAnswer} from "./Question"
 
 export default class ReadingQuestion extends Component {
     constructor(props) {
@@ -70,8 +70,8 @@ export default class ReadingQuestion extends Component {
     markAnswers() {
         let marks = (new Array(this.props.q.questions.length)).fill(Mark.UNMARKED)
         for (let i = 0; i < this.state.currentAnswers.length; i++) {
-            let actual = this.state.currentAnswers[i]
-            let expected = this.props.q.questions[i].answer
+            let actual = formatAnswer(this.state.currentAnswers[i])
+            let expected = formatAnswer(this.props.q.questions[i].answer)
             if (actual === expected) {
                 marks[i] = Mark.CORRECT
             } else {

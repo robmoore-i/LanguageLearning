@@ -172,3 +172,25 @@ it('Calls the onCompletion prop when clicking continue', () => {
 
     expect(spyOnCompletion).toHaveBeenCalled()
 })
+
+it('Ignores whitespace, case, commas, fullstops, exclamation marks and question mark when marking', () => {
+    let correctAnswer = "He went to the kitchen! Would you BELIEVE IT?!!"
+
+    let questionCompletedCorrectly = jest.fn()
+    let q = {
+        type: 2,
+        extract: "Vlad went to the kitchen and got some cake",
+        questions: [
+            {given: "Where did Vlad go?", answer: correctAnswer}
+        ]
+    }
+    let spyOnCompletion = jest.fn()
+    let testRQ = mount(<ReadingQuestion q={q} onCompletion={spyOnCompletion} />)
+
+    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("  He  went   to    THE  KITCHEN!?  would. yOU. beliEVE it."))
+    questionSubmitAndContinue(testRQ)
+
+    let expectedCorrect = 1
+    let expectedIncorrect = 0
+    expect(spyOnCompletion).toHaveBeenCalledWith(expectedCorrect, expectedIncorrect)
+})
