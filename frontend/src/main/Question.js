@@ -38,5 +38,5 @@ export const QuestionTypes = {
 }
 
 export function formatAnswer(rawAnswer) {
-    return rawAnswer.replace(/\s+/g,' ').trim().toLowerCase().replace(/[?]/g, "")
+    return rawAnswer.replace(/\s+/g,' ').trim().toLowerCase().replace(/[?!.,]/g, "")
 }
