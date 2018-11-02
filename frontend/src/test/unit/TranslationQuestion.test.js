@@ -5,7 +5,7 @@ import {mount, shallow} from 'enzyme'
 // Main
 import TranslationQuestion from '../../main/TranslationQuestion'
 // Enzyme react-adapter configuration & others
-import {configureAdapter, textBoxInputEvent} from "../utils"
+import {configureAdapter, textBoxInputEvent, questionSubmitAndContinue} from "../utils"
 
 configureAdapter()
 
@@ -80,8 +80,7 @@ it('Calls the onCorrect completion listener after clicking continue when questio
     let testTQ = mount(<TranslationQuestion q={q} onCorrect={questionCompletedCorrectly} />)
 
     testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
-    testTQ.find("#submit-for-marking-button").simulate("click")
-    testTQ.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testTQ)
 
     expect(questionCompletedCorrectly).toHaveBeenCalled()
 })
@@ -120,8 +119,7 @@ it('Doesnt call either the onCorrect or onIncorrect completion listeners when di
     let testTQ = mount(<TranslationQuestion q={q} onCorrect={questionCompletedCorrectly} onIncorrect={questionCompletedIncorrectly} />)
 
     testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
-    testTQ.find("#submit-for-marking-button").simulate("click")
-    testTQ.find("#continue-button").simulate("click")
+    questionSubmitAndContinue(testTQ)
 
     expect(questionCompletedCorrectly).toHaveBeenCalledTimes(0)
     expect(questionCompletedIncorrectly).toHaveBeenCalledTimes(0)
