@@ -137,20 +137,12 @@ export default class Lesson extends Component {
                 })
             },
 
-            onCompletion: (correct) => {
+            onCompletion: (numCorrectAnswers, numIncorrectAnswers) => {
                 setState((state) => {
-                    if (correct) {
-                        return {
-                            currentQuestionIndex: state.currentQuestionIndex + 1,
-                            correct: state.correct + 1
-                        }
-                    } else {
-                        return {
-                            // Add a question to the head of the queue
-                            currentQuestionIndex: state.currentQuestionIndex + 2,
-                            questions: [state.questions[state.currentQuestionIndex]].concat(state.questions),
-                            incorrect: state.incorrect + 1
-                        }
+                    return {
+                      currentQuestionIndex: state.currentQuestionIndex + 1,
+                      correct: state.correct + numCorrectAnswers,
+                      incorrect: state.incorrect + numIncorrectAnswers
                     }
                 })
             }

@@ -134,8 +134,6 @@ it('Records if an RQ was answered incorrectly without repeating it', async () =>
     testLesson.find("#submit-for-marking-button").simulate("click")
     testLesson.find("#continue-button").simulate("click")
 
-    //console.log(testLesson.debug())
-
     // MCQ
     testLesson.find("#choice-d").simulate("click")
     testLesson.find("#submit-for-marking-button").simulate("click")
@@ -147,4 +145,38 @@ it('Records if an RQ was answered incorrectly without repeating it', async () =>
     testLesson.find("#continue-button").simulate("click")
 
     expect(testLesson.find("#lesson-accuracy").text()).toEqual("Accuracy: 66.7%")
+})
+
+it('Records the correctness of reading subquestions when determining overall accuracy', async () => {
+    let rq = {type: 2, extract: "Vlad went to the kitchen and got some cake",
+      questions: [
+        {given: "Where did Vlad go?", answer: "Kitchen"},
+        {given: "What did he get there?", answer: "Cake"},
+        {given: "How much if it did he get?", answer: "Some"}
+      ]}
+    let mcq = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
+    let tq = {type: 0, given: "hello", answer: "გამარჯობა"}
+    let testServer = mockServer({name: "Hello!", questions: [rq, mcq, tq]})
+    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} />)
+    await sleep(mockServerLoadTimeMs)
+    testLesson.update()
+
+    // RQ
+    testLesson.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Kitchen"))
+    testLesson.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
+    testLesson.find("#answer-input-textbox-2").simulate("change", textBoxInputEvent("Wrong"))
+    testLesson.find("#submit-for-marking-button").simulate("click")
+    testLesson.find("#continue-button").simulate("click")
+
+    // MCQ
+    testLesson.find("#choice-d").simulate("click")
+    testLesson.find("#submit-for-marking-button").simulate("click")
+    testLesson.find("#continue-button").simulate("click")
+
+    // TQ
+    testLesson.find("#answer-input-textbox").simulate("change", textBoxInputEvent("გამარჯობა"))
+    testLesson.find("#submit-for-marking-button").simulate("click")
+    testLesson.find("#continue-button").simulate("click")
+
+    expect(testLesson.find("#lesson-accuracy").text()).toEqual("Accuracy: 80%")
 })

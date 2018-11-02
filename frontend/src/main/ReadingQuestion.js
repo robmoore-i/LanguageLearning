@@ -59,10 +59,10 @@ export default class ReadingQuestion extends Component {
                     marks: this.markAnswers()
                 })
             })
-        } else if (this.state.marks.every((mark) => mark === Mark.CORRECT)) {
-            return continueButton(() => {this.props.onCompletion(true)})
         } else {
-            return continueButton(() => {this.props.onCompletion(false)})
+          let numCorrectAnswers = this.state.marks.map((mark) => + (mark === Mark.CORRECT)).reduce((a, b) => a + b)
+          let numIncorrectAnswers = this.props.q.questions.length - numCorrectAnswers
+          return continueButton(() => {this.props.onCompletion(numCorrectAnswers, numIncorrectAnswers)})
         }
     }
 
