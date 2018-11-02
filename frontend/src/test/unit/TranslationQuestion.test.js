@@ -177,3 +177,16 @@ it('Calls the onIncorrect completion listener after clicking continue when quest
 
     expect(questionCompletedIncorrectly).toHaveBeenCalled()
 })
+
+it('Calls the onIncorrect completion listener after clicking continue when question answered incorrectly, then corrected', () => {
+    let correctAnswer = "What are you called?"
+
+    let questionCompletedCorrectly = jest.fn()
+    let q = {type: 0, given: "შენ რა გქვია?", answer: correctAnswer}
+    let testTQ = mount(<TranslationQuestion q={q} onCorrect={questionCompletedCorrectly} />)
+
+    testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("  WhaT  aRe   yOU callED     "))
+    questionSubmitAndContinue(testTQ)
+
+    expect(questionCompletedCorrectly).toHaveBeenCalled()
+})

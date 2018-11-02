@@ -36,3 +36,7 @@ export const QuestionTypes = {
     MULTIPLE_CHOICE: 1,
     READING: 2
 }
+
+export function formatAnswer(rawAnswer) {
+    return rawAnswer.replace(/\s+/g,' ').trim().toLowerCase().replace(/[?]/g, "")
+}

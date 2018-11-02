@@ -5,7 +5,7 @@ import '../styles/Question.css'
 import '../styles/TranslationQuestion.css'
 // Main
 import Mark from "./Mark"
-import {submitForMarkingButton, continueButton, disabledContinueButton} from "./Question"
+import {submitForMarkingButton, continueButton, disabledContinueButton, formatAnswer} from "./Question"
 
 export default class TranslationQuestion extends Component {
     constructor(props) {
@@ -107,9 +107,12 @@ export default class TranslationQuestion extends Component {
     }
 
     mark(answer) {
-        if (answer === "") {
+        let formattedActual = formatAnswer(answer)
+        let formattedExpected = formatAnswer(this.props.q.answer)
+
+        if (formattedActual === "") {
             return Mark.UNMARKED
-        } else if (answer === this.props.q.answer) {
+        } else if (formattedActual === formattedExpected) {
             return Mark.CORRECT
         } else {
             return Mark.INCORRECT
