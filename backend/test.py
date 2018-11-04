@@ -98,7 +98,6 @@ def tests():
 
 usage = "USAGE: ./test.py [a|r]\na => don't start the server because it's (a)lready running.\nr => (r)un the server."
 
-
 def main():
     print("Running: " + str(sys.argv))
 
