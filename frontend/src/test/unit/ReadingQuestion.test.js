@@ -34,18 +34,18 @@ it('Shows all the questions', () => {
     }
     let testRQ = shallow(<ReadingQuestion q={q} />)
 
-    expect(testRQ.find("#posed-question-0").dive().find("#question-given-0").text()).toBe("Where did Vlad go?")
-    expect(testRQ.find("#posed-question-1").dive().find("#question-given-1").text()).toBe("What did he get there?")
+    expect(testRQ.find("#sub-question-0").dive().find("#question-given-0").text()).toBe("Where did Vlad go?")
+    expect(testRQ.find("#sub-question-1").dive().find("#question-given-1").text()).toBe("What did he get there?")
 })
 
-// Asserts that the (i)th posed question in the reading question(rq) is correct
+// Asserts that the (i)th sub question in the reading question(rq) is correct
 let assertCorrect = (rq, i) => {
     expect(rq.find("#question-result-correct-" + i).exists()).toBe(true)
     expect(rq.find("#question-result-incorrect-" + i).exists()).toBe(false)
     expect(rq.find("#question-result-unmarked-" + i).exists()).toBe(false)
 }
 
-// Asserts that the (i)th posed question in the reading question(rq) is incorrect
+// Asserts that the (i)th sub question in the reading question(rq) is incorrect
 let assertIncorrect = (rq, i) => {
     expect(rq.find("#question-result-correct-" + i).exists()).toBe(false)
     expect(rq.find("#question-result-incorrect-" + i).exists()).toBe(true)
@@ -193,4 +193,20 @@ it('Ignores whitespace, case, commas, fullstops, exclamation marks and question 
     let expectedCorrect = 1
     let expectedIncorrect = 0
     expect(spyOnCompletion).toHaveBeenCalledWith(expectedCorrect, expectedIncorrect)
+})
+
+it('Warns user before marking if an answer box is empty', () => {
+  let q = {
+      type: 2,
+      extract: "Vlad went to the kitchen and got some cake",
+      questions: [
+          {given: "Where did Vlad go?", answer: "The Kitchen"}
+      ]
+  }
+
+  let testRQ = mount(<ReadingQuestion q={q} />)
+
+  testRQ.find("#submit-for-marking-button").simulate("click")
+
+  expect(testRQ.find("#unanswered-questions-warning").exists()).toBe(true)
 })

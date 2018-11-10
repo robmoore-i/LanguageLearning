@@ -122,6 +122,7 @@ it('Records if an RQ was answered incorrectly without repeating it', async () =>
     testLesson.update()
 
     // RQ
+    testLesson.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Wrong"))
     questionSubmitAndContinue(testLesson)
 
     // MCQ

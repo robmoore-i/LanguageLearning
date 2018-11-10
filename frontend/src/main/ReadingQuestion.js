@@ -14,7 +14,8 @@ export default class ReadingQuestion extends Component {
         this.state = {
             currentAnswers: (new Array(this.props.q.questions.length)).fill(""),
             marked: false,
-            marks: (new Array(this.props.q.questions.length)).fill(Mark.UNMARKED)
+            marks: (new Array(this.props.q.questions.length)).fill(Mark.UNMARKED),
+            warning: false
         }
     }
 
@@ -35,6 +36,7 @@ export default class ReadingQuestion extends Component {
                 {this.questions()}
             </div>,
             <br key="questions--break--button" />,
+            this.unansweredQuestionsWarning(),
             this.button()
         ]
     }
@@ -42,7 +44,7 @@ export default class ReadingQuestion extends Component {
     questions() {
         const setState = this.setState.bind(this)
         return this.props.q.questions.map((q, i) => {
-            return <PosedQuestion id={"posed-question-" + String(i)} key={"posed-question-" + String(i)}
+            return <SubQuestion id={"sub-question-" + String(i)} key={"sub-question-" + String(i)}
                                   i={i}
                                   question={q}
                                   mark={this.state.marks[i]}
@@ -52,18 +54,35 @@ export default class ReadingQuestion extends Component {
 
     button() {
         if (!this.state.marked) {
-            const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
-            return submitForMarkingButton(() => {
-                setState({
-                    marked: true,
-                    marks: this.markAnswers()
-                })
-            })
+          return this.submitForMarkingButton()
         } else {
           let numCorrectAnswers = this.state.marks.map((mark) => + (mark === Mark.CORRECT)).reduce((a, b) => a + b)
           let numIncorrectAnswers = this.props.q.questions.length - numCorrectAnswers
           return continueButton(() => {this.props.onCompletion(numCorrectAnswers, numIncorrectAnswers)})
         }
+    }
+
+    submitForMarkingButton() {
+      const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
+
+      if (this.anySubQuestionsUnanswered() && !this.state.warning) {
+        return submitForMarkingButton(() => { // Possible 'key' re-rendering issue
+            setState({
+                warning: true
+            })
+        })
+      } else {
+        return submitForMarkingButton(() => {
+            setState({
+                marked: true,
+                marks: this.markAnswers()
+            })
+        })
+      }
+    }
+
+    anySubQuestionsUnanswered() {
+        return this.state.currentAnswers.map((answer) => answer === "").reduce((cur, acc) => cur && acc)
     }
 
     // Matches currentAnswers against this.props.q.questions
@@ -80,11 +99,19 @@ export default class ReadingQuestion extends Component {
         }
         return marks
     }
+
+    unansweredQuestionsWarning() {
+        if (this.state.warning) {
+            return <div id="unanswered-questions-warning" key="unanswered-questions-warning">Warning</div>
+        } else {
+            return null
+        }
+    }
 }
 
 // The (i)th posed (question) about the extract. Shows the given (mark) and changing the textbox
 // makes a call to (setParentState) to update the parent-level list of answers.
-class PosedQuestion extends React.Component {
+class SubQuestion extends React.Component {
     render() {
         let correction = this.props.mark === Mark.INCORRECT ? this.correction() : null
         return [
