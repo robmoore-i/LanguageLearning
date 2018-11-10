@@ -1,7 +1,11 @@
 package main
 
+import (
+  "strings"
+)
+
 var (
-  Neo4jUser = "neo4j"
-	Neo4jPw = "zuhlke"
+  neo4jUser = "neo4j"
+	neo4jPw = "zuhlke"
 	Neo4jURL = strings.Join([]string{"bolt://", neo4jUser, ":", neo4jPw, "@localhost:7687"}, "")
 )
