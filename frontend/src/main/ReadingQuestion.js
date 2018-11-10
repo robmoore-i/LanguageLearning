@@ -90,7 +90,7 @@ export default class ReadingQuestion extends Component {
     markAnswers() {
         let marks = (new Array(this.props.q.questions.length)).fill(Mark.UNMARKED)
         for (let i = 0; i < this.state.currentAnswers.length; i++) {
-            let actual = formatAnswer(this.state.currentAnswers[i])
+            let actual   = formatAnswer(this.state.currentAnswers[i])
             let expected = formatAnswer(this.props.q.questions[i].answer)
             if (actual === expected) {
                 marks[i] = Mark.CORRECT
