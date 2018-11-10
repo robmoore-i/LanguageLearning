@@ -35,8 +35,9 @@ export default class ReadingQuestion extends Component {
             <div key="questions">
                 {this.questions()}
             </div>,
-            <br key="questions--break--button" />,
+            <br key="questions--break--unanswered-questions-warning" />,
             this.unansweredQuestionsWarning(),
+            <br key="unanswered-questions-warning--break--button" />,
             this.button()
         ]
     }
@@ -102,7 +103,12 @@ export default class ReadingQuestion extends Component {
 
     unansweredQuestionsWarning() {
         if (this.state.warning) {
-            return <div id="unanswered-questions-warning" key="unanswered-questions-warning">Warning</div>
+            return (
+                <div id="unanswered-questions-warning" key="unanswered-questions-warning">
+                    <span id="you-have-unanswered-questions">You have unanswered questions!</span><br/>
+                    Press 'Mark' again to mark your answers as they are.
+                </div>
+            )
         } else {
             return null
         }

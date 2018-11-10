@@ -45,3 +45,13 @@
     background: #313dad;
     padding: 7px 25px;
 }
+
+#unanswered-questions-warning {
+    color: red;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+#you-have-unanswered-questions {
+    border-bottom: 3px solid red;
+}
