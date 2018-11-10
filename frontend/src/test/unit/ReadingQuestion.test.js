@@ -200,12 +200,34 @@ it('Warns user before marking if an answer box is empty', () => {
       type: 2,
       extract: "Vlad went to the kitchen and got some cake",
       questions: [
-          {given: "Where did Vlad go?", answer: "The Kitchen"}
+          {given: "Where did Vlad go?", answer: "Kitchen"}
       ]
   }
 
   let testRQ = mount(<ReadingQuestion q={q} />)
 
+  testRQ.find("#submit-for-marking-button").simulate("click")
+
+  expect(testRQ.find("#unanswered-questions-warning").exists()).toBe(true)
+  expect(testRQ.find("#submit-for-marking-button").exists()).toBe(true)
+  expect(testRQ.find("#continue-button").exists()).toBe(false)
+})
+
+it('Warns user before marking if any answer box is empty', () => {
+  let q = {
+      type: 2,
+      extract: "Vlad went to the kitchen and got some cake",
+      questions: [
+          {given: "Where did Vlad go?", answer: "Kitchen"},
+          {given: "What did he get there?", answer: "Cake"},
+          {given: "What's this guy's name again?", answer: "Vlad"}
+      ]
+  }
+
+  let testRQ = mount(<ReadingQuestion q={q} />)
+
+  testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Kitchen"))
+  testRQ.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
   testRQ.find("#submit-for-marking-button").simulate("click")
 
   expect(testRQ.find("#unanswered-questions-warning").exists()).toBe(true)

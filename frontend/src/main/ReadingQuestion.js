@@ -83,7 +83,7 @@ export default class ReadingQuestion extends Component {
     }
 
     anySubQuestionsUnanswered() {
-        return this.state.currentAnswers.map((answer) => answer === "").reduce((cur, acc) => cur && acc)
+        return this.state.currentAnswers.map((answer) => answer === "").reduce((cur, acc) => cur || acc)
     }
 
     // Matches currentAnswers against this.props.q.questions
