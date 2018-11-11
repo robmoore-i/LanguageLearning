@@ -124,7 +124,7 @@ export default class TranslationQuestion extends Component {
             return this.compareFormattedAnswers(formattedActual, formattedExpected)
         } else {
             let formattedExpecteds = this.props.q.answers.map(formatAnswer)
-            let matchesFormattedExpecteds = formattedExpecteds.map((formattedExpected) => this.compareFormattedAnswers(formattedActual, formattedExpected) == Mark.CORRECT)
+            let matchesFormattedExpecteds = formattedExpecteds.map((formattedExpected) => this.compareFormattedAnswers(formattedActual, formattedExpected) === Mark.CORRECT)
             let matchesAnyExpected = matchesFormattedExpecteds.reduce((cur, acc) => cur || acc)
             if (matchesAnyExpected) {
                 return Mark.CORRECT
