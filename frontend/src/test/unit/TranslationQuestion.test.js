@@ -4,6 +4,7 @@ import React from 'react'
 import {mount, shallow} from 'enzyme'
 // Main
 import TranslationQuestion from '../../main/TranslationQuestion'
+import Mark from "../../main/Mark"
 // Enzyme react-adapter configuration & others
 import {configureAdapter, textBoxInputEvent, questionSubmitAndContinue} from "../utils"
 
@@ -189,4 +190,18 @@ it('Ignores whitespace, case, commas, fullstops, exclamation marks and question 
     questionSubmitAndContinue(testTQ)
 
     expect(questionCompletedCorrectly).toHaveBeenCalled()
+})
+
+it('Can have multiple correct answers', () => {
+    let correctAnswers = ["car", "the car"] // Recall that marking is case insensitive, so need to be too exhaustive
+
+    let q = {type: 0, given: "მანქანა", answers: correctAnswers}
+
+    let testTQ = mount(<TranslationQuestion q={q} />)
+
+    let mark1 = testTQ.instance().mark("car")
+    let mark2 = testTQ.instance().mark("the car")
+
+    expect(mark1).toEqual(Mark.CORRECT)
+    expect(mark2).toEqual(Mark.CORRECT)
 })

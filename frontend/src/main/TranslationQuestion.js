@@ -56,16 +56,25 @@ export default class TranslationQuestion extends Component {
             </div>,
             <div key="correction-prompt">
                 <span id="correction-prompt">Type out the correct answer </span>
-                <span id="correction-answer">{this.props.q.answer}</span>
+                <span id="correction-answer">{this.correctionAnswer()}</span>
             </div>
         ]
+    }
+
+    correctionAnswer() {
+        if ("answer" in this.props.q) {
+            return this.props.q.answer
+        } else {
+            console.log("this branch (corr)")
+            return this.props.q.answers[0]
+        }
     }
 
     answerInputTextBox() {
         let onChange
         if (this.state.transitionState.isCorrectingState()) {
             onChange = (event) => {
-                if (event.target.value === this.props.q.answer) {
+                if (event.target.value === this.correctionAnswer()) {
                     this.setState({transitionState: TransitionState.CORRECTED})
                 }
             }
@@ -73,8 +82,11 @@ export default class TranslationQuestion extends Component {
             onChange = (event) => {this.setState({currentAnswer: event.target.value})}
         }
         return (
-            <textarea id="answer-input-textbox" rows="5" cols="50" readOnly={this.state.transitionState.isDoneState()} key="answer-input-textbox"
-                      onChange={onChange}/>
+            <textarea id="answer-input-textbox" key="answer-input-textbox"
+                rows="5"
+                cols="50"
+                readOnly={this.state.transitionState.isDoneState()}
+                onChange={onChange}/>
         )
     }
 
@@ -94,8 +106,7 @@ export default class TranslationQuestion extends Component {
     submitForMarkingButton() {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
 
-        // Issue
-        // It is inefficient to be re-rendering the submitForMarkingButton every time the currentAnswer changes
+        // Issue: It is inefficient to be re-rendering the submitForMarkingButton every time the currentAnswer changes
         switch (this.mark(this.state.currentAnswer)) {
             case Mark.CORRECT:
                 return submitForMarkingButton(() => {setState({transitionState: TransitionState.CORRECT})})
@@ -108,8 +119,22 @@ export default class TranslationQuestion extends Component {
 
     mark(answer) {
         let formattedActual = formatAnswer(answer)
-        let formattedExpected = formatAnswer(this.props.q.answer)
+        if ("answer" in this.props.q) {
+            let formattedExpected = formatAnswer(this.props.q.answer)
+            return this.compareFormattedAnswers(formattedActual, formattedExpected)
+        } else {
+            let formattedExpecteds = this.props.q.answers.map(formatAnswer)
+            let matchesFormattedExpecteds = formattedExpecteds.map((formattedExpected) => this.compareFormattedAnswers(formattedActual, formattedExpected) == Mark.CORRECT)
+            let matchesAnyExpected = matchesFormattedExpecteds.reduce((cur, acc) => cur || acc)
+            if (matchesAnyExpected) {
+                return Mark.CORRECT
+            } else {
+                return Mark.INCORRECT
+            }
+        }
+    }
 
+    compareFormattedAnswers(formattedActual, formattedExpected) {
         if (formattedActual === "") {
             return Mark.UNMARKED
         } else if (formattedActual === formattedExpected) {
