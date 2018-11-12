@@ -1,3 +1,3 @@
 cd ../database
-cypher-shell -u $1 -p $2 < create.cql
+./reset-db.sh
 cd ../backend

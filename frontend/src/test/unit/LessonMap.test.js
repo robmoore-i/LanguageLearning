@@ -13,7 +13,7 @@ let mockServerLoadTimeMs = 1
 
 let mockServer = lessonNames => {
     return {
-        fetchLessonNames: () => {
+        fetchLessonNames: (anyCourseName) => {
             return new Promise(resolve => resolve(lessonNames))
         }
     }
@@ -21,7 +21,7 @@ let mockServer = lessonNames => {
 
 let mockSlowServer = lessonNames => {
     return {
-        fetchLessonNames: () => {
+        fetchLessonNames: (anyCourseName) => {
             return new Promise(async resolve => {
                 await sleep(500)
                 resolve(lessonNames)

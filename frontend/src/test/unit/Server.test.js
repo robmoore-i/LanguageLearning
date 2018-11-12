@@ -33,7 +33,7 @@ it('Returns lesson names as given by server', async () => {
     let testServer = LocalServer(mockFetcher)
 
     let fetchedLessonNames = undefined
-    await testServer.fetchLessonNames().then(lessonNames => {
+    await testServer.fetchLessonNames("courseName_doesn't_matter").then(lessonNames => {
         fetchedLessonNames = lessonNames
     })
     expect(fetchedLessonNames).toEqual(["A", "B", "C"])

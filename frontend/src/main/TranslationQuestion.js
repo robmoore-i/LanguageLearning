@@ -6,7 +6,7 @@ import '../styles/TranslationQuestion.css'
 // Main
 import Mark from "./Mark"
 import {Marker} from "./Marker"
-import {submitForMarkingButton, continueButton, disabledContinueButton, formatAnswer} from "./Question"
+import {submitForMarkingButton, continueButton, disabledContinueButton} from "./Question"
 
 export default class TranslationQuestion extends Component {
     constructor(props) {

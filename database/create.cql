@@ -23,3 +23,12 @@ MATCH (georgian: Course) WHERE georgian.name = "Georgian"
 CREATE (rq:Question:ReadingQuestion {`extract`: "მატარებელი ლურჯია და მანქანა წითელი არის"})<-[:HAS_QUESTION]-(trains:Lesson {name: "Colours"})<-[:HAS_LESSON]-(georgian)
 CREATE (rsq1:ReadingSubQuestion {given:"What colour is the train?", answer:"blue"})<-[:HAS_SUBQUESTION]-(rq)-[:HAS_SUBQUESTION]->(rsq2:ReadingSubQuestion {given: "What colour is the car?", answer: "red"})
 RETURN georgian,trains,rq,rsq1,rsq2;
+
+// French Course
+CREATE (french:Course {name: "French", image: "flagFrance.png"})-[:HAS_LESSON]->(animals:Lesson {name: "Animals"})
+RETURN french,animals;
+
+// French Lesson: Animals
+MATCH (animals:Lesson {name: "Animals"})
+CREATE (animals)-[:HAS_QUESTION]->(tq:Question:TranslationQuestion {given: "Mouse", answer: "La Souris"})
+RETURN animals,tq;

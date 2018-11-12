@@ -16,8 +16,8 @@ const defaultFetcher = {
 
 function Server(backendOrigin, fetcher) {
     return {
-        fetchLessonNames: () => {
-            return fetcher.getJSON(backendOrigin + "/lessonnames")
+        fetchLessonNames: (courseName) => {
+            return fetcher.getJSON(backendOrigin + "/lessonnames?course=" + courseName)
         },
 
         fetchLesson: (lessonName) => {

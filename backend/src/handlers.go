@@ -24,7 +24,8 @@ func GetLessonNames(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-	lessonNames := QueryLessonNames()
+    course := r.URL.Query().Get("course")
+	lessonNames := QueryLessonNames(course)
 
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(lessonNames); err != nil {

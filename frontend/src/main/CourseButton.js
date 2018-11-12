@@ -13,6 +13,8 @@ export default class CourseButton extends Component {
         if (image.type === "svg") {
             let svgB64 = btoa(image.src)
             return <img className="Course-icon" alt={this.props.courseName} src={"data:image/svg+xml;base64," + svgB64} />
+        } else if (image.type === "png") {
+            return <img className="Course-icon" alt={this.props.courseName} src={"data:image/png;base64," + image.src} />
         }
     }
 

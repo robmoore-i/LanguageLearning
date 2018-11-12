@@ -6,7 +6,7 @@ import '../styles/ReadingQuestion.css'
 // Main
 import Mark from "./Mark"
 import {Marker} from "./Marker"
-import {submitForMarkingButton, continueButton, formatAnswer} from "./Question"
+import {submitForMarkingButton, continueButton} from "./Question"
 
 export default class ReadingQuestion extends Component {
     constructor(props) {

@@ -6,6 +6,7 @@ import (
 	"strings"
 	"github.com/johnnadratowski/golang-neo4j-bolt-driver/structures/graph"
 	"io/ioutil"
+    b64 "encoding/base64"
 )
 
 var (
@@ -41,12 +42,20 @@ func parseCourse(node graph.Node) Course {
 	imgType := parseImageType(relPath)
 
 	bytes, err := ioutil.ReadFile(path)
+
 	if err != nil {
 		log.Printf("Couldn't read course image from path %#v", path)
 		panic("neo4jdatabase:parseCourse")
 	}
 
-	return Course{Name: name, Image: string(bytes), ImageType: imgType}
+    if imgType == "svg" {
+        return Course{Name: name, Image: string(bytes), ImageType: imgType}
+    } else if imgType == "png" {
+        encoded := b64.StdEncoding.EncodeToString(bytes)
+        return Course{Name: name, Image: encoded, ImageType: imgType}
+    } else {
+        panic("Image is neither an svg nor a png")
+    }
 }
 
 func parseImageType(filename string) string {
@@ -56,9 +65,10 @@ func parseImageType(filename string) string {
 
 // ====== LessonNames =========
 
-func QueryLessonNames() []string {
-	cypher := `MATCH (l:Lesson) RETURN l.name`
-	rows, conn, stmt := performQuery(cypher, nil)
+func QueryLessonNames(course string) []string {
+	cypher := `MATCH (l:Lesson)<-[:HAS_LESSON]-(c:Course {name: {course}}) RETURN l.name`
+    params := map[string]interface{}{"course": course}
+	rows, conn, stmt := performQuery(cypher, params)
 	defer conn.Close()
 	defer stmt.Close()
 
