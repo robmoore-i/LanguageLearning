@@ -5,6 +5,7 @@ import '../styles/Question.css'
 import '../styles/ReadingQuestion.css'
 // Main
 import Mark from "./Mark"
+import {Marker} from "./Marker"
 import {submitForMarkingButton, continueButton, formatAnswer} from "./Question"
 
 export default class ReadingQuestion extends Component {
@@ -17,6 +18,8 @@ export default class ReadingQuestion extends Component {
             marks: (new Array(this.props.q.questions.length)).fill(Mark.UNMARKED),
             warning: false
         }
+
+        this.marker = Marker()
     }
 
     render() {
@@ -90,13 +93,7 @@ export default class ReadingQuestion extends Component {
     markAnswers() {
         let marks = (new Array(this.props.q.questions.length)).fill(Mark.UNMARKED)
         for (let i = 0; i < this.state.currentAnswers.length; i++) {
-            let actual   = formatAnswer(this.state.currentAnswers[i])
-            let expected = formatAnswer(this.props.q.questions[i].answer)
-            if (actual === expected) {
-                marks[i] = Mark.CORRECT
-            } else {
-                marks[i] = Mark.INCORRECT
-            }
+            marks[i] = this.marker.mark(this.props.q.questions[i], this.state.currentAnswers[i])
         }
         return marks
     }

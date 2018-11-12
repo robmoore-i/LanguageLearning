@@ -233,26 +233,26 @@ it('Warns user before marking if any answer box is empty', () => {
   expect(testRQ.find("#unanswered-questions-warning").exists()).toBe(true)
 })
 
-// it('Can have subquestions with multiple potential correct answers', () => {
-//     let q = {
-//         type: 2,
-//         extract: "Vlad went to the kitchen and got some cake",
-//         questions: [
-//             {given: "Where did Vlad go?", answers: ["The kitchen", "Kitchen"]},
-//             {given: "What did he get there?", answers: ["The cake", "Cake"]},
-//             {given: "Who is this guy again?", answer: "Vlad"}
-//         ]
-//     }
-//
-//     let spyOnCompletion = jest.fn()
-//     let testRQ = mount(<ReadingQuestion q={q} onCompletion={spyOnCompletion} />)
-//
-//     testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("The kitchen"))
-//     testRQ.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
-//     testRQ.find("#answer-input-textbox-2").simulate("change", textBoxInputEvent("Vlad"))
-//     questionSubmitAndContinue(testRQ)
-//
-//     let expectedCorrect = 3
-//     let expectedIncorrect = 0
-//     expect(spyOnCompletion).toHaveBeenCalledWith(expectedCorrect, expectedIncorrect)
-// })
+it('Can have subquestions with multiple potential correct answers', () => {
+    let q = {
+        type: 2,
+        extract: "Vlad went to the kitchen and got some cake",
+        questions: [
+            {given: "Where did Vlad go?", answers: ["The kitchen", "Kitchen"]},
+            {given: "What did he get there?", answers: ["The cake", "Cake"]},
+            {given: "Who is this guy again?", answer: "Vlad"}
+        ]
+    }
+
+    let spyOnCompletion = jest.fn()
+    let testRQ = mount(<ReadingQuestion q={q} onCompletion={spyOnCompletion} />)
+
+    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("The kitchen"))
+    testRQ.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
+    testRQ.find("#answer-input-textbox-2").simulate("change", textBoxInputEvent("Vlad"))
+    questionSubmitAndContinue(testRQ)
+
+    let expectedCorrect = 3
+    let expectedIncorrect = 0
+    expect(spyOnCompletion).toHaveBeenCalledWith(expectedCorrect, expectedIncorrect)
+})
