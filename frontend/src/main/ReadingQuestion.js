@@ -85,17 +85,17 @@ export default class ReadingQuestion extends Component {
       }
     }
 
-    anySubQuestionsUnanswered() {
-        return this.state.currentAnswers.map((answer) => answer === "").reduce((cur, acc) => cur || acc)
-    }
-
-    // Matches currentAnswers against this.props.q.questions
+    // Matches this.state.currentAnswers against this.props.q.questions
     markAnswers() {
         let marks = (new Array(this.props.q.questions.length)).fill(Mark.UNMARKED)
         for (let i = 0; i < this.state.currentAnswers.length; i++) {
             marks[i] = this.marker.mark(this.props.q.questions[i], this.state.currentAnswers[i])
         }
         return marks
+    }
+
+    anySubQuestionsUnanswered() {
+        return this.state.currentAnswers.map((answer) => answer === "").reduce((cur, acc) => cur || acc)
     }
 
     unansweredQuestionsWarning() {
