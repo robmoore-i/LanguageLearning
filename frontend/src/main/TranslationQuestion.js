@@ -5,6 +5,7 @@ import '../styles/Question.css'
 import '../styles/TranslationQuestion.css'
 // Main
 import Mark from "./Mark"
+import {Marker} from "./Marker"
 import {submitForMarkingButton, continueButton, disabledContinueButton, formatAnswer} from "./Question"
 
 export default class TranslationQuestion extends Component {
@@ -15,6 +16,8 @@ export default class TranslationQuestion extends Component {
             currentAnswer: "",
             transitionState: TransitionState.UNMARKED
         }
+
+        this.marker = Marker()
     }
 
     render() {
@@ -107,45 +110,13 @@ export default class TranslationQuestion extends Component {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
 
         // Issue: It is inefficient to be re-rendering the submitForMarkingButton every time the currentAnswer changes
-        switch (this.markQuestion(this.props.q, this.state.currentAnswer)) {
+        switch (this.marker.mark(this.props.q, this.state.currentAnswer)) {
             case Mark.CORRECT:
                 return submitForMarkingButton(() => {setState({transitionState: TransitionState.CORRECT})})
             case Mark.INCORRECT:
                 return submitForMarkingButton(() => {setState({transitionState: TransitionState.INCORRECT})})
             default:
                 return submitForMarkingButton(() => {})
-        }
-    }
-
-    markQuestion(question, submittedAnswer) {
-        let formattedSubmission = formatAnswer(submittedAnswer)
-        if ("answer" in question) {
-            let formattedExpected = formatAnswer(question.answer)
-            return this.compareFormattedAnswers(formattedSubmission, formattedExpected)
-        } else {
-            return this.markAgainstAnswerList(formattedSubmission, question.answers)
-        }
-    }
-
-    markAgainstAnswerList(formattedSubmittedAnswer, correctAnswerList) {
-        let formattedExpecteds = correctAnswerList.map(formatAnswer)
-        let isCorrect = (formattedExpected) => this.compareFormattedAnswers(formattedSubmittedAnswer, formattedExpected) === Mark.CORRECT
-        let matchesFormattedExpecteds = formattedExpecteds.map(isCorrect)
-        let matchesAnyExpected = matchesFormattedExpecteds.reduce((cur, acc) => cur || acc)
-        if (matchesAnyExpected) {
-            return Mark.CORRECT
-        } else {
-            return Mark.INCORRECT
-        }
-    }
-
-    compareFormattedAnswers(formattedActual, formattedExpected) {
-        if (formattedActual === "") {
-            return Mark.UNMARKED
-        } else if (formattedActual === formattedExpected) {
-            return Mark.CORRECT
-        } else {
-            return Mark.INCORRECT
         }
     }
 }
