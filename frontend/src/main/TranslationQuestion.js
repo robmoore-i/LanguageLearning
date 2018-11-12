@@ -107,7 +107,7 @@ export default class TranslationQuestion extends Component {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
 
         // Issue: It is inefficient to be re-rendering the submitForMarkingButton every time the currentAnswer changes
-        switch (this.mark(this.state.currentAnswer)) {
+        switch (this.markQuestion(this.props.q, this.state.currentAnswer)) {
             case Mark.CORRECT:
                 return submitForMarkingButton(() => {setState({transitionState: TransitionState.CORRECT})})
             case Mark.INCORRECT:
@@ -117,20 +117,25 @@ export default class TranslationQuestion extends Component {
         }
     }
 
-    mark(answer) {
-        let formattedActual = formatAnswer(answer)
-        if ("answer" in this.props.q) {
-            let formattedExpected = formatAnswer(this.props.q.answer)
-            return this.compareFormattedAnswers(formattedActual, formattedExpected)
+    markQuestion(question, submittedAnswer) {
+        let formattedSubmission = formatAnswer(submittedAnswer)
+        if ("answer" in question) {
+            let formattedExpected = formatAnswer(question.answer)
+            return this.compareFormattedAnswers(formattedSubmission, formattedExpected)
         } else {
-            let formattedExpecteds = this.props.q.answers.map(formatAnswer)
-            let matchesFormattedExpecteds = formattedExpecteds.map((formattedExpected) => this.compareFormattedAnswers(formattedActual, formattedExpected) === Mark.CORRECT)
-            let matchesAnyExpected = matchesFormattedExpecteds.reduce((cur, acc) => cur || acc)
-            if (matchesAnyExpected) {
-                return Mark.CORRECT
-            } else {
-                return Mark.INCORRECT
-            }
+            return this.markAgainstAnswerList(formattedSubmission, question.answers)
+        }
+    }
+
+    markAgainstAnswerList(formattedSubmittedAnswer, correctAnswerList) {
+        let formattedExpecteds = correctAnswerList.map(formatAnswer)
+        let isCorrect = (formattedExpected) => this.compareFormattedAnswers(formattedSubmittedAnswer, formattedExpected) === Mark.CORRECT
+        let matchesFormattedExpecteds = formattedExpecteds.map(isCorrect)
+        let matchesAnyExpected = matchesFormattedExpecteds.reduce((cur, acc) => cur || acc)
+        if (matchesAnyExpected) {
+            return Mark.CORRECT
+        } else {
+            return Mark.INCORRECT
         }
     }
 

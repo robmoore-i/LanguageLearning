@@ -199,8 +199,8 @@ it('Can have multiple correct answers', () => {
 
     let testTQ = mount(<TranslationQuestion q={q} />)
 
-    let mark1 = testTQ.instance().mark("car")
-    let mark2 = testTQ.instance().mark("the car")
+    let mark1 = testTQ.instance().markQuestion(q, "car")
+    let mark2 = testTQ.instance().markQuestion(q, "the car")
 
     expect(mark1).toEqual(Mark.CORRECT)
     expect(mark2).toEqual(Mark.CORRECT)
