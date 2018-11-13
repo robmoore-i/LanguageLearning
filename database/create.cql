@@ -32,3 +32,12 @@ RETURN french,animals;
 MATCH (animals:Lesson {name: "Animals"})
 CREATE (animals)-[:HAS_QUESTION]->(tq:Question:TranslationQuestion {given: "Mouse", answer: "La Souris"})
 RETURN animals,tq;
+
+// German Course
+CREATE (german:Course {name: "German", image: "flagGermany.jpg"})-[:HAS_LESSON]->(clothes:Lesson {name: "Clothes"})
+RETURN german,clothes;
+
+// German Lesson: Clothes
+MATCH (clothes:Lesson {name: "Clothes"})
+CREATE (clothes)-[:HAS_QUESTION]->(tq:Question:TranslationQuestion {given: "Shirt", answer: "Das Hemd"})
+RETURN clothes,tq;

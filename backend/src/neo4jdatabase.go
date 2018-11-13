@@ -53,14 +53,21 @@ func parseCourse(node graph.Node) Course {
     } else if imgType == "png" {
         encoded := b64.StdEncoding.EncodeToString(bytes)
         return Course{Name: name, Image: encoded, ImageType: imgType}
+    } else if imgType == "jpg" {
+        encoded := b64.StdEncoding.EncodeToString(bytes)
+        return Course{Name: name, Image: encoded, ImageType: imgType}
     } else {
-        panic("Image is neither an svg nor a png")
+        panic("Image is none of [svg | png | jpg]")
     }
 }
 
+// Returns a 3 letter file extension for the image type. svg, png or jpg.
 func parseImageType(filename string) string {
-	fileExt := filename[len(filename) - 3:] // The last 3 characters
-	return fileExt
+    if filename[len(filename) - 4:] == "jpeg" {
+        return "jpg"
+    } else {
+        return filename[len(filename) - 3:]
+    }
 }
 
 // ====== LessonNames =========

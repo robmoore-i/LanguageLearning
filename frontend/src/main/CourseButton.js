@@ -15,6 +15,8 @@ export default class CourseButton extends Component {
             return <img className="Course-icon" alt={this.props.courseName} src={"data:image/svg+xml;base64," + svgB64} />
         } else if (image.type === "png") {
             return <img className="Course-icon" alt={this.props.courseName} src={"data:image/png;base64," + image.src} />
+        } else if (image.type === "jpg") {
+            return <img className="Course-icon" alt={this.props.courseName} src={"data:image/jpeg;base64," + image.src} />
         }
     }
 
