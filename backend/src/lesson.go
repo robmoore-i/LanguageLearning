@@ -47,18 +47,37 @@ func (q MultipleChoiceQuestion) encode(w http.ResponseWriter) error {
 
 // TQ
 
-type TranslationQuestion struct {
+// With a single answer
+
+type SingleAnswerTranslationQuestion struct {
 	Type      int    `json:"type"`
 	Given     string `json:"given"`
 	Answer    string `json:"answer"`
 }
 
-func NewTQ(given string, answer string) TranslationQuestion {
-	tq := TranslationQuestion{Type: 0, Given: given, Answer: answer}
+func NewSATQ(given string, answer string) SingleAnswerTranslationQuestion {
+	tq := SingleAnswerTranslationQuestion{Type: 0, Given: given, Answer: answer}
 	return tq
 }
 
-func (q TranslationQuestion) encode(w http.ResponseWriter) error {
+func (q SingleAnswerTranslationQuestion) encode(w http.ResponseWriter) error {
+	return json.NewEncoder(w).Encode(q)
+}
+
+// With multiple answers
+
+type MultipleAnswerTranslationQuestion struct {
+	Type      int      `json:"type"`
+	Given     string   `json:"given"`
+	Answers   []string `json:"answers"`
+}
+
+func NewMATQ(given string, answers []string) MultipleAnswerTranslationQuestion {
+	tq := MultipleAnswerTranslationQuestion{Type: 0, Given: given, Answers: answers}
+	return tq
+}
+
+func (q MultipleAnswerTranslationQuestion) encode(w http.ResponseWriter) error {
 	return json.NewEncoder(w).Encode(q)
 }
 

@@ -39,5 +39,5 @@ RETURN german,clothes;
 
 // German Lesson: Clothes
 MATCH (clothes:Lesson {name: "Clothes"})
-CREATE (clothes)-[:HAS_QUESTION]->(tq:Question:TranslationQuestion {given: "Shirt", answer: "Das Hemd"})
+CREATE (clothes)-[:HAS_QUESTION]->(tq:Question:TranslationQuestion {given: "Das Hemd", answers: ["Shirt", "The shirt"]})
 RETURN clothes,tq;

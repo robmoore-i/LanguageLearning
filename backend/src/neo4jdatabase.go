@@ -131,9 +131,24 @@ func hasLabel(node graph.Node, keyLabel string) bool {
 	return false
 }
 
+func toStrings(list []interface{}) []string {
+    var result []string
+    for _, elem := range list {
+        result = append(result, elem.(string))
+    }
+    return result
+}
+
 func parseTQ(node graph.Node) JsonEncodable {
 	p := node.Properties
-	return NewTQ(p["given"].(string), p["answer"].(string))
+    if answer, isSATQ := p["answer"]; isSATQ {
+        return NewSATQ(p["given"].(string), answer.(string))
+    } else if answers, isMATQ := p["answers"]; isMATQ {
+        return NewMATQ(p["given"].(string), toStrings(answers.([]interface{})))
+    } else {
+        log.Printf("TQ node had neither answer nor answers property")
+        panic("neo4jdatabase:parseTQ")
+    }
 }
 
 func parseMCQ(node graph.Node) JsonEncodable {

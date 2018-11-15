@@ -102,6 +102,19 @@ def readingQuestion():
     else:
         raise Exception()
 
+@test
+def multipleAnswerTranslationQuestion():
+    payload = {"lessonName": "Clothes"}
+    res = requests.post("http://localhost:8000/lesson", json=payload)
+    assert_that(res.status_code).is_equal_to(200)
+    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:3000")
+
+    resJson = res.json()
+    assert_that(resJson["name"]).is_equal_to("Clothes")
+    assert_that(sorted(resJson["questions"], key=lambda q: q["type"])).is_equal_to([
+        {'type': 0, 'given': 'Das Hemd', 'answers': ['Shirt', 'The shirt']},
+    ])
+    assert_that(sorted(resJson.keys())).is_equal_to(["name", "questions"])
 
 main(locals(), start_backend, stop_backend)
 exit(0)
