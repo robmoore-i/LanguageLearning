@@ -84,12 +84,12 @@ func (q MultipleAnswerTranslationQuestion) encode(w http.ResponseWriter) error {
 // RQ
 
 type ReadingQuestion struct {
-	Type    	int    					`json:"type"`
-	Extract		string 					`json:"extract"`
-	Questions   []ReadingSubQuestion 	`json:"questions"`
+	Type    	int    			   `json:"type"`
+	Extract		string 			   `json:"extract"`
+	Questions   []JsonEncodable    `json:"questions"`
 }
 
-func NewRQ(extract string, questions []ReadingSubQuestion) ReadingQuestion {
+func NewRQ(extract string, questions []JsonEncodable) ReadingQuestion {
 	rq := ReadingQuestion{Type: 2, Extract: extract, Questions: questions}
 	return rq
 }
@@ -100,16 +100,34 @@ func (q ReadingQuestion) encode(w http.ResponseWriter) error {
 
 // RSQ
 
-type ReadingSubQuestion struct {
+// Single Answer
+
+type SingleAnswerReadingSubQuestion struct {
 	Given     string `json:"given"`
 	Answer    string `json:"answer"`
 }
 
-func NewRSQ(given string, answer string) ReadingSubQuestion {
-	rsq := ReadingSubQuestion{Given: given, Answer: answer}
+func NewSARSQ(given string, answer string) SingleAnswerReadingSubQuestion {
+	rsq := SingleAnswerReadingSubQuestion{Given: given, Answer: answer}
 	return rsq
 }
 
-func (q ReadingSubQuestion) encode(w http.ResponseWriter) error {
+func (q SingleAnswerReadingSubQuestion) encode(w http.ResponseWriter) error {
+	return json.NewEncoder(w).Encode(q)
+}
+
+// Multiple Answer
+
+type MultipleAnswerReadingSubQuestion struct {
+	Given     string   `json:"given"`
+	Answers   []string `json:"answers"`
+}
+
+func NewMARSQ(given string, answers []string) MultipleAnswerReadingSubQuestion {
+	rsq := MultipleAnswerReadingSubQuestion{Given: given, Answers: answers}
+	return rsq
+}
+
+func (q MultipleAnswerReadingSubQuestion) encode(w http.ResponseWriter) error {
 	return json.NewEncoder(w).Encode(q)
 }

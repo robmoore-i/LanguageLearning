@@ -166,21 +166,28 @@ func parseRQ(node graph.Node) JsonEncodable {
 	defer conn.Close()
 	defer stmt.Close()
 
-	var questions []ReadingSubQuestion
+	var subquestions []JsonEncodable
 	row, _, err := rows.NextNeo()
 	for row != nil && err == nil {
 		node := onlyNode(row)
 		parsedSubQuestion := parseRSQ(node)
-		questions = append(questions, parsedSubQuestion)
+		subquestions = append(subquestions, parsedSubQuestion)
 		row, _, err = rows.NextNeo()
 	}
 
-	return NewRQ(extract, questions)
+	return NewRQ(extract, subquestions)
 }
 
-func parseRSQ(node graph.Node) ReadingSubQuestion {
+func parseRSQ(node graph.Node) JsonEncodable {
 	p := node.Properties
-	return NewRSQ(p["given"].(string), p["answer"].(string))
+    if answer, isSARSQ := p["answer"]; isSARSQ {
+        return NewSARSQ(p["given"].(string), answer.(string))
+    } else if answers, isMARSQ := p["answers"]; isMARSQ {
+        return NewMARSQ(p["given"].(string), toStrings(answers.([]interface{})))
+    } else {
+        log.Printf("RSQ node had neither answer nor answers property")
+        panic("neo4jdatabase:parseRSQ")
+    }
 }
 
 // ====== Common =========

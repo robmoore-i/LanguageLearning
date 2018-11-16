@@ -74,33 +74,42 @@ def courses():
     assert_is_german_course(courses["German"])
 
 @test
-def readingQuestion():
+def readingQuestionIncludingMultipleAnswerSubQuestion():
     payload = {"lessonName": "Colours"}
     res = requests.post("http://localhost:8000/lesson", json=payload)
 
     assert_that(res.status_code).is_equal_to(200)
     assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:3000")
 
-    resJson = res.json()
-    assert_that(resJson["name"]).is_equal_to("Colours")
-    questions = resJson["questions"]
+    res_json = res.json()
+    assert_that(res_json["name"]).is_equal_to("Colours")
+    questions = res_json["questions"]
     assert_that(len(questions)).is_equal_to(1)
-    assert_that(sorted(resJson.keys())).is_equal_to(["name", "questions"])
+    assert_that(sorted(res_json.keys())).is_equal_to(["name", "questions"])
     rq = questions[0]
     assert_that(rq["type"]).is_equal_to(2)
-    assert_that(rq["extract"]).is_equal_to("მატარებელი ლურჯია და მანქანა წითელი არის")
+    assert_that(rq["extract"]).is_equal_to("მატარებელი ლურჯია და მანქანა წითელი არის. ბალახი მწვანეა.")
 
-    assert_that(len(rq["questions"])).is_equal_to(2)
-    if rq["questions"][0]["answer"] == "blue":
-        assert_that(rq["questions"][0]["given"]).is_equal_to("What colour is the train?")
-        assert_that(rq["questions"][1]["given"]).is_equal_to("What colour is the car?")
-        assert_that(rq["questions"][1]["answer"]).is_equal_to("red")
-    elif rq["questions"][0]["answer"] == "red":
-        assert_that(rq["questions"][0]["given"]).is_equal_to("What colour is the car?")
-        assert_that(rq["questions"][1]["given"]).is_equal_to("What colour is the train?")
-        assert_that(rq["questions"][1]["answer"]).is_equal_to("blue")
-    else:
-        raise Exception()
+    def assert_is_train_question(rsq):
+        assert_that(rsq["given"]).is_equal_to("What colour is the train?")
+        assert_that(rsq["answer"]).is_equal_to("blue")
+
+    def assert_is_car_question(rsq):
+        assert_that(rsq["given"]).is_equal_to("What colour is the car?")
+        assert_that(rsq["answer"]).is_equal_to("red")
+
+    def assert_is_grass_question(rsq):
+        assert_that(rsq["given"]).is_equal_to("What is said to be green?")
+        assert_that(sorted(rsq["answers"])).is_equal_to(["Grass", "The grass"])
+
+    subquestions = {}
+    for subquestion in rq["questions"]:
+        given = subquestion["given"]
+        subquestions[given] = subquestion
+
+    assert_is_train_question(subquestions["What colour is the train?"])
+    assert_is_car_question(subquestions["What colour is the car?"])
+    assert_is_grass_question(subquestions["What is said to be green?"])
 
 @test
 def multipleAnswerTranslationQuestion():

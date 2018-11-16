@@ -20,9 +20,10 @@ RETURN whatAreYouCalled,tq,mcq;
 
 // Georgian Lesson: Colours
 MATCH (georgian: Course) WHERE georgian.name = "Georgian"
-CREATE (rq:Question:ReadingQuestion {`extract`: "მატარებელი ლურჯია და მანქანა წითელი არის"})<-[:HAS_QUESTION]-(trains:Lesson {name: "Colours"})<-[:HAS_LESSON]-(georgian)
+CREATE (rq:Question:ReadingQuestion {`extract`: "მატარებელი ლურჯია და მანქანა წითელი არის. ბალახი მწვანეა."})<-[:HAS_QUESTION]-(colours:Lesson {name: "Colours"})<-[:HAS_LESSON]-(georgian)
 CREATE (rsq1:ReadingSubQuestion {given:"What colour is the train?", answer:"blue"})<-[:HAS_SUBQUESTION]-(rq)-[:HAS_SUBQUESTION]->(rsq2:ReadingSubQuestion {given: "What colour is the car?", answer: "red"})
-RETURN georgian,trains,rq,rsq1,rsq2;
+CREATE (rsq3:ReadingSubQuestion {given:"What is said to be green?", answers:["Grass", "The grass"]})<-[:HAS_SUBQUESTION]-(rq)
+RETURN georgian,colours,rq,rsq1,rsq2,rsq3;
 
 // French Course
 CREATE (french:Course {name: "French", image: "flagFrance.png"})-[:HAS_LESSON]->(animals:Lesson {name: "Animals"})
