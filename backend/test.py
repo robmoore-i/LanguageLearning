@@ -6,26 +6,29 @@ import time
 from rest_test import *
 from assertpy import assert_that
 
-def start_backend():
+server_port = 8000
+frontend_port = 3000
+
+def start_server():
     os.system("./bin/src &")
 
-def stop_backend():
+def stop_server():
     os.system("pkill -f ./bin/src")
 
 @test
 def lesson_names():
-    res = requests.get("http://localhost:8000/lessonnames?course=Georgian")
+    res = requests.get("http://localhost:" + str(server_port) + "/lessonnames?course=Georgian")
     assert_that(res.status_code).is_equal_to(200)
     assert_that(sorted(res.json())).is_equal_to(sorted(["Colours", "Hello", "What are you called?"]))
-    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:3000")
+    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:" + str(frontend_port) + "")
 
 @test
 def lesson():
     payload = {"lessonName": "Hello"}
-    res = requests.post("http://localhost:8000/lesson", json=payload)
+    res = requests.post("http://localhost:" + str(server_port) + "/lesson", json=payload)
 
     assert_that(res.status_code).is_equal_to(200)
-    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:3000")
+    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:" + str(frontend_port) + "")
 
     resJson = res.json()
     assert_that(resJson["name"]).is_equal_to("Hello")
@@ -37,10 +40,10 @@ def lesson():
 
 @test
 def courses():
-    res = requests.get("http://localhost:8000/courses")
+    res = requests.get("http://localhost:" + str(server_port) + "/courses")
 
     assert_that(res.status_code).is_equal_to(200)
-    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:3000")
+    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:" + str(frontend_port) + "")
 
     def assert_is_georgian_course(course):
         assert_that(course["name"]).is_equal_to("Georgian")
@@ -76,10 +79,10 @@ def courses():
 @test
 def readingQuestionIncludingMultipleAnswerSubQuestion():
     payload = {"lessonName": "Colours"}
-    res = requests.post("http://localhost:8000/lesson", json=payload)
+    res = requests.post("http://localhost:" + str(server_port) + "/lesson", json=payload)
 
     assert_that(res.status_code).is_equal_to(200)
-    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:3000")
+    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:" + str(frontend_port) + "")
 
     res_json = res.json()
     assert_that(res_json["name"]).is_equal_to("Colours")
@@ -114,9 +117,9 @@ def readingQuestionIncludingMultipleAnswerSubQuestion():
 @test
 def multipleAnswerTranslationQuestion():
     payload = {"lessonName": "Clothes"}
-    res = requests.post("http://localhost:8000/lesson", json=payload)
+    res = requests.post("http://localhost:" + str(server_port) + "/lesson", json=payload)
     assert_that(res.status_code).is_equal_to(200)
-    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:3000")
+    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:" + str(frontend_port) + "")
 
     resJson = res.json()
     assert_that(resJson["name"]).is_equal_to("Clothes")
@@ -125,5 +128,5 @@ def multipleAnswerTranslationQuestion():
     ])
     assert_that(sorted(resJson.keys())).is_equal_to(["name", "questions"])
 
-main(locals(), start_backend, stop_backend)
+main(locals(), start_server, stop_server)
 exit(0)
