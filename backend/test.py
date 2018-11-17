@@ -6,8 +6,8 @@ import time
 from rest_test import *
 from assertpy import assert_that
 
-server_port = 8000
-frontend_port = 3000
+server_port = int(os.environ["MELANGE_SERVER_PORT"])
+frontend_port = int(os.environ["MELANGE_FRONTEND_PORT"])
 
 def start_server():
     os.system("./bin/src &")
