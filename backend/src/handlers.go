@@ -7,7 +7,7 @@ import (
 )
 
 func GetCourses(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:" + FrontendPortStr)
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
@@ -20,7 +20,7 @@ func GetCourses(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetLessonNames(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:" + FrontendPortStr)
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
@@ -34,11 +34,11 @@ func GetLessonNames(w http.ResponseWriter, r *http.Request) {
 }
 
 type LessonRequest struct {
-	Name      string          `json:"lessonName"`
+	Name   string  `json:"lessonName"`
 }
 
 func GetLesson(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:" + FrontendPortStr)
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
