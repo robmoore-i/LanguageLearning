@@ -3,11 +3,12 @@ package main
 import (
     "log"
     "net/http"
+    "strconv"
 )
 
 func main() {
 
     router := NewRouter()
 
-    log.Fatal(http.ListenAndServe(":8000", router))
+    log.Fatal(http.ListenAndServe(":" + strconv.Itoa(Port), router))
 }
