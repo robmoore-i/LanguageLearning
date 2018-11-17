@@ -68,7 +68,6 @@ export default class TranslationQuestion extends Component {
         if ("answer" in this.props.q) {
             return this.props.q.answer
         } else {
-            console.log("this branch (corr)")
             return this.props.q.answers[0]
         }
     }

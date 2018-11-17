@@ -256,3 +256,25 @@ it('Can have subquestions with multiple potential correct answers', () => {
     let expectedIncorrect = 0
     expect(spyOnCompletion).toHaveBeenCalledWith(expectedCorrect, expectedIncorrect)
 })
+
+it('Shows corrections for subquestions with multiple potential correct answers', () => {
+    let q = {
+        type: 2,
+        extract: "Vlad went to the kitchen and got some cake",
+        questions: [
+            {given: "Where did Vlad go?", answer: "Kitchen"},
+            {given: "What did he get there?", answers: ["Cake", "Some cake"]},
+            {given: "What's this guy's name again?", answer: "Vlad"}
+        ]
+    }
+    let testRQ = mount(<ReadingQuestion q={q} />)
+
+    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Kitchen"))
+    testRQ.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Wrong"))
+    testRQ.find("#answer-input-textbox-2").simulate("change", textBoxInputEvent("Wrong"))
+    testRQ.find("#submit-for-marking-button").simulate("click")
+
+    expect(testRQ.find("#question-correction-0").exists()).toBe(false)
+    expect(testRQ.find("#question-correction-1").text()).toBe("Cake")
+    expect(testRQ.find("#question-correction-2").text()).toEqual("Vlad")
+})

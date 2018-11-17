@@ -152,8 +152,16 @@ class SubQuestion extends React.Component {
     correction() {
         return (
             <div className="question-correction" id={"question-correction-" + String(this.props.i)} key={"question-correction-" + String(this.props.i)}>
-                {this.props.question.answer}
+                {this.correctionAnswer()}
             </div>
         )
+    }
+
+    correctionAnswer() {
+        if ("answer" in this.props.question) {
+            return this.props.question.answer
+        } else {
+            return this.props.question.answers[0]
+        }
     }
 }
