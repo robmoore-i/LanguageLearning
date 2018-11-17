@@ -10,5 +10,5 @@ func main() {
 
     router := NewRouter()
 
-    log.Fatal(http.ListenAndServe(":" + strconv.Itoa(Port), router))
+    log.Fatal(http.ListenAndServe(":" + strconv.Itoa(ServerPort), router))
 }
