@@ -17,7 +17,7 @@
   "scripts": {
     "start": "PORT=$MELANGE_FRONTEND_PORT REACT_APP_MELANGE_SERVER_PORT=$MELANGE_SERVER_PORT react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test --env=jsdom --watchAll=false",
     "eject": "react-scripts eject"
   },
   "browserslist": [
