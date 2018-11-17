@@ -9,10 +9,6 @@ import (
     b64 "encoding/base64"
 )
 
-var (
-	imagesPath = "/home/rob/Documents/language/melange/database/images/"
-)
-
 // ====== Courses =========
 
 func QueryCourses() []Course {
@@ -37,7 +33,7 @@ func parseCourse(node graph.Node) Course {
 	p := node.Properties
 	name := p["name"].(string)
 	relPath := p["image"].(string)
-	path := strings.Join([]string{imagesPath, relPath}, "")
+	path := strings.Join([]string{ImagesPath, relPath}, "")
 
 	imgType := parseImageType(relPath)
 
