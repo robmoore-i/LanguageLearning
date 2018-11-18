@@ -63,7 +63,7 @@ export default class Lesson extends Component {
 
         return [
             <header className="Lesson-header" key="header">
-                <h1 className="Lesson-title">{capitalisedCourseName}: {this.lessonName}</h1>,
+                <h1 className="Lesson-title">{capitalisedCourseName}: {this.lessonName}</h1>
             </header>,
             mainContent
         ]
