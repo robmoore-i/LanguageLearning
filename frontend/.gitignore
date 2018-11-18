@@ -22,3 +22,6 @@ yarn-error.log*
 
 # Cypress recorded videos
 cypress/videos
+
+# Lighthouse audits
+lighthouse-audits/
