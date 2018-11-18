@@ -69,7 +69,7 @@ func parseImageType(filename string) string {
 // ====== LessonNames =========
 
 func QueryLessonNames(course string) []string {
-	cypher := `MATCH (l:Lesson)<-[:HAS_LESSON]-(c:Course {name: {course}}) RETURN l.name`
+	cypher := `MATCH (tl:TopicLesson)<-[:HAS_TOPIC_LESSON]-(c:Course {name: {course}}) RETURN tl.name`
     params := map[string]interface{}{"course": course}
 	rows, conn, stmt := performQuery(cypher, params)
 	defer conn.Close()
@@ -87,7 +87,7 @@ func QueryLessonNames(course string) []string {
 // ====== Lesson =========
 
 func QueryLesson(lessonName string) Lesson {
-	cypher := `MATCH (l:Lesson {name: {name}})-[:HAS_QUESTION]->(q) RETURN q`
+	cypher := `MATCH (tl:TopicLesson {name: {name}})-[:HAS_QUESTION]->(q) RETURN q`
 	params := map[string]interface{}{"name": lessonName}
 	rows, conn, stmt := performQuery(cypher, params)
 	defer conn.Close()
