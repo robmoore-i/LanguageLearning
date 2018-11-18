@@ -133,3 +133,14 @@ it('Clicking checkboxes after marking doesnt change the active choice', () => {
 
     expect(testMCQ.state("activeChoice")).toEqual(Choices.B)
 })
+
+it('An incorrect answer changes class after marking', () => {
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
+
+    testMCQ.find("#choice-c").simulate("click")
+
+    testMCQ.find("#submit-for-marking-button").simulate("click")
+
+    expect(testMCQ.find("#choice-c").is(".choice-marked-incorrect")).toBe(true)
+})

@@ -94,8 +94,13 @@ function MultipleChoiceCheckBox(choice, MCQ) {
 
         let isCorrectAnswer = choice === MCQ.props.q.answer
         let questionHasBeenMarkedIncorrect = MCQ.state.markResult === Mark.INCORRECT
-        if (isCorrectAnswer && questionHasBeenMarkedIncorrect) {
-            classes.push("choice-correction")
+
+        if (questionHasBeenMarkedIncorrect) {
+            if (isCorrectAnswer) {
+                classes.push("choice-correction")
+            } else if (checked) {
+                classes.push("choice-marked-incorrect")
+            }
         }
 
         return classes

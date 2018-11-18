@@ -40,6 +40,15 @@
     background-image: -webkit-linear-gradient(rgb(179, 217, 140), rgb(153, 204, 102));
     background-image: linear-gradient(rgb(179, 217, 140), rgb(153, 204, 102));
 }
+.choice-marked-incorrect {
+    border: 0.0625em solid rgb(247, 17, 48);
+    background: rgb(242, 39, 63);
+    background-image: -moz-linear-gradient(rgb(227, 61, 81), rgb(242, 39, 63));
+    background-image: -ms-linear-gradient(rgb(227, 61, 81), rgb(242, 39, 63));
+    background-image: -o-linear-gradient(rgb(227, 61, 81), rgb(242, 39, 63));
+    background-image: -webkit-linear-gradient(rgb(227, 61, 81), rgb(242, 39, 63));
+    background-image: linear-gradient(rgb(227, 61, 81), rgb(242, 39, 63));
+}
 .choice-correction {
     border: 0.0625em solid rgb(67, 96, 153);
     background: rgb(100, 147, 204);
