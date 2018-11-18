@@ -131,3 +131,18 @@ func NewMARSQ(given string, answers []string) MultipleAnswerReadingSubQuestion {
 func (q MultipleAnswerReadingSubQuestion) encode(w http.ResponseWriter) error {
 	return json.NewEncoder(w).Encode(q)
 }
+
+// Course lesson data
+
+type CourseLessonNames struct {
+	TopicLessonNames   []string   `json:"topicLessonNames"`
+}
+
+func NewCourseLessonNames(topicLessonNames []string) CourseLessonNames {
+	courseLessonNames := CourseLessonNames{TopicLessonNames: topicLessonNames}
+	return courseLessonNames
+}
+
+func (courseLessonNames CourseLessonNames) encode(w http.ResponseWriter) error {
+	return json.NewEncoder(w).Encode(courseLessonNames)
+}

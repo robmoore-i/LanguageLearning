@@ -68,20 +68,23 @@ func parseImageType(filename string) string {
 
 // ====== LessonNames =========
 
-func QueryLessonNames(course string) []string {
+func QueryLessonNames(course string) CourseLessonNames {
 	cypher := `MATCH (tl:TopicLesson)<-[:HAS_TOPIC_LESSON]-(c:Course {name: {course}}) RETURN tl.name`
     params := map[string]interface{}{"course": course}
 	rows, conn, stmt := performQuery(cypher, params)
 	defer conn.Close()
 	defer stmt.Close()
 
-	var lessonNames []string
+	var topicLessonNames []string
 	row, _, err := rows.NextNeo()
 	for row != nil && err == nil {
-		lessonNames = append(lessonNames, row[0].(string))
+		topicLessonNames = append(topicLessonNames, row[0].(string))
 		row, _, err = rows.NextNeo()
 	}
-	return lessonNames
+
+    courseLessonNames := NewCourseLessonNames(topicLessonNames)
+
+	return courseLessonNames
 }
 
 // ====== Lesson =========
