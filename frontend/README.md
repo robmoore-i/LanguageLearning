@@ -20,3 +20,16 @@ To run the PWA audits for melange, make sure youre in the `frontend/` dir,
 and use the `./lighthouse-audit.sh` script.
 
 Generated reports are put in the `lighthouse-audits/` directory.
+
+# Cypress
+
+Long story short: This currently only works when run against the non-optimised
+frontend (run this with `npm start`).
+
+Cypress is a newish end to end testing framework. It's really good, but I've
+experienced some hicups with the cross-origin. The single journey test that I
+currently have works when you run the non-optimised build (`npm start`), but not
+for the optimised one (`run-build.sh`) because it seems to think that a change in
+origin is occuring when moving into a lesson. I suspect that the culript is
+some kind of caching by the optimised build that is erroneously picked up as a
+CORS violation by the Cypress-ized browser.

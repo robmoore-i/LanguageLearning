@@ -20,8 +20,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Cypress recorded videos
+# Cypress records
 cypress/videos
+cypress/screenshots
 
 # Lighthouse audits
 lighthouse-audits/
