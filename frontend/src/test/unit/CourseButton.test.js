@@ -31,3 +31,11 @@ it("Leaves the fetched image src as it is if the image is a png, because it's al
     // "LS1zdmctZGF0YS0t" is equivilant to `btoa(svgUtf8)`, the base64 encoding of svgUtf8.
     expect(courseIcon.is('[src="data:image/png;base64,--png-data--"]')).toBe(true)
 })
+
+it("Changes the href depending on the window location to ensure that the path is appended properly", () => {
+    let testCourseButton = mount(<CourseButton courseName="Georgian" image={{type: "svg", src: "--svg-data--"}} />)
+    testCourseButton.update()
+
+    expect(testCourseButton.instance().makeHref("http://localhost:3000/courses/")).toEqual("Georgian")
+    expect(testCourseButton.instance().makeHref("http://localhost:3000/courses")).toEqual("courses/Georgian")
+})
