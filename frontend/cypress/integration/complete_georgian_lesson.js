@@ -28,8 +28,10 @@ describe('Completing some Georgian lessons as a new user', function() {
 
             .get('#submit-for-marking-button').click()
             // Assert that it was marked incorrect
+            // Assert that incorrect answer is highlighted red
             // Assert that the correction is highlighted blue
             .get('#question-result-incorrect').should('be.visible')
+            .get('#choice-c').should('have.class', 'choice-marked-incorrect')
             .get('#choice-d').should('have.class', 'choice-correction')
 
             .get('#continue-button').click()
