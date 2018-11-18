@@ -27,7 +27,7 @@ it('Returns the sent questions when sent questions explicitly', async () => {
 it('Returns lesson names as given by server', async () => {
     let mockFetcher = {
         getJSON: (url) => {
-            return new Promise(resolve => resolve(["A", "B", "C"]))
+            return new Promise(resolve => resolve({topicLessonNames: ["A", "B", "C"]}))
         }
     }
     let testServer = LocalServer(mockFetcher)
@@ -36,5 +36,5 @@ it('Returns lesson names as given by server', async () => {
     await testServer.fetchLessonNames("courseName_doesn't_matter").then(lessonNames => {
         fetchedLessonNames = lessonNames
     })
-    expect(fetchedLessonNames).toEqual(["A", "B", "C"])
+    expect(fetchedLessonNames).toEqual({topicLessonNames: ["A", "B", "C"]})
 })

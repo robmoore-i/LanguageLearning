@@ -30,6 +30,10 @@ let mockSlowServer = lessonNames => {
     }
 }
 
+function lessonNames(topicLessonNames) {
+    return {topicLessonNames: topicLessonNames}
+}
+
 async function shallowRenderLessonMap(course, server) {
     let lessonMap = shallow(<LessonMap courseName={course} server={server} />)
     await sleep(mockServerLoadTimeMs)
@@ -38,7 +42,7 @@ async function shallowRenderLessonMap(course, server) {
 
 it('shows the correct course name depending on the url', async () => {
     // Given: I am on the lesson map page for Thai
-    let testLessonMap = await shallowRenderLessonMap("thai", mockServer([]))
+    let testLessonMap = await shallowRenderLessonMap("thai", mockServer(lessonNames([])))
 
     // When: I look around the page
     let content = testLessonMap.find('h1').first()
@@ -51,7 +55,7 @@ it('shows the correct course name depending on the url', async () => {
 
 it('populates the lesson map with the lessons fetched from the server', async () => {
     // Given: There are two lessons available on the server
-    let testServer = mockServer(["hello", "goodbye"])
+    let testServer = mockServer(lessonNames(["hello", "goodbye"]))
 
     // When: I am on the lesson map page
     let testLessonMap = await shallowRenderLessonMap("georgian", testServer)
@@ -63,7 +67,7 @@ it('populates the lesson map with the lessons fetched from the server', async ()
 
 it('fills in the correct lesson data for the lessons of the lesson map', async () => {
     // Given: There are two lessons available on the server, named 'a' and 'b'
-    let testServer = mockServer(["a", "b"])
+    let testServer = mockServer(lessonNames(["a", "b"]))
 
     // When: I am on the lesson map page
     let testLessonMap = await shallowRenderLessonMap("german", testServer)
@@ -76,7 +80,7 @@ it('fills in the correct lesson data for the lessons of the lesson map', async (
 
 it('creates links to lessons from the provided lesson data', async () => {
     // Given: There are two lessons available on the server, named 'doge' and 'pepe'
-    let testServer = mockServer(["doge", "pepe"])
+    let testServer = mockServer(lessonNames(["doge", "pepe"]))
 
     // When: I am on the lesson map page
     let testLessonMap = await shallowRenderLessonMap("spanish", testServer)
@@ -92,7 +96,7 @@ it('creates links to lessons from the provided lesson data', async () => {
 
 it('encodes lesson names which have spaces or punctuation', async () => {
     // Given: There is a lesson available on the server whose name ought not to be put in a url as-is.
-    let testServer = mockServer(["A lesson that shouldn't be in a url"])
+    let testServer = mockServer(lessonNames(["A lesson that shouldn't be in a url"]))
 
     // When: I am on the lesson map page
     let testLessonMap = await shallowRenderLessonMap("edgecases", testServer)
@@ -106,7 +110,7 @@ it('encodes lesson names which have spaces or punctuation', async () => {
 
 it('shows correct link text for lesson names with spaces or punctuation', async () => {
     // Given: There is a lesson available on the server whose name ought not to be put in a url as-is.
-    let testServer = mockServer(["A lesson that shouldn't be in a url"])
+    let testServer = mockServer(lessonNames(["A lesson that shouldn't be in a url"]))
 
     // When: I am on the lesson map page
     let testLessonMap = await shallowRenderLessonMap("edgecases", testServer)
@@ -120,7 +124,7 @@ it('shows correct link text for lesson names with spaces or punctuation', async 
 
 it('shows the loading screen before the content is fetched', async () => {
     // Given: The server is slow
-    let slowServer = mockSlowServer(["a", "b", "c"])
+    let slowServer = mockSlowServer(lessonNames(["a", "b", "c"]))
 
     // When: I am on the lesson map page
     let testLessonMap = await shallowRenderLessonMap("thai", slowServer)
