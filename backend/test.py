@@ -9,9 +9,11 @@ from assertpy import assert_that
 server_port = int(os.environ["MELANGE_SERVER_PORT"])
 frontend_port = int(os.environ["MELANGE_FRONTEND_PORT"])
 
+@setup
 def start_server():
     os.system("./bin/src &")
 
+@teardown
 def stop_server():
     os.system("pkill -f ./bin/src")
 
@@ -131,5 +133,4 @@ def multipleAnswerTranslationQuestion():
     ])
     assert_that(sorted(resJson.keys())).is_equal_to(["name", "questions"])
 
-main(locals(), start_server, stop_server)
-exit(0)
+exit(main(locals()))
