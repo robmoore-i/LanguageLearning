@@ -35,7 +35,7 @@ export default class ReadingQuestion extends Component {
                 <br />
                 <br />
             </div>,
-            <div key="questions">
+            <div key="questions" id="questions">
                 {this.questions()}
             </div>,
             <br key="questions--break--unanswered-questions-warning" />,
@@ -47,13 +47,16 @@ export default class ReadingQuestion extends Component {
 
     questions() {
         const setState = this.setState.bind(this)
-        return this.props.q.questions.map((q, i) => {
-            return <SubQuestion id={"sub-question-" + String(i)} key={"sub-question-" + String(i)}
+        let inOrderSubquestions = Array(this.props.q.questions.length).fill({})
+        this.props.q.questions.forEach((q, idx) => {
+            let i = q.index === undefined ? idx : q.index
+            inOrderSubquestions[i] = <SubQuestion id={"sub-question-" + String(i)} key={"sub-question-" + String(i)}
                                   i={i}
                                   question={q}
                                   mark={this.state.marks[i]}
                                   setParentState={setState} />
         })
+        return inOrderSubquestions
     }
 
     button() {

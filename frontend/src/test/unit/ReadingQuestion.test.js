@@ -278,3 +278,38 @@ it('Shows corrections for subquestions with multiple potential correct answers',
     expect(testRQ.find("#question-correction-1").text()).toBe("Cake")
     expect(testRQ.find("#question-correction-2").text()).toEqual("Vlad")
 })
+
+it('Indexes subquestions in the correct order if order is given', () => {
+    let q = {
+        type: 2,
+        extract: "Vlad went to the kitchen and got some cake",
+        questions: [
+            {index: 2, given: "What's this guy's name again?", answer: "Vlad"},
+            {index: 0, given: "Where did Vlad go?", answer: "Kitchen"},
+            {index: 1, given: "What did he get there?", answers: ["Cake", "Some cake"]}
+        ]
+    }
+    let testRQ = shallow(<ReadingQuestion q={q} />)
+
+    expect(testRQ.find("#sub-question-0").dive().find("#question-given-0").text()).toBe("Where did Vlad go?")
+    expect(testRQ.find("#sub-question-1").dive().find("#question-given-1").text()).toBe("What did he get there?")
+    expect(testRQ.find("#sub-question-2").dive().find("#question-given-2").text()).toBe("What's this guy's name again?")
+})
+
+it('Renders subquestions in index order', () => {
+    let q = {
+        type: 2,
+        extract: "Vlad went to the kitchen and got some cake",
+        questions: [
+            {index: 2, given: "What's this guy's name again?", answer: "Vlad"},
+            {index: 0, given: "Where did Vlad go?", answer: "Kitchen"},
+            {index: 1, given: "What did he get there?", answers: ["Cake", "Some cake"]}
+        ]
+    }
+    let testRQ = mount(<ReadingQuestion q={q} />)
+
+    let questionsDiv = testRQ.find("#questions")
+    expect(questionsDiv.childAt(0).prop("id")).toEqual("sub-question-0")
+    expect(questionsDiv.childAt(1).prop("id")).toEqual("sub-question-1")
+    expect(questionsDiv.childAt(2).prop("id")).toEqual("sub-question-2")
+})
