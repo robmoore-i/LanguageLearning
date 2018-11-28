@@ -180,9 +180,9 @@ func parseRQ(node graph.Node) JsonEncodable {
 func parseRSQ(node graph.Node) JsonEncodable {
 	p := node.Properties
     if answer, isSARSQ := p["answer"]; isSARSQ {
-        return NewSARSQ(p["given"].(string), answer.(string))
+        return NewSARSQ(p["index"].(int64), p["given"].(string), answer.(string))
     } else if answers, isMARSQ := p["answers"]; isMARSQ {
-        return NewMARSQ(p["given"].(string), toStrings(answers.([]interface{})))
+        return NewMARSQ(p["index"].(int64), p["given"].(string), toStrings(answers.([]interface{})))
     } else {
         log.Printf("RSQ node had neither answer nor answers property")
         panic("neo4jdatabase:parseRSQ")

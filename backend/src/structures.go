@@ -103,12 +103,13 @@ func (q ReadingQuestion) encode(w http.ResponseWriter) error {
 // Single Answer
 
 type SingleAnswerReadingSubQuestion struct {
+    Index     int64    `json:"index"`
 	Given     string `json:"given"`
 	Answer    string `json:"answer"`
 }
 
-func NewSARSQ(given string, answer string) SingleAnswerReadingSubQuestion {
-	rsq := SingleAnswerReadingSubQuestion{Given: given, Answer: answer}
+func NewSARSQ(index int64, given string, answer string) SingleAnswerReadingSubQuestion {
+	rsq := SingleAnswerReadingSubQuestion{Index: index, Given: given, Answer: answer}
 	return rsq
 }
 
@@ -119,12 +120,13 @@ func (q SingleAnswerReadingSubQuestion) encode(w http.ResponseWriter) error {
 // Multiple Answer
 
 type MultipleAnswerReadingSubQuestion struct {
-	Given     string   `json:"given"`
-	Answers   []string `json:"answers"`
+    Index     int64       `json:"index"`
+	Given     string    `json:"given"`
+	Answers   []string  `json:"answers"`
 }
 
-func NewMARSQ(given string, answers []string) MultipleAnswerReadingSubQuestion {
-	rsq := MultipleAnswerReadingSubQuestion{Given: given, Answers: answers}
+func NewMARSQ(index int64, given string, answers []string) MultipleAnswerReadingSubQuestion {
+	rsq := MultipleAnswerReadingSubQuestion{Index: index, Given: given, Answers: answers}
 	return rsq
 }
 

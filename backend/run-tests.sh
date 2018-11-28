@@ -1,11 +1,11 @@
 if [ "$1" == "r" ]
 then
   ./assemble.sh
-  python3 test.py r
+  python3 test.py
   exit $?
 elif [ "$1" == "a" ]
 then
-  python3 test.py r
+  python3 test.py
   exit $?
 else
   echo "USAGE: $0 [r|a]"

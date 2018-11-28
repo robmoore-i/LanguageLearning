@@ -101,14 +101,17 @@ def readingQuestionIncludingMultipleAnswerSubQuestion():
     def assert_is_train_question(rsq):
         assert_that(rsq["given"]).is_equal_to("What colour is the train?")
         assert_that(rsq["answer"]).is_equal_to("blue")
+        assert_that(rsq["index"]).is_equal_to(0)
 
     def assert_is_car_question(rsq):
         assert_that(rsq["given"]).is_equal_to("What colour is the car?")
         assert_that(rsq["answer"]).is_equal_to("red")
+        assert_that(rsq["index"]).is_equal_to(1)
 
     def assert_is_grass_question(rsq):
         assert_that(rsq["given"]).is_equal_to("What is said to be green?")
         assert_that(sorted(rsq["answers"])).is_equal_to(["Grass", "The grass"])
+        assert_that(rsq["index"]).is_equal_to(2)
 
     subquestions = {}
     for subquestion in rq["questions"]:
@@ -132,5 +135,6 @@ def multipleAnswerTranslationQuestion():
         {'type': 0, 'given': 'Das Hemd', 'answers': ['Shirt', 'The shirt']},
     ])
     assert_that(sorted(resJson.keys())).is_equal_to(["name", "questions"])
+
 
 exit(main(locals()))
