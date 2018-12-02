@@ -62,7 +62,7 @@ Yarn (1.12.3)
 Npm (6.4.1)
 Node (10.11.0)
 
-## Name
+# Name
 
 As always I have plucked a spicy name out of the air. Melange is the name of
 the geriatric spice from Frank Herbert's Dune series. It lets you live longer
@@ -70,9 +70,9 @@ and see the future. I'll change this to be some pronouncable word in Georgian
 at some point, but for now the repo is callled LanguageLearning because its
 a work in progress.
 
-## Big plans
+# Big plans
 
-### Adaptive UI
+## Adaptive UI
 
 Get UI parameters like the position of buttons on the screen and stuff from the
 server on data fetches. Track UI interactions. Feed data through a server-side
@@ -80,16 +80,12 @@ model. Update what new visitors see based on this. Over time, the UI evolves to
 become more effective at getting users towards the user stories they are
 achieving.
 
-### UI interaction tracking
+## UI interaction tracking
 
 Separate Q backend for tracking UI interactions.
 
-### Content creation
+# Content creation
 
 UI for submitting lesson plans - which are producers(functions which return
 questions) and their corresponding inputs. Completely configurable - can be used
 to create maths questions, vocab questions or programming questions.
-
-### PWA stuff
-
-// ToGoogle (or duckduckgo...)
