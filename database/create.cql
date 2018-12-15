@@ -5,7 +5,7 @@ MATCH (n) DETACH DELETE n;
 MATCH (n) DELETE (n);
 
 // Georgian Course
-CREATE (hello:TopicLesson {name: "Hello"})<-[:HAS_TOPIC_LESSON]-(georgian:Course {name: "Georgian", image: "flagGeorgia.svg"})-[:HAS_TOPIC_LESSON]->(whatAreYouCalled:TopicLesson {name: "What are you called?"})
+CREATE (hello:TopicLesson {index: 0, name: "Hello"})<-[:HAS_TOPIC_LESSON]-(georgian:Course {name: "Georgian", image: "flagGeorgia.svg"})-[:HAS_TOPIC_LESSON]->(whatAreYouCalled:TopicLesson {index: 1, name: "What are you called?"})
 RETURN georgian,hello,whatAreYouCalled;
 
 // Georgian Topic Lesson: Hello
@@ -20,13 +20,13 @@ RETURN whatAreYouCalled,tq,mcq;
 
 // Georgian Topic Lesson: Colours
 MATCH (georgian: Course) WHERE georgian.name = "Georgian"
-CREATE (rq:Question:ReadingQuestion {`extract`: "მატარებელი ლურჯია და მანქანა წითელი არის. ბალახი მწვანეა."})<-[:HAS_QUESTION]-(colours:TopicLesson {name: "Colours"})<-[:HAS_TOPIC_LESSON]-(georgian)
+CREATE (rq:Question:ReadingQuestion {`extract`: "მატარებელი ლურჯია და მანქანა წითელი არის. ბალახი მწვანეა."})<-[:HAS_QUESTION]-(colours:TopicLesson {index: 2, name: "Colours"})<-[:HAS_TOPIC_LESSON]-(georgian)
 CREATE (rsq1:ReadingSubQuestion {index: 0, given:"What colour is the train?", answer:"blue"})<-[:HAS_SUBQUESTION]-(rq)-[:HAS_SUBQUESTION]->(rsq2:ReadingSubQuestion {index: 1, given: "What colour is the car?", answer: "red"})
 CREATE (rsq3:ReadingSubQuestion {index: 2, given:"What is said to be green?", answers:["Grass", "The grass"]})<-[:HAS_SUBQUESTION]-(rq)
 RETURN georgian,colours,rq,rsq1,rsq2,rsq3;
 
 // French Course
-CREATE (french:Course {name: "French", image: "flagFrance.png"})-[:HAS_TOPIC_LESSON]->(animals:TopicLesson {name: "Animals"})
+CREATE (french:Course {name: "French", image: "flagFrance.png"})-[:HAS_TOPIC_LESSON]->(animals:TopicLesson {index: 0, name: "Animals"})
 RETURN french,animals;
 
 // French Topic Lesson: Animals
@@ -35,7 +35,7 @@ CREATE (animals)-[:HAS_QUESTION]->(tq:Question:TranslationQuestion {given: "Mous
 RETURN animals,tq;
 
 // German Course
-CREATE (german:Course {name: "German", image: "flagGermany.jpg"})-[:HAS_TOPIC_LESSON]->(clothes:TopicLesson {name: "Clothes"})
+CREATE (german:Course {name: "German", image: "flagGermany.jpg"})-[:HAS_TOPIC_LESSON]->(clothes:TopicLesson {index: 0, name: "Clothes"})
 RETURN german,clothes;
 
 // German Topic Lesson: Clothes

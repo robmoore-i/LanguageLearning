@@ -90,6 +90,8 @@ func QueryLessonNames(course string) CourseLessonNames {
 // ====== Lesson =========
 
 func QueryLesson(lessonName string) Lesson {
+    lessonIndex := QueryLessonIndex(lessonName)
+
 	cypher := `MATCH (tl:TopicLesson {name: {name}})-[:HAS_QUESTION]->(q) RETURN q`
 	params := map[string]interface{}{"name": lessonName}
 	rows, conn, stmt := performQuery(cypher, params)
@@ -105,7 +107,22 @@ func QueryLesson(lessonName string) Lesson {
 		row, _, err = rows.NextNeo()
 	}
 
-	return Lesson{Name: lessonName, Questions: questions}
+	return Lesson{Name: lessonName, Questions: questions, Index: lessonIndex}
+}
+
+func QueryLessonIndex(lessonName string) int64 {
+    cypher := `MATCH (tl:TopicLesson {name: {name}}) RETURN tl`
+    params := map[string]interface{}{"name": lessonName}
+    rows, conn, stmt := performQuery(cypher, params)
+    defer conn.Close()
+    defer stmt.Close()
+    row, _, err := rows.NextNeo()
+    if err != nil {
+        log.Printf("There was a problem getting the index of lesson %#v", lessonName)
+		panic("neo4jdatabase:QueryLessonIndex")
+    }
+    node := onlyNode(row)
+    return node.Properties["index"].(int64)
 }
 
 func parseQuestion(node graph.Node) JsonEncodable {

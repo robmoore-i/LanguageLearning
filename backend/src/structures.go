@@ -22,6 +22,7 @@ type Course struct {
 type Lesson struct {
 	Name      string          `json:"name"`
 	Questions []JsonEncodable `json:"questions"`
+    Index     int64           `json:"index"`
 }
 
 // MCQ
@@ -103,7 +104,7 @@ func (q ReadingQuestion) encode(w http.ResponseWriter) error {
 // Single Answer
 
 type SingleAnswerReadingSubQuestion struct {
-    Index     int64    `json:"index"`
+    Index     int64  `json:"index"`
 	Given     string `json:"given"`
 	Answer    string `json:"answer"`
 }

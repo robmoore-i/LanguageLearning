@@ -37,11 +37,12 @@ def lesson():
 
     resJson = res.json()
     assert_that(resJson["name"]).is_equal_to("Hello")
+    assert_that(resJson["index"]).is_equal_to(0)
     assert_that(sorted(resJson["questions"], key=lambda q: q["type"])).is_equal_to([
         {'type': 0, 'given': 'Hello', 'answer': 'გამარჯობა'},
         {'type': 1, 'question': 'sounds like "i" in English', 'a': 'ა', 'b': 'ო', 'c': 'უ', 'd': 'ი', 'answer': 'd'}
     ])
-    assert_that(sorted(resJson.keys())).is_equal_to(["name", "questions"])
+    assert_that(sorted(resJson.keys())).is_equal_to(["index", "name", "questions"])
 
 @test
 def courses():
@@ -91,9 +92,10 @@ def readingQuestionIncludingMultipleAnswerSubQuestion():
 
     res_json = res.json()
     assert_that(res_json["name"]).is_equal_to("Colours")
+    assert_that(res_json["index"]).is_equal_to(2)
     questions = res_json["questions"]
     assert_that(len(questions)).is_equal_to(1)
-    assert_that(sorted(res_json.keys())).is_equal_to(["name", "questions"])
+    assert_that(sorted(res_json.keys())).is_equal_to(["index", "name", "questions"])
     rq = questions[0]
     assert_that(rq["type"]).is_equal_to(2)
     assert_that(rq["extract"]).is_equal_to("მატარებელი ლურჯია და მანქანა წითელი არის. ბალახი მწვანეა.")
@@ -131,10 +133,11 @@ def multipleAnswerTranslationQuestion():
 
     resJson = res.json()
     assert_that(resJson["name"]).is_equal_to("Clothes")
+    assert_that(resJson["index"]).is_equal_to(0)
     assert_that(sorted(resJson["questions"], key=lambda q: q["type"])).is_equal_to([
         {'type': 0, 'given': 'Das Hemd', 'answers': ['Shirt', 'The shirt']},
     ])
-    assert_that(sorted(resJson.keys())).is_equal_to(["name", "questions"])
+    assert_that(sorted(resJson.keys())).is_equal_to(["index", "name", "questions"])
 
 
 exit(main(locals()))
