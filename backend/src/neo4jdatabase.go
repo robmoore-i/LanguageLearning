@@ -162,10 +162,11 @@ func toStrings(list []interface{}) []string {
 
 func parseTQ(node graph.Node) JsonEncodable {
 	p := node.Properties
+    index := p["index"].(int64)
     if answer, isSATQ := p["answer"]; isSATQ {
-        return NewSATQ(p["given"].(string), answer.(string))
+        return NewSATQ(index, p["given"].(string), answer.(string))
     } else if answers, isMATQ := p["answers"]; isMATQ {
-        return NewMATQ(p["given"].(string), toStrings(answers.([]interface{})))
+        return NewMATQ(index, p["given"].(string), toStrings(answers.([]interface{})))
     } else {
         log.Printf("TQ node had neither answer nor answers property")
         panic("neo4jdatabase:parseTQ")
@@ -174,11 +175,12 @@ func parseTQ(node graph.Node) JsonEncodable {
 
 func parseMCQ(node graph.Node) JsonEncodable {
 	p := node.Properties
-	return NewMCQ(p["question"].(string), p["a"].(string), p["b"].(string), p["c"].(string), p["d"].(string), p["answer"].(string))
+	return NewMCQ(p["index"].(int64), p["question"].(string), p["a"].(string), p["b"].(string), p["c"].(string), p["d"].(string), p["answer"].(string))
 }
 
 func parseRQ(node graph.Node) JsonEncodable {
 	p := node.Properties
+    index := p["index"].(int64)
 	extract := p["extract"].(string)
 
 	cypher := "MATCH (rq:ReadingQuestion {`extract`: {extract}})-[:HAS_SUBQUESTION]->(q:ReadingSubQuestion) RETURN q"
@@ -196,7 +198,7 @@ func parseRQ(node graph.Node) JsonEncodable {
 		row, _, err = rows.NextNeo()
 	}
 
-	return NewRQ(extract, subquestions)
+	return NewRQ(index, extract, subquestions)
 }
 
 func parseRSQ(node graph.Node) JsonEncodable {

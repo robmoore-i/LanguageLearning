@@ -29,8 +29,8 @@ def lesson():
     assert_that(resJson["name"]).is_equal_to("Hello")
     assert_that(resJson["index"]).is_equal_to(0)
     assert_that(sorted(resJson["questions"], key=lambda q: q["type"])).is_equal_to([
-        {'type': 0, 'given': 'Hello', 'answer': 'გამარჯობა'},
-        {'type': 1, 'question': 'sounds like "i" in English', 'a': 'ა', 'b': 'ო', 'c': 'უ', 'd': 'ი', 'answer': 'd'}
+        {'index': 1, 'type': 0, 'given': 'Hello', 'answer': 'გამარჯობა'},
+        {'index': 0, 'type': 1, 'question': 'sounds like "i" in English', 'a': 'ა', 'b': 'ო', 'c': 'უ', 'd': 'ი', 'answer': 'd'}
     ])
     assert_that(sorted(resJson.keys())).is_equal_to(["index", "name", "questions"])
 
@@ -125,7 +125,7 @@ def multipleAnswerTranslationQuestion():
     assert_that(resJson["name"]).is_equal_to("Clothes")
     assert_that(resJson["index"]).is_equal_to(0)
     assert_that(sorted(resJson["questions"], key=lambda q: q["type"])).is_equal_to([
-        {'type': 0, 'given': 'Das Hemd', 'answers': ['Shirt', 'The shirt']},
+        {'index': 0, 'type': 0, 'given': 'Das Hemd', 'answers': ['Shirt', 'The shirt']},
     ])
     assert_that(sorted(resJson.keys())).is_equal_to(["index", "name", "questions"])
 
