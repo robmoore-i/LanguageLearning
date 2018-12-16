@@ -15,7 +15,7 @@ const defaultFetcher = {
     }
 }
 
-function Server(backendOrigin, fetcher) {
+export function Server(backendOrigin, fetcher) {
     return {
         fetchLessonNames: (courseName) => {
             return fetcher.getJSON(backendOrigin + "/coursemetadata?course=" + courseName)

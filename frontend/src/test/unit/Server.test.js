@@ -1,4 +1,8 @@
-import {LocalServer} from "../../main/Server";
+import {Server} from "../../main/Server";
+
+function TestServer(fetcher) {
+    return Server("testorigin", fetcher)
+}
 
 it('Returns the sent questions when sent questions explicitly', async () => {
     let rq = {type: 2, extract: "Vlad went to the kitchen and got some cake", questions: [{given: "Where did Vlad go?", answer: "Kitchen"}, {given: "What did he get there?", answer: "Cake"}]}
@@ -14,7 +18,7 @@ it('Returns the sent questions when sent questions explicitly', async () => {
             ))
         }
     }
-    let testServer = LocalServer(mockFetcher)
+    let testServer = TestServer(mockFetcher)
 
     let fetchedLesson = undefined
     await testServer.fetchLesson("ayylmao").then(lesson => {
@@ -38,7 +42,7 @@ it('Returns lesson names as given by server', async () => {
             return new Promise(resolve => resolve(testMetadata))
         }
     }
-    let testServer = LocalServer(mockFetcher)
+    let testServer = TestServer(mockFetcher)
 
     let fetchedLessonNames = undefined
     await testServer.fetchLessonNames("courseName_doesn't_matter").then(lessonNames => {
@@ -60,7 +64,7 @@ it('Fetches course metadata as given by server', async () => {
             return new Promise(resolve => resolve(testMetadata))
         }
     }
-    let testServer = LocalServer(mockFetcher)
+    let testServer = TestServer(mockFetcher)
 
     let fetchedMetadata = undefined
     await testServer.fetchCourseMetadata("courseName_doesn't_matter").then(metadata => {
@@ -84,7 +88,7 @@ it('Returns lesson names ordered by index', async () => {
             return new Promise(resolve => resolve(testMetadata))
         }
     }
-    let testServer = LocalServer(mockFetcher)
+    let testServer = TestServer(mockFetcher)
 
     let fetchedLessonNames = undefined
     await testServer.fetchLessonNames("courseName_doesn't_matter").then(lessonNames => {
@@ -107,7 +111,7 @@ it('Returns the questions of a lesson ordered by index', async () => {
             ))
         }
     }
-    let testServer = LocalServer(mockFetcher)
+    let testServer = TestServer(mockFetcher)
 
     let fetchedLesson = undefined
     await testServer.fetchLesson("ayylmao").then(lesson => {
