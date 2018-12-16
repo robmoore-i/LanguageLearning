@@ -61,7 +61,7 @@ describe('Completing some Georgian lessons as a new user', function() {
             .get('.Lesson-list').children('a[href="/courses/Georgian/Colours"]').click()
             .get('#answer-input-textbox-0').type('wrong')
             .get('#answer-input-textbox-1').type('wrong')
-            .get('#answer-input-textbox-2').type('Grass')
+            .get('#answer-input-textbox-2').type('grass')
             .get('#submit-for-marking-button').click()
             // Assert that questions 0 and 1 were marked incorrect
             // Assert that question 2 was marked correct
@@ -69,8 +69,8 @@ describe('Completing some Georgian lessons as a new user', function() {
             .get('#question-result-incorrect-0').should('be.visible')
             .get('#question-result-incorrect-1').should('be.visible')
             .get('#question-result-correct-2').should('be.visible')
-            .get('#question-correction-0').should('have.text', 'red')
-            .get('#question-correction-1').should('have.text', 'blue')
+            .get('#question-correction-0').should('have.text', 'blue')
+            .get('#question-correction-1').should('have.text', 'red')
 
             .get('#continue-button').click()
             // Assert that the accuracy is 33.3%
