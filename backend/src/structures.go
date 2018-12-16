@@ -135,34 +135,13 @@ func (q MultipleAnswerReadingSubQuestion) encode(w http.ResponseWriter) error {
 	return json.NewEncoder(w).Encode(q)
 }
 
-// Course lesson data
-
-type CourseLessonNames struct {
-	TopicLessonNames   []string   `json:"topicLessonNames"`
-}
-
-func NewCourseLessonNames(topicLessonNames []string) CourseLessonNames {
-	courseLessonNames := CourseLessonNames{TopicLessonNames: topicLessonNames}
-	return courseLessonNames
-}
-
-func (courseLessonNames CourseLessonNames) encode(w http.ResponseWriter) error {
-	return json.NewEncoder(w).Encode(courseLessonNames)
-}
+// Course Metadata
 
 type LessonMetadata struct {
     Name      string          `json:"name"`
     Index     int64           `json:"index"`
 }
 
-func (metadata LessonMetadata) encode(w http.ResponseWriter) error {
-	return json.NewEncoder(w).Encode(metadata)
-}
-
 type CourseMetadata struct {
     LessonMetadata []LessonMetadata `json:"lessonMetadata"`
-}
-
-func (metadata CourseMetadata) encode(w http.ResponseWriter) error {
-	return json.NewEncoder(w).Encode(metadata)
 }

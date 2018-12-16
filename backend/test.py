@@ -18,16 +18,6 @@ def stop_server():
     os.system("pkill -f ./bin/src")
 
 @test
-def lesson_names():
-    res = requests.get("http://localhost:" + str(server_port) + "/lessonnames?course=Georgian")
-    assert_that(res.status_code).is_equal_to(200)
-    res_json = res.json()
-    assert_that(list(res_json.keys())).is_equal_to(["topicLessonNames"])
-    topic_lesson_names = res_json["topicLessonNames"]
-    assert_that(sorted(topic_lesson_names)).is_equal_to(sorted(["Colours", "Hello", "What are you called?"]))
-    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:" + str(frontend_port) + "")
-
-@test
 def lesson():
     payload = {"lessonName": "Hello"}
     res = requests.post("http://localhost:" + str(server_port) + "/lesson", json=payload)

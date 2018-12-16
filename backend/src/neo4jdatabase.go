@@ -66,26 +66,7 @@ func parseImageType(filename string) string {
     }
 }
 
-// ====== LessonNames =========
-
-func QueryLessonNames(course string) CourseLessonNames {
-	cypher := `MATCH (tl:TopicLesson)<-[:HAS_TOPIC_LESSON]-(c:Course {name: {course}}) RETURN tl.name`
-    params := map[string]interface{}{"course": course}
-	rows, conn, stmt := performQuery(cypher, params)
-	defer conn.Close()
-	defer stmt.Close()
-
-	var topicLessonNames []string
-	row, _, err := rows.NextNeo()
-	for row != nil && err == nil {
-		topicLessonNames = append(topicLessonNames, row[0].(string))
-		row, _, err = rows.NextNeo()
-	}
-
-    courseLessonNames := NewCourseLessonNames(topicLessonNames)
-
-	return courseLessonNames
-}
+// ====== Course Metadata =========
 
 func QueryCourseMetadata(course string) CourseMetadata {
 	cypher := `MATCH (tl:TopicLesson)<-[:HAS_TOPIC_LESSON]-(c:Course {name: {course}}) RETURN tl`
