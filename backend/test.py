@@ -145,7 +145,7 @@ def course_metadata():
     assert_that(res.status_code).is_equal_to(200)
     assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:" + str(frontend_port) + "")
     res_json = res.json()
-    assert_that(list(res_json.keys())).is_equal_to(["metadata"])
+    assert_that(list(res_json.keys())).is_equal_to(["lessonMetadata"])
 
     def assert_is_hello_lesson(l):
         assert_that(l["name"]).is_equal_to("Hello")
@@ -159,14 +159,14 @@ def course_metadata():
         assert_that(l["name"]).is_equal_to("Colours")
         assert_that(l["index"]).is_equal_to(2)
 
-    lessons = {}
-    for l in res_json["metadata"]:
+    lessonMetadata = {}
+    for l in res_json["lessonMetadata"]:
         lesson_name = l["name"]
-        lessons[lesson_name] = l
+        lessonMetadata[lesson_name] = l
 
-    assert_is_hello_lesson(lessons["Hello"])
-    assert_is_whatsyourname_lesson(lessons["What are you called?"])
-    assert_is_colours_lesson(lessons["Colours"])
+    assert_is_hello_lesson(lessonMetadata["Hello"])
+    assert_is_whatsyourname_lesson(lessonMetadata["What are you called?"])
+    assert_is_colours_lesson(lessonMetadata["Colours"])
 
 
 exit(main(locals()))

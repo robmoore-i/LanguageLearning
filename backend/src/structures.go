@@ -160,7 +160,7 @@ func (metadata LessonMetadata) encode(w http.ResponseWriter) error {
 }
 
 type CourseMetadata struct {
-    LessonMetadata []LessonMetadata `json:"metadata"`
+    LessonMetadata []LessonMetadata `json:"lessonMetadata"`
 }
 
 func (metadata CourseMetadata) encode(w http.ResponseWriter) error {
