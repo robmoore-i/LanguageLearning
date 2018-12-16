@@ -20,6 +20,10 @@ function Server(backendOrigin, fetcher) {
             return fetcher.getJSON(backendOrigin + "/lessonnames?course=" + courseName)
         },
 
+        fetchCourseMetadata: (courseName) => {
+            return fetcher.getJSON(backendOrigin + "/coursemetadata?course=" + courseName)
+        },
+
         fetchLesson: (lessonName) => {
             return fetcher.postJSON(backendOrigin + "/lesson", {lessonName: lessonName}).then(lesson => {
                 return {
