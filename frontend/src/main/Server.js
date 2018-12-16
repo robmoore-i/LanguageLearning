@@ -1,5 +1,6 @@
 // Main
 import config from './config'
+import {keySort} from './sorting'
 
 const defaultFetcher = {
     getJSON: (url) => {
@@ -11,15 +12,6 @@ const defaultFetcher = {
             method: 'POST',
             body: JSON.stringify(body)
         }).then(response => response.json())
-    }
-}
-
-// From: https://stackoverflow.com/questions/16648076/sort-array-on-key-value
-function keySort(key) {
-    return function(a, b){
-        if (a[key] > b[key]) return 1
-        if (a[key] < b[key]) return -1
-        return 0
     }
 }
 

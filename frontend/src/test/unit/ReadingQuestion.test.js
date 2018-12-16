@@ -43,6 +43,7 @@ let assertCorrect = (rq, i) => {
     expect(rq.find("#question-result-correct-" + i).exists()).toBe(true)
     expect(rq.find("#question-result-incorrect-" + i).exists()).toBe(false)
     expect(rq.find("#question-result-unmarked-" + i).exists()).toBe(false)
+    expect(rq.find("#question-correction-" + i).exists()).toBe(false)
 }
 
 // Asserts that the (i)th sub question in the reading question(rq) is incorrect
@@ -50,6 +51,7 @@ let assertIncorrect = (rq, i) => {
     expect(rq.find("#question-result-correct-" + i).exists()).toBe(false)
     expect(rq.find("#question-result-incorrect-" + i).exists()).toBe(true)
     expect(rq.find("#question-result-unmarked-" + i).exists()).toBe(false)
+    expect(rq.find("#question-correction-" + i).exists()).toBe(true)
 }
 
 it('Marks correct answers as correct', () => {
@@ -312,4 +314,28 @@ it('Renders subquestions in index order', () => {
     expect(questionsDiv.childAt(0).prop("id")).toEqual("sub-question-0")
     expect(questionsDiv.childAt(1).prop("id")).toEqual("sub-question-1")
     expect(questionsDiv.childAt(2).prop("id")).toEqual("sub-question-2")
+})
+
+it('Marks all answers as correct when all answers are correct', () => {
+    let q = {
+        type: 2,
+        extract: "მატარებელი ლურჯია და მანქანა წითელი არის. ბალახი მწვანეა.",
+        questions: [
+            {index: 2, given: "What is said to be green?", answers: ["Grass", "The grass"]},
+            {index: 0, given: "What colour is the train?", answer: "blue"},
+            {index: 1, given: "What colour is the car?", answer: "red"}
+        ]
+    }
+
+    let testRQ = mount(<ReadingQuestion q={q} />)
+
+    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("blue"))
+    testRQ.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("red"))
+    testRQ.find("#answer-input-textbox-2").simulate("change", textBoxInputEvent("grass"))
+
+    testRQ.find("#submit-for-marking-button").simulate("click")
+
+    assertCorrect(testRQ, 0)
+    assertCorrect(testRQ, 1)
+    assertCorrect(testRQ, 2)
 })

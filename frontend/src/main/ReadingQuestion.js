@@ -7,10 +7,14 @@ import '../styles/ReadingQuestion.css'
 import Mark from "./Mark"
 import {Marker} from "./Marker"
 import {submitForMarkingButton, continueButton} from "./Question"
+import {keySort} from './sorting'
 
 export default class ReadingQuestion extends Component {
     constructor(props) {
         super(props)
+
+        // Make sure the subquestions are in the correct order.
+        this.props.q.questions.sort(keySort("index"))
 
         this.state = {
             currentAnswers: (new Array(this.props.q.questions.length)).fill(""),
@@ -47,6 +51,8 @@ export default class ReadingQuestion extends Component {
 
     questions() {
         const setState = this.setState.bind(this)
+
+        // Insertion sort effort is now unnecessary because of the upfront keySort in constructor.
         let inOrderSubquestions = Array(this.props.q.questions.length).fill({})
         this.props.q.questions.forEach((q, idx) => {
             let i = q.index === undefined ? idx : q.index
