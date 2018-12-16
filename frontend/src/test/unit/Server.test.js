@@ -70,7 +70,7 @@ it('Fetches course metadata as given by server', async () => {
     expect(fetchedMetadata).toEqual(testMetadata)
 })
 
-it('Returns lesson names in order', async () => {
+it('Returns lesson names ordered by index', async () => {
     let testMetadata = {
         lessonMetadata: [
             {name: "B", index: 1},
@@ -91,4 +91,28 @@ it('Returns lesson names in order', async () => {
         fetchedLessonNames = lessonNames
     })
     expect(fetchedLessonNames).toEqual({topicLessonNames: ["A", "B", "C"]})
+})
+
+it('Returns the questions of a lesson ordered by index', async () => {
+    let rq = {index: 2, type: 2, extract: "Vlad went to the kitchen and got some cake", questions: [{given: "Where did Vlad go?", answer: "Kitchen"}, {given: "What did he get there?", answer: "Cake"}]}
+    let mcq = {index: 0, type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
+    let tq = {index: 1, type: 0, given: "hello", answer: "გამარჯობა"}
+    let mockFetcher = {
+        postJSON: (url, body) => {
+            return new Promise(resolve => resolve(
+                {
+                    name: "Server Stuff",
+                    questions: [rq, mcq, tq]
+                }
+            ))
+        }
+    }
+    let testServer = LocalServer(mockFetcher)
+
+    let fetchedLesson = undefined
+    await testServer.fetchLesson("ayylmao").then(lesson => {
+        fetchedLesson = lesson
+    })
+    expect(fetchedLesson.name).toEqual("Server Stuff")
+    expect(fetchedLesson.questions).toEqual([mcq, tq, rq])
 })

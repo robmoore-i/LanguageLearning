@@ -31,6 +31,7 @@ function Server(backendOrigin, fetcher) {
 
         fetchLesson: (lessonName) => {
             return fetcher.postJSON(backendOrigin + "/lesson", {lessonName: lessonName}).then(lesson => {
+                lesson.questions.sort(keySort("index"))
                 return {
                     name: lesson.name,
                     questions: lesson.questions
