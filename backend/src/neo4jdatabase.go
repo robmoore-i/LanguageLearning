@@ -87,6 +87,30 @@ func QueryLessonNames(course string) CourseLessonNames {
 	return courseLessonNames
 }
 
+func QueryCourseMetadata(course string) CourseMetadata {
+	cypher := `MATCH (tl:TopicLesson)<-[:HAS_TOPIC_LESSON]-(c:Course {name: {course}}) RETURN tl`
+    params := map[string]interface{}{"course": course}
+	rows, conn, stmt := performQuery(cypher, params)
+	defer conn.Close()
+	defer stmt.Close()
+
+	var courseLessonMetadata []LessonMetadata
+	row, _, err := rows.NextNeo()
+	for row != nil && err == nil {
+        node := onlyNode(row)
+        lessonMetadata := parseLessonMetadata(node)
+		courseLessonMetadata = append(courseLessonMetadata, lessonMetadata)
+		row, _, err = rows.NextNeo()
+	}
+
+    return CourseMetadata{LessonMetadata: courseLessonMetadata}
+}
+
+func parseLessonMetadata(node graph.Node) LessonMetadata {
+    p := node.Properties
+    return LessonMetadata{Name: p["name"].(string), Index: p["index"].(int64)}
+}
+
 // ====== Lesson =========
 
 func QueryLesson(lessonName string) Lesson {

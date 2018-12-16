@@ -121,7 +121,7 @@ func (q SingleAnswerReadingSubQuestion) encode(w http.ResponseWriter) error {
 // Multiple Answer
 
 type MultipleAnswerReadingSubQuestion struct {
-    Index     int64       `json:"index"`
+    Index     int64     `json:"index"`
 	Given     string    `json:"given"`
 	Answers   []string  `json:"answers"`
 }
@@ -148,4 +148,21 @@ func NewCourseLessonNames(topicLessonNames []string) CourseLessonNames {
 
 func (courseLessonNames CourseLessonNames) encode(w http.ResponseWriter) error {
 	return json.NewEncoder(w).Encode(courseLessonNames)
+}
+
+type LessonMetadata struct {
+    Name      string          `json:"name"`
+    Index     int64           `json:"index"`
+}
+
+func (metadata LessonMetadata) encode(w http.ResponseWriter) error {
+	return json.NewEncoder(w).Encode(metadata)
+}
+
+type CourseMetadata struct {
+    LessonMetadata []LessonMetadata `json:"metadata"`
+}
+
+func (metadata CourseMetadata) encode(w http.ResponseWriter) error {
+	return json.NewEncoder(w).Encode(metadata)
 }

@@ -139,5 +139,34 @@ def multipleAnswerTranslationQuestion():
     ])
     assert_that(sorted(resJson.keys())).is_equal_to(["index", "name", "questions"])
 
+@test
+def course_metadata():
+    res = requests.get("http://localhost:" + str(server_port) + "/coursemetadata?course=Georgian")
+    assert_that(res.status_code).is_equal_to(200)
+    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:" + str(frontend_port) + "")
+    res_json = res.json()
+    assert_that(list(res_json.keys())).is_equal_to(["metadata"])
+
+    def assert_is_hello_lesson(l):
+        assert_that(l["name"]).is_equal_to("Hello")
+        assert_that(l["index"]).is_equal_to(0)
+
+    def assert_is_whatsyourname_lesson(l):
+        assert_that(l["name"]).is_equal_to("What are you called?")
+        assert_that(l["index"]).is_equal_to(1)
+
+    def assert_is_colours_lesson(l):
+        assert_that(l["name"]).is_equal_to("Colours")
+        assert_that(l["index"]).is_equal_to(2)
+
+    lessons = {}
+    for l in res_json["metadata"]:
+        lesson_name = l["name"]
+        lessons[lesson_name] = l
+
+    assert_is_hello_lesson(lessons["Hello"])
+    assert_is_whatsyourname_lesson(lessons["What are you called?"])
+    assert_is_colours_lesson(lessons["Colours"])
+
 
 exit(main(locals()))

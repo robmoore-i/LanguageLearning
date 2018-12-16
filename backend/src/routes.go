@@ -18,6 +18,12 @@ var routes = Routes{
 		"/lessonnames",
 		GetLessonNames,
 	},
+    Route{
+		"CourseMetadata",
+		"GET",
+		"/coursemetadata",
+		GetCourseMetadata,
+	},
 	Route{
 		"Lesson",
 		"POST",

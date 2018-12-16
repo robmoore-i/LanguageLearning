@@ -57,3 +57,17 @@ func GetLesson(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 }
+
+func GetCourseMetadata(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:" + FrontendPortStr)
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
+    courseName := r.URL.Query().Get("course")
+	courseMetadata := QueryCourseMetadata(courseName)
+
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(courseMetadata); err != nil {
+		panic(err)
+	}
+}
