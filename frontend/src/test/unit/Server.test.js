@@ -25,9 +25,17 @@ it('Returns the sent questions when sent questions explicitly', async () => {
 })
 
 it('Returns lesson names as given by server', async () => {
+    let testMetadata = {
+        lessonMetadata: [
+            {name: "A", index: 0},
+            {name: "B", index: 1},
+            {name: "C", index: 2}
+        ]
+    }
+
     let mockFetcher = {
         getJSON: (url) => {
-            return new Promise(resolve => resolve({topicLessonNames: ["A", "B", "C"]}))
+            return new Promise(resolve => resolve(testMetadata))
         }
     }
     let testServer = LocalServer(mockFetcher)
@@ -41,7 +49,7 @@ it('Returns lesson names as given by server', async () => {
 
 it('Fetches course metadata as given by server', async () => {
     let testMetadata = {
-        metadata: [
+        lessonMetadata: [
             {name: "A", index: 0},
             {name: "B", index: 1}
         ]
@@ -60,4 +68,27 @@ it('Fetches course metadata as given by server', async () => {
     })
 
     expect(fetchedMetadata).toEqual(testMetadata)
+})
+
+it('Returns lesson names in order', async () => {
+    let testMetadata = {
+        lessonMetadata: [
+            {name: "B", index: 1},
+            {name: "C", index: 2},
+            {name: "A", index: 0}
+        ]
+    }
+
+    let mockFetcher = {
+        getJSON: (url) => {
+            return new Promise(resolve => resolve(testMetadata))
+        }
+    }
+    let testServer = LocalServer(mockFetcher)
+
+    let fetchedLessonNames = undefined
+    await testServer.fetchLessonNames("courseName_doesn't_matter").then(lessonNames => {
+        fetchedLessonNames = lessonNames
+    })
+    expect(fetchedLessonNames).toEqual({topicLessonNames: ["A", "B", "C"]})
 })

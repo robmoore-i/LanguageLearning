@@ -35,7 +35,7 @@ it('Directs the user to courses/georgian upon pressing the [georgian flag]', asy
 
     let georgianCourseLink = testCoursesPage.find('#course-link-Georgian')
 
-    expect(georgianCourseLink.is('[href="courses/Georgian"]')).toBe(true)
+    expect(georgianCourseLink.is('[href="Georgian"]')).toBe(true)
 })
 
 it('Directs the user to courses/german upon pressing the [german flag]', async () => {
@@ -45,7 +45,7 @@ it('Directs the user to courses/german upon pressing the [german flag]', async (
 
     let germanCourseLink = testCoursesPage.find('#course-link-German')
 
-    expect(germanCourseLink.is('[href="courses/German"]')).toBe(true)
+    expect(germanCourseLink.is('[href="German"]')).toBe(true)
 })
 
 it('Requests the list of course names from the server', async () => {

@@ -11,10 +11,14 @@ configureAdapter()
 
 let mockServerLoadTimeMs = 1
 
-let mockServer = lessonNames => {
+let mockServer = data => {
     return {
         fetchLessonNames: (anyCourseName) => {
-            return new Promise(resolve => resolve(lessonNames))
+            return new Promise(resolve => resolve(data))
+        },
+
+        fetchCourseMetadata: (anyCourseName) => {
+            return new Promise(resolve => resolve(data))
         }
     }
 }
@@ -40,7 +44,7 @@ async function shallowRenderLessonMap(course, server) {
     return lessonMap
 }
 
-it('shows the correct course name depending on the url', async () => {
+it('Shows the correct course name depending on the url', async () => {
     // Given: I am on the lesson map page for Thai
     let testLessonMap = await shallowRenderLessonMap("thai", mockServer(lessonNames([])))
 
@@ -53,7 +57,7 @@ it('shows the correct course name depending on the url', async () => {
     expect(text).toBe("Choose a thai lesson")
 })
 
-it('populates the lesson map with the lessons fetched from the server', async () => {
+it('Populates the lesson map with the lessons fetched from the server', async () => {
     // Given: There are two lessons available on the server
     let testServer = mockServer(lessonNames(["hello", "goodbye"]))
 
@@ -65,7 +69,7 @@ it('populates the lesson map with the lessons fetched from the server', async ()
     expect(lessonsList.children()).toHaveLength(2)
 })
 
-it('fills in the correct lesson data for the lessons of the lesson map', async () => {
+it('Fills in the correct lesson data for the lessons of the lesson map', async () => {
     // Given: There are two lessons available on the server, named 'a' and 'b'
     let testServer = mockServer(lessonNames(["a", "b"]))
 
@@ -78,7 +82,7 @@ it('fills in the correct lesson data for the lessons of the lesson map', async (
     expect(lessonsList.children().at(1).dive().childAt(0).text()).toEqual("b")
 })
 
-it('creates links to lessons from the provided lesson data', async () => {
+it('Creates links to lessons from the provided lesson data', async () => {
     // Given: There are two lessons available on the server, named 'doge' and 'pepe'
     let testServer = mockServer(lessonNames(["doge", "pepe"]))
 
@@ -94,7 +98,7 @@ it('creates links to lessons from the provided lesson data', async () => {
     expect(pepeLessonButton.is('[to="spanish/pepe"]')).toBe(true)
 })
 
-it('encodes lesson names which have spaces or punctuation', async () => {
+it('Encodes lesson names which have spaces or punctuation', async () => {
     // Given: There is a lesson available on the server whose name ought not to be put in a url as-is.
     let testServer = mockServer(lessonNames(["A lesson that shouldn't be in a url"]))
 
@@ -108,7 +112,7 @@ it('encodes lesson names which have spaces or punctuation', async () => {
     expect(lessonButton.is('[to="edgecases/A_lesson_that_shouldn\'t_be_in_a_url"]')).toBe(true)
 })
 
-it('shows correct link text for lesson names with spaces or punctuation', async () => {
+it('Shows correct link text for lesson names with spaces or punctuation', async () => {
     // Given: There is a lesson available on the server whose name ought not to be put in a url as-is.
     let testServer = mockServer(lessonNames(["A lesson that shouldn't be in a url"]))
 
@@ -122,7 +126,7 @@ it('shows correct link text for lesson names with spaces or punctuation', async 
     expect(lessonButton.childAt(0).text()).toEqual("A lesson that shouldn't be in a url")
 })
 
-it('shows the loading screen before the content is fetched', async () => {
+it('Shows the loading screen before the content is fetched', async () => {
     // Given: The server is slow
     let slowServer = mockSlowServer(lessonNames(["a", "b", "c"]))
 
@@ -135,4 +139,15 @@ it('shows the loading screen before the content is fetched', async () => {
     let text = lessonMapText.map(child => child.text()).reduce((acc, cur) => acc + cur)
 
     expect(text).toBe("Loading thai lessons")
+})
+
+it('Shows the lessons in order it recieves them from the server', async () => {
+    let server = mockServer(lessonNames(["b", "c", "a"]))
+
+    let testLessonMap = await shallowRenderLessonMap("course", server)
+
+    let lessonsList = testLessonMap.find('.Lesson-list').first()
+    expect(lessonsList.children().at(0).dive().childAt(0).text()).toEqual("b")
+    expect(lessonsList.children().at(1).dive().childAt(0).text()).toEqual("c")
+    expect(lessonsList.children().at(2).dive().childAt(0).text()).toEqual("a")
 })

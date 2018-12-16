@@ -14,10 +14,23 @@ const defaultFetcher = {
     }
 }
 
+// From: https://stackoverflow.com/questions/16648076/sort-array-on-key-value
+function keySort(key) {
+    return function(a, b){
+        if (a[key] > b[key]) return 1
+        if (a[key] < b[key]) return -1
+        return 0
+    }
+}
+
 function Server(backendOrigin, fetcher) {
     return {
         fetchLessonNames: (courseName) => {
-            return fetcher.getJSON(backendOrigin + "/lessonnames?course=" + courseName)
+            return fetcher.getJSON(backendOrigin + "/coursemetadata?course=" + courseName)
+                .then(metadata => {
+                    metadata.lessonMetadata.sort(keySort("index"))
+                    return {topicLessonNames: metadata.lessonMetadata.map(l => l.name)}
+                })
         },
 
         fetchCourseMetadata: (courseName) => {
