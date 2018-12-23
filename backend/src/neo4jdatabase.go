@@ -180,11 +180,13 @@ func parseMCQ(node graph.Node) JsonEncodable {
 
 func parseRQ(node graph.Node) JsonEncodable {
 	p := node.Properties
+    course := p["course"].(string)
+    lesson := p["lesson"].(string)
     index := p["index"].(int64)
-	extract := p["extract"].(string)
+	extract := parseRQExtract(p)
 
-	cypher := "MATCH (rq:ReadingQuestion {`extract`: {extract}})-[:HAS_SUBQUESTION]->(q:ReadingSubQuestion) RETURN q"
-	params := map[string]interface{}{"extract": extract}
+	cypher := "MATCH (rq:ReadingQuestion {course: {course}, lesson: {lesson}, index: {index}})-[:HAS_SUBQUESTION]->(q:ReadingSubQuestion) RETURN q"
+	params := map[string]interface{}{"course": course, "lesson": lesson, "index": index}
 	rows, conn, stmt := performQuery(cypher, params)
 	defer conn.Close()
 	defer stmt.Close()
@@ -199,6 +201,23 @@ func parseRQ(node graph.Node) JsonEncodable {
 	}
 
 	return NewRQ(index, extract, subquestions)
+}
+
+func parseRQExtract(nodeProperties map[string]interface {}) string {
+    if inlineExtract, hasInlineExtract := nodeProperties["extractInline"]; hasInlineExtract {
+        return inlineExtract.(string)
+    } else if extractFileRelPath, hasExtractFile := nodeProperties["extractFile"]; hasExtractFile {
+        path := strings.Join([]string{ExtractsPath, extractFileRelPath.(string)}, "")
+        bytes, err := ioutil.ReadFile(path)
+        if err != nil {
+            log.Printf("Couldn't read RQ extract from path %#v", path)
+            panic("neo4jdatabase:parseRQExtract")
+        }
+        return string(bytes)
+    } else {
+        log.Printf("RQ node has neither extractInline nor extractFile property")
+        panic("neo4jdatabase:parseRQExtract")
+    }
 }
 
 func parseRSQ(node graph.Node) JsonEncodable {

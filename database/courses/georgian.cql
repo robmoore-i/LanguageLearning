@@ -7,7 +7,7 @@ RETURN georgian,hello;
 
 // Georgian Topic Lesson: Hello
 MATCH (hello:TopicLesson {name: "Hello"})
-CREATE (hello)-[:HAS_QUESTION]->(teaching:Question:ReadingQuestion {index: 0, `extract`: "Welcome! I hope you enjoy learning Georgian as much as I do!"})
+CREATE (hello)-[:HAS_QUESTION]->(teaching:Question:ReadingQuestion {index: 0, course: "georgian", lesson: "hello", extractFile: "welcome.txt"})
 CREATE (teaching)-[:HAS_SUBQUESTION]->(georgiaInGeorgian:ReadingSubQuestion {index: 0, given:"What does 'საქართველო' mean in English?", answer:"Georgia"})
 CREATE (hello)-[:HAS_QUESTION]->(letterA:Question:MultipleChoiceQuestion {index: 1, question: "sounds like \"a\" in English", a: "მ",b:"ბ", c:"გ", d:"ა", answer: "d"})
 CREATE (hello)-[:HAS_QUESTION]->(letterM:Question:MultipleChoiceQuestion {index: 2, question: "sounds like \"m\" in English", a: "ა",b:"მ", c:"ო", d:"ჯ", answer: "b"})
@@ -26,8 +26,8 @@ CREATE (whatAreYouCalled)-[:HAS_QUESTION]->(tq:Question:TranslationQuestion {ind
 RETURN whatAreYouCalled,mcq,tq;
 
 // Georgian Topic Lesson: Colours
-MATCH (colours:TopicLesson {name: "What are you called?"})
-CREATE (colours)-[:HAS_QUESTION]->(rq:Question:ReadingQuestion {index: 2, `extract`: "მატარებელი ლურჯია და მანქანა წითელი არის. ბალახი მწვანეა."})
+MATCH (colours:TopicLesson {name: "Colours"})
+CREATE (colours)-[:HAS_QUESTION]->(rq:Question:ReadingQuestion {index: 2, course: "georgian", lesson: "colours", extractInline: "მატარებელი ლურჯია და მანქანა წითელი არის. ბალახი მწვანეა."})
 CREATE (rq)-[:HAS_SUBQUESTION]->(rsq1:ReadingSubQuestion {index: 0, given:"What colour is the train?", answer:"blue"})
 CREATE (rq)-[:HAS_SUBQUESTION]->(rsq2:ReadingSubQuestion {index: 1, given: "What colour is the car?", answer: "red"})
 CREATE (rq)-[:HAS_SUBQUESTION]->(rsq3:ReadingSubQuestion {index: 2, given:"What is said to be green?", answers:["Grass", "The grass"]})
