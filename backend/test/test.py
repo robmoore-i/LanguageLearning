@@ -216,8 +216,10 @@ def can_get_lesson_with_rq():
     cleanup_query = (
         """
         MATCH (l:TopicLesson {name: "RQ", index: 4})
-        DETACH DELETE l
-        DELETE l;
+        MATCH (rq:Question:ReadingQuestion {index: 3, course: "georgian", lesson: "hello", extractInline: "memes"})
+        MATCH (rsq:ReadingSubQuestion {index: 0, given:"What does 'საქართველო' mean in English?", answer:"Georgia"})
+        DETACH DELETE l,rq,rsq
+        DELETE l,rq,rsq;
         """)
 
     # Query the server
@@ -239,5 +241,76 @@ def can_get_lesson_with_rq():
     assert_that(rsq['given']).is_equal_to("What does 'საქართველო' mean in English?")
     assert_that(rsq['answer']).is_equal_to("Georgia")
     assert_that(rsq['index']).is_equal_to(0)
+
+@test
+def can_get_lesson_with_rq_with_rsq_with_multiple_answers():
+    # Seed the database
+    with driver.session() as session:
+        session.run(
+            """
+            CREATE (l:TopicLesson {name: "MARSQ", index: 5})
+            CREATE (l)-[:HAS_QUESTION]->(rq:Question:ReadingQuestion {index: 3, course: "georgian", lesson: "hello", extractInline: "memes"})
+            CREATE (rq)-[:HAS_SUBQUESTION]->(rsq:ReadingSubQuestion {index: 0, given:"What does 'საქართველო' mean in English?", answers:["Georgia", "Sakartvelo"]})
+            RETURN l,rq,rsq;
+            """)
+
+    # Prepare the cleanup
+    global cleanup_query
+    cleanup_query = (
+        """
+        MATCH (l:TopicLesson {name: "MARSQ", index: 5})
+        MATCH (rq:ReadingQuestion {index: 3, course: "georgian", lesson: "hello", extractInline: "memes"})
+        MATCH (rsq:ReadingSubQuestion {index: 0, given:"What does 'საქართველო' mean in English?", answers:["Georgia", "Sakartvelo"]})
+        DETACH DELETE l,rq,rsq
+        DELETE l,rq,rsq;
+        """)
+
+    # Query the server
+    res = requests.post("http://localhost:" + str(server_port) + "/lesson", json={"lessonName": "MARSQ"})
+
+    # Assert the response
+    lesson = res.json()
+    questions = lesson["questions"]
+
+    rq = questions[0]
+    sub_questions = rq['questions']
+    rsq = sub_questions[0]
+    assert_that(type(rsq['answers']).__name__).is_equal_to("list")
+    assert_that(rsq['answers']).contains("Georgia")
+    assert_that(rsq['answers']).contains("Sakartvelo")
+
+@test
+def can_get_lesson_with_tq_with_multiple_answers():
+    # Seed the database
+    with driver.session() as session:
+        session.run(
+            """
+            CREATE (l:TopicLesson {name: "MATQ", index: 0})
+            CREATE (l)-[:HAS_QUESTION]->(tq:Question:TranslationQuestion {index: 0, given: "ცისფერი", answers: ["blue", "sky colour", "light blue"]})
+            RETURN l,tq;
+            """)
+
+    # Prepare the cleanup
+    global cleanup_query
+    cleanup_query = (
+        """
+        MATCH (l:TopicLesson {name: "MATQ", index: 0})
+        MATCH (tq:Question:TranslationQuestion {index: 0, given: "ცისფერი"})
+        DETACH DELETE l,tq
+        DELETE l,tq;
+        """)
+
+    # Query the server
+    res = requests.post("http://localhost:" + str(server_port) + "/lesson", json={"lessonName": "MATQ"})
+
+    # Assert the response
+    lesson = res.json()
+    questions = lesson["questions"]
+
+    tq = questions[0]
+    assert_that(type(tq['answers']).__name__).is_equal_to("list")
+    assert_that(tq['answers']).contains("blue")
+    assert_that(tq['answers']).contains("sky colour")
+    assert_that(tq['answers']).contains("light blue")
 
 exit(main(locals()))
