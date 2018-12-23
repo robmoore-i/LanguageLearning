@@ -155,7 +155,7 @@ class SubQuestion extends React.Component {
 
         let colourClass = "colourclass-" + this.props.mark.id
         let hasBeenMarked = this.props.mark === Mark.CORRECT || this.props.mark === Mark.INCORRECT
-        return <textarea className={"answer-input-textbox" + " " + colourClass}
+        return <textarea className={["answer-input-textbox", colourClass].join(" ")}
                          id={"answer-input-textbox-" + String(this.props.i)}
                          key={"answer-input-textbox-" + String(this.props.i)}
                          rows="5" cols="50"
