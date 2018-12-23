@@ -54,9 +54,12 @@ def can_get_svg_course_img():
     global cleanup_query
     cleanup_query = (
         """
-        MATCH (c:Course {name: "SvgTest", image: "flagGeorgia.svg"})
-        DETACH DELETE c
-        DELETE c;
+        MATCH (georgian:Course {name: "SvgTest", image: "flagGeorgia.svg"})
+        MATCH (hello:TopicLesson {index: 0, name: "Hello"})
+        MATCH (whatAreYouCalled:TopicLesson {index: 1, name: "What are you called?"})
+        MATCH (colours:TopicLesson {index: 2, name: "Colours"})
+        DETACH DELETE georgian,hello,whatAreYouCalled,colours
+        DELETE georgian,hello,whatAreYouCalled,colours;
         """)
 
     # Query the server
@@ -87,8 +90,11 @@ def can_get_png_course_img():
     cleanup_query = (
         """
         MATCH (c:Course {name: "PngTest", image: "flagFrance.png"})
-        DETACH DELETE c
-        DELETE c;
+        MATCH (l1:TopicLesson {index: 0, name: "l3"})
+        MATCH (l2:TopicLesson {index: 1, name: "l2"})
+        MATCH (l3:TopicLesson {index: 2, name: "l1"})
+        DETACH DELETE c,l1,l2,l3
+        DELETE c,l1,l2,l3;
         """)
 
     # Query the server
@@ -119,8 +125,11 @@ def can_get_jpg_course_img():
     cleanup_query = (
         """
         MATCH (c:Course {name: "JpgTest", image: "flagGermany.jpg"})
-        DETACH DELETE c
-        DELETE c;
+        MATCH (l1:TopicLesson {index: 0, name: "l3"})
+        MATCH (l2:TopicLesson {index: 1, name: "l2"})
+        MATCH (l3:TopicLesson {index: 2, name: "l1"})
+        DETACH DELETE c,l1,l2,l3
+        DELETE c,l1,l2,l3;
         """)
 
     # Query the server
@@ -149,8 +158,9 @@ def can_get_lesson_with_mcq():
     cleanup_query = (
         """
         MATCH (l:TopicLesson {name: "MCQ", index: 0})
-        DETACH DELETE l
-        DELETE l;
+        MATCH (letterA:Question:MultipleChoiceQuestion {index: 1, question: "sounds like \\"a\\" in English", a: "მ",b:"ბ", c:"გ", d:"ა", answer: "d"})
+        DETACH DELETE l,letterA
+        DELETE l,letterA;
         """)
 
     # Query the server
@@ -183,8 +193,9 @@ def can_get_lesson_with_tq():
     cleanup_query = (
         """
         MATCH (l:TopicLesson {name: "TQ", index: 0})
-        DETACH DELETE l
-        DELETE l;
+        MATCH (tq:Question:TranslationQuestion {index: 0, given: "What are you called?", answer: "შენ რა გქვია?"})
+        DETACH DELETE l,tq
+        DELETE l,tq;
         """)
 
     # Query the server
@@ -312,5 +323,63 @@ def can_get_lesson_with_tq_with_multiple_answers():
     assert_that(tq['answers']).contains("blue")
     assert_that(tq['answers']).contains("sky colour")
     assert_that(tq['answers']).contains("light blue")
+
+@test
+def courses_endpoint_gives_200_and_cors_header():
+    # Seed the database
+    with driver.session() as session:
+        session.run(
+            """
+            CREATE (georgian:Course {name: "Georgian", image: "flagGeorgia.svg"})
+            CREATE (french:Course {name: "French", image: "flagFrance.png"})
+            CREATE (german:Course {name: "German", image: "flagGermany.jpg"})
+            RETURN georgian,french,german;
+            """)
+
+    # Prepare the cleanup
+    global cleanup_query
+    cleanup_query = (
+        """
+        MATCH (georgian:Course {name: "Georgian", image: "flagGeorgia.svg"})
+        MATCH (french:Course {name: "French", image: "flagFrance.png"})
+        MATCH (german:Course {name: "German", image: "flagGermany.jpg"})
+        DETACH DELETE georgian,french,german
+        DELETE georgian,french,german;
+        """)
+
+    # Query the server
+    res = requests.get("http://localhost:" + str(server_port) + "/courses")
+
+    # Assert the response
+    assert_that(res.status_code).is_equal_to(200)
+    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:" + str(frontend_port) + "")
+
+@test
+def lesson_endpoint_gives_200_and_cors_header():
+    # Seed the database
+    with driver.session() as session:
+        session.run(
+            """
+            CREATE (l:TopicLesson {name: "Q", index: 0})
+            CREATE (l)-[:HAS_QUESTION]->(tq:Question:TranslationQuestion {index: 0, given: "ცისფერი", answers: ["blue", "sky colour", "light blue"]})
+            RETURN l,tq;
+            """)
+
+    # Prepare the cleanup
+    global cleanup_query
+    cleanup_query = (
+        """
+        MATCH (l:TopicLesson {name: "Q", index: 0})
+        MATCH (tq:Question:TranslationQuestion {index: 0, given: "ცისფერი"})
+        DETACH DELETE l,tq
+        DELETE l,tq;
+        """)
+
+    # Query the server
+    res = requests.post("http://localhost:" + str(server_port) + "/lesson", json={"lessonName": "Q"})
+
+    # Assert the response
+    assert_that(res.status_code).is_equal_to(200)
+    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:" + str(frontend_port) + "")
 
 exit(main(locals()))
