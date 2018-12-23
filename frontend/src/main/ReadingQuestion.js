@@ -153,8 +153,13 @@ class SubQuestion extends React.Component {
             })
         }
 
-        return <textarea className="answer-input-textbox" id={"answer-input-textbox-" + String(this.props.i)} key={"answer-input-textbox-" + String(this.props.i)}
+        let colourClass = "colourclass-" + this.props.mark.id
+        let hasBeenMarked = this.props.mark === Mark.CORRECT || this.props.mark === Mark.INCORRECT
+        return <textarea className={"answer-input-textbox" + " " + colourClass}
+                         id={"answer-input-textbox-" + String(this.props.i)}
+                         key={"answer-input-textbox-" + String(this.props.i)}
                          rows="5" cols="50"
+                         readOnly={hasBeenMarked}
                          onChange={onChange}/>;
     }
 

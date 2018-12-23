@@ -152,7 +152,7 @@ it('Disables typing into the text area once the correction is typed out', () => 
     expect(testTQ.find("#answer-input-textbox").prop("readOnly")).toEqual(true)
 })
 
-it('Disables typing into the text area if a correct answer is marked', () => {
+it('Text area becomes read-only if a correct answer is marked', () => {
     let correctAnswer = "გამარჯობა"
 
     let q = {type: 0, given: "hello", answer: correctAnswer}

@@ -339,3 +339,39 @@ it('Marks all answers as correct when all answers are correct', () => {
     assertCorrect(testRQ, 1)
     assertCorrect(testRQ, 2)
 })
+
+it('Text area becomes read-only if a correct answer is marked', () => {
+    let q = {
+        type: 2,
+        extract: "მატარებელი ლურჯია და მანქანა წითელი არის. ბალახი მწვანეა.",
+        questions: [
+            {index: 0, given: "What is said to be green?", answers: ["Grass", "The grass"]}
+        ]
+    }
+
+    let testRQ = mount(<ReadingQuestion q={q} />)
+
+    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("grass"))
+    testRQ.find("#submit-for-marking-button").simulate("click")
+
+    expect(testRQ.find("#answer-input-textbox-0").prop("readOnly")).toBe(true)
+    expect(testRQ.find("#answer-input-textbox-0").hasClass("colourclass-question-result-correct")).toBe(true)
+})
+
+it('Text area becomes read-only if an incorrect answer is marked', () => {
+    let q = {
+        type: 2,
+        extract: "მატარებელი ლურჯია და მანქანა წითელი არის. ბალახი მწვანეა.",
+        questions: [
+            {index: 0, given: "What is said to be green?", answers: ["Grass", "The grass"]}
+        ]
+    }
+
+    let testRQ = mount(<ReadingQuestion q={q} />)
+
+    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("wrong"))
+    testRQ.find("#submit-for-marking-button").simulate("click")
+
+    expect(testRQ.find("#answer-input-textbox-0").prop("readOnly")).toBe(true)
+    expect(testRQ.find("#answer-input-textbox-0").hasClass("colourclass-question-result-incorrect")).toBe(true)
+})

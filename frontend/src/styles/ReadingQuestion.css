@@ -39,6 +39,14 @@
     background-color: aliceblue;
 }
 
+.colourclass-question-result-correct {
+    background-color: #a2ffa5;
+}
+
+.colourclass-question-result-incorrect {
+    background-color: #ff6666;
+}
+
 .question-correction {
     display: inline;
     border-radius: 10px;
