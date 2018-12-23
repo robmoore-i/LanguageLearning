@@ -8,6 +8,7 @@ then
   exit $exitCode
 elif [ "$1" == "a" ]
 then
+  cd test
   python3 test.py
   exitCode=$?
   cd ..
