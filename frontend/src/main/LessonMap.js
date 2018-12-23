@@ -1,6 +1,5 @@
 // React
 import React, {Component} from "react"
-import {Link} from 'react-router-dom'
 // Resources
 import '../styles/LessonMap.css'
 // Main

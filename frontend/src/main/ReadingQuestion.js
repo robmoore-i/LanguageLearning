@@ -13,6 +13,10 @@ export default class ReadingQuestion extends Component {
     constructor(props) {
         super(props)
 
+        this.noQuestions = false
+        if (!this.props.q.questions) { this.noQuestions = true; return }
+        if (this.props.q.questions.length === 0) { this.noQuestions = true; return }
+
         // Make sure the subquestions are in the correct order.
         this.props.q.questions.sort(keySort("index"))
 
@@ -27,9 +31,17 @@ export default class ReadingQuestion extends Component {
     }
 
     render() {
+        if (this.noQuestions) {
+            return this.renderNoQuestions()
+        } else {
+            return this.renderWithQuestions()
+        }
+    }
+
+    renderExtractPrompt(prompt) {
         return [
             <br key="lesson-header--break--prompt" />,
-            <div id="read-the-extract-prompt" key="read-the-extract-prompt" >Read the text, then answer the questions below</div>,
+            <div id="read-the-extract-prompt" key="read-the-extract-prompt" >{prompt}</div>,
             <br key="prompt--break--extract" />,
             <div id="question-extract" key="question-extract">
                 {this.props.q.extract}
@@ -38,15 +50,27 @@ export default class ReadingQuestion extends Component {
                 <br />
                 <br />
                 <br />
-            </div>,
-            <div key="questions" id="questions">
-                {this.questions()}
-            </div>,
-            <br key="questions--break--unanswered-questions-warning" />,
-            this.unansweredQuestionsWarning(),
-            <br key="unanswered-questions-warning--break--button" />,
-            this.button()
+            </div>
         ]
+    }
+
+    renderWithQuestions() {
+        return this.renderExtractPrompt("Read the text, then answer the questions below").concat(
+                [
+                    <div key="questions" id="questions">
+                        {this.questions()}
+                    </div>,
+                    <br key="questions--break--unanswered-questions-warning" />,
+                    this.unansweredQuestionsWarning(),
+                    <br key="unanswered-questions-warning--break--button" />,
+                    this.button()
+                ]
+            )
+    }
+
+    renderNoQuestions() {
+        let button = continueButton(() => {this.props.onCompletion(0, 0)})
+        return this.renderExtractPrompt("Read the text, there are no questions").concat([button])
     }
 
     questions() {

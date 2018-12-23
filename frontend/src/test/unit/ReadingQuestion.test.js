@@ -375,3 +375,24 @@ it('Text area becomes read-only if an incorrect answer is marked', () => {
     expect(testRQ.find("#answer-input-textbox-0").prop("readOnly")).toBe(true)
     expect(testRQ.find("#answer-input-textbox-0").hasClass("colourclass-question-result-incorrect")).toBe(true)
 })
+
+it('Shows only the continue button if questions is a empty list', () => {
+    let q = {
+        type: 2,
+        extract: "A question-less extract",
+        questions: []
+    }
+    let testRQ = shallow(<ReadingQuestion q={q} />)
+
+    expect(testRQ.find("#read-the-extract-prompt").text()).toBe("Read the text, there are no questions")
+})
+
+it('Shows only the continue button if there isnt a questions property', () => {
+    let q = {
+        type: 2,
+        extract: "A question-less extract"
+    }
+    let testRQ = shallow(<ReadingQuestion q={q} />)
+
+    expect(testRQ.find("#read-the-extract-prompt").text()).toBe("Read the text, there are no questions")
+})
