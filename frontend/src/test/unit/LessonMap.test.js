@@ -82,36 +82,6 @@ it('Fills in the correct lesson data for the lessons of the lesson map', async (
     expect(lessonsList.children().at(1).dive().childAt(0).text()).toEqual("b")
 })
 
-it('Creates links to lessons from the provided lesson data', async () => {
-    // Given: There are two lessons available on the server, named 'doge' and 'pepe'
-    let testServer = mockServer(lessonNames(["doge", "pepe"]))
-
-    // When: I am on the lesson map page
-    let testLessonMap = await shallowRenderLessonMap("spanish", testServer)
-
-    // Then: The links go to the appropriate lessons
-    let lessonsList = testLessonMap.find('.Lesson-list').first()
-    let dogeLessonButton = lessonsList.children().at(0).dive()
-    let pepeLessonButton = lessonsList.children().at(1).dive()
-
-    expect(dogeLessonButton.is('[to="spanish/doge"]')).toBe(true)
-    expect(pepeLessonButton.is('[to="spanish/pepe"]')).toBe(true)
-})
-
-it('Encodes lesson names which have spaces or punctuation', async () => {
-    // Given: There is a lesson available on the server whose name ought not to be put in a url as-is.
-    let testServer = mockServer(lessonNames(["A lesson that shouldn't be in a url"]))
-
-    // When: I am on the lesson map page
-    let testLessonMap = await shallowRenderLessonMap("edgecases", testServer)
-
-    // Then: The link is sensibly cleaned up
-    let lessonsList = testLessonMap.find('.Lesson-list').first()
-    let lessonButton = lessonsList.children().at(0).dive()
-
-    expect(lessonButton.is('[to="edgecases/A_lesson_that_shouldn\'t_be_in_a_url"]')).toBe(true)
-})
-
 it('Shows correct link text for lesson names with spaces or punctuation', async () => {
     // Given: There is a lesson available on the server whose name ought not to be put in a url as-is.
     let testServer = mockServer(lessonNames(["A lesson that shouldn't be in a url"]))

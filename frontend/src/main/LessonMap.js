@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 // Resources
 import '../styles/LessonMap.css'
 // Main
-import {encodeUrl} from "./App"
+import LessonButton from "./LessonButton"
 
 export default class LessonMap extends Component {
     constructor(props) {
@@ -56,18 +56,5 @@ export default class LessonMap extends Component {
         } else {
             return this.renderLoading()
         }
-    }
-}
-
-class LessonButton extends Component {
-    render() {
-        let lessonName = this.props.lessonName
-        let encodedLessonName = encodeUrl(lessonName)
-        let linkTo = this.props.courseName + "/" + encodedLessonName
-        return (
-            <Link className="Lesson-button" to={linkTo}>
-                {lessonName}
-            </Link>
-        )
     }
 }
