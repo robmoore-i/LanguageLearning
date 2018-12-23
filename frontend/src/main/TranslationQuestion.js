@@ -73,23 +73,35 @@ export default class TranslationQuestion extends Component {
     }
 
     answerInputTextBox() {
-        let onChange
+        let onChange, onKeyDown
         if (this.state.transitionState.isCorrectingState()) {
             onChange = (event) => {
                 if (event.target.value === this.correctionAnswer()) {
                     this.setState({transitionState: TransitionState.CORRECTED})
                 }
             }
+            onKeyDown = (event) => {}
         } else {
             onChange = (event) => {this.setState({currentAnswer: event.target.value})}
+            onKeyDown = (event) => {
+                if (event.key === "Enter") {
+                    this.pressButton()
+                }
+            }
         }
+
         return (
             <textarea id="answer-input-textbox" key="answer-input-textbox"
                 rows="5"
                 cols="50"
                 readOnly={this.state.transitionState.isDoneState()}
-                onChange={onChange}/>
+                onChange={onChange}
+                onKeyDown={onKeyDown}/>
         )
+    }
+
+    pressButton() {
+        this.button().props.onClick()
     }
 
     button() {
