@@ -3,7 +3,7 @@ CREATE (georgian:Course {name: "Georgian", image: "flagGeorgia.svg"})
 CREATE (georgian)-[:HAS_TOPIC_LESSON]->(hello:TopicLesson {index: 0, name: "Hello"})
 CREATE (georgian)-[:HAS_TOPIC_LESSON]->(whatAreYouCalled:TopicLesson {index: 1, name: "What are you called?"})
 CREATE (georgian)-[:HAS_TOPIC_LESSON]->(colours:TopicLesson {index: 2, name: "Colours"})
-RETURN georgian,hello;
+RETURN georgian,hello,whatAreYouCalled,colours;
 
 // Georgian Topic Lesson: Hello
 MATCH (hello:TopicLesson {name: "Hello"})
