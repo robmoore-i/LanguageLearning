@@ -15,6 +15,28 @@ export default class MultipleChoiceQuestion extends Component {
             activeChoice: Choices.NONE,
             markResult: Mark.UNMARKED
         }
+
+        let onKeyDownClosure = (mcq) => {
+            return (event) => {
+                let k = event.key
+                if (k === "a" || k === "1") {
+                    mcq.setState({activeChoice: Choices.A})
+                } else if (k === "b" || k === "2") {
+                    mcq.setState({activeChoice: Choices.B})
+                } else if (k === "c" || k === "3") {
+                    mcq.setState({activeChoice: Choices.C})
+                } else if (k === "d" || k === "4") {
+                    mcq.setState({activeChoice: Choices.D})
+                } else if (k === "Enter") {
+                    mcq.button().props.onClick()
+                }
+            }
+        }
+        window.onkeydown = onKeyDownClosure(this)
+    }
+
+    componentWillUnmount() {
+        window.onkeydown = (event) => {}
     }
 
     render() {

@@ -4,6 +4,7 @@ import React from 'react'
 import {mount, shallow} from 'enzyme'
 // Main
 import MultipleChoiceQuestion, {Choices} from '../../main/MultipleChoiceQuestion'
+import Mark from "../../main/Mark"
 // Enzyme react-adapter configuration & others
 import {configureAdapter, questionSubmitAndContinue} from "../utils"
 
@@ -143,4 +144,46 @@ it('An incorrect answer changes class after marking', () => {
     testMCQ.find("#submit-for-marking-button").simulate("click")
 
     expect(testMCQ.find("#choice-c").is(".choice-marked-incorrect")).toBe(true)
+})
+
+it('Can select choices using ABCD', () => {
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
+
+    window.onkeydown({key: "a"})
+    testMCQ.update()
+    expect(testMCQ.state("activeChoice")).toEqual(Choices.A)
+})
+
+it('Can select choices using 1234', () => {
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
+
+    window.onkeydown({key: "2"})
+    testMCQ.update()
+    expect(testMCQ.state("activeChoice")).toEqual(Choices.B)
+})
+
+it('Can submit choice for marking using enter', () => {
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
+
+    testMCQ.find("#choice-c").simulate("click")
+
+    window.onkeydown({key: "Enter"})
+
+    expect(testMCQ.state("markResult")).toEqual(Mark.INCORRECT)
+})
+
+it('Can press continue button using enter', () => {
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let questionCompletedCorrectly = jest.fn()
+    let testMCQ = mount(<MultipleChoiceQuestion q={q} onCorrect={questionCompletedCorrectly} />)
+
+    testMCQ.find("#choice-d").simulate("click")
+
+    window.onkeydown({key: "Enter"})
+    window.onkeydown({key: "Enter"})
+
+    expect(questionCompletedCorrectly).toHaveBeenCalled()
 })
