@@ -1,5 +1,5 @@
 describe('Completing an RQ with all subquestions correct.', function() {
-    it('Gets to the question and completes it with no mistakes.', function() {
+    it('Completes the RQ with no mistakes.', function() {
         cy.visit('http://localhost:3000/courses/German/Colours')
             .get('#answer-input-textbox-0').type('blue')
             .get('#answer-input-textbox-1').type('red')
