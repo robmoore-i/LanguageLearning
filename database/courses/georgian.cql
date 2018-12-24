@@ -7,8 +7,7 @@ RETURN georgian,hello,whatAreYouCalled,colours;
 
 // Georgian Topic Lesson: Hello
 MATCH (hello:TopicLesson {name: "Hello"})
-CREATE (hello)-[:HAS_QUESTION]->(teaching:Question:ReadingQuestion {index: 0, course: "georgian", lesson: "hello", extractFile: "welcome.txt"})
-CREATE (teaching)-[:HAS_SUBQUESTION]->(georgiaInGeorgian:ReadingSubQuestion {index: 0, given:"What does 'საქართველო' mean in English?", answer:"Georgia"})
+CREATE (hello)-[:HAS_QUESTION]->(teaching:Question:ReadingQuestion {index: 0, course: "georgian", lesson: "hello", extractFile: "georgian-hello.txt"})
 CREATE (hello)-[:HAS_QUESTION]->(letterA:Question:MultipleChoiceQuestion {index: 1, question: "sounds like \"a\" in English", a: "მ",b:"ბ", c:"გ", d:"ა", answer: "d"})
 CREATE (hello)-[:HAS_QUESTION]->(letterM:Question:MultipleChoiceQuestion {index: 2, question: "sounds like \"m\" in English", a: "ა",b:"მ", c:"ო", d:"ჯ", answer: "b"})
 CREATE (hello)-[:HAS_QUESTION]->(letterO:Question:MultipleChoiceQuestion {index: 3, question: "sounds like \"o\" in English", a: "ო",b:"ჯ", c:"ა", d:"მ", answer: "a"})
@@ -17,7 +16,7 @@ CREATE (hello)-[:HAS_QUESTION]->(letterR:Question:MultipleChoiceQuestion {index:
 CREATE (hello)-[:HAS_QUESTION]->(letterB:Question:MultipleChoiceQuestion {index: 6, question: "sounds like \"b\" in English", a: "ო",b:"მ", c:"ბ", d:"რ", answer: "c"})
 CREATE (hello)-[:HAS_QUESTION]->(letterJ:Question:MultipleChoiceQuestion {index: 7, question: "sounds like \"j\" in English", a: "ა",b:"ჯ", c:"ბ", d:"გ", answer: "b"})
 CREATE (hello)-[:HAS_QUESTION]->(helloTranslation:Question:TranslationQuestion {index: 8, given: "Hello", answer: "გამარჯობა"})
-RETURN hello,teaching,georgiaInGeorgian,letterA,letterM,letterO,letterG,letterR,letterB,letterJ,helloTranslation;
+RETURN hello,teaching,letterA,letterM,letterO,letterG,letterR,letterB,letterJ,helloTranslation;
 
 // Georgian Topic Lesson: What are you called?
 MATCH (whatAreYouCalled:TopicLesson {name: "What are you called?"})
