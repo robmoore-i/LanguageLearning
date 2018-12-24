@@ -2,8 +2,7 @@
 CREATE (georgian:Course {name: "Georgian", image: "flagGeorgia.svg"})
 CREATE (georgian)-[:HAS_TOPIC_LESSON]->(pcg_hello:TopicLesson {index: 0, name: "Peace Corps Georgia: Hello"})
 CREATE (georgian)-[:HAS_TOPIC_LESSON]->(pcg_whatAreYouCalled:TopicLesson {index: 1, name: "Peace Corps Georgia: What are you called?"})
-CREATE (georgian)-[:HAS_TOPIC_LESSON]->(colours:TopicLesson {index: 2, name: "Colours"})
-RETURN georgian,pcg_hello,pcg_whatAreYouCalled,colours;
+RETURN georgian,pcg_hello,pcg_whatAreYouCalled;
 
 // Georgian Topic Lesson: Hello
 MATCH (pcg_hello:TopicLesson {name: "Peace Corps Georgia: Hello"})
@@ -35,11 +34,3 @@ CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION]->(tqIAmCalled:Question:Translation
 CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION]->(tqWhatAreYouCalled:Question:TranslationQuestion {index: 11, given: "What are you called?", answer: "შენ რა გქვია?"})
 CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION]->(tqNiceToMeetYou:Question:TranslationQuestion {index: 12, given: "Nice to meet you!", answer: "სასიამოვნოა!"})
 RETURN pcg_whatAreYouCalled,teachingLetters,letterI,letterE,letterN,letterSh,letterV,letterT,letterS,letterK,teachingPhrases,tqIAmCalled,tqWhatAreYouCalled,tqNiceToMeetYou;
-
-// Georgian Topic Lesson: Colours
-MATCH (colours:TopicLesson {name: "Colours"})
-CREATE (colours)-[:HAS_QUESTION]->(rq:Question:ReadingQuestion {index: 2, course: "georgian", lesson: "colours", extractInline: "მატარებელი ლურჯია და მანქანა წითელი არის. ბალახი მწვანეა."})
-CREATE (rq)-[:HAS_SUBQUESTION]->(rsq1:ReadingSubQuestion {index: 0, given:"What colour is the train?", answer:"blue"})
-CREATE (rq)-[:HAS_SUBQUESTION]->(rsq2:ReadingSubQuestion {index: 1, given: "What colour is the car?", answer: "red"})
-CREATE (rq)-[:HAS_SUBQUESTION]->(rsq3:ReadingSubQuestion {index: 2, given:"What is said to be green?", answers:["Grass", "The grass"]})
-RETURN colours,rq,rsq1,rsq2,rsq3;
