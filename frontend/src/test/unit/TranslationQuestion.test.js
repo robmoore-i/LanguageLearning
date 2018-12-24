@@ -191,3 +191,30 @@ it('Ignores whitespace, case, commas, fullstops, exclamation marks and question 
 
     expect(questionCompletedCorrectly).toHaveBeenCalled()
 })
+
+it('Can submit for marking using enter key', () => {
+    let correctAnswer = "What are you called?"
+
+    let q = {type: 0, given: "შენ რა გქვია?", answer: correctAnswer}
+    let testTQ = mount(<TranslationQuestion q={q} />)
+
+    testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
+    testTQ.find("#answer-input-textbox").simulate("keydown", {key: "Enter"})
+
+    expect(testTQ.find("#submit-for-marking-button").exists()).toBe(false)
+    expect(testTQ.find("#continue-button").exists()).toBe(true)
+})
+
+it('Can continue using enter key', () => {
+    let correctAnswer = "What are you called?"
+
+    let q = {type: 0, given: "შენ რა გქვია?", answer: correctAnswer}
+    let questionCompletedCorrectly = jest.fn()
+    let testTQ = mount(<TranslationQuestion q={q} onCorrect={questionCompletedCorrectly} />)
+
+    testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
+    testTQ.find("#answer-input-textbox").simulate("keydown", {key: "Enter"})
+    testTQ.find("#answer-input-textbox").simulate("keydown", {key: "Enter"})
+
+    expect(questionCompletedCorrectly).toHaveBeenCalled()
+})
