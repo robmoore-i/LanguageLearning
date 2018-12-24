@@ -11,6 +11,8 @@
     border-style: groove;
     margin: auto;
     max-width: 650px;
+    white-space: pre-wrap;
+    text-align: left;
 }
 
 .question-header {
