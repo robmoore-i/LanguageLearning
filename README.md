@@ -19,9 +19,9 @@ pro learners. Or something.
 
 I am in this process also discovering the best ways to learn a language using
 tools. To this end one of the most important goals for the tool is that it is
-configurable and has a low cost of change (the same thing is a way, no?)
+configurable and has a low cost of change (the same thing in a way, no?)
 
-Current thoughts:
+Thoughts:
 - I want to be able to describe the world in a new language.
 - But only when I'm thinking about the fact that I want that.
 - I am usually thinking about how I'd like to be able to do that while I'm
@@ -38,6 +38,8 @@ sand cone tradeoff model, sentence complexity must be built on before
 expanding horizontally. Aka: Constructions > Vocabulary. However vocabulary is
 necessary to make sufficient use of further constructions to feel as though my
 skill is advancing, so they must be balanced.
+- I am not a skilled Georgian speaker, so I will start off by serving other
+people's lessons through this interface.
 
 # Configuration
 
