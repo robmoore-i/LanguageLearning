@@ -17,7 +17,11 @@ func QueryCourses() []Course {
 	defer conn.Close()
 	defer stmt.Close()
 
-	var courses []Course
+	return parseCourseRows(rows)
+}
+
+func parseCourseRows(rows driver.Rows) []Course {
+    var courses []Course
 	row, _, err := rows.NextNeo()
 	for row != nil && err == nil {
 		node := onlyNode(row)
@@ -25,8 +29,7 @@ func QueryCourses() []Course {
 		courses = append(courses, parsedCourse)
 		row, _, err = rows.NextNeo()
 	}
-
-	return courses
+    return courses
 }
 
 func parseCourse(node graph.Node) Course {
@@ -75,9 +78,7 @@ func QueryCourseMetadata(course string) CourseMetadata {
 	defer conn.Close()
 	defer stmt.Close()
 
-    courseLessonMetadata := parseLessonMetadataRows(rows)
-
-    return CourseMetadata{LessonMetadata: courseLessonMetadata}
+    return CourseMetadata{LessonMetadata: parseLessonMetadataRows(rows)}
 }
 
 func parseLessonMetadataRows(rows driver.Rows) []LessonMetadata {
@@ -108,9 +109,7 @@ func QueryLesson(lessonName string) Lesson {
 	defer conn.Close()
 	defer stmt.Close()
 
-    questions := parseJsonEncodableRows(rows, parseQuestion)
-
-	return Lesson{Name: lessonName, Questions: questions, Index: lessonIndex}
+	return Lesson{Name: lessonName, Questions: parseJsonEncodableRows(rows, parseQuestion), Index: lessonIndex}
 }
 
 func QueryLessonIndex(lessonName string) int64 {
@@ -189,9 +188,7 @@ func parseRQ(node graph.Node) JsonEncodable {
 	defer conn.Close()
 	defer stmt.Close()
 
-    subquestions := parseJsonEncodableRows(rows, parseRSQ)
-
-	return NewRQ(index, extract, subquestions)
+	return NewRQ(index, extract, parseJsonEncodableRows(rows, parseRSQ))
 }
 
 func parseRQExtract(nodeProperties map[string]interface {}) string {
