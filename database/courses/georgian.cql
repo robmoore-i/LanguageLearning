@@ -1,10 +1,9 @@
-// Georgian Course
 CREATE (georgian:Course {name: "Georgian", image: "flagGeorgia.svg"})
 CREATE (georgian)-[:HAS_TOPIC_LESSON]->(pcg_hello:TopicLesson {index: 0, name: "Peace Corps Georgia: Hello"})
 CREATE (georgian)-[:HAS_TOPIC_LESSON]->(pcg_whatAreYouCalled:TopicLesson {index: 1, name: "Peace Corps Georgia: What are you called?"})
-RETURN georgian,pcg_hello,pcg_whatAreYouCalled;
+CREATE (georgian)-[:HAS_TOPIC_LESSON]->(pcg_howAreYou:TopicLesson {index: 2, name: "Peace Corps Georgia: How are you?"})
+RETURN georgian,pcg_hello,pcg_whatAreYouCalled,pcg_howAreYou;
 
-// Georgian Topic Lesson: Hello
 MATCH (pcg_hello:TopicLesson {name: "Peace Corps Georgia: Hello"})
 CREATE (pcg_hello)-[:HAS_QUESTION]->(teachingLetters:Question:ReadingQuestion {index: 0, course: "Georgian", lesson: "Peace Corps Georgia: Hello", extractFile: "PeaceCorpsGeorgia/georgian-pcg_hello-letters.txt"})
 CREATE (pcg_hello)-[:HAS_QUESTION]->(letterA:Question:MultipleChoiceQuestion {index: 1, question: "sounds like \"a\" in English", a: "მ", b:"ბ", c:"გ", d:"ა", answer: "d"})
@@ -18,7 +17,6 @@ CREATE (pcg_hello)-[:HAS_QUESTION]->(teachingPhrases:Question:ReadingQuestion {i
 CREATE (pcg_hello)-[:HAS_QUESTION]->(tqHello:Question:TranslationQuestion {index: 9, given: "Hello", answer: "გამარჯობა"})
 RETURN pcg_hello,teachingLetters,letterA,letterM,letterO,letterG,letterR,letterB,letterJ,teachingPhrases,tqHello;
 
-// Georgian Topic Lesson: What are you called?
 MATCH (pcg_whatAreYouCalled:TopicLesson {name: "Peace Corps Georgia: What are you called?"})
 CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION]->(teachingLetters:Question:ReadingQuestion {index: 0, course: "Georgian", lesson: "Peace Corps Georgia: What are you called?", extractFile: "PeaceCorpsGeorgia/georgian-pcg_whatAreYouCalled-letters.txt"})
 CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION]->(letterI: Question:MultipleChoiceQuestion {index: 1, question: "sounds like \"i\"  in English", a: "ი", b:"გ", c:"ა", d:"ჯ", answer: "a"})
@@ -34,3 +32,17 @@ CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION]->(tqIAmCalled:Question:Translation
 CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION]->(tqWhatAreYouCalled:Question:TranslationQuestion {index: 11, given: "What are you called?", answer: "შენ რა გქვია?"})
 CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION]->(tqNiceToMeetYou:Question:TranslationQuestion {index: 12, given: "Nice to meet you!", answer: "სასიამოვნოა!"})
 RETURN pcg_whatAreYouCalled,teachingLetters,letterI,letterE,letterN,letterSh,letterV,letterT,letterS,letterK,teachingPhrases,tqIAmCalled,tqWhatAreYouCalled,tqNiceToMeetYou;
+
+MATCH (pcg_howAreYou:TopicLesson {name: "Peace Corps Georgia: How are you?"})
+CREATE (pcg_howAreYou)-[:HAS_QUESTION]->(teachingLetters:Question:ReadingQuestion {index: 0, course: "Georgian", lesson: "Peace Corps Georgia: How are you?", extractFile: "PeaceCorpsGeorgia/georgian-pcg_howAreYou-letters.txt"})
+CREATE (pcg_howAreYou)-[:HAS_QUESTION]->(letterD:  Question:MultipleChoiceQuestion {index: 1, question: "sounds like \"d\"  in English", a: "დ", b:"ქ", c:"ს", d:"ო", answer: "a"})
+CREATE (pcg_howAreYou)-[:HAS_QUESTION]->(letterX: Question:MultipleChoiceQuestion {index: 2, question: "sounds like \"ch\" in \"Loch\"", a: "ე", b:"ი", c:"ხ", d:"ა", answer: "c"})
+CREATE (pcg_howAreYou)-[:HAS_QUESTION]->(letterL: Question:MultipleChoiceQuestion {index: 3, question: "sounds like \"l\" in English", a: "ხ", b:"ბ", c:"რ", d:"ლ", answer: "d"})
+CREATE (pcg_howAreYou)-[:HAS_QUESTION]->(letterK: Question:MultipleChoiceQuestion {index: 4, question: "sounds like an ejective \"k\" in English", a: "კ", b:"მ", c:"ჯ", d:"ვ", answer: "a"})
+CREATE (pcg_howAreYou)-[:HAS_QUESTION]->(teachingPhrases:Question:ReadingQuestion {index: 5, course: "Georgian", lesson: "Peace Corps Georgia: How are you?", extractFile: "PeaceCorpsGeorgia/georgian-pcg_howAreYou-phrases.txt"})
+CREATE (pcg_howAreYou)-[:HAS_QUESTION]->(tqHowAreYou:Question:TranslationQuestion {index: 6, given: "How are you?", answer: "როგორ ხარ?"})
+CREATE (pcg_howAreYou)-[:HAS_QUESTION]->(tqThanks:Question:TranslationQuestion {index: 7, given: "Thanks", answer: "გმადლობ"})
+CREATE (pcg_howAreYou)-[:HAS_QUESTION]->(tqWell:Question:TranslationQuestion {index: 8, given: "Well", answer: "კარგად"})
+CREATE (pcg_howAreYou)-[:HAS_QUESTION]->(tqNotBad:Question:TranslationQuestion {index: 9, given: "Not bad", answer: "არამიშავს"})
+CREATE (pcg_howAreYou)-[:HAS_QUESTION]->(tqSeeYouSoon:Question:TranslationQuestion {index: 10, given: "See you soon!", answer: "ნახვამდის"})
+RETURN pcg_howAreYou,teachingLetters,letterD,letterX,letterL,letterK,teachingPhrases,tqHowAreYou,tqThanks,tqWell,tqNotBad,tqSeeYouSoon;
