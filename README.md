@@ -1,16 +1,17 @@
 # Learning frontend
 
-Why not.
+React and Enzyme are very good. TDD is easy and highly applicable on frontend,
+don't be lazy (because you'll pay for it).
 
-3 month-ish update: Writing object oriented, loosely coupled javascript is not
-rocket science.
+# Neo4j
 
-# Doing some TDD with React
+Very cool. Be careful about what data you model with properties and whether
+you put those properties on nodes or edges.
 
-Fun and helps me understand what to aim for when working with the various
-*interesting* react design patterns I find out in the wild.
+# Golang
 
-3 month-ish update: TDD using enzyme/react is a joy.
+I don't like having test files right next to source files. Other than that
+it's ok.
 
 # This app
 
