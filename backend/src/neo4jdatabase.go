@@ -75,7 +75,13 @@ func QueryCourseMetadata(course string) CourseMetadata {
 	defer conn.Close()
 	defer stmt.Close()
 
-	var courseLessonMetadata []LessonMetadata
+    courseLessonMetadata := parseLessonMetadataRows(rows)
+
+    return CourseMetadata{LessonMetadata: courseLessonMetadata}
+}
+
+func parseLessonMetadataRows(rows driver.Rows) []LessonMetadata {
+    var courseLessonMetadata []LessonMetadata
 	row, _, err := rows.NextNeo()
 	for row != nil && err == nil {
         node := onlyNode(row)
@@ -83,8 +89,7 @@ func QueryCourseMetadata(course string) CourseMetadata {
 		courseLessonMetadata = append(courseLessonMetadata, lessonMetadata)
 		row, _, err = rows.NextNeo()
 	}
-
-    return CourseMetadata{LessonMetadata: courseLessonMetadata}
+    return courseLessonMetadata
 }
 
 func parseLessonMetadata(node graph.Node) LessonMetadata {
@@ -103,14 +108,7 @@ func QueryLesson(lessonName string) Lesson {
 	defer conn.Close()
 	defer stmt.Close()
 
-	var questions []JsonEncodable
-	row, _, err := rows.NextNeo()
-	for row != nil && err == nil {
-		node := onlyNode(row)
-		parsedQuestion := parseQuestion(node)
-		questions = append(questions, parsedQuestion)
-		row, _, err = rows.NextNeo()
-	}
+    questions := parseJsonEncodableRows(rows, parseQuestion)
 
 	return Lesson{Name: lessonName, Questions: questions, Index: lessonIndex}
 }
@@ -191,14 +189,7 @@ func parseRQ(node graph.Node) JsonEncodable {
 	defer conn.Close()
 	defer stmt.Close()
 
-	var subquestions []JsonEncodable
-	row, _, err := rows.NextNeo()
-	for row != nil && err == nil {
-		node := onlyNode(row)
-		parsedSubQuestion := parseRSQ(node)
-		subquestions = append(subquestions, parsedSubQuestion)
-		row, _, err = rows.NextNeo()
-	}
+    subquestions := parseJsonEncodableRows(rows, parseRSQ)
 
 	return NewRQ(index, extract, subquestions)
 }
@@ -233,6 +224,20 @@ func parseRSQ(node graph.Node) JsonEncodable {
 }
 
 // ====== Common =========
+
+type JsonEncodableParse func(graph.Node) JsonEncodable
+
+func parseJsonEncodableRows(rows driver.Rows, parse JsonEncodableParse) []JsonEncodable {
+    var encodables []JsonEncodable
+	row, _, err := rows.NextNeo()
+	for row != nil && err == nil {
+		node := onlyNode(row)
+		parsedEncodable := parse(node)
+		encodables = append(encodables, parsedEncodable)
+		row, _, err = rows.NextNeo()
+	}
+    return encodables
+}
 
 func openConnection() driver.Conn {
 	conn, err := driver.NewDriver().OpenNeo(Neo4jURL)
