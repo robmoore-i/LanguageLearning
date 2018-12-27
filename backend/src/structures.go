@@ -1,8 +1,17 @@
 package main
 
 import (
+    b64 "encoding/base64"
 	"net/http"
 	"encoding/json"
+    "log"
+	"strings"
+)
+
+var (
+    SVG = "svg"
+    PNG = "png"
+    JPG = "jpg"
 )
 
 type JsonEncodable interface {
@@ -15,6 +24,22 @@ type Course struct {
 	Name   		string  `json:"name"`
 	Image  		string	`json:"image"`
 	ImageType  	string	`json:"imageType"`
+}
+
+func NewCourse(name string, imgFileBytes []byte, imgType string) Course {
+    if imgType == SVG {
+        return Course{Name: name, Image: string(imgFileBytes), ImageType: imgType}
+    } else if imgType == PNG {
+        encoded := b64.StdEncoding.EncodeToString(imgFileBytes)
+        return Course{Name: name, Image: encoded, ImageType: imgType}
+    } else if imgType == JPG {
+        encoded := b64.StdEncoding.EncodeToString(imgFileBytes)
+        return Course{Name: name, Image: encoded, ImageType: imgType}
+    } else {
+        errorMsg := strings.Join([]string{"Image is none of [", SVG, " | ", PNG, " | ", JPG, "]"}, "")
+        log.Printf(errorMsg)
+        panic("structures:NewCourse")
+    }
 }
 
 // Lesson

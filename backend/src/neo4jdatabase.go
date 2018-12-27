@@ -6,7 +6,6 @@ import (
 	"strings"
 	"github.com/johnnadratowski/golang-neo4j-bolt-driver/structures/graph"
 	"io/ioutil"
-    b64 "encoding/base64"
 )
 
 // ====== Courses =========
@@ -47,28 +46,17 @@ func parseCourse(node graph.Node) Course {
 		panic("neo4jdatabase:parseCourse")
 	}
 
-    if imgType == "svg" {
-        return Course{Name: name, Image: string(bytes), ImageType: imgType}
-    } else if imgType == "png" {
-        encoded := b64.StdEncoding.EncodeToString(bytes)
-        return Course{Name: name, Image: encoded, ImageType: imgType}
-    } else if imgType == "jpg" {
-        encoded := b64.StdEncoding.EncodeToString(bytes)
-        return Course{Name: name, Image: encoded, ImageType: imgType}
-    } else {
-        log.Printf("Image is none of [svg | png | jpg]")
-        panic("neo4jdatabase:parseCourse")
-    }
+    return NewCourse(name, bytes, imgType)
 }
 
 // Returns a 3 letter file extension for the image type. svg, png or jpg.
 func parseImageType(filename string) string {
-    if len(filename) < 4 {
+    if len(filename) < len(".xxx") {
         log.Printf("Image filename is too short (< 4 characters, including file extension)")
         panic("neo4jdatabase:parseImageType")
     }
-    if filename[len(filename) - 4:] == "jpeg" {
-        return "jpg"
+    if filename[len(filename) - 4:] == "jpeg" && len(filename) > len(".jpeg") {
+        return JPG
     } else {
         return filename[len(filename) - 3:]
     }
