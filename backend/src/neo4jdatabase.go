@@ -56,12 +56,17 @@ func parseCourse(node graph.Node) Course {
         encoded := b64.StdEncoding.EncodeToString(bytes)
         return Course{Name: name, Image: encoded, ImageType: imgType}
     } else {
-        panic("Image is none of [svg | png | jpg]")
+        log.Printf("Image is none of [svg | png | jpg]")
+        panic("neo4jdatabase:parseCourse")
     }
 }
 
 // Returns a 3 letter file extension for the image type. svg, png or jpg.
 func parseImageType(filename string) string {
+    if len(filename) < 4 {
+        log.Printf("Image filename is too short (< 4 characters, including file extension)")
+        panic("neo4jdatabase:parseImageType")
+    }
     if filename[len(filename) - 4:] == "jpeg" {
         return "jpg"
     } else {
@@ -109,18 +114,18 @@ func QueryLesson(lessonName string) Lesson {
 }
 
 func QueryLessonIndex(lessonName string) int64 {
-    cypher := `MATCH (tl:TopicLesson {name: {name}}) RETURN tl`
+    cypher := `MATCH (tl:TopicLesson {name: {name}})<-[r:HAS_TOPIC_LESSON]-(c:Course) RETURN r.index`
     params := map[string]interface{}{"name": lessonName}
     rows, conn, stmt := performQuery(cypher, params)
     defer conn.Close()
     defer stmt.Close()
     row, _, err := rows.NextNeo()
     if err != nil {
+        log.Printf("%v", err)
         log.Printf("There was a problem getting the index of lesson %#v", lessonName)
 		panic("neo4jdatabase:QueryLessonIndex")
     }
-    node := onlyNode(row)
-    return node.Properties["index"].(int64)
+    return row[0].(int64)
 }
 
 func parseQuestion(node graph.Node) JsonEncodable {

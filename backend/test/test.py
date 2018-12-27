@@ -1,5 +1,6 @@
 import os
 import requests
+import time
 
 from rest_test import *
 from assertpy import assert_that
@@ -38,7 +39,8 @@ cleanup_query = """;"""
 def cleanup():
     global cleanup_query
     with driver.session() as session:
-        session.run(cleanup_query)
+        session.run("MATCH (n) DETACH DELETE (n)")
+        session.run("MATCH (n) DELETE (n)")
 
 
 @test
@@ -48,23 +50,11 @@ def can_get_svg_course_img():
         session.run(
             """
             CREATE (georgian:Course {name: "SvgTest", image: "flagGeorgia.svg"})
-            CREATE (georgian)-[:HAS_TOPIC_LESSON]->(hello:TopicLesson {index: 0, name: "Hello"})
-            CREATE (georgian)-[:HAS_TOPIC_LESSON]->(whatAreYouCalled:TopicLesson {index: 1, name: "What are you called?"})
-            CREATE (georgian)-[:HAS_TOPIC_LESSON]->(colours:TopicLesson {index: 2, name: "Colours"})
+            CREATE (georgian)-[:HAS_TOPIC_LESSON {index: 0}]->(hello:TopicLesson {name: "Hello"})
+            CREATE (georgian)-[:HAS_TOPIC_LESSON {index: 1}]->(whatAreYouCalled:TopicLesson {name: "What are you called?"})
+            CREATE (georgian)-[:HAS_TOPIC_LESSON {index: 2}]->(colours:TopicLesson {name: "Colours"})
             RETURN georgian,hello,whatAreYouCalled,colours;
             """)
-
-    # Prepare the cleanup
-    global cleanup_query
-    cleanup_query = (
-        """
-        MATCH (georgian:Course {name: "SvgTest", image: "flagGeorgia.svg"})
-        MATCH (hello:TopicLesson {index: 0, name: "Hello"})
-        MATCH (whatAreYouCalled:TopicLesson {index: 1, name: "What are you called?"})
-        MATCH (colours:TopicLesson {index: 2, name: "Colours"})
-        DETACH DELETE georgian,hello,whatAreYouCalled,colours
-        DELETE georgian,hello,whatAreYouCalled,colours;
-        """)
 
     # Query the server
     res = requests.get("http://localhost:" + str(server_port) + "/courses")
@@ -84,23 +74,11 @@ def can_get_png_course_img():
         session.run(
             """
             CREATE (c:Course {name: "PngTest", image: "flagFrance.png"})
-            CREATE (c)-[:HAS_TOPIC_LESSON]->(l1:TopicLesson {index: 0, name: "l3"})
-            CREATE (c)-[:HAS_TOPIC_LESSON]->(l2:TopicLesson {index: 1, name: "l2"})
-            CREATE (c)-[:HAS_TOPIC_LESSON]->(l3:TopicLesson {index: 2, name: "l1"})
+            CREATE (c)-[:HAS_TOPIC_LESSON {index: 0}]->(l1:TopicLesson {name: "l3"})
+            CREATE (c)-[:HAS_TOPIC_LESSON {index: 1}]->(l2:TopicLesson {name: "l2"})
+            CREATE (c)-[:HAS_TOPIC_LESSON {index: 2}]->(l3:TopicLesson {name: "l1"})
             RETURN c,l1,l2,l3;
             """)
-
-    # Prepare the cleanup
-    global cleanup_query
-    cleanup_query = (
-        """
-        MATCH (c:Course {name: "PngTest", image: "flagFrance.png"})
-        MATCH (l1:TopicLesson {index: 0, name: "l3"})
-        MATCH (l2:TopicLesson {index: 1, name: "l2"})
-        MATCH (l3:TopicLesson {index: 2, name: "l1"})
-        DETACH DELETE c,l1,l2,l3
-        DELETE c,l1,l2,l3;
-        """)
 
     # Query the server
     res = requests.get("http://localhost:" + str(server_port) + "/courses")
@@ -120,23 +98,11 @@ def can_get_jpg_course_img():
         session.run(
             """
             CREATE (c:Course {name: "JpgTest", image: "flagGermany.jpg"})
-            CREATE (c)-[:HAS_TOPIC_LESSON]->(l1:TopicLesson {index: 0, name: "l3"})
-            CREATE (c)-[:HAS_TOPIC_LESSON]->(l2:TopicLesson {index: 1, name: "l2"})
-            CREATE (c)-[:HAS_TOPIC_LESSON]->(l3:TopicLesson {index: 2, name: "l1"})
+            CREATE (c)-[:HAS_TOPIC_LESSON {index: 0}]->(l1:TopicLesson {name: "l3"})
+            CREATE (c)-[:HAS_TOPIC_LESSON {index: 1}]->(l2:TopicLesson {name: "l2"})
+            CREATE (c)-[:HAS_TOPIC_LESSON {index: 2}]->(l3:TopicLesson {name: "l1"})
             RETURN c,l1,l2,l3;
             """)
-
-    # Prepare the cleanup
-    global cleanup_query
-    cleanup_query = (
-        """
-        MATCH (c:Course {name: "JpgTest", image: "flagGermany.jpg"})
-        MATCH (l1:TopicLesson {index: 0, name: "l3"})
-        MATCH (l2:TopicLesson {index: 1, name: "l2"})
-        MATCH (l3:TopicLesson {index: 2, name: "l1"})
-        DETACH DELETE c,l1,l2,l3
-        DELETE c,l1,l2,l3;
-        """)
 
     # Query the server
     res = requests.get("http://localhost:" + str(server_port) + "/courses")
@@ -155,20 +121,10 @@ def can_get_lesson_with_mcq():
     with driver.session() as session:
         session.run(
             """
-            CREATE (hello:TopicLesson {name: "MCQ", index: 0})
+            CREATE (hello:TopicLesson {name: "MCQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
             CREATE (hello)-[:HAS_QUESTION]->(letterA:Question:MultipleChoiceQuestion {index: 1, question: "sounds like \\"a\\" in English", a: "მ",b:"ბ", c:"გ", d:"ა", answer: "d"})
-            RETURN hello,letterA;
+            RETURN hello,letterA,c;
             """)
-
-    # Prepare the cleanup
-    global cleanup_query
-    cleanup_query = (
-        """
-        MATCH (l:TopicLesson {name: "MCQ", index: 0})
-        MATCH (letterA:Question:MultipleChoiceQuestion {index: 1, question: "sounds like \\"a\\" in English", a: "მ",b:"ბ", c:"გ", d:"ა", answer: "d"})
-        DETACH DELETE l,letterA
-        DELETE l,letterA;
-        """)
 
     # Query the server
     res = requests.post("http://localhost:" + str(server_port) + "/lesson", json={"lessonName": "MCQ"})
@@ -192,20 +148,10 @@ def can_get_lesson_with_tq():
     with driver.session() as session:
         session.run(
             """
-            CREATE (l:TopicLesson {name: "TQ", index: 0})
+            CREATE (l:TopicLesson {name: "TQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
             CREATE (l)-[:HAS_QUESTION]->(tq:Question:TranslationQuestion {index: 0, given: "What are you called?", answer: "შენ რა გქვია?"})
-            RETURN l,tq;
+            RETURN l,tq,c;
             """)
-
-    # Prepare the cleanup
-    global cleanup_query
-    cleanup_query = (
-        """
-        MATCH (l:TopicLesson {name: "TQ", index: 0})
-        MATCH (tq:Question:TranslationQuestion {index: 0, given: "What are you called?", answer: "შენ რა გქვია?"})
-        DETACH DELETE l,tq
-        DELETE l,tq;
-        """)
 
     # Query the server
     res = requests.post("http://localhost:" + str(server_port) + "/lesson", json={"lessonName": "TQ"})
@@ -226,22 +172,11 @@ def can_get_lesson_with_rq():
     with driver.session() as session:
         session.run(
             """
-            CREATE (l:TopicLesson {name: "RQ", index: 4})
+            CREATE (l:TopicLesson {name: "RQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
             CREATE (l)-[:HAS_QUESTION]->(rq:Question:ReadingQuestion {index: 3, course: "georgian", lesson: "hello", extractInline: "memes"})
             CREATE (rq)-[:HAS_SUBQUESTION]->(rsq:ReadingSubQuestion {index: 0, given:"What does 'საქართველო' mean in English?", answer:"Georgia"})
-            RETURN l,rq,rsq;
+            RETURN l,rq,rsq,c;
             """)
-
-    # Prepare the cleanup
-    global cleanup_query
-    cleanup_query = (
-        """
-        MATCH (l:TopicLesson {name: "RQ", index: 4})
-        MATCH (rq:Question:ReadingQuestion {index: 3, course: "georgian", lesson: "hello", extractInline: "memes"})
-        MATCH (rsq:ReadingSubQuestion {index: 0, given:"What does 'საქართველო' mean in English?", answer:"Georgia"})
-        DETACH DELETE l,rq,rsq
-        DELETE l,rq,rsq;
-        """)
 
     # Query the server
     res = requests.post("http://localhost:" + str(server_port) + "/lesson", json={"lessonName": "RQ"})
@@ -270,22 +205,11 @@ def can_get_lesson_with_rq_with_rsq_with_multiple_answers():
     with driver.session() as session:
         session.run(
             """
-            CREATE (l:TopicLesson {name: "MARSQ", index: 5})
+            CREATE (l:TopicLesson {name: "MARSQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
             CREATE (l)-[:HAS_QUESTION]->(rq:Question:ReadingQuestion {index: 3, course: "georgian", lesson: "hello", extractInline: "memes"})
             CREATE (rq)-[:HAS_SUBQUESTION]->(rsq:ReadingSubQuestion {index: 0, given:"What does 'საქართველო' mean in English?", answers:["Georgia", "Sakartvelo"]})
-            RETURN l,rq,rsq;
+            RETURN l,rq,rsq,c;
             """)
-
-    # Prepare the cleanup
-    global cleanup_query
-    cleanup_query = (
-        """
-        MATCH (l:TopicLesson {name: "MARSQ", index: 5})
-        MATCH (rq:ReadingQuestion {index: 3, course: "georgian", lesson: "hello", extractInline: "memes"})
-        MATCH (rsq:ReadingSubQuestion {index: 0, given:"What does 'საქართველო' mean in English?", answers:["Georgia", "Sakartvelo"]})
-        DETACH DELETE l,rq,rsq
-        DELETE l,rq,rsq;
-        """)
 
     # Query the server
     res = requests.post("http://localhost:" + str(server_port) + "/lesson", json={"lessonName": "MARSQ"})
@@ -308,20 +232,10 @@ def can_get_lesson_with_tq_with_multiple_answers():
     with driver.session() as session:
         session.run(
             """
-            CREATE (l:TopicLesson {name: "MATQ", index: 0})
+            CREATE (l:TopicLesson {name: "MATQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
             CREATE (l)-[:HAS_QUESTION]->(tq:Question:TranslationQuestion {index: 0, given: "ცისფერი", answers: ["blue", "sky colour", "light blue"]})
-            RETURN l,tq;
+            RETURN l,tq,c;
             """)
-
-    # Prepare the cleanup
-    global cleanup_query
-    cleanup_query = (
-        """
-        MATCH (l:TopicLesson {name: "MATQ", index: 0})
-        MATCH (tq:Question:TranslationQuestion {index: 0, given: "ცისფერი"})
-        DETACH DELETE l,tq
-        DELETE l,tq;
-        """)
 
     # Query the server
     res = requests.post("http://localhost:" + str(server_port) + "/lesson", json={"lessonName": "MATQ"})
@@ -349,17 +263,6 @@ def courses_endpoint_gives_200_and_cors_header():
             RETURN georgian,french,german;
             """)
 
-    # Prepare the cleanup
-    global cleanup_query
-    cleanup_query = (
-        """
-        MATCH (georgian:Course {name: "Georgian", image: "flagGeorgia.svg"})
-        MATCH (french:Course {name: "French", image: "flagFrance.png"})
-        MATCH (german:Course {name: "German", image: "flagGermany.jpg"})
-        DETACH DELETE georgian,french,german
-        DELETE georgian,french,german;
-        """)
-
     # Query the server
     res = requests.get("http://localhost:" + str(server_port) + "/courses")
 
@@ -374,20 +277,10 @@ def lesson_endpoint_gives_200_and_cors_header():
     with driver.session() as session:
         session.run(
             """
-            CREATE (l:TopicLesson {name: "Q", index: 0})
+            CREATE (l:TopicLesson {name: "Q"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
             CREATE (l)-[:HAS_QUESTION]->(tq:Question:TranslationQuestion {index: 0, given: "ცისფერი", answers: ["blue", "sky colour", "light blue"]})
-            RETURN l,tq;
+            RETURN l,tq,c;
             """)
-
-    # Prepare the cleanup
-    global cleanup_query
-    cleanup_query = (
-        """
-        MATCH (l:TopicLesson {name: "Q", index: 0})
-        MATCH (tq:Question:TranslationQuestion {index: 0, given: "ცისფერი"})
-        DETACH DELETE l,tq
-        DELETE l,tq;
-        """)
 
     # Query the server
     res = requests.post("http://localhost:" + str(server_port) + "/lesson", json={"lessonName": "Q"})
@@ -407,20 +300,8 @@ def course_metadata_gives_200_and_cors_header():
             CREATE (c)-[:HAS_TOPIC_LESSON {index: 0}]->(hello:TopicLesson {name: "Hello"})
             CREATE (c)-[:HAS_TOPIC_LESSON {index: 1}]->(whatAreYouCalled:TopicLesson {name: "What are you called?"})
             CREATE (c)-[:HAS_TOPIC_LESSON {index: 2}]->(colours:TopicLesson {name: "Colours"})
-            RETURN c,hello,whatAreYouCalled,colours;
+            RETURN hello,whatAreYouCalled,colours,c;
             """)
-
-    # Prepare the cleanup
-    global cleanup_query
-    cleanup_query = (
-        """
-        MATCH (c:Course {name: "Course", image: "flagGeorgia.svg"})
-        MATCH (hello:TopicLesson {name: "Hello"})
-        MATCH (whatAreYouCalled:TopicLesson {name: "What are you called?"})
-        MATCH (colours:TopicLesson {name: "Colours"})
-        DETACH DELETE c,hello,whatAreYouCalled,colours
-        DELETE c,hello,whatAreYouCalled,colours;
-        """)
 
     # Query the server
     res = requests.get("http://localhost:" + str(server_port) + "/coursemetadata?course=Course")
@@ -440,20 +321,8 @@ def can_get_lesson_order_for_course():
             CREATE (c)-[:HAS_TOPIC_LESSON {index: 0}]->(hello:TopicLesson {name: "Hello"})
             CREATE (c)-[:HAS_TOPIC_LESSON {index: 1}]->(whatAreYouCalled:TopicLesson {name: "What are you called?"})
             CREATE (c)-[:HAS_TOPIC_LESSON {index: 2}]->(colours:TopicLesson {name: "Colours"})
-            RETURN c,hello,whatAreYouCalled,colours;
+            RETURN hello,whatAreYouCalled,colours,c;
             """)
-
-    # Prepare the cleanup
-    global cleanup_query
-    cleanup_query = (
-        """
-        MATCH (c:Course {name: "Course", image: "flagGeorgia.svg"})
-        MATCH (hello:TopicLesson {name: "Hello"})
-        MATCH (whatAreYouCalled:TopicLesson {name: "What are you called?"})
-        MATCH (colours:TopicLesson {name: "Colours"})
-        DETACH DELETE c,hello,whatAreYouCalled,colours
-        DELETE c,hello,whatAreYouCalled,colours;
-        """)
 
     # Query the server
     res = requests.get("http://localhost:" + str(server_port) + "/coursemetadata?course=Course")
