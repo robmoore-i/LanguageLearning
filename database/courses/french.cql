@@ -1,7 +1,7 @@
 // French Course
 CREATE (french:Course {name: "French", image: "flagFrance.png"})
-CREATE (french)-[:HAS_TOPIC_LESSON]->(animals:TopicLesson {index: 0, name: "Animals"})
-CREATE (french)-[:HAS_TOPIC_LESSON]->(food:TopicLesson {index: 1, name: "Food"})
+CREATE (french)-[:HAS_TOPIC_LESSON {index: 0}]->(animals:TopicLesson {name: "Animals"})
+CREATE (french)-[:HAS_TOPIC_LESSON {index: 1}]->(food:TopicLesson {name: "Food"})
 RETURN french,animals,food;
 
 // French Topic Lesson: Animals

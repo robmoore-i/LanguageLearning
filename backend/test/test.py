@@ -404,9 +404,9 @@ def course_metadata_gives_200_and_cors_header():
         session.run(
             """
             CREATE (c:Course {name: "Course", image: "flagGeorgia.svg"})
-            CREATE (c)-[:HAS_TOPIC_LESSON]->(hello:TopicLesson {index: 0, name: "Hello"})
-            CREATE (c)-[:HAS_TOPIC_LESSON]->(whatAreYouCalled:TopicLesson {index: 1, name: "What are you called?"})
-            CREATE (c)-[:HAS_TOPIC_LESSON]->(colours:TopicLesson {index: 2, name: "Colours"})
+            CREATE (c)-[:HAS_TOPIC_LESSON {index: 0}]->(hello:TopicLesson {name: "Hello"})
+            CREATE (c)-[:HAS_TOPIC_LESSON {index: 1}]->(whatAreYouCalled:TopicLesson {name: "What are you called?"})
+            CREATE (c)-[:HAS_TOPIC_LESSON {index: 2}]->(colours:TopicLesson {name: "Colours"})
             RETURN c,hello,whatAreYouCalled,colours;
             """)
 
@@ -415,9 +415,9 @@ def course_metadata_gives_200_and_cors_header():
     cleanup_query = (
         """
         MATCH (c:Course {name: "Course", image: "flagGeorgia.svg"})
-        MATCH (hello:TopicLesson {index: 0, name: "Hello"})
-        MATCH (whatAreYouCalled:TopicLesson {index: 1, name: "What are you called?"})
-        MATCH (colours:TopicLesson {index: 2, name: "Colours"})
+        MATCH (hello:TopicLesson {name: "Hello"})
+        MATCH (whatAreYouCalled:TopicLesson {name: "What are you called?"})
+        MATCH (colours:TopicLesson {name: "Colours"})
         DETACH DELETE c,hello,whatAreYouCalled,colours
         DELETE c,hello,whatAreYouCalled,colours;
         """)
@@ -437,9 +437,9 @@ def can_get_lesson_order_for_course():
         session.run(
             """
             CREATE (c:Course {name: "Course", image: "flagGeorgia.svg"})
-            CREATE (c)-[:HAS_TOPIC_LESSON]->(hello:TopicLesson {index: 0, name: "Hello"})
-            CREATE (c)-[:HAS_TOPIC_LESSON]->(whatAreYouCalled:TopicLesson {index: 1, name: "What are you called?"})
-            CREATE (c)-[:HAS_TOPIC_LESSON]->(colours:TopicLesson {index: 2, name: "Colours"})
+            CREATE (c)-[:HAS_TOPIC_LESSON {index: 0}]->(hello:TopicLesson {name: "Hello"})
+            CREATE (c)-[:HAS_TOPIC_LESSON {index: 1}]->(whatAreYouCalled:TopicLesson {name: "What are you called?"})
+            CREATE (c)-[:HAS_TOPIC_LESSON {index: 2}]->(colours:TopicLesson {name: "Colours"})
             RETURN c,hello,whatAreYouCalled,colours;
             """)
 
@@ -448,9 +448,9 @@ def can_get_lesson_order_for_course():
     cleanup_query = (
         """
         MATCH (c:Course {name: "Course", image: "flagGeorgia.svg"})
-        MATCH (hello:TopicLesson {index: 0, name: "Hello"})
-        MATCH (whatAreYouCalled:TopicLesson {index: 1, name: "What are you called?"})
-        MATCH (colours:TopicLesson {index: 2, name: "Colours"})
+        MATCH (hello:TopicLesson {name: "Hello"})
+        MATCH (whatAreYouCalled:TopicLesson {name: "What are you called?"})
+        MATCH (colours:TopicLesson {name: "Colours"})
         DETACH DELETE c,hello,whatAreYouCalled,colours
         DELETE c,hello,whatAreYouCalled,colours;
         """)

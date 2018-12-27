@@ -1,7 +1,7 @@
 // German Course
 CREATE (german:Course {name: "German", image: "flagGermany.jpg"})
-CREATE (german)-[:HAS_TOPIC_LESSON]->(clothes:TopicLesson {index: 0, name: "Clothes"})
-CREATE (german)-[:HAS_TOPIC_LESSON]->(colours:TopicLesson {index: 1, name: "Colours"})
+CREATE (german)-[:HAS_TOPIC_LESSON {index: 0}]->(clothes:TopicLesson {name: "Clothes"})
+CREATE (german)-[:HAS_TOPIC_LESSON {index: 1}]->(colours:TopicLesson {name: "Colours"})
 RETURN german,clothes,colours;
 
 // German Topic Lesson: Clothes

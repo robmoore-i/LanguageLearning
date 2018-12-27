@@ -72,7 +72,7 @@ func parseImageType(filename string) string {
 // ====== Course Metadata =========
 
 func QueryCourseMetadata(course string) CourseMetadata {
-	cypher := `MATCH (tl:TopicLesson)<-[:HAS_TOPIC_LESSON]-(c:Course {name: {course}}) RETURN tl`
+    cypher := `MATCH (c:Course {name: {course}})-[r:HAS_TOPIC_LESSON]->(l) RETURN l.name,r.index`
     params := map[string]interface{}{"course": course}
 	rows, conn, stmt := performQuery(cypher, params)
 	defer conn.Close()
@@ -85,17 +85,13 @@ func parseLessonMetadataRows(rows driver.Rows) []LessonMetadata {
     var courseLessonMetadata []LessonMetadata
 	row, _, err := rows.NextNeo()
 	for row != nil && err == nil {
-        node := onlyNode(row)
-        lessonMetadata := parseLessonMetadata(node)
-		courseLessonMetadata = append(courseLessonMetadata, lessonMetadata)
+        name := row[0].(string)
+        index := row[1].(int64)
+        lessonMetadata := LessonMetadata{Name: name, Index: index}
+        courseLessonMetadata = append(courseLessonMetadata, lessonMetadata)
 		row, _, err = rows.NextNeo()
 	}
     return courseLessonMetadata
-}
-
-func parseLessonMetadata(node graph.Node) LessonMetadata {
-    p := node.Properties
-    return LessonMetadata{Name: p["name"].(string), Index: p["index"].(int64)}
 }
 
 // ====== Lesson =========

@@ -1,7 +1,7 @@
 CREATE (georgian:Course {name: "Georgian", image: "flagGeorgia.svg"})
-CREATE (georgian)-[:HAS_TOPIC_LESSON]->(pcg_hello:TopicLesson {index: 0, name: "Peace Corps Georgia: Hello"})
-CREATE (georgian)-[:HAS_TOPIC_LESSON]->(pcg_whatAreYouCalled:TopicLesson {index: 1, name: "Peace Corps Georgia: What are you called?"})
-CREATE (georgian)-[:HAS_TOPIC_LESSON]->(pcg_howAreYou:TopicLesson {index: 2, name: "Peace Corps Georgia: How are you?"})
+CREATE (georgian)-[:HAS_TOPIC_LESSON {index: 0}]->(pcg_hello:TopicLesson {name: "Peace Corps Georgia: Hello"})
+CREATE (georgian)-[:HAS_TOPIC_LESSON {index: 1}]->(pcg_whatAreYouCalled:TopicLesson {name: "Peace Corps Georgia: What are you called?"})
+CREATE (georgian)-[:HAS_TOPIC_LESSON {index: 2}]->(pcg_howAreYou:TopicLesson {name: "Peace Corps Georgia: How are you?"})
 RETURN georgian,pcg_hello,pcg_whatAreYouCalled,pcg_howAreYou;
 
 MATCH (pcg_hello:TopicLesson {name: "Peace Corps Georgia: Hello"})
