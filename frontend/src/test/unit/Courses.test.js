@@ -15,9 +15,13 @@ configureAdapter()
 let mockServerLoadTimeMs = 1
 
 let mockServer = courseNames => {
+    let courses = courseNames.map(courseName => {
+        return {name: courseName, image: -1}
+    })
+
     return {
         fetchCourses: () => {
-            return new Promise(resolve => resolve([{name:"Georgian", image: -1}, {name: "German", image: -2}]))
+            return new Promise(resolve => resolve(courses))
         }
     }
 }
@@ -55,4 +59,22 @@ it('Requests the list of course names from the server', async () => {
     let _testCoursesPage = await fullRenderCourses(testServer)
 
     expect(spyFetch).toHaveBeenCalled()
+})
+
+it("Sets courses to empty list if server fetches null", async () => {
+    let testServer = {
+        fetchCourses: () => {
+            return new Promise(resolve => resolve(null))
+        }
+    }
+    let testCoursesPage = await fullRenderCourses(testServer)
+
+    expect(testCoursesPage.state().courses).toEqual([])
+})
+
+it("Courses list is empty if server fetches no courses", async () => {
+    let testServer = mockServer([])
+    let testCoursesPage = await fullRenderCourses(testServer)
+
+    expect(testCoursesPage.state().courses).toEqual([])
 })

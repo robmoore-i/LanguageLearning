@@ -18,7 +18,7 @@ export default class Courses extends Component {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within promise closure.
         this.props.server.fetchCourses().then(courses => {
             setState({
-                courses: courses,
+                courses: courses ? courses : [],
                 loaded: true
             })
         })
