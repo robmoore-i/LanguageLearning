@@ -6,10 +6,10 @@ RETURN french,animals,food;
 
 // French Topic Lesson: Animals
 MATCH (animals:TopicLesson {name: "Animals"})
-CREATE (animals)-[:HAS_QUESTION]->(tq:Question:TranslationQuestion {index: 0, given: "Mouse", answer: "La Souris"})
+CREATE (animals)-[:HAS_QUESTION {index: 0}]->(tq:Question:TranslationQuestion {given: "Mouse", answer: "La Souris"})
 RETURN animals,tq;
 
 // French Topic Lesson: Food
 MATCH (food:TopicLesson {name: "Food"})
-CREATE (food)-[:HAS_QUESTION]->(mcq:Question:MultipleChoiceQuestion {index: 0, question: "means 'cheese' in French?", a: "Le pain", b:"La pomme", c:"Le fromage", d:"La carotte", answer: "c"})
+CREATE (food)-[:HAS_QUESTION {index: 0}]->(mcq:Question:MultipleChoiceQuestion {question: "means 'cheese' in French?", a: "Le pain", b:"La pomme", c:"Le fromage", d:"La carotte", answer: "c"})
 RETURN food,mcq;

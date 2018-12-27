@@ -149,7 +149,7 @@ def can_get_lesson_with_tq():
         session.run(
             """
             CREATE (l:TopicLesson {name: "TQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
-            CREATE (l)-[:HAS_QUESTION]->(tq:Question:TranslationQuestion {index: 0, given: "What are you called?", answer: "შენ რა გქვია?"})
+            CREATE (l)-[:HAS_QUESTION {index: 0}]->(tq:Question:TranslationQuestion {given: "What are you called?", answer: "შენ რა გქვია?"})
             RETURN l,tq,c;
             """)
 
@@ -233,7 +233,7 @@ def can_get_lesson_with_tq_with_multiple_answers():
         session.run(
             """
             CREATE (l:TopicLesson {name: "MATQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
-            CREATE (l)-[:HAS_QUESTION]->(tq:Question:TranslationQuestion {index: 0, given: "ცისფერი", answers: ["blue", "sky colour", "light blue"]})
+            CREATE (l)-[:HAS_QUESTION {index: 0}]->(tq:Question:TranslationQuestion {given: "ცისფერი", answers: ["blue", "sky colour", "light blue"]})
             RETURN l,tq,c;
             """)
 
@@ -278,7 +278,7 @@ def lesson_endpoint_gives_200_and_cors_header():
         session.run(
             """
             CREATE (l:TopicLesson {name: "Q"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
-            CREATE (l)-[:HAS_QUESTION]->(tq:Question:TranslationQuestion {index: 0, given: "ცისფერი", answers: ["blue", "sky colour", "light blue"]})
+            CREATE (l)-[:HAS_QUESTION {index: 0}]->(tq:Question:TranslationQuestion {given: "ცისფერი", answers: ["blue", "sky colour", "light blue"]})
             RETURN l,tq,c;
             """)
 

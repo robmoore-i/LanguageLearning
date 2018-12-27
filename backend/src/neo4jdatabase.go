@@ -119,8 +119,7 @@ func QueryLessonIndex(lessonName string) int64 {
 func parseQuestion(row []interface{}) JsonEncodable {
     node := firstNode(row)
 	if hasLabel(node, "TranslationQuestion") {
-        node := firstNode(row)
-		return parseTQ(node)
+		return parseTQ(row)
 	} else if hasLabel(node, "MultipleChoiceQuestion") {
 		return parseMCQ(row)
 	} else if hasLabel(node, "ReadingQuestion") {
@@ -149,9 +148,10 @@ func toStrings(list []interface{}) []string {
     return result
 }
 
-func parseTQ(node graph.Node) JsonEncodable {
-	p := node.Properties
-    index := p["index"].(int64)
+func parseTQ(row []interface{}) JsonEncodable {
+    node := firstNode(row)
+    p := node.Properties
+    index := row[1].(int64)
     if answer, isSATQ := p["answer"]; isSATQ {
         return NewSATQ(index, p["given"].(string), answer.(string))
     } else if answers, isMATQ := p["answers"]; isMATQ {
@@ -163,7 +163,7 @@ func parseTQ(node graph.Node) JsonEncodable {
 }
 
 func parseMCQ(row []interface{}) JsonEncodable {
-    node := row[0].(graph.Node)
+    node := firstNode(row)
     index := row[1].(int64)
 	p := node.Properties
 	return NewMCQ(index, p["question"].(string), p["a"].(string), p["b"].(string), p["c"].(string), p["d"].(string), p["answer"].(string))

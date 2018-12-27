@@ -6,7 +6,7 @@ RETURN german,clothes,colours;
 
 // German Topic Lesson: Clothes
 MATCH (clothes:TopicLesson {name: "Clothes"})
-CREATE (clothes)-[:HAS_QUESTION]->(tq:Question:TranslationQuestion {index: 0, given: "Das Hemd", answers: ["Shirt", "The shirt"]})
+CREATE (clothes)-[:HAS_QUESTION {index: 0}]->(tq:Question:TranslationQuestion {given: "Das Hemd", answers: ["Shirt", "The shirt"]})
 RETURN clothes,tq;
 
 // German Topic Lesson: Colours
