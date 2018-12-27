@@ -5,7 +5,7 @@ CREATE (georgian)-[:HAS_TOPIC_LESSON {index: 2}]->(pcg_howAreYou:TopicLesson {na
 RETURN georgian,pcg_hello,pcg_whatAreYouCalled,pcg_howAreYou;
 
 MATCH (pcg_hello:TopicLesson {name: "Peace Corps Georgia: Hello"})
-CREATE (pcg_hello)-[:HAS_QUESTION]->(teachingLetters:Question:ReadingQuestion {index: 0, course: "Georgian", lesson: "Peace Corps Georgia: Hello", extractFile: "PeaceCorpsGeorgia/georgian-pcg_hello-letters.txt"})
+CREATE (pcg_hello)-[:HAS_QUESTION {index: 0}]->(teachingLetters:Question:ReadingQuestion {extractFile: "PeaceCorpsGeorgia/georgian-pcg_hello-letters.txt"})
 CREATE (pcg_hello)-[:HAS_QUESTION {index: 1}]->(letterA:Question:MultipleChoiceQuestion {question: "sounds like \"a\" in English", a: "მ", b:"ბ", c:"გ", d:"ა", answer: "d"})
 CREATE (pcg_hello)-[:HAS_QUESTION {index: 2}]->(letterO:Question:MultipleChoiceQuestion {question: "sounds like \"o\" in English", a: "ო", b:"ჯ", c:"ა", d:"მ", answer: "a"})
 CREATE (pcg_hello)-[:HAS_QUESTION {index: 3}]->(letterM:Question:MultipleChoiceQuestion {question: "sounds like \"m\" in English", a: "ა", b:"მ", c:"ო", d:"ჯ", answer: "b"})
@@ -13,12 +13,12 @@ CREATE (pcg_hello)-[:HAS_QUESTION {index: 4}]->(letterG:Question:MultipleChoiceQ
 CREATE (pcg_hello)-[:HAS_QUESTION {index: 5}]->(letterR:Question:MultipleChoiceQuestion {question: "sounds like \"r\" in English", a: "გ", b:"ო", c:"რ", d:"ა", answer: "c"})
 CREATE (pcg_hello)-[:HAS_QUESTION {index: 6}]->(letterB:Question:MultipleChoiceQuestion {question: "sounds like \"b\" in English", a: "ო", b:"მ", c:"ბ", d:"რ", answer: "c"})
 CREATE (pcg_hello)-[:HAS_QUESTION {index: 7}]->(letterJ:Question:MultipleChoiceQuestion {question: "sounds like \"j\" in English", a: "ა", b:"ჯ", c:"ბ", d:"გ", answer: "b"})
-CREATE (pcg_hello)-[:HAS_QUESTION]->(teachingPhrases:Question:ReadingQuestion {index: 8, course: "Georgian", lesson: "Peace Corps Georgia: Hello", extractFile: "PeaceCorpsGeorgia/georgian-pcg_hello-phrases.txt"})
+CREATE (pcg_hello)-[:HAS_QUESTION {index: 8}]->(teachingPhrases:Question:ReadingQuestion {course: "Georgian", lesson: "Peace Corps Georgia: Hello", extractFile: "PeaceCorpsGeorgia/georgian-pcg_hello-phrases.txt"})
 CREATE (pcg_hello)-[:HAS_QUESTION {index: 9}]->(tqHello:Question:TranslationQuestion {given: "Hello", answer: "გამარჯობა"})
 RETURN pcg_hello,teachingLetters,letterA,letterM,letterO,letterG,letterR,letterB,letterJ,teachingPhrases,tqHello;
 
 MATCH (pcg_whatAreYouCalled:TopicLesson {name: "Peace Corps Georgia: What are you called?"})
-CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION]->(teachingLetters:Question:ReadingQuestion {index: 0, course: "Georgian", lesson: "Peace Corps Georgia: What are you called?", extractFile: "PeaceCorpsGeorgia/georgian-pcg_whatAreYouCalled-letters.txt"})
+CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION {index: 0}]->(teachingLetters:Question:ReadingQuestion {extractFile: "PeaceCorpsGeorgia/georgian-pcg_whatAreYouCalled-letters.txt"})
 CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION {index: 1}]->(letterI: Question:MultipleChoiceQuestion {question: "sounds like \"i\"  in English", a: "ი", b:"გ", c:"ა", d:"ჯ", answer: "a"})
 CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION {index: 2}]->(letterE: Question:MultipleChoiceQuestion {question: "sounds like \"e\"  in English", a: "ბ", b:"ი", c:"რ", d:"ე", answer: "d"})
 CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION {index: 3}]->(letterN: Question:MultipleChoiceQuestion {question: "sounds like \"n\"  in English", a: "ნ", b:"ო", c:"რ", d:"ე", answer: "a"})
@@ -27,19 +27,19 @@ CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION {index: 5}]->(letterV: Question:Mul
 CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION {index: 6}]->(letterT: Question:MultipleChoiceQuestion {question: "sounds like \"t\"  in English", a: "ო", b:"შ", c:"თ", d:"ვ", answer: "c"})
 CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION {index: 7}]->(letterS: Question:MultipleChoiceQuestion {question: "sounds like \"s\"  in English", a: "ი", b:"თ", c:"შ", d:"ს", answer: "d"})
 CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION {index: 8}]->(letterK: Question:MultipleChoiceQuestion {question: "sounds like \"k\"  in English", a: "ქ", b:"ნ", c:"ს", d:"ი", answer: "a"})
-CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION]->(teachingPhrases:Question:ReadingQuestion {index: 9, course: "Georgian", lesson: "Peace Corps Georgia: What are you called?", extractFile: "PeaceCorpsGeorgia/georgian-pcg_whatAreYouCalled-phrases.txt"})
+CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION {index: 9}]->(teachingPhrases:Question:ReadingQuestion {course: "Georgian", lesson: "Peace Corps Georgia: What are you called?", extractFile: "PeaceCorpsGeorgia/georgian-pcg_whatAreYouCalled-phrases.txt"})
 CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION {index: 10}]->(tqIAmCalled:Question:TranslationQuestion {given: "I am called Keti", answers: ["მე მქვია ქეთი", "მე ქეთი მქვია"]})
 CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION {index: 11}]->(tqWhatAreYouCalled:Question:TranslationQuestion {given: "What are you called?", answer: "შენ რა გქვია?"})
 CREATE (pcg_whatAreYouCalled)-[:HAS_QUESTION {index: 12}]->(tqNiceToMeetYou:Question:TranslationQuestion {given: "Nice to meet you!", answer: "სასიამოვნოა!"})
 RETURN pcg_whatAreYouCalled,teachingLetters,letterI,letterE,letterN,letterSh,letterV,letterT,letterS,letterK,teachingPhrases,tqIAmCalled,tqWhatAreYouCalled,tqNiceToMeetYou;
 
 MATCH (pcg_howAreYou:TopicLesson {name: "Peace Corps Georgia: How are you?"})
-CREATE (pcg_howAreYou)-[:HAS_QUESTION]->(teachingLetters:Question:ReadingQuestion {index: 0, course: "Georgian", lesson: "Peace Corps Georgia: How are you?", extractFile: "PeaceCorpsGeorgia/georgian-pcg_howAreYou-letters.txt"})
+CREATE (pcg_howAreYou)-[:HAS_QUESTION {index: 0}]->(teachingLetters:Question:ReadingQuestion {extractFile: "PeaceCorpsGeorgia/georgian-pcg_howAreYou-letters.txt"})
 CREATE (pcg_howAreYou)-[:HAS_QUESTION {index: 1}]->(letterD: Question:MultipleChoiceQuestion {question: "sounds like \"d\"  in English", a: "დ", b:"ქ", c:"ს", d:"ო", answer: "a"})
 CREATE (pcg_howAreYou)-[:HAS_QUESTION {index: 2}]->(letterX: Question:MultipleChoiceQuestion {question: "sounds like \"ch\" in \"Loch\"", a: "ე", b:"ი", c:"ხ", d:"ა", answer: "c"})
 CREATE (pcg_howAreYou)-[:HAS_QUESTION {index: 3}]->(letterL: Question:MultipleChoiceQuestion {question: "sounds like \"l\" in English", a: "ხ", b:"ბ", c:"რ", d:"ლ", answer: "d"})
 CREATE (pcg_howAreYou)-[:HAS_QUESTION {index: 4}]->(letterK: Question:MultipleChoiceQuestion {question: "sounds like an ejective \"k\" in English", a: "კ", b:"მ", c:"ჯ", d:"ვ", answer: "a"})
-CREATE (pcg_howAreYou)-[:HAS_QUESTION]->(teachingPhrases:Question:ReadingQuestion {index: 5, course: "Georgian", lesson: "Peace Corps Georgia: How are you?", extractFile: "PeaceCorpsGeorgia/georgian-pcg_howAreYou-phrases.txt"})
+CREATE (pcg_howAreYou)-[:HAS_QUESTION {index: 5}]->(teachingPhrases:Question:ReadingQuestion {course: "Georgian", lesson: "Peace Corps Georgia: How are you?", extractFile: "PeaceCorpsGeorgia/georgian-pcg_howAreYou-phrases.txt"})
 CREATE (pcg_howAreYou)-[:HAS_QUESTION {index: 6}]->(tqHowAreYou:Question:TranslationQuestion {given: "How are you?", answer: "როგორ ხარ?"})
 CREATE (pcg_howAreYou)-[:HAS_QUESTION {index: 7}]->(tqThanks:Question:TranslationQuestion {given: "Thanks", answer: "გმადლობ"})
 CREATE (pcg_howAreYou)-[:HAS_QUESTION {index: 8}]->(tqWell:Question:TranslationQuestion {given: "Well", answer: "კარგად"})

@@ -173,7 +173,7 @@ def can_get_lesson_with_rq():
         session.run(
             """
             CREATE (l:TopicLesson {name: "RQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
-            CREATE (l)-[:HAS_QUESTION]->(rq:Question:ReadingQuestion {index: 3, course: "georgian", lesson: "hello", extractInline: "memes"})
+            CREATE (l)-[:HAS_QUESTION {index: 10}]->(rq:Question:ReadingQuestion {extractInline: "memes"})
             CREATE (rq)-[:HAS_SUBQUESTION]->(rsq:ReadingSubQuestion {index: 0, given:"What does 'საქართველო' mean in English?", answer:"Georgia"})
             RETURN l,rq,rsq,c;
             """)
@@ -188,7 +188,7 @@ def can_get_lesson_with_rq():
     rq = questions[0]
     assert_that(type(rq).__name__).is_equal_to('dict')
     assert_that(rq['type']).is_equal_to(2)
-    assert_that(rq['index']).is_equal_to(3)
+    assert_that(rq['index']).is_equal_to(10)
     sub_questions = rq['questions']
     assert_that(type(sub_questions).__name__).is_equal_to('list')
     assert_that(len(sub_questions)).is_equal_to(1)
@@ -206,7 +206,7 @@ def can_get_lesson_with_rq_with_rsq_with_multiple_answers():
         session.run(
             """
             CREATE (l:TopicLesson {name: "MARSQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
-            CREATE (l)-[:HAS_QUESTION]->(rq:Question:ReadingQuestion {index: 3, course: "georgian", lesson: "hello", extractInline: "memes"})
+            CREATE (l)-[:HAS_QUESTION {index: 0}]->(rq:Question:ReadingQuestion {extractInline: "memes"})
             CREATE (rq)-[:HAS_SUBQUESTION]->(rsq:ReadingSubQuestion {index: 0, given:"What does 'საქართველო' mean in English?", answers:["Georgia", "Sakartvelo"]})
             RETURN l,rq,rsq,c;
             """)

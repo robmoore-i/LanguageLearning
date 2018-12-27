@@ -98,7 +98,15 @@ func QueryLesson(lessonName string) Lesson {
 	defer conn.Close()
 	defer stmt.Close()
 
-	return Lesson{Name: lessonName, Questions: parseJsonEncodableRows(rows, parseQuestion), Index: lessonIndex}
+    var questions []JsonEncodable
+	row, _, err := rows.NextNeo()
+	for row != nil && err == nil {
+		parsedQuestion := parseQuestion(lessonName, row)
+		questions = append(questions, parsedQuestion)
+		row, _, err = rows.NextNeo()
+	}
+
+	return Lesson{Name: lessonName, Questions: questions, Index: lessonIndex}
 }
 
 func QueryLessonIndex(lessonName string) int64 {
@@ -116,17 +124,16 @@ func QueryLessonIndex(lessonName string) int64 {
     return row[0].(int64)
 }
 
-func parseQuestion(row []interface{}) JsonEncodable {
+func parseQuestion(lessonName string, row []interface{}) JsonEncodable {
     node := firstNode(row)
 	if hasLabel(node, "TranslationQuestion") {
 		return parseTQ(row)
 	} else if hasLabel(node, "MultipleChoiceQuestion") {
 		return parseMCQ(row)
 	} else if hasLabel(node, "ReadingQuestion") {
-        node := firstNode(row)
-		return parseRQ(node)
+		return parseRQ(lessonName, row)
 	} else {
-		log.Printf("Couldn't find any appropriate question type label on node %#v", node)
+		log.Printf("Couldn't find any appropriate question type label on node %#v within row %#v", node, row)
 		panic("neo4jdatabase:parseQuestion")
 	}
 }
@@ -169,15 +176,14 @@ func parseMCQ(row []interface{}) JsonEncodable {
 	return NewMCQ(index, p["question"].(string), p["a"].(string), p["b"].(string), p["c"].(string), p["d"].(string), p["answer"].(string))
 }
 
-func parseRQ(node graph.Node) JsonEncodable {
+func parseRQ(lessonName string, row []interface{}) JsonEncodable {
+    node := firstNode(row)
 	p := node.Properties
-    course := p["course"].(string)
-    lesson := p["lesson"].(string)
-    index := p["index"].(int64)
+    index := row[1].(int64)
 	extract := parseRQExtract(p)
 
-	cypher := "MATCH (rq:ReadingQuestion {course: {course}, lesson: {lesson}, index: {index}})-[:HAS_SUBQUESTION]->(q:ReadingSubQuestion) RETURN q"
-	params := map[string]interface{}{"course": course, "lesson": lesson, "index": index}
+	cypher := "MATCH (tl:TopicLesson {name: {lessonName}})-[:HAS_QUESTION {index: {index}}]->(rq:ReadingQuestion)-[:HAS_SUBQUESTION]->(rsq:ReadingSubQuestion) RETURN rsq"
+	params := map[string]interface{}{"lessonName": lessonName, "index": index}
 	rows, conn, stmt := performQuery(cypher, params)
 	defer conn.Close()
 	defer stmt.Close()
