@@ -182,7 +182,7 @@ func parseRQ(lessonName string, row []interface{}) JsonEncodable {
     index := row[1].(int64)
 	extract := parseRQExtract(p)
 
-	cypher := "MATCH (tl:TopicLesson {name: {lessonName}})-[:HAS_QUESTION {index: {index}}]->(rq:ReadingQuestion)-[:HAS_SUBQUESTION]->(rsq:ReadingSubQuestion) RETURN rsq"
+	cypher := "MATCH (tl:TopicLesson {name: {lessonName}})-[:HAS_QUESTION {index: {index}}]->(rq:ReadingQuestion)-[r:HAS_SUBQUESTION]->(rsq:ReadingSubQuestion) RETURN rsq,r.index"
 	params := map[string]interface{}{"lessonName": lessonName, "index": index}
 	rows, conn, stmt := performQuery(cypher, params)
 	defer conn.Close()
@@ -210,11 +210,12 @@ func parseRQExtract(nodeProperties map[string]interface {}) string {
 
 func parseRSQ(row []interface{}) JsonEncodable {
     node := firstNode(row)
+    index := row[1].(int64)
 	p := node.Properties
     if answer, isSARSQ := p["answer"]; isSARSQ {
-        return NewSARSQ(p["index"].(int64), p["given"].(string), answer.(string))
+        return NewSARSQ(index, p["given"].(string), answer.(string))
     } else if answers, isMARSQ := p["answers"]; isMARSQ {
-        return NewMARSQ(p["index"].(int64), p["given"].(string), toStrings(answers.([]interface{})))
+        return NewMARSQ(index, p["given"].(string), toStrings(answers.([]interface{})))
     } else {
         log.Printf("RSQ node had neither answer nor answers property")
         panic("neo4jdatabase:parseRSQ")

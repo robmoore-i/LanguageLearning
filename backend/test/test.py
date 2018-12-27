@@ -174,7 +174,7 @@ def can_get_lesson_with_rq():
             """
             CREATE (l:TopicLesson {name: "RQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
             CREATE (l)-[:HAS_QUESTION {index: 10}]->(rq:Question:ReadingQuestion {extractInline: "memes"})
-            CREATE (rq)-[:HAS_SUBQUESTION]->(rsq:ReadingSubQuestion {index: 0, given:"What does 'საქართველო' mean in English?", answer:"Georgia"})
+            CREATE (rq)-[:HAS_SUBQUESTION {index: 0}]->(rsq:ReadingSubQuestion {given:"What does 'საქართველო' mean in English?", answer:"Georgia"})
             RETURN l,rq,rsq,c;
             """)
 
@@ -207,8 +207,9 @@ def can_get_lesson_with_rq_with_rsq_with_multiple_answers():
             """
             CREATE (l:TopicLesson {name: "MARSQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
             CREATE (l)-[:HAS_QUESTION {index: 0}]->(rq:Question:ReadingQuestion {extractInline: "memes"})
-            CREATE (rq)-[:HAS_SUBQUESTION]->(rsq:ReadingSubQuestion {index: 0, given:"What does 'საქართველო' mean in English?", answers:["Georgia", "Sakartvelo"]})
-            RETURN l,rq,rsq,c;
+            CREATE (rq)-[:HAS_SUBQUESTION {index: 0}]->(rsq1:ReadingSubQuestion {given:"What does 'საქართველო' mean in English?", answer:"Georgia"})
+            CREATE (rq)-[:HAS_SUBQUESTION {index: 1}]->(rsq2:ReadingSubQuestion {given:"What does 'ცისფერი' mean in English?", answers:["Blue", "Sky blue"]})
+            RETURN l,rq,rsq1,rsq2,c;
             """)
 
     # Query the server
@@ -217,13 +218,15 @@ def can_get_lesson_with_rq_with_rsq_with_multiple_answers():
     # Assert the response
     lesson = res.json()
     questions = lesson["questions"]
-
     rq = questions[0]
     sub_questions = rq['questions']
-    rsq = sub_questions[0]
-    assert_that(type(rsq['answers']).__name__).is_equal_to("list")
-    assert_that(rsq['answers']).contains("Georgia")
-    assert_that(rsq['answers']).contains("Sakartvelo")
+
+    marsq = maplist_where(sub_questions, "given", "What does 'ცისფერი' mean in English?")
+
+    assert_that(type(marsq['answers']).__name__).is_equal_to("list")
+    assert_that(marsq['index']).is_equal_to(1)
+    assert_that(marsq['answers']).contains("Blue")
+    assert_that(marsq['answers']).contains("Sky blue")
 
 
 @test

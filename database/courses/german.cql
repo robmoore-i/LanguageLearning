@@ -12,7 +12,7 @@ RETURN clothes,tq;
 // German Topic Lesson: Colours
 MATCH (colours:TopicLesson {name: "Colours"})
 CREATE (colours)-[:HAS_QUESTION {index: 0}]->(rq:Question:ReadingQuestion {extractInline: "Der Zug ist blau und das Auto ist rot. Der Rasen ist grün."})
-CREATE (rq)-[:HAS_SUBQUESTION]->(rsq1:ReadingSubQuestion {index: 0, given:"What colour is the train?", answer:"blue"})
-CREATE (rq)-[:HAS_SUBQUESTION]->(rsq2:ReadingSubQuestion {index: 1, given: "What colour is the car?", answer: "red"})
-CREATE (rq)-[:HAS_SUBQUESTION]->(rsq3:ReadingSubQuestion {index: 2, given:"What is said to be green?", answers:["Grass", "The grass"]})
+CREATE (rq)-[:HAS_SUBQUESTION {index: 0}]->(rsq1:ReadingSubQuestion {given:"What colour is the train?", answer:"blue"})
+CREATE (rq)-[:HAS_SUBQUESTION {index: 1}]->(rsq2:ReadingSubQuestion {given: "What colour is the car?", answer: "red"})
+CREATE (rq)-[:HAS_SUBQUESTION {index: 2}]->(rsq3:ReadingSubQuestion {given:"What is said to be green?", answers:["Grass", "The grass"]})
 RETURN colours,rq,rsq1,rsq2,rsq3;
