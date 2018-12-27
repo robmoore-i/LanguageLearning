@@ -122,7 +122,7 @@ def can_get_lesson_with_mcq():
         session.run(
             """
             CREATE (hello:TopicLesson {name: "MCQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
-            CREATE (hello)-[:HAS_QUESTION]->(letterA:Question:MultipleChoiceQuestion {index: 1, question: "sounds like \\"a\\" in English", a: "მ",b:"ბ", c:"გ", d:"ა", answer: "d"})
+            CREATE (hello)-[:HAS_QUESTION {index: 1}]->(letterA:Question:MultipleChoiceQuestion {question: "sounds like \\"a\\" in English", a: "მ",b:"ბ", c:"გ", d:"ა", answer: "d"})
             RETURN hello,letterA,c;
             """)
 

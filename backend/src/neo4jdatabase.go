@@ -23,7 +23,7 @@ func parseCourseRows(rows driver.Rows) []Course {
     var courses []Course
 	row, _, err := rows.NextNeo()
 	for row != nil && err == nil {
-		node := onlyNode(row)
+		node := firstNode(row)
 		parsedCourse := parseCourse(node)
 		courses = append(courses, parsedCourse)
 		row, _, err = rows.NextNeo()
@@ -92,7 +92,7 @@ func parseLessonMetadataRows(rows driver.Rows) []LessonMetadata {
 func QueryLesson(lessonName string) Lesson {
     lessonIndex := QueryLessonIndex(lessonName)
 
-	cypher := `MATCH (tl:TopicLesson {name: {name}})-[:HAS_QUESTION]->(q) RETURN q`
+	cypher := `MATCH (tl:TopicLesson {name: {name}})-[r:HAS_QUESTION]->(q) RETURN q,r.index`
 	params := map[string]interface{}{"name": lessonName}
 	rows, conn, stmt := performQuery(cypher, params)
 	defer conn.Close()
@@ -116,12 +116,15 @@ func QueryLessonIndex(lessonName string) int64 {
     return row[0].(int64)
 }
 
-func parseQuestion(node graph.Node) JsonEncodable {
+func parseQuestion(row []interface{}) JsonEncodable {
+    node := firstNode(row)
 	if hasLabel(node, "TranslationQuestion") {
+        node := firstNode(row)
 		return parseTQ(node)
 	} else if hasLabel(node, "MultipleChoiceQuestion") {
-		return parseMCQ(node)
+		return parseMCQ(row)
 	} else if hasLabel(node, "ReadingQuestion") {
+        node := firstNode(row)
 		return parseRQ(node)
 	} else {
 		log.Printf("Couldn't find any appropriate question type label on node %#v", node)
@@ -159,9 +162,11 @@ func parseTQ(node graph.Node) JsonEncodable {
     }
 }
 
-func parseMCQ(node graph.Node) JsonEncodable {
+func parseMCQ(row []interface{}) JsonEncodable {
+    node := row[0].(graph.Node)
+    index := row[1].(int64)
 	p := node.Properties
-	return NewMCQ(p["index"].(int64), p["question"].(string), p["a"].(string), p["b"].(string), p["c"].(string), p["d"].(string), p["answer"].(string))
+	return NewMCQ(index, p["question"].(string), p["a"].(string), p["b"].(string), p["c"].(string), p["d"].(string), p["answer"].(string))
 }
 
 func parseRQ(node graph.Node) JsonEncodable {
@@ -197,7 +202,8 @@ func parseRQExtract(nodeProperties map[string]interface {}) string {
     }
 }
 
-func parseRSQ(node graph.Node) JsonEncodable {
+func parseRSQ(row []interface{}) JsonEncodable {
+    node := firstNode(row)
 	p := node.Properties
     if answer, isSARSQ := p["answer"]; isSARSQ {
         return NewSARSQ(p["index"].(int64), p["given"].(string), answer.(string))
@@ -211,14 +217,13 @@ func parseRSQ(node graph.Node) JsonEncodable {
 
 // ====== Common =========
 
-type JsonEncodableParse func(graph.Node) JsonEncodable
+type JsonEncodableParse func([]interface{}) JsonEncodable
 
 func parseJsonEncodableRows(rows driver.Rows, parse JsonEncodableParse) []JsonEncodable {
     var encodables []JsonEncodable
 	row, _, err := rows.NextNeo()
 	for row != nil && err == nil {
-		node := onlyNode(row)
-		parsedEncodable := parse(node)
+		parsedEncodable := parse(row)
 		encodables = append(encodables, parsedEncodable)
 		row, _, err = rows.NextNeo()
 	}
@@ -260,7 +265,7 @@ func performQuery(cypher string, params map[string]interface{}) (driver.Rows, dr
 	return rows, conn, stmt
 }
 
-func onlyNode(row []interface{}) graph.Node {
+func firstNode(row []interface{}) graph.Node {
 	node := row[0].(graph.Node)
 	return node
 }
