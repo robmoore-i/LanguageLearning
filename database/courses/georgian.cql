@@ -2,7 +2,8 @@ CREATE (georgian:Course {name: "Georgian", image: "flagGeorgia.svg"})
 CREATE (georgian)-[:HAS_TOPIC_LESSON {index: 0}]->(pcg_hello:TopicLesson {name: "Peace Corps Georgia: Hello"})
 CREATE (georgian)-[:HAS_TOPIC_LESSON {index: 1}]->(pcg_whatAreYouCalled:TopicLesson {name: "Peace Corps Georgia: What are you called?"})
 CREATE (georgian)-[:HAS_TOPIC_LESSON {index: 2}]->(pcg_howAreYou:TopicLesson {name: "Peace Corps Georgia: How are you?"})
-RETURN georgian,pcg_hello,pcg_whatAreYouCalled,pcg_howAreYou;
+CREATE (georgian)-[:HAS_TOPIC_LESSON {index: 3}]->(pcg_jobs:TopicLesson {name: "Peace Corps Georgia: Jobs and the verb 'To be'"})
+RETURN georgian,pcg_hello,pcg_whatAreYouCalled,pcg_howAreYou,pcg_jobs;
 
 MATCH (pcg_hello:TopicLesson {name: "Peace Corps Georgia: Hello"})
 CREATE (pcg_hello)-[:HAS_QUESTION {index: 0}]->(teachingLetters:Question:ReadingQuestion {extractFile: "PeaceCorpsGeorgia/georgian-pcg_hello-letters.txt"})
@@ -46,3 +47,7 @@ CREATE (pcg_howAreYou)-[:HAS_QUESTION {index: 8}]->(tqWell:Question:TranslationQ
 CREATE (pcg_howAreYou)-[:HAS_QUESTION {index: 9}]->(tqNotBad:Question:TranslationQuestion {given: "Not bad", answer: "არამიშავს"})
 CREATE (pcg_howAreYou)-[:HAS_QUESTION {index: 10}]->(tqSeeYouSoon:Question:TranslationQuestion {given: "See you soon!", answer: "ნახვამდის"})
 RETURN pcg_howAreYou,teachingLetters,letterD,letterX,letterL,letterK,teachingPhrases,tqHowAreYou,tqThanks,tqWell,tqNotBad,tqSeeYouSoon;
+
+MATCH (pcg_jobs:TopicLesson {name: "Peace Corps Georgia: Jobs and the verb 'To be'"})
+CREATE (pcg_jobs)-[:HAS_QUESTION {index: 0}]->(teachingTobeConjugations:Question:ReadingQuestion {extractFile: "PeaceCorpsGeorgia/georgian-pcg_jobs-tobeIntroduction.txt"})
+RETURN pcg_jobs,teachingTobeConjugations;
