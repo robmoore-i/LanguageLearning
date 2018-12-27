@@ -17,13 +17,14 @@ frontend_port = int(os.environ["MELANGE_FRONTEND_PORT"])
 
 
 @setup
-def start_server():
+def start_backend():
     os.system("./../bin/src &")
 
 
 @teardown
-def stop_server():
+def kill_backend_and_reset_db():
     os.system("pkill -f bin/src")
+    os.system("cd .. && ./reset-db.sh >> /dev/null")
 
 
 # Finds the (first) entry in a (l)ist of maps where (f)ield equals (v)alue.
