@@ -34,7 +34,8 @@ export function Shuffler() {
 }
 
 export const nonShuffler = {
-    shuffleChoices: (mcq) => mcq
+    shuffleChoices: (mcq) => mcq,
+    shuffleTranslation: (tq) => tq
 }
 
 export const defaultShuffler = Shuffler()
