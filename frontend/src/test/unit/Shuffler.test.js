@@ -22,12 +22,23 @@ function assertGeneratedMCQIsValid(mcq) {
     expect(mcq[mcq.answer]).toEqual("YES")
 }
 
-it('Shuffled MCQ is consistent', () => {
+it('Shuffles MCQ consistently', () => {
     let shuffler = Shuffler()
 
     for (var i = 0; i < 50; i++) {
-        let q = generateMCQ()
-        let shuffledQ = shuffler.shuffleChoices(q)
-        assertGeneratedMCQIsValid(shuffledQ)
+        let mcq = generateMCQ()
+        let shuffledMCQ = shuffler.shuffleChoices(mcq)
+        assertGeneratedMCQIsValid(shuffledMCQ)
+    }
+})
+
+it('Shuffles TQs consistently', () => {
+    let shuffler = Shuffler()
+    let tq = {type: 0, given: "A", answer: "B"}
+
+    for (var i = 0; i < 10; i++) {
+        let shuffledTQ = shuffler.shuffleTranslation(tq)
+        expect([shuffledTQ.given, shuffledTQ.answer]).toContain("A")
+        expect([shuffledTQ.given, shuffledTQ.answer]).toContain("B")
     }
 })

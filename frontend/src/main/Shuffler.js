@@ -1,4 +1,5 @@
 import {Choices} from './MultipleChoiceQuestion'
+import {coinFlip} from './random'
 
 export function Shuffler() {
     function shuffleChoices(mcq) {
@@ -13,8 +14,22 @@ export function Shuffler() {
         return shuffledQ
     }
 
+    function shuffleTranslation(tq) {
+        let flipTranslation = coinFlip()
+        if (flipTranslation) {
+            let shuffledTQ = tq
+            let temp = tq.given
+            shuffledTQ.given = tq.answer
+            shuffledTQ.answer = temp
+            return shuffledTQ
+        } else {
+            return tq
+        }
+    }
+
     return {
-        shuffleChoices: shuffleChoices
+        shuffleChoices: shuffleChoices,
+        shuffleTranslation: shuffleTranslation
     }
 }
 
