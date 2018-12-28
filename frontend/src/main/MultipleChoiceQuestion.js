@@ -6,6 +6,7 @@ import '../styles/MultipleChoiceQuestion.css'
 // Main
 import Mark from "./Mark"
 import {continueButton, submitForMarkingButton} from "./Question"
+import {randomChoice} from './random.js'
 
 export default class MultipleChoiceQuestion extends Component {
     constructor(props) {
@@ -103,6 +104,7 @@ export const Choices = {
     B: "b",
     C: "c",
     D: "d",
+    random: () => randomChoice(["a", "b", "c", "d"])
 }
 
 function MultipleChoiceCheckBox(choice, MCQ) {

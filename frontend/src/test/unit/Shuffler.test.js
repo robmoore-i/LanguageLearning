@@ -3,8 +3,9 @@ import React from 'react'
 
 
 // Main
-import {Shuffler, randomChoice} from "../../main/Shuffler"
+import {Shuffler} from "../../main/Shuffler"
 import {Choices} from '../../main/MultipleChoiceQuestion'
+import {randomChoice} from '../../main/random.js'
 
 function generateMCQ() {
     let fourPossibleConfigurations = [
@@ -24,8 +25,9 @@ function assertGeneratedMCQIsValid(mcq) {
 it('Shuffled MCQ is consistent', () => {
     let shuffler = Shuffler()
 
-    let q = generateMCQ()
-    let shuffledQ = shuffler.shuffleChoices(q)
-
-    assertGeneratedMCQIsValid(shuffledQ)
+    for (var i = 0; i < 50; i++) {
+        let q = generateMCQ()
+        let shuffledQ = shuffler.shuffleChoices(q)
+        assertGeneratedMCQIsValid(shuffledQ)
+    }
 })
