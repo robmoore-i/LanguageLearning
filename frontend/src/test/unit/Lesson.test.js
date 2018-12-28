@@ -1,9 +1,13 @@
 // React
 import React from 'react'
+
 // Testing
 import {shallow, mount} from 'enzyme'
+
 // Main
 import Lesson from '../../main/Lesson'
+import {nonShuffler} from "../../main/Shuffler"
+
 // Enzyme react-adapter configuration & others
 import {configureAdapter, sleep} from "../utils"
 
@@ -20,7 +24,7 @@ let mockServer = lesson => {
 }
 
 async function shallowRenderLesson(course, lessonName, server) {
-    let lesson = shallow(<Lesson courseName={course} encodedLessonName={encodeURIComponent(lessonName)} server={server} />)
+    let lesson = shallow(<Lesson courseName={course} encodedLessonName={encodeURIComponent(lessonName)} server={server} shuffler={nonShuffler} />)
     await sleep(mockServerLoadTimeMs)
     return lesson
 }

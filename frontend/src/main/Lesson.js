@@ -16,6 +16,7 @@ export default class Lesson extends Component {
         this.server = this.props.server
         this.courseName = this.props.courseName
         this.lessonName = decodeUrl(this.props.encodedLessonName)
+        this.shuffler = this.props.shuffler
 
         this.state = {
             loaded: false,

@@ -17,3 +17,7 @@ export function Shuffler() {
         shuffleChoices: shuffleChoices
     }
 }
+
+export const nonShuffler = {
+    shuffleChoices: (mcq) => mcq
+}

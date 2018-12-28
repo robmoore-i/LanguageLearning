@@ -1,10 +1,14 @@
 // React
 import React from 'react'
+
 // Testing
 import {mount} from 'enzyme'
+
 // Main
 import Lesson from '../../main/Lesson'
 import {encodeUrl} from "../../main/App"
+import {nonShuffler} from "../../main/Shuffler"
+
 // Enzyme react-adapter configuration & others
 import {configureAdapter, sleep, textBoxInputEvent, questionSubmitAndContinue} from "../utils"
 
@@ -24,7 +28,7 @@ it('Can advance through an MCQ and a TQ in index order', async () => {
     let mcq = {index: 0, type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let tq = {index: 1, type: 0, given: "hello", answer: "გამარჯობა"}
     let testServer = mockServer({name: "Hello!", questions: [mcq, tq]})
-    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} />)
+    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} shuffler={nonShuffler} />)
     await sleep(mockServerLoadTimeMs)
     testLesson.update()
 
