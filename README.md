@@ -45,11 +45,11 @@ people's lessons through this interface.
 # Configuration
 
 config/ has a script you can run as `q create_env_configuration_script.q`. This
-produces a file `config/melangerc`. If you then run `source melangerc`, it will set a bunch
+produces a file `config/apprc`. If you then run `source apprc`, it will set a bunch
 of project specific environment variables so that all the parts can work together
 on the same machine in a fully configurable manner.
 
-`melangerc` is produced using the actual configuration file: `config/cfg`.
+`apprc` is produced using the actual configuration file: `config/cfg`.
 There is an example containing all of the required variables, called
 `config/cfg.example`.
 
@@ -62,16 +62,7 @@ Neo4j (3.4.9)
 Python3 (3.5.2)
 Go (1.11.1)
 Yarn (1.12.3)
-Npm (6.4.1)
 Node (10.11.0)
-
-# Name
-
-As always I have plucked a spicy name out of the air. Melange is the name of
-the geriatric spice from Frank Herbert's Dune series. It lets you live longer
-and see the future. I'll change this to be some pronouncable word in Georgian
-at some point, but for now the repo is callled LanguageLearning because its
-a work in progress.
 
 # Big plans
 

@@ -1,5 +1,5 @@
 {
-  "name": "melange",
+  "name": "Language Learning",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -15,7 +15,7 @@
     "react-scripts": "^2.1.1"
   },
   "scripts": {
-    "start": "PORT=$MELANGE_FRONTEND_PORT REACT_APP_MELANGE_SERVER_PORT=$MELANGE_SERVER_PORT react-scripts start",
+    "start": "PORT=$APP_FRONTEND_PORT REACT_APP_SERVER_PORT=$APP_SERVER_PORT REACT_APP_APP_NAME=$APP_APP_NAME react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom --watchAll=false",
     "eject": "react-scripts eject"

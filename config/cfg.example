@@ -5,3 +5,4 @@ neo4j_user=neo4j
 neo4j_pw=my_neo4j_password
 images_path=/path/to/melange/database/images
 extracts_path=/path/to/melange/database/extracts
+app_name=language_learning

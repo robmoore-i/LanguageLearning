@@ -6,14 +6,14 @@ from rest_test import *
 from assertpy import assert_that
 from neo4j import GraphDatabase
 
-neo4j_port = int(os.environ["MELANGE_NEO4J_PORT"])
-neo4j_user = os.environ["MELANGE_NEO4J_USER"]
-neo4j_pw = os.environ["MELANGE_NEO4J_PW"]
+neo4j_port = int(os.environ["APP_NEO4J_PORT"])
+neo4j_user = os.environ["APP_NEO4J_USER"]
+neo4j_pw = os.environ["APP_NEO4J_PW"]
 neo4j_url = "bolt://localhost:" + str(neo4j_port)
 driver = GraphDatabase.driver(neo4j_url, auth=(neo4j_user, neo4j_pw))
 
-server_port = int(os.environ["MELANGE_SERVER_PORT"])
-frontend_port = int(os.environ["MELANGE_FRONTEND_PORT"])
+server_port = int(os.environ["APP_SERVER_PORT"])
+frontend_port = int(os.environ["APP_FRONTEND_PORT"])
 
 
 @setup
