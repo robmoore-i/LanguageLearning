@@ -47,7 +47,7 @@ it('Can repeats TQ and MCQ if answered incorrectly', async () => {
     let tq = {index: 1, type: 0, given: "hello", answer: "გამარჯობა"}
     let mcq = {index: 0, type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testServer = mockServer({name: "Hello!", questions: [tq, mcq]})
-    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} />)
+    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} shuffler={nonShuffler} />)
     await sleep(mockServerLoadTimeMs)
     testLesson.update()
 
@@ -75,7 +75,7 @@ it('Can repeats TQ and MCQ if answered incorrectly', async () => {
 it('Repeats a question even if its the last question', async () => {
     let mcq = {index: 0, type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testServer = mockServer({name: "Hello!", questions: [mcq]})
-    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} />)
+    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} shuffler={nonShuffler} />)
     await sleep(mockServerLoadTimeMs)
     testLesson.update()
 
@@ -94,7 +94,7 @@ it('Gets a reasonably accurate reading on the lesson time', async () => {
     let mcq = {index: 0, type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let tq = {index: 1, type: 0, given: "hello", answer: "გამარჯობა"}
     let testServer = mockServer({name: "Hello!", questions: [mcq, tq]})
-    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} />)
+    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} shuffler={nonShuffler} />)
     await sleep(mockServerLoadTimeMs)
     testLesson.update()
 
@@ -121,7 +121,7 @@ it('Records if an RQ was answered incorrectly without repeating it', async () =>
     let mcq = {index: 1, type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let tq = {index: 2, type: 0, given: "hello", answer: "გამარჯობა"}
     let testServer = mockServer({name: "Hello!", questions: [rq, mcq, tq]})
-    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} />)
+    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} shuffler={nonShuffler} />)
     await sleep(mockServerLoadTimeMs)
     testLesson.update()
 
@@ -150,7 +150,7 @@ it('Records the correctness of reading subquestions when determining overall acc
     let mcq = {index: 1, type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let tq = {index: 2, type: 0, given: "hello", answer: "გამარჯობა"}
     let testServer = mockServer({name: "Hello!", questions: [rq, mcq, tq]})
-    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} />)
+    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} shuffler={nonShuffler} />)
     await sleep(mockServerLoadTimeMs)
     testLesson.update()
 

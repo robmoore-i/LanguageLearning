@@ -111,7 +111,7 @@ export default class Lesson extends Component {
                     onCompletion={questionProps.onCompletion} />
             case QuestionTypes.MULTIPLE_CHOICE:
                 return <MultipleChoiceQuestion
-                    q={questionProps.q}
+                    q={this.shuffler.shuffleChoices(questionProps.q)}
                     key={questionProps.key}
                     onCorrect={questionProps.onCorrect}
                     onIncorrect={questionProps.onIncorrect}
