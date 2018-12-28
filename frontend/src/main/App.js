@@ -12,6 +12,7 @@ import Home from './Home'
 import Courses from './Courses'
 import LessonMap from './LessonMap'
 import Lesson from './Lesson'
+import {defaultShuffler} from './Shuffler'
 
 export function startApp() {
     ReactDOM.render(<App />, document.getElementById('root'))
@@ -49,7 +50,7 @@ const MatchedLessonMap = ({ match }) => {
 
 const MatchedLesson = ({ match }) => {
     return (
-        <Lesson courseName={match.params.course} encodedLessonName={match.params.lesson} server={defaultServer}/>
+        <Lesson courseName={match.params.course} encodedLessonName={match.params.lesson} server={defaultServer} shuffler={defaultShuffler}/>
     )
 }
 
