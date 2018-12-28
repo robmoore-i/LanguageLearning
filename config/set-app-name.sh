@@ -11,5 +11,7 @@ packageJsonAppName=`echo $APP_APP_NAME | sed -e 's/ /_/g'`
 
 sed -i "2s/.*/  \"name\": \"${packageJsonAppName}\",/" ../frontend/package.json
 
-set +e
-set +x
+# Change name in lines 2 and 3 in frontend/public/manifest.json
+
+sed -i "2s/.*/  \"short_name\": \"${APP_APP_NAME}\",/" ../frontend/public/manifest.json
+sed -i "3s/.*/  \"name\": \"${APP_APP_NAME}\",/" ../frontend/public/manifest.json
