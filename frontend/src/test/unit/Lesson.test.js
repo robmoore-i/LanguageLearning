@@ -42,8 +42,6 @@ it('Shows the lesson name from the lesson data', async () => {
     expect(text).toBe("Japanese: Hello!")
 })
 
-
-
 it('Shows the loading screen while loading', async () => {
     let mockSlowServer = lesson => {
         return {
@@ -69,12 +67,17 @@ it('Shows the loading screen while loading', async () => {
     expect(text).toBe("Loading Thai: Boxing")
 })
 
+async function mountRenderLesson(course, lessonName, server) {
+    let lesson = mount(<Lesson courseName={course} encodedLessonName={encodeURIComponent(lessonName)} server={server} shuffler={nonShuffler} />)
+    await sleep(mockServerLoadTimeMs)
+    lesson.update()
+    return lesson
+}
+
 it('Adds questions which are answered incorrectly back into the questions list', async () => {
     let tq = {type: 0, given: "hello", answer: "გამარჯობა"}
     let testServer = mockServer({name: "Hello!", questions: [tq]})
-    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName="hello" server={testServer} />)
-    await sleep(mockServerLoadTimeMs)
-    testLesson.update()
+    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
 
     let completionHandlers = testLesson.instance().questionCompletionHandlers()
     completionHandlers.onIncorrect()
@@ -85,7 +88,7 @@ it('Adds questions which are answered incorrectly back into the questions list',
 it('Completes when the the incorrect then correct completion handlers are called', async () => {
     let tq = {type: 0, given: "hello", answer: "გამარჯობა"}
     let testServer = mockServer({name: "Hello!", questions: [tq]})
-    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName="hello" server={testServer} />)
+    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
     await sleep(mockServerLoadTimeMs)
     testLesson.update()
 
@@ -102,7 +105,7 @@ it('Completes when the the incorrect then correct completion handlers are called
 it('Shows the lesson stats page when all questions are complete', async () => {
     let dummyQuestion = {type: -1}
     let testServer = mockServer({name: "Hello!", questions: [dummyQuestion, dummyQuestion, dummyQuestion, dummyQuestion]})
-    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName="hello" server={testServer} />)
+    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
     testLesson.setState({currentQuestionIndex: 4, correct: 4, incorrect: 0})
     await sleep(mockServerLoadTimeMs)
     testLesson.update()
@@ -113,7 +116,7 @@ it('Shows the lesson stats page when all questions are complete', async () => {
 it('Accurately shows a lesson accuracy of less than 100% when appropriate', async () => {
     let dummyQuestion = {type: -1}
     let testServer = mockServer({name: "Hello!", questions: [dummyQuestion, dummyQuestion, dummyQuestion, dummyQuestion]})
-    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName="hello" server={testServer} />)
+    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
     testLesson.setState({currentQuestionIndex: 10, correct: 4, incorrect: 6})
     await sleep(mockServerLoadTimeMs)
     testLesson.update()
@@ -124,7 +127,7 @@ it('Accurately shows a lesson accuracy of less than 100% when appropriate', asyn
 it('Shows the lesson time on the lesson stats page', async () => {
     let dummyQuestion = {type: -1}
     let testServer = mockServer({name: "Hello!", questions: [dummyQuestion, dummyQuestion, dummyQuestion, dummyQuestion]})
-    let testLesson = shallow(<Lesson courseName="georgian" encodedLessonName="hello" server={testServer} />)
+    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
     await sleep(mockServerLoadTimeMs)
 
     let lessonStats = testLesson.instance().renderLessonStats(85.3, 100.0)
@@ -136,7 +139,7 @@ it('Shows the lesson time on the lesson stats page', async () => {
 it('Truncates lesson accuracy to 1dp on the lesson stats page', async () => {
     let dummyQuestion = {type: -1}
     let testServer = mockServer({name: "Hello!", questions: [dummyQuestion, dummyQuestion, dummyQuestion, dummyQuestion]})
-    let testLesson = shallow(<Lesson courseName="georgian" encodedLessonName="hello" server={testServer} />)
+    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
     await sleep(mockServerLoadTimeMs)
 
     let lessonStats = testLesson.instance().renderLessonStats(67.6666666666666667, 55.3)
@@ -148,7 +151,7 @@ it('Truncates lesson accuracy to 1dp on the lesson stats page', async () => {
 it('Has a button to go back to the lesson map after completing a lesson', async () => {
     let dummyQuestion = {type: -1}
     let testServer = mockServer({name: "Hello!", questions: [dummyQuestion, dummyQuestion, dummyQuestion, dummyQuestion]})
-    let testLesson = mount(<Lesson courseName="arabic" encodedLessonName="hello" server={testServer} />)
+    let testLesson = await mountRenderLesson("arabic", "hello", testServer)
     testLesson.setState({currentQuestionIndex: 6})
     await sleep(mockServerLoadTimeMs)
     testLesson.update()

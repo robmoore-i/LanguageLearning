@@ -93,10 +93,10 @@ export default class Lesson extends Component {
     renderQuestion(q) {
         let completionHandlers = this.questionCompletionHandlers()
         let questionProps = {
-            q: q,
-            // Note - the uniqueness of 'key' here is crucial. If it's not unique (aka doesn't take currentQuestionIndex into account)
+            // Note - The uniqueness of 'key' here is crucial. If it's not unique (aka doesn't take currentQuestionIndex into account),
             //        then it will not be re-rendered upon completion if two questions are the same type.
             key: "questionIndex-" + this.state.currentQuestionIndex,
+            q: q,
             onCorrect: completionHandlers.onCorrect,
             onIncorrect: completionHandlers.onIncorrect,
             onCompletion: completionHandlers.onCompletion
@@ -104,7 +104,7 @@ export default class Lesson extends Component {
         switch (q.type) {
             case QuestionTypes.TRANSLATION:
                 return <TranslationQuestion
-                    q={questionProps.q}
+                    q={this.shuffler.shuffleTranslation(questionProps.q)}
                     key={questionProps.key}
                     onCorrect={questionProps.onCorrect}
                     onIncorrect={questionProps.onIncorrect}
