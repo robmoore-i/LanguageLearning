@@ -1,7 +1,6 @@
 // React
 import React from 'react'
 
-
 // Main
 import {Shuffler} from "../../main/Shuffler"
 import {Choices} from '../../main/MultipleChoiceQuestion'
