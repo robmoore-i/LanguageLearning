@@ -91,8 +91,10 @@ export default class Lesson extends Component {
 
     renderQuestion(q) {
         let completionHandlers = this.questionCompletionHandlers()
-        let genericQuestionProps = {
+        let questionProps = {
             q: q,
+            // Note - the uniqueness of 'key' here is crucial. If it's not unique (aka doesn't take currentQuestionIndex into account)
+            //        then it will not be re-rendered upon completion if two questions are the same type.
             key: "questionIndex-" + this.state.currentQuestionIndex,
             onCorrect: completionHandlers.onCorrect,
             onIncorrect: completionHandlers.onIncorrect,
@@ -100,16 +102,24 @@ export default class Lesson extends Component {
         }
         switch (q.type) {
             case QuestionTypes.TRANSLATION:
-                return <TranslationQuestion {... genericQuestionProps} />
+                return <TranslationQuestion
+                    q={questionProps.q}
+                    key={questionProps.key}
+                    onCorrect={questionProps.onCorrect}
+                    onIncorrect={questionProps.onIncorrect}
+                    onCompletion={questionProps.onCompletion} />
             case QuestionTypes.MULTIPLE_CHOICE:
-                // Note - the uniqueness of 'key' here is crucial. If it's not unique (aka doesn't take currentQuestionIndex into account)
-                //        then it will not be re-rendered upon completion if the next question is also an MCQ.
-                return <MultipleChoiceQuestion {... genericQuestionProps} />
+                return <MultipleChoiceQuestion
+                    q={questionProps.q}
+                    key={questionProps.key}
+                    onCorrect={questionProps.onCorrect}
+                    onIncorrect={questionProps.onIncorrect}
+                    onCompletion={questionProps.onCompletion} />
             case QuestionTypes.READING:
                 return <ReadingQuestion
-                    key={"questionIndex-" + this.state.currentQuestionIndex}
-                    q={q}
-                    onCompletion={genericQuestionProps.onCompletion} />
+                    key={questionProps.key}
+                    q={questionProps.q}
+                    onCompletion={questionProps.onCompletion} />
             default:
                 return <div key="sorry pal">Can't render that question pal</div>
         }
