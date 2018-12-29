@@ -83,3 +83,9 @@ Separate Q backend for tracking UI interactions.
 UI for submitting lesson plans - which are producers(functions which return
 questions) and their corresponding inputs. Completely configurable - can be used
 to create maths questions, vocab questions or programming questions.
+
+# Seperation of learning from practice
+
+Learning something for the first time is different from practicing it later.
+There should be different exercises for learning something for the first time
+and for revisiting a topic later.
