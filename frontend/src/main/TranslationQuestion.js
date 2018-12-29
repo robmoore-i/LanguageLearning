@@ -76,7 +76,7 @@ export default class TranslationQuestion extends Component {
         let onChange, onKeyDown
         if (this.state.transitionState.isCorrectingState()) {
             onChange = (event) => {
-                if (event.target.value === this.correctionAnswer()) {
+                if (this.marker.mark(this.props.q, event.target.value) === Mark.CORRECT) {
                     this.setState({transitionState: TransitionState.CORRECTED})
                 }
             }

@@ -218,3 +218,17 @@ it('Can continue using enter key', () => {
 
     expect(questionCompletedCorrectly).toHaveBeenCalled()
 })
+
+it('Ignores whitespace, case, commas, fullstops, exclamation marks and question mark when checking a correction', () => {
+    let correctAnswer = "What are you called?"
+
+    let questionCompletedCorrectly = jest.fn()
+    let q = {type: 0, given: "შენ რა გქვია?", answer: correctAnswer}
+    let testTQ = mount(<TranslationQuestion q={q} onCorrect={questionCompletedCorrectly} />)
+
+    testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong"))
+    testTQ.find("#submit-for-marking-button").simulate("click")
+    testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("  WhaT!  aRe,   yOU! callED.     "))
+
+    expect(testTQ.find("#answer-input-textbox").prop("readOnly")).toEqual(true)
+})
