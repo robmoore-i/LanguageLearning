@@ -10,8 +10,8 @@ you put those properties on nodes or edges.
 
 # Golang
 
-I don't like having test files right next to source files. Other than that
-it's ok.
+The testing situation on the backend is fit-for-purpose, but suboptimal. This
+is my own fault.
 
 # This app
 
