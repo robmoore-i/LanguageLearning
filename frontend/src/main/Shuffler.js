@@ -18,9 +18,10 @@ export function Shuffler() {
         let flipTranslation = coinFlip()
         if (flipTranslation) {
             let shuffledTQ = tq
-            let temp = tq.given
-            shuffledTQ.given = tq.answer
-            shuffledTQ.answer = temp
+            let newAnswer = tq.given
+            let newGiven = tq.answer ? tq.answer : tq.answers[0]
+            shuffledTQ.given = newGiven
+            shuffledTQ.answer = newAnswer
             return shuffledTQ
         } else {
             return tq

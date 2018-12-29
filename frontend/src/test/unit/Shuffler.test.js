@@ -31,13 +31,28 @@ it('Shuffles MCQ consistently', () => {
     }
 })
 
-it('Shuffles TQs consistently', () => {
+it('Shuffles single answer TQs consistently', () => {
     let shuffler = Shuffler()
     let tq = {type: 0, given: "A", answer: "B"}
 
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 50; i++) {
+        let shuffledTQ = shuffler.shuffleTranslation(tq)
+
+    }
+})
+
+it('Shuffles multiple answer TQs such that the first element in the list of possible answers is swapped to being the given', () => {
+    let shuffler = Shuffler()
+    let tq = {type: 0, given: "A", answers: ["B", "C", "D", "E", "F"]}
+
+    for (var i = 0; i < 50; i++) {
         let shuffledTQ = shuffler.shuffleTranslation(tq)
         expect([shuffledTQ.given, shuffledTQ.answer]).toContain("A")
         expect([shuffledTQ.given, shuffledTQ.answer]).toContain("B")
+        expect(shuffledTQ.answers).toContain("B")
+        expect(shuffledTQ.answers).toContain("C")
+        expect(shuffledTQ.answers).toContain("D")
+        expect(shuffledTQ.answers).toContain("E")
+        expect(shuffledTQ.answers).toContain("F")
     }
 })
