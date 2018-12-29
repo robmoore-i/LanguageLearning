@@ -19,7 +19,7 @@ export function Shuffler() {
         if (flipTranslation) {
             let shuffledTQ = tq
             let newAnswer = tq.given
-            let newGiven = tq.answer ? tq.answer : tq.answers[0]
+            let newGiven = tq.hasOwnProperty("answer") ? tq.answer : tq.answers[0]
             shuffledTQ.given = newGiven
             shuffledTQ.answer = newAnswer
             return shuffledTQ

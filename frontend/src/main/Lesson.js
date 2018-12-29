@@ -57,7 +57,7 @@ export default class Lesson extends Component {
         if (this.state.currentQuestionIndex >= this.state.questions.length) {
             let accuracyPercentage = 100 * this.state.correct / (this.state.correct + this.state.incorrect)
             let lessonTimeSeconds = ((new Date()).getTime() - this.state.startTime.getTime()) / 1000
-            mainContent = this.renderLessonStats(accuracyPercentage, lessonTimeSeconds)
+            mainContent = <LessonStats key="lesson-stats-component" accuracyPercentage={accuracyPercentage} lessonTime={lessonTimeSeconds} courseName={this.courseName} />
         } else {
             mainContent = this.renderQuestion(this.state.questions[this.state.currentQuestionIndex])
         }
@@ -68,26 +68,6 @@ export default class Lesson extends Component {
             </header>,
             mainContent
         ]
-    }
-
-    renderLessonStats(accuracyPercentage, lessonTime) {
-        let accuracyTo1dpString = (Math.round(10 * accuracyPercentage) / 10).toString()
-        return (
-            <div id="lesson-stats" key="lesson-stats">
-                <br />
-                <div id="lesson-accuracy">
-                    <span>Accuracy: </span>
-                    <span id="lesson-accuracy-number">{accuracyTo1dpString + "%"}</span>
-                </div>
-                <br />
-                <div id="lesson-time">
-                    <span>Time taken: </span>
-                    <span id="lesson-time-number">{lessonTime + " seconds"}</span>
-                </div>
-                <br />
-                <a id="back-to-lessonmap-button" href={"/courses/" + this.courseName}>Back to Lesson Map</a>
-            </div>
-        )
     }
 
     renderQuestion(q) {
@@ -118,8 +98,8 @@ export default class Lesson extends Component {
                     onCompletion={questionProps.onCompletion} />
             case QuestionTypes.READING:
                 return <ReadingQuestion
-                    key={questionProps.key}
                     q={questionProps.q}
+                    key={questionProps.key}
                     onCompletion={questionProps.onCompletion} />
             default:
                 return <div key="sorry pal">Can't render that question pal</div>
@@ -163,6 +143,35 @@ export default class Lesson extends Component {
     renderLoading() {
         return (
             <h1>Loading {this.courseName}: {this.lessonName}</h1>
+        )
+    }
+}
+
+class LessonStats extends Component {
+    constructor(props) {
+        super(props)
+        this.accuracyPercentage = this.props.accuracyPercentage
+        this.lessonTime = this.props.lessonTime
+        this.courseName = this.props.courseName
+    }
+
+    render() {
+        let accuracyTo1dpString = (Math.round(10 * this.accuracyPercentage) / 10).toString()
+        return (
+            <div id="lesson-stats" key="lesson-stats">
+                <br />
+                <div id="lesson-accuracy">
+                    <span>Accuracy: </span>
+                    <span id="lesson-accuracy-number">{accuracyTo1dpString + "%"}</span>
+                </div>
+                <br />
+                <div id="lesson-time">
+                    <span>Time taken: </span>
+                    <span id="lesson-time-number">{this.lessonTime + " seconds"}</span>
+                </div>
+                <br />
+                <a id="back-to-lessonmap-button" href={"/courses/" + this.courseName}>Back to Lesson Map</a>
+            </div>
         )
     }
 }
