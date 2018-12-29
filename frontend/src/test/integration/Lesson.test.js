@@ -24,13 +24,18 @@ let mockServer = lesson => {
     }
 }
 
+async function mountRenderLesson(course, lessonName, server) {
+    let lesson = mount(<Lesson courseName={course} encodedLessonName={encodeURIComponent(lessonName)} server={server} shuffler={nonShuffler} />)
+    await sleep(mockServerLoadTimeMs)
+    lesson.update()
+    return lesson
+}
+
 it('Can advance through an MCQ and a TQ in index order', async () => {
     let mcq = {index: 0, type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let tq = {index: 1, type: 0, given: "hello", answer: "გამარჯობა"}
     let testServer = mockServer({name: "Hello!", questions: [mcq, tq]})
-    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} shuffler={nonShuffler} />)
-    await sleep(mockServerLoadTimeMs)
-    testLesson.update()
+    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
 
     // MCQ
     testLesson.find("#choice-d").simulate("click")
@@ -47,9 +52,7 @@ it('Can repeats TQ and MCQ if answered incorrectly', async () => {
     let tq = {index: 1, type: 0, given: "hello", answer: "გამარჯობა"}
     let mcq = {index: 0, type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testServer = mockServer({name: "Hello!", questions: [tq, mcq]})
-    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} shuffler={nonShuffler} />)
-    await sleep(mockServerLoadTimeMs)
-    testLesson.update()
+    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
 
     // TQ Incorrect
     testLesson.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
@@ -75,9 +78,7 @@ it('Can repeats TQ and MCQ if answered incorrectly', async () => {
 it('Repeats a question even if its the last question', async () => {
     let mcq = {index: 0, type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testServer = mockServer({name: "Hello!", questions: [mcq]})
-    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} shuffler={nonShuffler} />)
-    await sleep(mockServerLoadTimeMs)
-    testLesson.update()
+    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
 
     // MCQ Incorrect
     testLesson.find("#choice-c").simulate("click")
@@ -94,9 +95,7 @@ it('Gets a reasonably accurate reading on the lesson time', async () => {
     let mcq = {index: 0, type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let tq = {index: 1, type: 0, given: "hello", answer: "გამარჯობა"}
     let testServer = mockServer({name: "Hello!", questions: [mcq, tq]})
-    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} shuffler={nonShuffler} />)
-    await sleep(mockServerLoadTimeMs)
-    testLesson.update()
+    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
 
     let testDurationSeconds = 120
     let mockStartTime = new Date((new Date()).getTime() - 1000 * testDurationSeconds)
@@ -121,9 +120,7 @@ it('Records if an RQ was answered incorrectly without repeating it', async () =>
     let mcq = {index: 1, type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let tq = {index: 2, type: 0, given: "hello", answer: "გამარჯობა"}
     let testServer = mockServer({name: "Hello!", questions: [rq, mcq, tq]})
-    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} shuffler={nonShuffler} />)
-    await sleep(mockServerLoadTimeMs)
-    testLesson.update()
+    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
 
     // RQ
     testLesson.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Wrong"))
@@ -150,9 +147,7 @@ it('Records the correctness of reading subquestions when determining overall acc
     let mcq = {index: 1, type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let tq = {index: 2, type: 0, given: "hello", answer: "გამარჯობა"}
     let testServer = mockServer({name: "Hello!", questions: [rq, mcq, tq]})
-    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} shuffler={nonShuffler} />)
-    await sleep(mockServerLoadTimeMs)
-    testLesson.update()
+    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
 
     // RQ
     testLesson.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Kitchen"))
@@ -174,8 +169,7 @@ it('Records the correctness of reading subquestions when determining overall acc
 it('Shows the lesson stats page when all questions are complete', async () => {
     let dummyQuestion = {type: -1}
     let testServer = mockServer({name: "Hello!", questions: [dummyQuestion, dummyQuestion, dummyQuestion, dummyQuestion]})
-    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} shuffler={nonShuffler} />)
-    await sleep(mockServerLoadTimeMs)
+    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
     testLesson.setState({currentQuestionIndex: 4, correct: 4, incorrect: 0})
     testLesson.update()
 
@@ -185,8 +179,7 @@ it('Shows the lesson stats page when all questions are complete', async () => {
 it('Accurately shows a lesson accuracy of less than 100% when appropriate', async () => {
     let dummyQuestion = {type: -1}
     let testServer = mockServer({name: "Hello!", questions: [dummyQuestion, dummyQuestion, dummyQuestion, dummyQuestion]})
-    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} shuffler={nonShuffler} />)
-    await sleep(mockServerLoadTimeMs)
+    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
     testLesson.setState({currentQuestionIndex: 10, correct: 4, incorrect: 6})
     testLesson.update()
 
