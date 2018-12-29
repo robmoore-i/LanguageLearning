@@ -15,11 +15,14 @@ export function Shuffler() {
     }
 
     function shuffleTranslation(tq) {
-        let flipTranslation = coinFlip()
-        if (flipTranslation) {
+        if (tq.hasOwnProperty("answers")) {
+            let copyTQ = tq
+            copyTQ.answer = tq.answers[0]
+            return copyTQ
+        } else if (coinFlip()) {
             let shuffledTQ = tq
             let newAnswer = tq.given
-            let newGiven = tq.hasOwnProperty("answer") ? tq.answer : tq.answers[0]
+            let newGiven = tq.answer
             shuffledTQ.given = newGiven
             shuffledTQ.answer = newAnswer
             return shuffledTQ

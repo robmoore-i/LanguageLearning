@@ -41,14 +41,14 @@ it('Shuffles single answer TQs consistently', () => {
     }
 })
 
-it('Shuffles multiple answer TQs such that the first element in the list of possible answers is swapped to being the given', () => {
+it("Doesn't shuffle multiple answer TQs", () => {
     let shuffler = Shuffler()
     let tq = {type: 0, given: "A", answers: ["B", "C", "D", "E", "F"]}
 
     for (var i = 0; i < 50; i++) {
         let shuffledTQ = shuffler.shuffleTranslation(tq)
-        expect([shuffledTQ.given, shuffledTQ.answer]).toContain("A")
-        expect([shuffledTQ.given, shuffledTQ.answer]).toContain("B")
+        expect(shuffledTQ.given).toEqual("A")
+        expect(shuffledTQ.answer).toEqual("B")
         expect(shuffledTQ.answers).toContain("B")
         expect(shuffledTQ.answers).toContain("C")
         expect(shuffledTQ.answers).toContain("D")

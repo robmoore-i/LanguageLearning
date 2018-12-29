@@ -170,3 +170,25 @@ it('Records the correctness of reading subquestions when determining overall acc
 
     expect(testLesson.find("#lesson-accuracy").text()).toEqual("Accuracy: 80%")
 })
+
+it('Shows the lesson stats page when all questions are complete', async () => {
+    let dummyQuestion = {type: -1}
+    let testServer = mockServer({name: "Hello!", questions: [dummyQuestion, dummyQuestion, dummyQuestion, dummyQuestion]})
+    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} shuffler={nonShuffler} />)
+    await sleep(mockServerLoadTimeMs)
+    testLesson.setState({currentQuestionIndex: 4, correct: 4, incorrect: 0})
+    testLesson.update()
+
+    expect(testLesson.find("#lesson-accuracy").text()).toEqual("Accuracy: 100%")
+})
+
+it('Accurately shows a lesson accuracy of less than 100% when appropriate', async () => {
+    let dummyQuestion = {type: -1}
+    let testServer = mockServer({name: "Hello!", questions: [dummyQuestion, dummyQuestion, dummyQuestion, dummyQuestion]})
+    let testLesson = mount(<Lesson courseName="georgian" encodedLessonName={encodeUrl("hello")} server={testServer} shuffler={nonShuffler} />)
+    await sleep(mockServerLoadTimeMs)
+    testLesson.setState({currentQuestionIndex: 10, correct: 4, incorrect: 6})
+    testLesson.update()
+
+    expect(testLesson.find("#lesson-accuracy").text()).toEqual("Accuracy: 40%")
+})
