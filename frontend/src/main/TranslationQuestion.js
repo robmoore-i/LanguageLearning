@@ -18,6 +18,17 @@ export default class TranslationQuestion extends Component {
         }
 
         this.marker = Marker()
+
+        this.answerInputTextBoxRef = React.createRef()
+    }
+
+    componentDidMount() {
+        // Yuck. This is test-only control-flow management.
+        try {
+            this.answerInputTextBoxRef.current.focus()
+        } catch (e) {
+            // This branch is entered during a shallow render
+        }
     }
 
     render() {
@@ -91,7 +102,7 @@ export default class TranslationQuestion extends Component {
         }
 
         return (
-            <textarea id="answer-input-textbox" key="answer-input-textbox"
+            <textarea autoFocus id="answer-input-textbox" key="answer-input-textbox" ref={this.answerInputTextBoxRef}
                 rows="5"
                 cols="50"
                 readOnly={this.state.transitionState.isDoneState()}
