@@ -27,7 +27,7 @@ export default class LessonStats extends Component {
                     <span id="lesson-time-number">{this.lessonTime + " seconds"}</span>
                 </div>
                 <br />
-                <a id="back-to-lessonmap-button" href={"/courses/" + this.courseName}>Back to Lesson Map</a>
+                <a autoFocus id="back-to-lessonmap-button" href={"/courses/" + this.courseName} >Back to Lesson Map</a>
             </div>
         )
     }
