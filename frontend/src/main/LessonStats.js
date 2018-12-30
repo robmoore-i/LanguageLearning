@@ -7,7 +7,13 @@ import '../styles/LessonStats.css'
 export default class LessonStats extends Component {
     constructor(props) {
         super(props)
-        this.accuracyPercentage = this.props.accuracyPercentage
+
+        if (isNaN(this.props.accuracyPercentage)) {
+            this.accuracyPercentage = 100
+        } else {
+            this.accuracyPercentage = this.props.accuracyPercentage
+        }
+
         this.lessonTime = this.props.lessonTime
         this.courseName = this.props.courseName
     }
