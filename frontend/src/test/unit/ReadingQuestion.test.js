@@ -384,7 +384,8 @@ it('Shows only the continue button if questions is a empty list', () => {
     }
     let testRQ = shallow(<ReadingQuestion q={q} />)
 
-    expect(testRQ.find("#read-the-extract-prompt").text()).toBe("Read the text, there are no questions")
+    expect(testRQ.find("#read-the-extract-prompt").text()).toBe("")
+    expect(testRQ.find("#read-the-extract-prompt").exists()).toBe(true)
 })
 
 it('Shows only the continue button if there isnt a questions property', () => {
@@ -394,5 +395,6 @@ it('Shows only the continue button if there isnt a questions property', () => {
     }
     let testRQ = shallow(<ReadingQuestion q={q} />)
 
-    expect(testRQ.find("#read-the-extract-prompt").text()).toBe("Read the text, there are no questions")
+    expect(testRQ.find("#read-the-extract-prompt").text()).toBe("")
+    expect(testRQ.find("#read-the-extract-prompt").exists()).toBe(true)
 })

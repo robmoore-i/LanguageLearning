@@ -70,7 +70,7 @@ export default class ReadingQuestion extends Component {
 
     renderNoQuestions() {
         let button = continueButton(() => {this.props.onCompletion(0, 0)})
-        return this.renderExtractPrompt("Read the text, there are no questions").concat([button])
+        return this.renderExtractPrompt("").concat([button])
     }
 
     questions() {
