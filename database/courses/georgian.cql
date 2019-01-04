@@ -50,4 +50,13 @@ RETURN pcg_howAreYou,teachingLetters,letterD,letterX,letterL,letterK,teachingPhr
 
 MATCH (pcg_jobs:TopicLesson {name: "Peace Corps Georgia: Jobs and the verb 'To be'"})
 CREATE (pcg_jobs)-[:HAS_QUESTION {index: 0}]->(teachingTobeConjugations:Question:ReadingQuestion {extractFile: "PeaceCorpsGeorgia/georgian-pcg_jobs-tobeIntroduction.txt"})
-RETURN pcg_jobs,teachingTobeConjugations;
+CREATE (pcg_jobs)-[:HAS_QUESTION {index: 1}]->(iAm: Question:MultipleChoiceQuestion {question: "means \"I am\"  in English", a: "მე ვარ", b:"შენ ხარ", c:"ის არის", d:"ჩვენ ვართ", answer: "a"})
+CREATE (pcg_jobs)-[:HAS_QUESTION {index: 2}]->(sheIs: Question:MultipleChoiceQuestion {question: "means \"She is\"  in English", a: "მე ვარ", b:"შენ ხარ", c:"ის არის", d:"ჩვენ ვართ", answer: "c"})
+CREATE (pcg_jobs)-[:HAS_QUESTION {index: 3}]->(youAre: Question:MultipleChoiceQuestion {question: "means \"You are\"  in English", a: "მე ვარ", b:"შენ ხარ", c:"ის არის", d:"ჩვენ ვართ", answer: "b"})
+CREATE (pcg_jobs)-[:HAS_QUESTION {index: 4}]->(itIs: Question:MultipleChoiceQuestion {question: "means \"It is\"  in English", a: "მე ვარ", b:"შენ ხარ", c:"ის არის", d:"ჩვენ ვართ", answer: "c"})
+CREATE (pcg_jobs)-[:HAS_QUESTION {index: 5}]->(teachingJobs:Question:ReadingQuestion {extractFile: "PeaceCorpsGeorgia/georgian-pcg_jobs-jobs.txt"})
+CREATE (pcg_jobs)-[:HAS_QUESTION {index: 6}]->(tqSheIsAVolunteer:Question:TranslationQuestion {given: "ის მოხალისეა", answers: ["She is a volunteer", "She's a volunteer", "He is a volunteer", "He's a volunteer"]})
+CREATE (pcg_jobs)-[:HAS_QUESTION {index: 7}]->(tqIAmAManager:Question:TranslationQuestion {given: "მე ვარ მენეგერი", answers: ["I am a manager", "I'm a manager"]})
+CREATE (pcg_jobs)-[:HAS_QUESTION {index: 8}]->(tqYouAreADirector:Question:TranslationQuestion {given: "შენ ხარ დირექტორი", answers: ["You are a director", "You're a director"]})
+CREATE (pcg_jobs)-[:HAS_QUESTION {index: 9}]->(tqIAmAVolunteer:Question:TranslationQuestion {given: "მოხალისე ვარ", answers: ["I am a volunteer", "I'm a volunteer"]})
+RETURN pcg_jobs,teachingTobeConjugations,iAm,sheIs,youAre,itIs,teachingJobs,tqSheIsAVolunteer,tqIAmAManager,tqYouAreADirector,tqIAmAVolunteer;
