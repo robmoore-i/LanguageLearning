@@ -4,7 +4,6 @@ import React from 'react'
 import {mount, shallow} from 'enzyme'
 // Main
 import MultipleChoiceQuestion from '../../main/MultipleChoiceQuestion'
-import {Choices} from '../../main/Choices'
 import Mark from "../../main/Mark"
 // Enzyme react-adapter configuration & others
 import {configureAdapter, questionSubmitAndContinue} from "../utils"
@@ -12,14 +11,14 @@ import {configureAdapter, questionSubmitAndContinue} from "../utils"
 configureAdapter()
 
 it('Shows the question of a translation question', () => {
-    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testMCQ = shallow(<MultipleChoiceQuestion q={q} />)
 
     expect(testMCQ.find("#question").text()).toBe("Which of these sounds like \"i\" in English?")
 })
 
 it('Shows the four choices', () => {
-    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testMCQ = shallow(<MultipleChoiceQuestion q={q} />)
 
     expect(testMCQ.find("#choiceValue-a").text()).toBe("ა")
@@ -29,7 +28,7 @@ it('Shows the four choices', () => {
 })
 
 it('Can select a choice', () => {
-    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
 
     testMCQ.find("#choice-a").simulate("click")
@@ -38,7 +37,7 @@ it('Can select a choice', () => {
 })
 
 it('Can select only one choice at a time', () => {
-    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
 
     testMCQ.find("#choice-a").simulate("click")
@@ -49,7 +48,7 @@ it('Can select only one choice at a time', () => {
 })
 
 it('Marks a correct answer as correct', () => {
-    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
 
     testMCQ.find("#choice-d").simulate("click")
@@ -60,7 +59,7 @@ it('Marks a correct answer as correct', () => {
 })
 
 it('Marks an incorrect answer as incorrect', () => {
-    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
 
     testMCQ.find("#choice-c").simulate("click")
@@ -72,7 +71,7 @@ it('Marks an incorrect answer as incorrect', () => {
 })
 
 it('Doesnt mark if no answer is given', () => {
-    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
 
     testMCQ.find("#submit-for-marking-button").simulate("click")
@@ -83,7 +82,7 @@ it('Doesnt mark if no answer is given', () => {
 })
 
 it('Transforms submit button into continue button after correct answer', () => {
-    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
 
     testMCQ.find("#choice-d").simulate("click")
@@ -95,7 +94,7 @@ it('Transforms submit button into continue button after correct answer', () => {
 })
 
 it('Calls the onCorrect completion handler when question answered correctly', () => {
-    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let questionCompletedCorrectly = jest.fn()
     let testMCQ = mount(<MultipleChoiceQuestion q={q} onCorrect={questionCompletedCorrectly} />)
 
@@ -106,7 +105,7 @@ it('Calls the onCorrect completion handler when question answered correctly', ()
 })
 
 it('Calls the onIncorrect completion handler when question answered incorrectly', () => {
-    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let questionCompletedIncorrectly = jest.fn()
     let testMCQ = mount(<MultipleChoiceQuestion q={q} onIncorrect={questionCompletedIncorrectly} />)
 
@@ -117,7 +116,7 @@ it('Calls the onIncorrect completion handler when question answered incorrectly'
 })
 
 it('Shows the correction for after answering incorrectly', () => {
-    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testMCQ = mount(<MultipleChoiceQuestion q={q} onIncorrect={() => {}} />)
 
     testMCQ.find("#choice-b").simulate("click")
@@ -127,17 +126,17 @@ it('Shows the correction for after answering incorrectly', () => {
 })
 
 it('Clicking checkboxes after marking doesnt change the active choice', () => {
-    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testMCQ = mount(<MultipleChoiceQuestion q={q} onIncorrect={() => {}} />)
 
     testMCQ.find("#choice-b").simulate("click")
     questionSubmitAndContinue(testMCQ)
 
-    expect(testMCQ.state("activeChoice")).toEqual(Choices.B)
+    expect(testMCQ.state("activeChoice")).toEqual("b")
 })
 
 it('An incorrect answer changes class after marking', () => {
-    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
 
     testMCQ.find("#choice-c").simulate("click")
@@ -148,25 +147,25 @@ it('An incorrect answer changes class after marking', () => {
 })
 
 it('Can select choices using ABCD', () => {
-    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
 
     window.onkeydown({key: "a"})
     testMCQ.update()
-    expect(testMCQ.state("activeChoice")).toEqual(Choices.A)
+    expect(testMCQ.state("activeChoice")).toEqual("a")
 })
 
 it('Can select choices using 1234', () => {
-    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
 
     window.onkeydown({key: "2"})
     testMCQ.update()
-    expect(testMCQ.state("activeChoice")).toEqual(Choices.B)
+    expect(testMCQ.state("activeChoice")).toEqual("b")
 })
 
 it('Can submit choice for marking using enter', () => {
-    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
 
     testMCQ.find("#choice-c").simulate("click")
@@ -177,7 +176,7 @@ it('Can submit choice for marking using enter', () => {
 })
 
 it('Can press continue button using enter', () => {
-    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: Choices.D}
+    let q = {type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let questionCompletedCorrectly = jest.fn()
     let testMCQ = mount(<MultipleChoiceQuestion q={q} onCorrect={questionCompletedCorrectly} />)
 
