@@ -73,7 +73,7 @@ achieving.
 
 ## UI interaction tracking
 
-Separate Q backend for tracking UI interactions.
+Separate Q server for tracking UI interactions.
 
 # Content creation
 
