@@ -86,15 +86,17 @@ export default class Lesson extends Component {
         }
         switch (q.type) {
             case QuestionTypes.TRANSLATION:
+                let shuffledTQ = this.shuffler.shuffleTranslation(questionProps.q)
                 return <TranslationQuestion
-                    q={this.shuffler.shuffleTranslation(questionProps.q)}
+                    q={shuffledTQ}
                     key={questionProps.key}
                     onCorrect={questionProps.onCorrect}
                     onIncorrect={questionProps.onIncorrect}
                     onCompletion={questionProps.onCompletion} />
             case QuestionTypes.MULTIPLE_CHOICE:
+                let shuffledMCQ = this.shuffler.shuffleChoices(questionProps.q)
                 return <MultipleChoiceQuestion
-                    q={this.shuffler.shuffleChoices(questionProps.q)}
+                    q={shuffledMCQ}
                     key={questionProps.key}
                     onCorrect={questionProps.onCorrect}
                     onIncorrect={questionProps.onIncorrect}
