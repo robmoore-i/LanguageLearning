@@ -10,7 +10,7 @@ you put those properties on nodes or edges.
 
 # Golang
 
-It's okay, but nothing special. I'm probably just using it wrong.
+It's okay, but nothing special. I'm probably using it wrong.
 
 # This app
 
