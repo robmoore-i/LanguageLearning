@@ -54,7 +54,7 @@ There is an example containing all of the required variables, called
 
 # Dependencies
 
-Forma: <name of thing> (<version I am using>)
+Format: <name of thing> (<version I am using>)
 
 Q (3.5)
 Neo4j (3.4.9)
