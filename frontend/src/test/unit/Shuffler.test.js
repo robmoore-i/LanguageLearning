@@ -3,7 +3,7 @@ import React from 'react'
 
 // Main
 import {Shuffler} from "../../main/Shuffler"
-import {Choices} from '../../main/MultipleChoiceQuestion'
+import {Choices} from '../../main/Choices'
 import {randomChoice} from '../../main/random.js'
 
 function generateMCQ() {

@@ -1,9 +1,9 @@
-import {Choices} from './MultipleChoiceQuestion'
+import {ChoicesClass} from './Choices'
 import {coinFlip} from './random'
 
 export function Shuffler() {
     function shuffleChoices(mcq) {
-        let selectedNewAnswer = Choices.random()
+        let selectedNewAnswer = ChoicesClass.random(4)
         let currentAnswer = mcq.answer
         let answerValue = mcq[currentAnswer]
         let answerToBeReplacedByRealAnswer = mcq[selectedNewAnswer]
