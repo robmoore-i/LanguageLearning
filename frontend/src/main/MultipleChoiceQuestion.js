@@ -12,6 +12,8 @@ export default class MultipleChoiceQuestion extends Component {
     constructor(props) {
         super(props)
 
+        this.nChoices = 4
+
         this.state = {
             activeChoice: Choices.NONE,
             markResult: Mark.UNMARKED
@@ -48,10 +50,7 @@ export default class MultipleChoiceQuestion extends Component {
             </div>,
             <br key="question-title--break--choices" />,
             <div key="choices">
-                {MultipleChoiceCheckBox(Choices.A, this)}
-                {MultipleChoiceCheckBox(Choices.B, this)}
-                {MultipleChoiceCheckBox(Choices.C, this)}
-                {MultipleChoiceCheckBox(Choices.D, this)}
+                {this.choiceCheckBoxes()}
             </div>,
             <div key="choices--break--submit-button">
                 <br />
@@ -59,6 +58,15 @@ export default class MultipleChoiceQuestion extends Component {
             </div>,
             this.button()
         ]
+    }
+
+    choiceCheckBoxes() {
+        let choices = []
+        for (var i = 0; i < this.nChoices ; i++) {
+            let choice = Choices.fromInt(i)
+            choices.push(MultipleChoiceCheckBox(choice, this))
+        }
+        return choices
     }
 
     button() {
@@ -109,6 +117,9 @@ export const Choices = {
         } else if (k === "d" || k === "4") {
             return Choices.D
         }
+    },
+    fromInt: (i) => {
+        return [Choices.A, Choices.B, Choices.C, Choices.D][i]
     }
 }
 
@@ -149,11 +160,12 @@ function MultipleChoiceCheckBox(choice, MCQ) {
 
     return (
         <div id={"choice-" + choice}
+             key={"choice-" + choice}
              className={classes().join(" ")}
              onClick={onClick()}>
             <input id={"choicebox-" + choice}
                    type="radio"
-                   key="checkbox"
+                   key={"checkbox-" + choice}
                    checked={checked}
                    onChange={() => {} /* This removes a warning about having a `checked` prop without an `onChange` handler.*/}/>
             <span id={"choiceValue-" + choice} key="choiceValue">{MCQ.props.q[choice]}</span>
