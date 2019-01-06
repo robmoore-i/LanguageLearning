@@ -12,8 +12,7 @@ export default class MultipleChoiceQuestion extends Component {
     constructor(props) {
         super(props)
 
-        this.nChoices = 4
-
+        this.nChoices = numberOfChoices(this.props.q)
         this.choices = Choices(this.nChoices)
 
         this.state = {
@@ -150,4 +149,8 @@ function MultipleChoiceCheckBox(choice, MCQ) {
             <span id={"choiceValue-" + choice} key="choiceValue">{MCQ.props.q[choice]}</span>
         </div>
     )
+}
+
+export function numberOfChoices(mcq) {
+    return Object.keys(mcq).length - ["type", "question", "answer"].length
 }

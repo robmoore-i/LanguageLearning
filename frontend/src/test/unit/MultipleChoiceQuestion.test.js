@@ -187,3 +187,24 @@ it('Can press continue button using enter', () => {
 
     expect(questionCompletedCorrectly).toHaveBeenCalled()
 })
+
+it('Shows three choices if there are only three', () => {
+    let q = {type: 1, question: "sounds like \"u\" in English", a: "ა", b: "ო", c: "უ", answer: "c"}
+    let testMCQ = shallow(<MultipleChoiceQuestion q={q} />)
+
+    expect(testMCQ.find("#choiceValue-a").text()).toBe("ა")
+    expect(testMCQ.find("#choiceValue-b").text()).toBe("ო")
+    expect(testMCQ.find("#choiceValue-c").text()).toBe("უ")
+    expect(testMCQ.find("#choiceValue-d").exists()).toBe(false)
+})
+
+it('Shows five choices if there are five', () => {
+    let q = {type: 1, question: "sounds like \"s\" in English", a: "ა", b: "ო", c: "უ", d: "ხ", e: "ს", answer: "e"}
+    let testMCQ = shallow(<MultipleChoiceQuestion q={q} />)
+
+    expect(testMCQ.find("#choiceValue-a").text()).toBe("ა")
+    expect(testMCQ.find("#choiceValue-b").text()).toBe("ო")
+    expect(testMCQ.find("#choiceValue-c").text()).toBe("უ")
+    expect(testMCQ.find("#choiceValue-d").text()).toBe("ხ")
+    expect(testMCQ.find("#choiceValue-e").text()).toBe("ს")
+})
