@@ -14,7 +14,7 @@ export default class MultipleChoiceQuestion extends Component {
 
         this.nChoices = 4
 
-        this.choices = Choices.init(this.nChoices)
+        this.choices = Choices(this.nChoices)
 
         this.state = {
             activeChoice: this.choices.NONE,
