@@ -14,8 +14,10 @@ export default class MultipleChoiceQuestion extends Component {
 
         this.nChoices = 4
 
+        this.choices = Choices.init(this.nChoices)
+
         this.state = {
-            activeChoice: Choices.NONE,
+            activeChoice: this.choices.NONE,
             markResult: Mark.UNMARKED
         }
     }
@@ -25,8 +27,8 @@ export default class MultipleChoiceQuestion extends Component {
             let k = event.key
             if (k === "Enter") {
                 mcq.button().props.onClick()
-            } else if (Choices.isChoiceKey(k)) {
-                mcq.setState({activeChoice: Choices.fromKey(k)})
+            } else if (this.choices.isChoiceKey(k)) {
+                mcq.setState({activeChoice: this.choices.fromKey(k)})
             }
         }
     }
@@ -63,7 +65,7 @@ export default class MultipleChoiceQuestion extends Component {
     choiceCheckBoxes() {
         let choices = []
         for (var i = 0; i < this.nChoices ; i++) {
-            let choice = Choices.fromInt(i)
+            let choice = this.choices.fromInt(i)
             choices.push(MultipleChoiceCheckBox(choice, this))
         }
         return choices
@@ -90,7 +92,7 @@ export default class MultipleChoiceQuestion extends Component {
     }
 
     mark(choice) {
-        if (choice === Choices.NONE) {
+        if (choice === this.choices.NONE) {
             return Mark.UNMARKED
         } else if (choice === this.props.q.answer) {
             return Mark.CORRECT

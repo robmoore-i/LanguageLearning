@@ -1,7 +1,7 @@
 import {randomChoice} from './random'
 import {isLowercaseLetter, isOneDigitNumber} from './string'
 
-export const ChoicesClass = {
+export const Choices = {
     init: (nChoices) => {
         let capitalAlphabet = "ABCD"
         let o = {}
@@ -33,7 +33,7 @@ export const ChoicesClass = {
         return o
     },
 
-    random: (n) => randomChoice(["a", "b", "c", "d"])
-}
+    random: (n) => randomChoice(["a", "b", "c", "d"]),
 
-export const Choices = ChoicesClass.init(4)
+    NONE: "!"
+}
