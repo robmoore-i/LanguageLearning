@@ -33,7 +33,5 @@ export const Choices = {
         return o
     },
 
-    random: (n) => randomCharChoice("abcdef".substring(0, n)),
-
-    NONE: "!"
+    random: (n) => randomCharChoice("abcdef".substring(0, n))
 }
