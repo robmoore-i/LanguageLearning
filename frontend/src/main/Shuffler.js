@@ -1,9 +1,10 @@
+import {numberOfChoices} from './MultipleChoiceQuestion'
 import {randomMultipleQuestionChoice} from './Choices'
 import {coinFlip} from './random'
 
 export function Shuffler() {
     function shuffleChoices(mcq) {
-        let selectedNewAnswer = randomMultipleQuestionChoice(4)
+        let selectedNewAnswer = randomMultipleQuestionChoice(numberOfChoices(mcq))
         let currentAnswer = mcq.answer
         let answerValue = mcq[currentAnswer]
         let answerToBeReplacedByRealAnswer = mcq[selectedNewAnswer]
