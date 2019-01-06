@@ -21,16 +21,10 @@ export default class MultipleChoiceQuestion extends Component {
     onKeyDownClosure(mcq) {
         return (event) => {
             let k = event.key
-            if (k === "a" || k === "1") {
-                mcq.setState({activeChoice: Choices.A})
-            } else if (k === "b" || k === "2") {
-                mcq.setState({activeChoice: Choices.B})
-            } else if (k === "c" || k === "3") {
-                mcq.setState({activeChoice: Choices.C})
-            } else if (k === "d" || k === "4") {
-                mcq.setState({activeChoice: Choices.D})
-            } else if (k === "Enter") {
+            if (k === "Enter") {
                 mcq.button().props.onClick()
+            } else {
+                mcq.setState({activeChoice: Choices.fromKey(k)})
             }
         }
     }
@@ -104,7 +98,18 @@ export const Choices = {
     B: "b",
     C: "c",
     D: "d",
-    random: () => randomChoice(["a", "b", "c", "d"])
+    random: () => randomChoice(["a", "b", "c", "d"]),
+    fromKey: (k) => {
+        if (k === "a" || k === "1") {
+            return Choices.A
+        } else if (k === "b" || k === "2") {
+            return Choices.B
+        } else if (k === "c" || k === "3") {
+            return Choices.C
+        } else if (k === "d" || k === "4") {
+            return Choices.D
+        }
+    }
 }
 
 function MultipleChoiceCheckBox(choice, MCQ) {
