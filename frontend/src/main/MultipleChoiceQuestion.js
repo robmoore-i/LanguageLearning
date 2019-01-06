@@ -152,7 +152,7 @@ function MultipleChoiceCheckBox(choice, MCQ) {
 }
 
 export function numberOfChoices(mcq) {
-    return Object.keys(mcq).length - ["type", "question", "answer"].length
+    return Object.keys(mcq).length - ["type", "index", "question", "answer"].length
 }
 
 export function rmExcessChoices(mcq) {

@@ -7,7 +7,7 @@ import '../styles/Lesson.css'
 // Main
 import {decodeUrl} from "./App"
 import {QuestionTypes} from "./Question"
-import MultipleChoiceQuestion from "./MultipleChoiceQuestion"
+import MultipleChoiceQuestion, {rmExcessChoices} from "./MultipleChoiceQuestion"
 import TranslationQuestion from "./TranslationQuestion"
 import ReadingQuestion from "./ReadingQuestion"
 import LessonStats from "./LessonStats"
@@ -94,7 +94,8 @@ export default class Lesson extends Component {
                     onIncorrect={questionProps.onIncorrect}
                     onCompletion={questionProps.onCompletion} />
             case QuestionTypes.MULTIPLE_CHOICE:
-                let shuffledMCQ = this.shuffler.shuffleChoices(questionProps.q)
+                let withoutExcessChoices = rmExcessChoices(questionProps.q)
+                let shuffledMCQ = this.shuffler.shuffleChoices(withoutExcessChoices)
                 return <MultipleChoiceQuestion
                     q={shuffledMCQ}
                     key={questionProps.key}
