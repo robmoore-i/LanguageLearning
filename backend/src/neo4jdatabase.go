@@ -173,7 +173,23 @@ func parseMCQ(row []interface{}) JsonEncodable {
     node := firstNode(row)
     index := row[1].(int64)
 	p := node.Properties
-	return NewMCQ(index, p["question"].(string), p["a"].(string), p["b"].(string), p["c"].(string), p["d"].(string), p["answer"].(string))
+    a := "!"
+    b := "!"
+    c := "!"
+    d := "!"
+    if choiceA, hasA := p["a"]; hasA {
+        a = choiceA.(string)
+    }
+    if choiceB, hasB := p["b"]; hasB {
+        b = choiceB.(string)
+    }
+    if choiceC, hasC := p["c"]; hasC {
+        c = choiceC.(string)
+    }
+    if choiceD, hasD := p["d"]; hasD {
+        d = choiceD.(string)
+    }
+	return NewMCQ(index, p["question"].(string), a, b, c, d, p["answer"].(string))
 }
 
 func parseRQ(lessonName string, row []interface{}) JsonEncodable {

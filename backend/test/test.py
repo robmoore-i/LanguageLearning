@@ -342,4 +342,31 @@ def can_get_lesson_order_for_course():
     assert_that(colours_lesson["index"]).is_equal_to(2)
 
 
+@test
+def can_get_lesson_with_mcq_with_three_choices():
+    # Seed the database
+    with driver.session() as session:
+        session.run(
+            """
+            CREATE (toBe:TopicLesson {name: "MCQ3"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "Georgian", image: "img.png"})
+            CREATE (toBe)-[:HAS_QUESTION {index: 1}]->(singularToBe:Question:MultipleChoiceQuestion {question: "means \\"I am\\" in English", a: "მე ვარ", b: "შენ ხარ", c: "ის არის", answer: "a"})
+            RETURN toBe,singularToBe,c;
+            """)
+
+    # Query the server
+    res = requests.post("http://localhost:" + str(server_port) + "/lesson", json={"lessonName": "MCQ3"})
+
+    # Assert the response
+    lesson = res.json()
+    questions = lesson["questions"]
+
+    expected_mcq = {'index': 1, 'type': 1, 'question': 'means "I am" in English',
+                    'a': 'მე ვარ', 'b': 'შენ ხარ', 'c': 'ის არის', 'd': '!', 'answer': 'a'}
+    assert_that(type(questions).__name__).is_equal_to('list')
+    assert_that(len(questions)).is_equal_to(1)
+    mcq = questions[0]
+    assert_that(type(mcq).__name__).is_equal_to('dict')
+    assert_that(mcq).is_equal_to(expected_mcq)
+
+
 exit(main(locals()))
