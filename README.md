@@ -10,8 +10,7 @@ you put those properties on nodes or edges.
 
 # Golang
 
-The testing situation on the backend is fit-for-purpose, but suboptimal. This
-is my own fault.
+It's okay, but nothing special. I'm probably just using it wrong.
 
 # This app
 
