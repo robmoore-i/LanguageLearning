@@ -6,7 +6,8 @@ import '../styles/MultipleChoiceQuestion.css'
 // Main
 import Mark from "./Mark"
 import {continueButton, submitForMarkingButton} from "./Question"
-import {randomChoice} from './random.js'
+import {randomChoice} from './random'
+import {isLowercaseLetter, isOneDigitNumber} from './string'
 
 export default class MultipleChoiceQuestion extends Component {
     constructor(props) {
@@ -25,7 +26,7 @@ export default class MultipleChoiceQuestion extends Component {
             let k = event.key
             if (k === "Enter") {
                 mcq.button().props.onClick()
-            } else {
+            } else if (Choices.isChoiceKey(k)) {
                 mcq.setState({activeChoice: Choices.fromKey(k)})
             }
         }
@@ -100,28 +101,42 @@ export default class MultipleChoiceQuestion extends Component {
     }
 }
 
-export const Choices = {
-    NONE: "!",
-    A: "a",
-    B: "b",
-    C: "c",
-    D: "d",
-    random: () => randomChoice(["a", "b", "c", "d"]),
-    fromKey: (k) => {
-        if (k === "a" || k === "1") {
-            return Choices.A
-        } else if (k === "b" || k === "2") {
-            return Choices.B
-        } else if (k === "c" || k === "3") {
-            return Choices.C
-        } else if (k === "d" || k === "4") {
-            return Choices.D
+const ChoicesClass = {
+    init: (nChoices) => {
+        let capitalAlphabet = "ABCD"
+        let o = {}
+        let choiceEnumValues = []
+        for (var i = 0; i < nChoices; i++) {
+            let choiceCapitalLetter = capitalAlphabet.charAt(i)
+            let choiceValue = choiceCapitalLetter.toLowerCase()
+            o[choiceCapitalLetter] = choiceValue
+            choiceEnumValues.push(choiceValue)
         }
+        let NONE = "!"
+        o.NONE = NONE
+        o.random = () => randomChoice(choiceEnumValues)
+        o.fromInt = (i) => choiceEnumValues[i]
+        let fromKey = (k) => {
+            if (isLowercaseLetter(k) && choiceEnumValues.includes(k)) {
+                return k
+            } else if (isOneDigitNumber(k)) {
+                let indexOneBased = parseInt(k)
+                if (indexOneBased <= nChoices) {
+                    return choiceEnumValues[indexOneBased - 1]
+                }
+            } else {
+                return NONE
+            }
+        }
+        o.fromKey = fromKey
+        o.isChoiceKey = (k) => fromKey(k) != NONE
+        return o
     },
-    fromInt: (i) => {
-        return [Choices.A, Choices.B, Choices.C, Choices.D][i]
-    }
+
+    random: (n) => {}
 }
+
+export const Choices = ChoicesClass.init(4)
 
 function MultipleChoiceCheckBox(choice, MCQ) {
     let checked = MCQ.state.activeChoice === choice
@@ -160,7 +175,7 @@ function MultipleChoiceCheckBox(choice, MCQ) {
 
     return (
         <div id={"choice-" + choice}
-             key={"choice-" + choice}
+             key={"choice-" + choice + "-key"}
              className={classes().join(" ")}
              onClick={onClick()}>
             <input id={"choicebox-" + choice}
