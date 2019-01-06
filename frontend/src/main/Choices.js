@@ -1,4 +1,4 @@
-import {randomChoice} from './random'
+import {randomChoice, randomCharChoice} from './random'
 import {isLowercaseLetter, isOneDigitNumber} from './string'
 
 export const Choices = {
@@ -33,7 +33,7 @@ export const Choices = {
         return o
     },
 
-    random: (n) => randomChoice(["a", "b", "c", "d"]),
+    random: (n) => randomCharChoice("abcdef".substring(0, n)),
 
     NONE: "!"
 }
