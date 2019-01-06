@@ -3,7 +3,7 @@ import React from 'react'
 // Testing
 import {mount, shallow} from 'enzyme'
 // Main
-import MultipleChoiceQuestion from '../../main/MultipleChoiceQuestion'
+import MultipleChoiceQuestion, {rmExcessChoices} from '../../main/MultipleChoiceQuestion'
 import Mark from "../../main/Mark"
 // Enzyme react-adapter configuration & others
 import {configureAdapter, questionSubmitAndContinue} from "../utils"
@@ -207,4 +207,21 @@ it('Shows five choices if there are five', () => {
     expect(testMCQ.find("#choiceValue-c").text()).toBe("უ")
     expect(testMCQ.find("#choiceValue-d").text()).toBe("ხ")
     expect(testMCQ.find("#choiceValue-e").text()).toBe("ს")
+})
+
+it('Can remove excess choices from an MCQ object', () => {
+    let q = {type: 1, question: "sounds like \"u\" in English", a: "ა", b: "ო", c: "უ", d: "!", answer: "c"}
+    expect(Object.keys(rmExcessChoices(q))).not.toContain("d")
+})
+
+it('Removing excess choices from an MCQ object leaves the others intact', () => {
+    let q = {type: 1, question: "sounds like \"u\" in English", a: "ა", b: "ო", c: "უ", d: "!", answer: "c"}
+    let newMCQ = rmExcessChoices(q)
+    console.log(newMCQ)
+    expect(newMCQ.type).toEqual(q.type)
+    expect(newMCQ.question).toEqual(q.question)
+    expect(newMCQ.answer).toEqual(q.answer)
+    expect(newMCQ.a).toEqual(q.a)
+    expect(newMCQ.b).toEqual(q.b)
+    expect(newMCQ.c).toEqual(q.c)
 })
