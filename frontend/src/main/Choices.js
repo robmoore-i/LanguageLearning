@@ -20,12 +20,11 @@ export function Choices(nChoices) {
             return k
         } else if (isOneDigitNumber(k)) {
             let indexOneBased = parseInt(k)
-            if (indexOneBased <= nChoices) {
+            if (indexOneBased < nChoices) {
                 return choiceEnumValues[indexOneBased - 1]
             }
-        } else {
-            return NONE
         }
+        return NONE
     }
     o.fromKey = fromKey
     o.isChoiceKey = (k) => fromKey(k) !== NONE
