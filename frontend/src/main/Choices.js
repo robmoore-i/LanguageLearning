@@ -2,7 +2,7 @@ import {randomChoice, randomCharChoice} from './random'
 import {isLowercaseLetter, isOneDigitNumber} from './string'
 
 export function Choices(nChoices) {
-    let capitalAlphabet = "ABCD"
+    let capitalAlphabet = "ABCDEF"
     let o = {}
     let choiceEnumValues = []
     for (var i = 0; i < nChoices; i++) {
@@ -28,7 +28,7 @@ export function Choices(nChoices) {
         }
     }
     o.fromKey = fromKey
-    o.isChoiceKey = (k) => fromKey(k) != NONE
+    o.isChoiceKey = (k) => fromKey(k) !== NONE
     return o
 }
 
