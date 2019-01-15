@@ -39,10 +39,18 @@ class ServerTest {
     }
 
     @Test
-    fun logsInboundRequestMethodAndPath() {
+    fun logsInboundRequestMethodAndPathForHeartbeatEndpoint() {
         val request = Request(Method.GET, "$serverUrl/heartbeat").query("heartbeat-token", "memes")
         client.invoke(request)
 
         assertThat(logger.history, containsString("GET /heartbeat"))
+    }
+
+    @Test
+    fun logsInboundRequestMethodAndPathForCoursemetadataEndpoint() {
+        val request = Request(Method.GET, "$serverUrl/coursemetadata").query("course", "Georgian")
+        client.invoke(request)
+
+        assertThat(logger.history, containsString("GET /coursemetadata"))
     }
 }

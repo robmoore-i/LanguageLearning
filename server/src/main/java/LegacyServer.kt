@@ -6,7 +6,7 @@ import org.http4k.core.Response
 class LegacyServer(private val legacyServerPort: Int) {
     private val client = JavaHttpClient()
 
-    fun handleCourses(): Response {
+    fun handleCourses(request: Request): Response {
         return client.invoke(Request(Method.GET, "http://localhost:$legacyServerPort/courses"))
     }
 
