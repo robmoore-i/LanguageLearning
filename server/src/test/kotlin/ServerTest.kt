@@ -12,8 +12,9 @@ import org.junit.Test
 /*Created on 13/01/19. */
 class ServerTest {
     private val port = 8000
-    private val server: Http4kServer = Server(port)
-    private val serverUrl = "http://localhost:$port"
+    private val legacyServerPort = 7000
+    private val server: Http4kServer = Server(port, legacyServerPort)
+    private val serverUrl = "http://localhost:$port/heartbeat"
 
     @After
     fun tearDown() {

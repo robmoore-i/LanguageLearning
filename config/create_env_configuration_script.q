@@ -1,5 +1,5 @@
 cfgFile:`:cfg
-apprcLines:{"export ",upper[" app_",x 0],"=",raze[1_x],"\n"} each "="vs/:read0 cfgFile
+apprcLines:{"export ",upper["app_",x 0],"=",raze[1_x],"\n"} each "="vs/:read0 cfgFile
 apprc:`:apprc
 if[not()~key apprc;hdel apprc]
 h:hopen apprc
