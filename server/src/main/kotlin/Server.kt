@@ -14,7 +14,7 @@ class Server(private val port: Int, legacyServerPort: Int) : Http4kServer {
     private val handler: HttpHandler = ServerFilters.CatchLensFailure.then(
         routes(
             "/heartbeat" bind Method.GET to { request: Request -> Response(OK).body(request.query("heartbeat-token").toString()) },
-            "/courses" bind Method.GET to { _: Request -> legacyServer.handleCourses() },
+            "/courses" bind Method.GET to { legacyServer.handleCourses() },
             "/lesson" bind Method.POST to { request: Request -> legacyServer.handleLesson(request) },
             "/coursemetadata" bind Method.GET to { request: Request -> legacyServer.handleCoursemetadata(request) }
         )
