@@ -5,18 +5,19 @@ import org.http4k.core.Response
 
 class LegacyServer(private val legacyServerPort: Int) {
     private val client = JavaHttpClient()
+    private val legacyServerUrl = "http://localhost:$legacyServerPort"
 
     fun handleCourses(request: Request): Response {
-        return client.invoke(Request(Method.GET, "http://localhost:$legacyServerPort/courses"))
+        return client.invoke(Request(Method.GET, "$legacyServerUrl/courses"))
     }
 
     fun handleLesson(request: Request): Response {
         val json = request.bodyString()
-        return client.invoke(Request(Method.POST, "http://localhost:$legacyServerPort/lesson").body(json))
+        return client.invoke(Request(Method.POST, "$legacyServerUrl/lesson").body(json))
     }
 
     fun handleCoursemetadata(request: Request): Response {
         val courseName: String = request.query("course") ?: throw Exception("No course query parameter in request for the coursemetadata/ endpoint")
-        return client.invoke(Request(Method.GET, "http://localhost:$legacyServerPort/coursemetadata").query("course", courseName))
+        return client.invoke(Request(Method.GET, "$legacyServerUrl/coursemetadata").query("course", courseName))
     }
 }
