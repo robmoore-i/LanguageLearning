@@ -8,9 +8,7 @@ import org.http4k.server.Jetty
 import org.http4k.server.asServer
 
 /*Created on 13/01/19. */
-class Server(private val port: Int, legacyServerPort: Int, val logger: ServerLogger) : Http4kServer {
-    private val legacyServer = LegacyServer(legacyServerPort)
-
+class Server(private val port: Int, legacyServer: LegacyServer, val logger: ServerLogger) : Http4kServer {
     private val handleHearbeat = { request: Request -> Response(OK).body(request.query("heartbeat-token").toString()) }
 
     private val handler: HttpHandler = ServerFilters.CatchLensFailure.then(
@@ -26,7 +24,7 @@ class Server(private val port: Int, legacyServerPort: Int, val logger: ServerLog
 
     private fun loggedResponse(handler: (Request) -> Response): (Request) -> Response {
         return { request: Request ->
-            logger.log("$request.method /${request.uri.path}")
+            logger.log("${request.method} ${request.uri.path}")
             handler(request)
         }
     }

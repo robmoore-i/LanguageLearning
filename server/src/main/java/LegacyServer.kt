@@ -3,7 +3,7 @@ import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
 
-class LegacyServer(private val legacyServerPort: Int) {
+class LegacyServer(legacyServerPort: Int) {
     private val client = JavaHttpClient()
     private val legacyServerUrl = "http://localhost:$legacyServerPort"
 

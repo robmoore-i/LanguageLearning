@@ -10,6 +10,7 @@ fun main(args: Array<String>) {
     val legacyServerPort = LEGACY_SERVER_PORT.toInt()
 
     val logger = ServerLogger()
-    val server = Server(port, legacyServerPort, logger)
+    val legacyServer = LegacyServer(legacyServerPort)
+    val server = Server(port, legacyServer, logger)
     server.start()
 }

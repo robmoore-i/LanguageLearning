@@ -15,7 +15,7 @@ class ServerTest {
     private val port = 8000
     private val legacyServerPort = 7000
     private val logger = ServerLogger()
-    private val server: Http4kServer = Server(port, legacyServerPort, logger)
+    private val server: Http4kServer = Server(port, LegacyServer(legacyServerPort), logger)
     private val serverUrl = "http://localhost:$port"
     private val client = JavaHttpClient()
 
