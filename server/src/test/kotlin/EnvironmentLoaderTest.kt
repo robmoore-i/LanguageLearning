@@ -21,4 +21,19 @@ class EnvironmentLoaderTest {
         assertThat(serverPort, equalTo(8000))
         assertThat(legacyServerPort, equalTo(7000))
     }
+
+    @Test(expected = MissingConfigurationException::class)
+    fun throwsMissingConfigurationExceptionIfAVariableIsMissing() {
+        val environment = { varName: String ->
+            when (varName) {
+                "APP_SERVER_PORT" -> "8000"
+                "APP_LEGACY_SERVER_PORT" -> null // missing
+                else -> null
+            }
+        }
+
+        val environmentLoader = EnvironmentLoader(environment)
+
+        environmentLoader.getEnvironment()
+    }
 }
