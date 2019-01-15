@@ -1,5 +1,5 @@
 class ServerLogger {
-    var history: String = "GET /heartbeat"
+    var history: String = ""
 
     fun log(msg: String) {
         println(msg)
