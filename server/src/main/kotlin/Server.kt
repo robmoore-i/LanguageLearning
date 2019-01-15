@@ -11,16 +11,14 @@ import org.http4k.server.asServer
 class Server(private val port: Int, legacyServerPort: Int, val logger: ServerLogger) : Http4kServer {
     private val legacyServer = LegacyServer(legacyServerPort)
 
+    private val handleHearbeat = { request: Request -> Response(OK).body(request.query("heartbeat-token").toString()) }
+
     private val handler: HttpHandler = ServerFilters.CatchLensFailure.then(
         routes(
-            "/heartbeat" bind Method.GET to loggedResponse { request: Request -> Response(OK).body(request.query("heartbeat-token").toString()) },
-            "/courses" bind Method.GET to loggedResponse { request: Request -> legacyServer.handleCourses(request) },
-            "/lesson" bind Method.POST to loggedResponse { request: Request -> legacyServer.handleLesson(request) },
-            "/coursemetadata" bind Method.GET to loggedResponse { request: Request ->
-                legacyServer.handleCoursemetadata(
-                    request
-                )
-            }
+            "/heartbeat" bind Method.GET to loggedResponse(handleHearbeat),
+            "/courses" bind Method.GET to loggedResponse(legacyServer::handleCourses),
+            "/lesson" bind Method.POST to loggedResponse(legacyServer::handleLesson),
+            "/coursemetadata" bind Method.GET to loggedResponse(legacyServer::handleCoursemetadata)
         )
     )
 
