@@ -55,11 +55,12 @@ There is an example containing all of the required variables, called
 # Dependencies
 
 Q (3.5)
-Neo4j (3.4.9)
-Python3 (3.5.2)
-Go (1.11.1)
-Yarn (1.12.3)
-Node (10.11.0)
+Neo4j (3.4)
+Python3 (3.5)
+Go (1.11)
+Yarn (1.12)
+Node (10.11)
+Kotlin (1.3)
 
 # Big plans
 
