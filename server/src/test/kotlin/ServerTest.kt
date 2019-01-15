@@ -11,7 +11,9 @@ import org.junit.Test
 
 /*Created on 13/01/19. */
 class ServerTest {
-    private val server: Http4kServer = Server(8000)
+    private val port = 8000
+    private val server: Http4kServer = Server(port)
+    private val serverUrl = "http://localhost:$port"
 
     @After
     fun tearDown() {
@@ -25,7 +27,7 @@ class ServerTest {
 
     @Test
     fun canPing() {
-        val request = Request(Method.GET, "http://localhost:8000").query("heartbeat-token", "abc")
+        val request = Request(Method.GET, serverUrl).query("heartbeat-token", "abc")
 
         val client = JavaHttpClient()
 
