@@ -1,7 +1,7 @@
 /*Created on 15/01/19. */
 
 fun main(args: Array<String>) {
-    val environmentLoader = EnvironmentLoader()
+    val environmentLoader = EnvironmentLoader(System::getenv)
     val (port, legacyServerPort) = environmentLoader.getEnvironment()
 
     val logger = ServerLogger()
