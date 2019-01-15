@@ -8,7 +8,7 @@ import org.http4k.server.Jetty
 import org.http4k.server.asServer
 
 /*Created on 13/01/19. */
-class Server(private val port: Int, legacyServerPort: Int) : Http4kServer {
+class Server(private val port: Int, legacyServerPort: Int, logger: ServerLogger) : Http4kServer {
     private val legacyServer = LegacyServer(legacyServerPort)
 
     private val handler: HttpHandler = ServerFilters.CatchLensFailure.then(
