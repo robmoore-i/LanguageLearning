@@ -16,10 +16,10 @@ class EnvironmentLoaderTest {
 
         val environmentLoader = EnvironmentLoader(environment)
 
-        val (serverPort: Int, legacyServerPort: Int) = environmentLoader.getEnvironment()
+        val appEnv = environmentLoader.getEnvironment()
 
-        assertThat(serverPort, equalTo(8000))
-        assertThat(legacyServerPort, equalTo(7000))
+        assertThat(appEnv.serverPort, equalTo(8000))
+        assertThat(appEnv.legacyServerPort, equalTo(7000))
     }
 
     @Test(expected = MissingConfigurationException::class)
