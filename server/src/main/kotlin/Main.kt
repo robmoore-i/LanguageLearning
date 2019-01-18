@@ -10,17 +10,3 @@ fun main(args: Array<String>) {
     val server = Server(port, legacyServer, logger)
     server.start()
 }
-
-//class Main {
-//    companion object {
-//        fun main(args: Array<String>) {
-//            val environmentLoader = EnvironmentLoader(System::getenv)
-//            val (port, legacyServerPort) = environmentLoader.getEnvironment()
-//
-//            val logger = ServerLogger()
-//            val legacyServer = LegacyServer(legacyServerPort)
-//            val server = Server(port, legacyServer, logger)
-//            server.start()
-//        }
-//    }
-//}
