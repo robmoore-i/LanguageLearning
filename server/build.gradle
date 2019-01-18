@@ -14,10 +14,10 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    
-    compile "org.http4k:http4k-core:3.106.0"
-    compile "org.http4k:http4k-server-jetty:3.106.0"
-    compile "org.http4k:http4k-client-okhttp:3.106.0"
+
+    compile "org.http4k:http4k-core:3.105.0"
+    compile "org.http4k:http4k-server-jetty:3.105.0"
+    compile "org.http4k:http4k-client-okhttp:3.105.0"
 
     testCompile "junit:junit:4.12"
     testCompile "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
@@ -28,4 +28,14 @@ compileKotlin {
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+jar {
+    doFirst {
+        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+    manifest {
+        attributes 'Main-Class': 'MainClass'
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
 }

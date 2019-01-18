@@ -1,3 +1,8 @@
+package unit
+
+import LegacyServer
+import Server
+import ServerLogger
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import org.hamcrest.CoreMatchers.containsString
