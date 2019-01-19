@@ -19,6 +19,8 @@ dependencies {
     compile "org.http4k:http4k-server-jetty:3.105.0"
     compile "org.http4k:http4k-client-okhttp:3.105.0"
 
+    compile 'org.neo4j.driver:neo4j-java-driver:1.7.2'
+
     testCompile "junit:junit:4.12"
     testCompile "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
 }

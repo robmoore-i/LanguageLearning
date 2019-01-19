@@ -12,3 +12,5 @@ class EnvironmentLoader(val environment: (String) -> String?) {
 }
 
 data class AppEnvironment(val serverPort: Int, val legacyServerPort: Int)
+
+class MissingConfigurationException(msg: String) : Exception(msg)
