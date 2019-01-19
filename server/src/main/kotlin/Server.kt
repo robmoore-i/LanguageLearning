@@ -9,11 +9,8 @@ import org.http4k.server.asServer
 
 /*Created on 13/01/19. */
 class Server(private val port: Int, legacyServer: LegacyServer, private val logger: ServerLogger) : Http4kServer {
-    private val handleHearbeat = { request: Request -> Response(OK).body(request.query("heartbeat-token").toString()) }
-
     private val handler: HttpHandler = ServerFilters.CatchLensFailure.then(
         routes(
-            "/heartbeat" bind Method.GET to loggedResponse(handleHearbeat),
             "/courses" bind Method.GET to loggedResponse(legacyServer::handleCourses),
             "/lesson" bind Method.POST to loggedResponse(legacyServer::handleLesson),
             "/coursemetadata" bind Method.GET to loggedResponse(legacyServer::handleCoursemetadata)
