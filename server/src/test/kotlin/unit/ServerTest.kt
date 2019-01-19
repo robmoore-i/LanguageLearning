@@ -24,6 +24,8 @@ class ServerTest {
     private val logger = ServerLogger()
 
     private val port = 8000
+    private val frontendPort = 3000
+
     private val serverUrl = "http://localhost:$port"
     private val client = JavaHttpClient()
 
@@ -37,7 +39,7 @@ class ServerTest {
         on { allCourses() } doReturn listOf(Jackson { obj() })
     }
 
-    private val server: Http4kServer = Server(port, mockLegacyServer, mockDbAdaptor, logger)
+    private val server: Http4kServer = Server(port, mockLegacyServer, mockDbAdaptor, frontendPort, logger)
 
     @After
     fun tearDown() {

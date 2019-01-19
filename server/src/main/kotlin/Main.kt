@@ -13,6 +13,6 @@ fun main(args: Array<String>) {
     val legacyServer = LegacyServer(appEnvironment.legacyServerPort)
     val neo4jDriver = Neo4jDriver(appEnvironment.neo4jUser, appEnvironment.neo4jPassword, appEnvironment.neo4jPort)
     val neo4jDatabase = Neo4jDatabaseAdaptor(neo4jDriver, appEnvironment.imagesPath, appEnvironment.extractsPath)
-    val server = Server(appEnvironment.serverPort, legacyServer, neo4jDatabase, logger)
+    val server = Server(appEnvironment.serverPort, legacyServer, neo4jDatabase, appEnvironment.frontendPort, logger)
     server.start()
 }
