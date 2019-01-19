@@ -7,10 +7,6 @@ open class LegacyServer(legacyServerPort: Int) {
     private val client = JavaHttpClient()
     private val legacyServerUrl = "http://localhost:$legacyServerPort"
 
-    fun handleCourses(@Suppress("UNUSED_PARAMETER") request: Request): Response {
-        return client.invoke(Request(Method.GET, "$legacyServerUrl/courses"))
-    }
-
     fun handleLesson(request: Request): Response {
         val json = request.bodyString()
         return client.invoke(Request(Method.POST, "$legacyServerUrl/lesson").body(json))
