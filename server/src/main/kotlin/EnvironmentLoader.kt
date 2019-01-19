@@ -1,13 +1,18 @@
 class EnvironmentLoader(val environment: (String) -> String?) {
     fun getEnvironment(): AppEnvironment {
-        val APP_SERVER_PORT =
-            environment("APP_SERVER_PORT")
-                ?: throw MissingConfigurationException("Required environment variables not found: APP_SERVER_PORT")
-        val LEGACY_SERVER_PORT =
-            environment("APP_LEGACY_SERVER_PORT")
-                ?: throw MissingConfigurationException("Required environment variables not found: APP_LEGACY_SERVER_PORT")
+        val requiredVariables = mutableListOf("APP_SERVER_PORT", "APP_LEGACY_SERVER_PORT")
 
-        return AppEnvironment(APP_SERVER_PORT.toInt(), LEGACY_SERVER_PORT.toInt())
+        val environmentMap = requiredVariables.associateWith(environment)
+        val unsetVariables = environmentMap.filterValues { it == null }.keys
+        if (unsetVariables.count() > 0) {
+            val concatenated = unsetVariables.reduce { acc, v -> "$acc, $v" }
+            throw MissingConfigurationException("Required environment variables not found: $concatenated")
+        }
+
+        return AppEnvironment(
+            environmentMap["APP_SERVER_PORT"]!!.toInt(),
+            environmentMap["APP_LEGACY_SERVER_PORT"]!!.toInt()
+        )
     }
 }
 
