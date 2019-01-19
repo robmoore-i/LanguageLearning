@@ -1,10 +1,9 @@
 import os
-import requests
-import time
 
-from rest_test import *
+import requests
 from assertpy import assert_that
 from neo4j import GraphDatabase
+from rest_test import *
 
 neo4j_port = int(os.environ["APP_NEO4J_PORT"])
 neo4j_user = os.environ["APP_NEO4J_USER"]
@@ -14,6 +13,7 @@ driver = GraphDatabase.driver(neo4j_url, auth=(neo4j_user, neo4j_pw))
 
 server_port = int(os.environ["APP_SERVER_PORT"])
 frontend_port = int(os.environ["APP_FRONTEND_PORT"])
+
 
 # Finds the (first) entry in a (l)ist of maps where (f)ield equals (v)alue.
 def maplist_where(l, f, v):
