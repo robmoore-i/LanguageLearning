@@ -3,10 +3,10 @@
 
 fun main(args: Array<String>) {
     val environmentLoader = EnvironmentLoader(System::getenv)
-    val (port, legacyServerPort) = environmentLoader.getEnvironment()
+    val appEnvironment = environmentLoader.getEnvironment()
 
     val logger = ServerLogger()
-    val legacyServer = LegacyServer(legacyServerPort)
-    val server = Server(port, legacyServer, logger)
+    val legacyServer = LegacyServer(appEnvironment.legacyServerPort)
+    val server = Server(appEnvironment.serverPort, legacyServer, logger)
     server.start()
 }
