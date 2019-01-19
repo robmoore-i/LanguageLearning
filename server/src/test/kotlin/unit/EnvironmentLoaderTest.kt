@@ -1,7 +1,7 @@
 package unit
 
-import EnvironmentLoader
-import MissingConfigurationException
+import environment.EnvironmentLoader
+import environment.MissingConfigurationException
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
@@ -14,7 +14,7 @@ class EnvironmentLoaderTest {
             when (varName) {
                 "APP_SERVER_PORT" -> "8000"
                 "APP_LEGACY_SERVER_PORT" -> "7000"
-                else -> null
+                else -> "123" // This is laziness.
             }
         }
 
@@ -31,7 +31,7 @@ class EnvironmentLoaderTest {
         val environment = { varName: String ->
             when (varName) {
                 "APP_SERVER_PORT" -> "8000"
-                "APP_LEGACY_SERVER_PORT" -> null // missing
+                "APP_LEGACY_SERVER_PORT" -> null // Variable is missing
                 else -> null
             }
         }
