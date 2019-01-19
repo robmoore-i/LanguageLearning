@@ -13,6 +13,7 @@ import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.OK
+import org.http4k.format.Jackson
 import org.http4k.server.Http4kServer
 import org.junit.After
 import org.junit.Before
@@ -26,13 +27,14 @@ class ServerTest {
     private val serverUrl = "http://localhost:$port"
     private val client = JavaHttpClient()
 
-    private val requestForGeorgianCourseMetadata = Request(Method.GET, "$serverUrl/coursemetadata").query("course", "Georgian")
+    private val georgianCoursemetadataReq = Request(Method.GET, "$serverUrl/coursemetadata").query("course", "Georgian")
+
     private val mockLegacyServer = mock<LegacyServer> {
-        on { handleCoursemetadata(requestForGeorgianCourseMetadata) } doReturn Response(OK)
+        on { handleCoursemetadata(georgianCoursemetadataReq) } doReturn Response(OK)
     }
 
     private val mockDbAdaptor = mock<DatabaseAdaptor> {
-        on { allCourses() } doReturn 0
+        on { allCourses() } doReturn listOf(Jackson { obj() })
     }
 
     private val server: Http4kServer = Server(port, mockLegacyServer, mockDbAdaptor, logger)
@@ -49,7 +51,7 @@ class ServerTest {
 
     @Test
     fun logsInboundRequestMethodAndPathForCoursemetadataEndpoint() {
-        client.invoke(requestForGeorgianCourseMetadata)
+        client.invoke(georgianCoursemetadataReq)
 
         assertThat(logger.history, containsString("GET /coursemetadata"))
     }
