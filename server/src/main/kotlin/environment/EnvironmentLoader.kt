@@ -8,7 +8,9 @@ class EnvironmentLoader(private val environment: (String) -> String?) {
             "APP_NEO4J_USER",
             "APP_NEO4J_PW",
             "APP_NEO4J_PORT",
-            "APP_FRONTEND_PORT"
+            "APP_FRONTEND_PORT",
+            "APP_IMAGES_PATH",
+            "APP_EXTRACTS_PATH"
         )
 
         val environmentMap = readEnvironment(requiredVariables)
@@ -19,7 +21,9 @@ class EnvironmentLoader(private val environment: (String) -> String?) {
             stringVariable(environmentMap, "APP_NEO4J_USER"),
             stringVariable(environmentMap, "APP_NEO4J_PW"),
             intVariable(environmentMap, "APP_NEO4J_PORT"),
-            intVariable(environmentMap, "APP_FRONTEND_PORT")
+            intVariable(environmentMap, "APP_FRONTEND_PORT"),
+            stringVariable(environmentMap, "APP_IMAGES_PATH"),
+            stringVariable(environmentMap, "APP_EXTRACTS_PATH")
         )
     }
 
@@ -48,7 +52,9 @@ data class AppEnvironment(
     val neo4jUser: String,
     val neo4jPassword: String,
     val neo4jPort: Int,
-    val frontendPort: Int
+    val frontendPort: Int,
+    val imagesPath: String,
+    val extractsPath: String
 )
 
 class MissingConfigurationException(msg: String) : Exception(msg)

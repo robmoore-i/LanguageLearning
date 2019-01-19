@@ -1,3 +1,4 @@
+import neo4j.DatabaseAdaptor
 import org.http4k.core.*
 import org.http4k.filter.ServerFilters
 import org.http4k.routing.bind
@@ -7,14 +8,19 @@ import org.http4k.server.Jetty
 import org.http4k.server.asServer
 
 /*Created on 13/01/19. */
-class Server(private val port: Int, legacyServer: LegacyServer, private val logger: ServerLogger) : Http4kServer {
-    private val serverApi = ServerApi(legacyServer)
+class Server(
+    private val port: Int,
+    legacyServer: LegacyServer,
+    databaseAdaptor: DatabaseAdaptor,
+    private val logger: ServerLogger
+) : Http4kServer {
+    private val serverApi = ServerApi(legacyServer, databaseAdaptor)
 
     private val handler: HttpHandler = ServerFilters.CatchLensFailure.then(
         routes(
-                "/courses" bind Method.GET to loggedResponse(serverApi::handleCourses),
-                "/lesson" bind Method.POST to loggedResponse(serverApi::handleLesson),
-                "/coursemetadata" bind Method.GET to loggedResponse(serverApi::handleCoursemetadata)
+            "/courses" bind Method.GET to loggedResponse(serverApi::handleCourses),
+            "/lesson" bind Method.POST to loggedResponse(serverApi::handleLesson),
+            "/coursemetadata" bind Method.GET to loggedResponse(serverApi::handleCoursemetadata)
         )
     )
 

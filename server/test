@@ -1,9 +1,0 @@
-echo "Starting tests."
-./jar
-./run &
-sleep 2
-cd integration-test/
-python3 test.py
-lsof -i :$APP_SERVER_PORT | tail -1 | cut -c 9-14 | xargs kill -9
-sleep 1
-echo "Tests done."

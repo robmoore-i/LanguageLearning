@@ -5,6 +5,7 @@ import Server
 import ServerLogger
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import neo4j.DatabaseAdaptor
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.MatcherAssert.assertThat
 import org.http4k.client.JavaHttpClient
@@ -30,7 +31,11 @@ class ServerTest {
         on { handleCoursemetadata(requestForGeorgianCourseMetadata) } doReturn Response(OK)
     }
 
-    private val server: Http4kServer = Server(port, mockLegacyServer, logger)
+    private val mockDbAdaptor = mock<DatabaseAdaptor> {
+        on { allCourses() } doReturn 0
+    }
+
+    private val server: Http4kServer = Server(port, mockLegacyServer, mockDbAdaptor, logger)
 
     @After
     fun tearDown() {
