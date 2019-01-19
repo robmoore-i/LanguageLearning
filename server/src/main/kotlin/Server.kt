@@ -1,5 +1,4 @@
 import org.http4k.core.*
-import org.http4k.core.Status.Companion.OK
 import org.http4k.filter.ServerFilters
 import org.http4k.routing.bind
 import org.http4k.routing.routes
@@ -9,11 +8,13 @@ import org.http4k.server.asServer
 
 /*Created on 13/01/19. */
 class Server(private val port: Int, legacyServer: LegacyServer, private val logger: ServerLogger) : Http4kServer {
+    private val serverApi = ServerApi(legacyServer)
+
     private val handler: HttpHandler = ServerFilters.CatchLensFailure.then(
         routes(
-            "/courses" bind Method.GET to loggedResponse(legacyServer::handleCourses),
-            "/lesson" bind Method.POST to loggedResponse(legacyServer::handleLesson),
-            "/coursemetadata" bind Method.GET to loggedResponse(legacyServer::handleCoursemetadata)
+                "/courses" bind Method.GET to loggedResponse(serverApi::handleCourses),
+                "/lesson" bind Method.POST to loggedResponse(serverApi::handleLesson),
+                "/coursemetadata" bind Method.GET to loggedResponse(serverApi::handleCoursemetadata)
         )
     )
 
@@ -36,5 +37,19 @@ class Server(private val port: Int, legacyServer: LegacyServer, private val logg
 
     override fun stop(): Http4kServer {
         return server.stop()
+    }
+}
+
+class ServerApi(private val legacyServer: LegacyServer) {
+    fun handleCourses(request: Request): Response {
+        return legacyServer.handleCourses(request)
+    }
+
+    fun handleLesson(request: Request): Response {
+        return legacyServer.handleLesson(request)
+    }
+
+    fun handleCoursemetadata(request: Request): Response {
+        return legacyServer.handleCoursemetadata(request)
     }
 }
