@@ -1,4 +1,4 @@
-class EnvironmentLoader(val environment: (String) -> String?) {
+class EnvironmentLoader(private val environment: (String) -> String?) {
     fun getEnvironment(): AppEnvironment {
         val requiredVariables = mutableListOf("APP_SERVER_PORT", "APP_LEGACY_SERVER_PORT")
 
