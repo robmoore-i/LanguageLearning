@@ -2,6 +2,7 @@ package neo4j
 
 import com.fasterxml.jackson.databind.JsonNode
 import org.http4k.format.Jackson
+import org.http4k.unquoted
 import org.neo4j.driver.v1.Value
 
 data class CourseNode(val name: String, val fullImagePath: String, val imageFileType: ImageType) {
@@ -30,10 +31,10 @@ data class CourseNode(val name: String, val fullImagePath: String, val imageFile
 
     companion object {
         fun fromNode(node: Value, imagesDirectoryPath: String): CourseNode {
-            val imageFileRelativePath = node["image"].toString().dequote()
+            val imageFileRelativePath = node["image"].toString().unquoted()
             val imageFileType = ImageType.fromExtension(imageFileRelativePath.fileExtension())
             return CourseNode(
-                node["name"].toString().dequote(),
+                node["name"].toString().unquoted(),
                 imagesDirectoryPath + imageFileRelativePath,
                 imageFileType
             )
@@ -45,8 +46,4 @@ class UnknownImageTypeException(msg: String) : Exception(msg)
 
 fun String.fileExtension(): String {
     return this.takeLast(3)
-}
-
-fun String.dequote(): String {
-    return this.substring(1, this.length - 1)
 }

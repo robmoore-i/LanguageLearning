@@ -3,6 +3,7 @@ package neo4j
 import org.neo4j.driver.v1.AuthTokens
 import org.neo4j.driver.v1.GraphDatabase
 import org.neo4j.driver.v1.Record
+import org.neo4j.driver.v1.Session
 
 open class Neo4jDriver(user: String, password: String, boltPort: Int) {
     private val uri = "bolt://$user:$password@localhost:$boltPort"
@@ -14,5 +15,9 @@ open class Neo4jDriver(user: String, password: String, boltPort: Int) {
 
     fun queryWithParams(query: String, params: Map<String, String>): MutableIterable<Record> {
         return driver.session().readTransaction { tx -> tx.run(query, params).list() }
+    }
+
+    fun session(): Session {
+        return driver.session()
     }
 }

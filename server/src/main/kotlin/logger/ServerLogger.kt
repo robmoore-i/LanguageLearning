@@ -1,3 +1,5 @@
+package logger
+
 class ServerLogger {
     var history: String = ""
 

@@ -1,3 +1,5 @@
+package server
+
 import com.fasterxml.jackson.databind.JsonNode
 import neo4j.DatabaseAdaptor
 import org.http4k.core.Request
@@ -14,11 +16,10 @@ class ServerApi(
 
         val stringBuilder = StringBuilder().append("[")
         for (course in courses) {
-            stringBuilder.append(course.toString()).append(",")
+            val stringCourse = course.toString()
+            stringBuilder.append(stringCourse).append(",")
         }
         val json = stringBuilder.toString().dropLast(1) + "]"
-
-        println(json)
 
         return Response(OK)
             .header("Access-Control-Allow-Origin", "http://localhost:$frontendPort")

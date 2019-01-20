@@ -1,3 +1,6 @@
+package server
+
+import logger.ServerLogger
 import neo4j.DatabaseAdaptor
 import org.http4k.core.*
 import org.http4k.filter.ServerFilters

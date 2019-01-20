@@ -1,3 +1,5 @@
+package server
+
 import org.http4k.client.JavaHttpClient
 import org.http4k.core.Method
 import org.http4k.core.Request
