@@ -235,3 +235,14 @@ it("Can't deselect choice on a 3-choice MCQ by using number keys greater than 3"
     testMCQ.update()
     expect(testMCQ.state("activeChoice")).toEqual("a")
 })
+
+it("Can select choice d/4 on a 4-choice MCQ using the '4' key", () => {
+    let q = {type: 1, index: 0, question: "sounds like \"u\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "c"}
+    let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
+
+    window.onkeydown({key: "1"})
+    testMCQ.update()
+    window.onkeydown({key: "4"})
+    testMCQ.update()
+    expect(testMCQ.state("activeChoice")).toEqual("d")
+})

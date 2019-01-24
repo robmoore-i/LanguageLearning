@@ -26,8 +26,8 @@ export default class MultipleChoiceQuestion extends Component {
             let k = event.key
             if (k === "Enter") {
                 mcq.button().props.onClick()
-            } else if (this.choices.isChoiceKey(k)) {
-                mcq.setState({activeChoice: this.choices.fromKey(k)})
+            } else if (mcq.choices.isChoiceKey(k)) {
+                mcq.setState({activeChoice: mcq.choices.fromKey(k)})
             }
         }
     }
