@@ -26,11 +26,11 @@ export function Marker() {
 
     function mark(question, submittedAnswer) {
         let formattedSubmission = formatAnswer(submittedAnswer)
-        if ("answer" in question) {
+        if ("answers" in question) {
+            return markAgainstAnswerList(formattedSubmission, question.answers)
+        } else {
             let formattedExpected = formatAnswer(question.answer)
             return compareFormattedAnswers(formattedSubmission, formattedExpected)
-        } else {
-            return markAgainstAnswerList(formattedSubmission, question.answers)
         }
     }
 
