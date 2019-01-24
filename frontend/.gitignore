@@ -26,3 +26,6 @@ cypress/screenshots
 
 # Lighthouse audits
 lighthouse-audits/
+
+# Lock files
+yarn.lock
