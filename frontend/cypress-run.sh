@@ -1,1 +1,1 @@
-yarn run cypress run --browser chromium
+yarn run cypress run --browser chrome
