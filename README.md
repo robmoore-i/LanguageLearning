@@ -1,27 +1,14 @@
-# Learning frontend
-
-React and Enzyme are very good. TDD is easy and highly applicable on frontend,
-don't be lazy (because you'll pay for it).
-
-# Neo4j
-
-Very cool. Be careful about what data you model with properties and whether
-you put those properties on nodes or edges.
-
-# Golang
-
-It's okay, but nothing special. I'm probably using it wrong.
-
 # This app
 
 I combine my favourite parts of Duolingo and Quizlet to create an app for
-pro learners. Or something.
+pro learners.
 
 I am in this process also discovering the best ways to learn a language using
 tools. To this end one of the most important goals for the tool is that it is
-configurable and has a low cost of change (the same thing in a way, no?)
+configurable and has a low cost of change (in the end, the logical conclusion
+for lowering the cost of change is implementing configurability).
 
-Thoughts:
+Thoughts on language learning:
 - I want to be able to describe the world in a new language.
 - But only when I'm thinking about the fact that I want that.
 - I am usually thinking about how I'd like to be able to do that while I'm
@@ -52,11 +39,21 @@ on the same machine in a fully configurable manner.
 There is an example containing all of the required variables, called
 `config/cfg.example`.
 
+After a few weeks of always forgetting to load the variables, I added
+`. "<path to this project>/config/apprc"` to my `~/.profile` (semantically
+speaking).
+
+```
+"Don't forget, a couple of hours of trial and error can save you several minutes
+of reading the README."
+- Unknown
+```
+
 # Dependencies
 
 Q (3.5)
-Neo4j (3.4)
-Python3 (3.5)
+Neo4j (3.5)
+Python3 (3.6)
 Go (1.11)
 Yarn (1.12)
 Node (10.11)
@@ -87,3 +84,7 @@ to create maths questions, vocab questions or programming questions.
 Learning something for the first time is different from practicing it later.
 There should be different exercises for learning something for the first time
 and for revisiting a topic later.
+
+# Actually delivering features again instead of pissing about
+
+Hm
