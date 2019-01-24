@@ -12,16 +12,16 @@ neo4j_pw = os.environ["APP_NEO4J_PW"]
 neo4j_url = "bolt://localhost:" + str(neo4j_port)
 driver = GraphDatabase.driver(neo4j_url, auth=(neo4j_user, neo4j_pw))
 
-server_port = int(os.environ["APP_SERVER_PORT"])
+server_port = int(os.environ["APP_LEGACY_SERVER_PORT"])
 frontend_port = int(os.environ["APP_FRONTEND_PORT"])
 
 
-@setup
+# @setup
 def start_backend():
     os.system("./../bin/src &")
 
 
-@teardown
+# @teardown
 def kill_backend_and_reset_db():
     os.system("pkill -f bin/src")
     os.system("cd .. && ./reset-db.sh >> /dev/null")
