@@ -2,6 +2,7 @@ package server
 
 import com.fasterxml.jackson.databind.JsonNode
 import neo4j.Course
+import neo4j.CourseMetadata
 import neo4j.DatabaseAdaptor
 import org.http4k.core.Request
 import org.http4k.core.Response
@@ -22,7 +23,7 @@ class ServerApi(
 
     fun handleCoursemetadata(request: Request): Response {
         val courseName = request.query("course") ?: throw MissingQueryParameter("course")
-        val courseMetadata = databaseAdaptor.courseMetadata(courseName)
+        val courseMetadata: CourseMetadata = databaseAdaptor.courseMetadata(courseName)
         val json = courseMetadata.jsonify().toString()
 
         return okResponse(json)
