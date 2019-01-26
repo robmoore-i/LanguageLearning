@@ -9,11 +9,11 @@ import org.http4k.core.Status.Companion.OK
 
 class ServerApi(
     private val legacyServer: LegacyServer,
-    private val neo4jDatabase: DatabaseAdaptor,
+    private val databaseAdaptor: DatabaseAdaptor,
     private val frontendPort: Int
 ) {
     fun handleCourses(@Suppress("UNUSED_PARAMETER") request: Request): Response {
-        val courses: List<Course> = neo4jDatabase.allCourses()
+        val courses: List<Course> = databaseAdaptor.allCourses()
         val coursesJsonObjects: List<JsonNode> = courses.map { course -> course.jsonify() }
         val json = encodeJsonArray(coursesJsonObjects)
 
