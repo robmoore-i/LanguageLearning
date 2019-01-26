@@ -5,7 +5,6 @@ import com.nhaarman.mockitokotlin2.verify
 import neo4j.Neo4jDatabaseAdaptor
 import neo4j.Neo4jDriver
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyString
 
 /*Created on 19/01/19. */
 class Neo4jDatabaseAdaptorTest {
@@ -16,6 +15,6 @@ class Neo4jDatabaseAdaptorTest {
 
         databaseAdaptor.allCourses()
 
-        verify(mockNeo4jDriver).query(anyString())
+        verify(mockNeo4jDriver).query("MATCH (c:Course) RETURN c")
     }
 }
