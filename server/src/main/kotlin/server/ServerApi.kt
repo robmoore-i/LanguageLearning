@@ -22,12 +22,12 @@ class ServerApi(
             .body(json)
     }
 
-    fun handleLesson(request: Request): Response {
-        return legacyServer.handleLesson(request)
-    }
-
     fun handleCoursemetadata(request: Request): Response {
         return legacyServer.handleCoursemetadata(request)
+    }
+
+    fun handleLesson(request: Request): Response {
+        return legacyServer.handleLesson(request)
     }
 
     private fun encodeJsonArray(courses: List<JsonNode>): String {
