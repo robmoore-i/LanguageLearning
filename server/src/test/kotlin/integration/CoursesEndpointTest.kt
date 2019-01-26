@@ -8,8 +8,10 @@ import neo4j.Neo4jDriver
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.http4k.client.JavaHttpClient
+import org.http4k.core.Headers
 import org.http4k.core.Method
 import org.http4k.core.Request
+import org.http4k.core.Response
 import org.http4k.format.Jackson
 import org.http4k.server.Http4kServer
 import org.http4k.unquoted
@@ -62,6 +64,47 @@ class CoursesEndpointTest {
     }
 
     @Test
+    fun givesOkResponse() {
+        neo4jDriver.session().let { session ->
+            val query = """
+                CREATE (georgian:Course {name: "Georgian", image: "flagGeorgia.svg"})
+                CREATE (french:Course {name: "French", image: "flagFrance.png"})
+                CREATE (german:Course {name: "German", image: "flagGermany.jpg"})
+                RETURN georgian,french,german;
+                """.trimIndent()
+
+            session.run(query)
+            session.close()
+        }
+
+        val response = coursesRequest()
+
+        assertThat(response.status.code, equalTo(200))
+    }
+
+    @Test
+    fun givesAccessControlAllowOriginCorsHeader() {
+        neo4jDriver.session().let { session ->
+            val query = """
+                CREATE (georgian:Course {name: "Georgian", image: "flagGeorgia.svg"})
+                CREATE (french:Course {name: "French", image: "flagFrance.png"})
+                CREATE (german:Course {name: "German", image: "flagGermany.jpg"})
+                RETURN georgian,french,german;
+                """.trimIndent()
+
+            session.run(query)
+            session.close()
+        }
+
+        val response = coursesRequest()
+
+        assertThat(
+            headerValue(response.headers, "Access-Control-Allow-Origin"),
+            equalTo("http://localhost:" + environment.frontendPort + "")
+        )
+    }
+
+    @Test
     fun canGetAnSvgCourseIcon() {
         neo4jDriver.session().let { session ->
             val query = """
@@ -76,7 +119,7 @@ class CoursesEndpointTest {
             session.close()
         }
 
-        val jsonNode = coursesEndpointRequest()
+        val jsonNode = coursesRequestFirstJsonNode()
 
         assertCourseHasProperties(
             jsonNode,
@@ -101,7 +144,7 @@ class CoursesEndpointTest {
             session.close()
         }
 
-        val jsonNode = coursesEndpointRequest()
+        val jsonNode = coursesRequestFirstJsonNode()
 
         assertCourseHasProperties(
             jsonNode,
@@ -126,7 +169,7 @@ class CoursesEndpointTest {
             session.close()
         }
 
-        val jsonNode = coursesEndpointRequest()
+        val jsonNode = coursesRequestFirstJsonNode()
 
         assertCourseHasProperties(
             jsonNode,
@@ -136,9 +179,13 @@ class CoursesEndpointTest {
         )
     }
 
-    private fun coursesEndpointRequest(): JsonNode {
+    private fun coursesRequest(): Response {
         val request = Request(Method.GET, "$serverUrl/courses")
-        val response = client.invoke(request)
+        return client.invoke(request)
+    }
+
+    private fun coursesRequestFirstJsonNode(): JsonNode {
+        val response = coursesRequest()
         val responseJson = json.parse(response.bodyString())
         return responseJson[0]
     }
@@ -152,5 +199,9 @@ class CoursesEndpointTest {
         assertThat(jsonNode["name"].toString().unquoted(), equalTo(expectedCourseName))
         assertThat(jsonNode["imageType"].toString().unquoted(), equalTo(expectedCourseImageType))
         assertThat(jsonNode["image"].toString().unquoted().replace("\\n", "\n"), equalTo(expectedImageStringBytes))
+    }
+
+    private fun headerValue(headers: Headers, headerName: String): String {
+        return headers.first { header -> header.first.equals(headerName) }.second!!
     }
 }
