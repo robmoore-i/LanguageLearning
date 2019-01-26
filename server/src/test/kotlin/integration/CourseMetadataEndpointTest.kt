@@ -80,17 +80,13 @@ class CourseMetadataEndpointTest {
         val responseJson = courseMetadataRequestJson("Course")
         val lessonMetadata = responseJson["lessonMetadata"]
 
-        val helloLesson = getNodeWithName(lessonMetadata, "Hello")
-        val whatAreYouCalledLesson = getNodeWithName(lessonMetadata, "What are you called?")
-        val coloursLesson = getNodeWithName(lessonMetadata, "Colours")
-
-        assertLessonHasIndex(helloLesson, 0)
-        assertLessonHasIndex(whatAreYouCalledLesson, 1)
-        assertLessonHasIndex(coloursLesson, 2)
+        assertLessonHasIndex(lessonMetadata, "Hello", 0)
+        assertLessonHasIndex(lessonMetadata, "What are you called?", 1)
+        assertLessonHasIndex(lessonMetadata, "Colours", 2)
     }
 
-    private fun assertLessonHasIndex(lessonNode: JsonNode, index: Int) {
-        assertThat(lessonNode["index"].asInt(), equalTo(index))
+    private fun assertLessonHasIndex(lessonMetadata: JsonNode, lessonName: String, index: Int) {
+        assertThat(getNodeWithName(lessonMetadata, lessonName)["index"].asInt(), equalTo(index))
     }
 
     private fun getNodeWithName(
