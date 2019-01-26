@@ -5,15 +5,8 @@ import org.http4k.format.Jackson
 import org.http4k.unquoted
 import org.neo4j.driver.v1.Value
 
-class CourseMetadata(valuePairs: List<Pair<Value, Value>>) {
+class CourseMetadata(private val lessonMetadata: MutableList<LessonMetadata>) {
     private val json = Jackson
-    private val lessonMetadata: MutableList<LessonMetadata> = mutableListOf()
-
-    init {
-        valuePairs.withIndex().forEach { (i, valuePair) ->
-            lessonMetadata.add(i, LessonMetadata(valuePair.first.toString().unquoted(), valuePair.second.asInt()))
-        }
-    }
 
     fun titleOfLessonAtIndex(i: Int): String {
         return lessonMetadata[i].lessonName
@@ -24,6 +17,16 @@ class CourseMetadata(valuePairs: List<Pair<Value, Value>>) {
             obj(
                 "lessonMetadata" to array(lessonMetadata.map(LessonMetadata::jsonify))
             )
+        }
+    }
+
+    companion object {
+        fun fromNeo4jValuePairs(valuePairs: List<Pair<Value, Value>>): CourseMetadata {
+            val lessonMetadata: MutableList<LessonMetadata> = mutableListOf()
+            valuePairs.withIndex().forEach { (i, valuePair) ->
+                lessonMetadata.add(i, LessonMetadata(valuePair.first.toString().unquoted(), valuePair.second.asInt()))
+            }
+            return CourseMetadata(lessonMetadata)
         }
     }
 }

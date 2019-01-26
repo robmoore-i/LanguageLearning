@@ -17,7 +17,7 @@ class Neo4jDatabaseAdaptor(
             mapOf("courseName" to courseName)
         )
 
-        return CourseMetadata(valuePairs)
+        return CourseMetadata.fromNeo4jValuePairs(valuePairs)
     }
 }
 
