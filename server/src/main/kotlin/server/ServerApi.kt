@@ -13,13 +13,7 @@ class ServerApi(
 ) {
     fun handleCourses(@Suppress("UNUSED_PARAMETER") request: Request): Response {
         val courses: List<JsonNode> = neo4jDatabase.allCourses()
-
-        val stringBuilder = StringBuilder().append("[")
-        for (course in courses) {
-            val stringCourse = course.toString()
-            stringBuilder.append(stringCourse).append(",")
-        }
-        val json = stringBuilder.toString().dropLast(1) + "]"
+        val json = encodeJsonArray(courses)
 
         return Response(OK)
             .header("Access-Control-Allow-Origin", "http://localhost:$frontendPort")
@@ -34,5 +28,15 @@ class ServerApi(
 
     fun handleCoursemetadata(request: Request): Response {
         return legacyServer.handleCoursemetadata(request)
+    }
+
+    private fun encodeJsonArray(courses: List<JsonNode>): String {
+        val stringBuilder = StringBuilder().append("[")
+        for (course in courses) {
+            val stringCourse = course.toString()
+            stringBuilder.append(stringCourse).append(",")
+        }
+        val json = stringBuilder.toString().dropLast(1) + "]"
+        return json
     }
 }
