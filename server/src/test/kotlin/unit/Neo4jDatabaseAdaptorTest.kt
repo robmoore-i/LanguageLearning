@@ -13,13 +13,13 @@ class Neo4jDatabaseAdaptorTest {
     @Test
     fun canMapNodesToCourses() {
         val mockNodes: List<Value> = listOf(
-            neo4jCourseNode("course-1", "image-relative-path-1.svg"),
-            neo4jCourseNode("course-2", "image-relative-path-2.png"),
-            neo4jCourseNode("course-3", "image-relative-path-3.jpg")
+            neo4jCourseValue("course-1", "image-relative-path-1.svg"),
+            neo4jCourseValue("course-2", "image-relative-path-2.png"),
+            neo4jCourseValue("course-3", "image-relative-path-3.jpg")
         )
 
         val mockNeo4jDriver = mock<Neo4jDriver> {
-            on { queryNodes(anyString()) } doReturn mockNodes
+            on { queryValues(anyString()) } doReturn mockNodes
         }
 
         val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(mockNeo4jDriver, "images/", "extracts/")
@@ -29,9 +29,5 @@ class Neo4jDatabaseAdaptorTest {
         assertThat(allCourses, hasItem(Course("course-1", "images/image-relative-path-1.svg", ImageType.SVG)))
         assertThat(allCourses, hasItem(Course("course-2", "images/image-relative-path-2.png", ImageType.PNG)))
         assertThat(allCourses, hasItem(Course("course-3", "images/image-relative-path-3.jpg", ImageType.JPG)))
-    }
-
-    private fun neo4jCourseNode(courseName: String, imageFileRelativePath: String): Value {
-        return mapValue("name" to stringValue(courseName), "image" to stringValue(imageFileRelativePath))
     }
 }

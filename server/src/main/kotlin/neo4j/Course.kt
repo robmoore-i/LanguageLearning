@@ -30,11 +30,11 @@ data class Course(val name: String, val fullImagePath: String, val imageFileType
     }
 
     companion object {
-        fun fromNeo4jNode(node: Value, imagesDirectoryPath: String): Course {
-            val imageFileRelativePath = node["image"].toString().unquoted()
+        fun fromNeo4jValue(neo4jValue: Value, imagesDirectoryPath: String): Course {
+            val imageFileRelativePath = neo4jValue["image"].toString().unquoted()
             val imageFileType = ImageType.fromExtension(imageFileRelativePath.fileExtension())
             return Course(
-                node["name"].toString().unquoted(),
+                neo4jValue["name"].toString().unquoted(),
                 imagesDirectoryPath + imageFileRelativePath,
                 imageFileType
             )

@@ -7,8 +7,8 @@ class Neo4jDatabaseAdaptor(
 ) : DatabaseAdaptor {
 
     override fun allCourses(): List<Course> {
-        val nodes = neo4jDriver.queryNodes("MATCH (c:Course) RETURN c")
-        return nodes.map { node -> Course.fromNeo4jNode(node, imagesPath) }
+        val values = neo4jDriver.queryValues("MATCH (c:Course) RETURN c")
+        return values.map { value -> Course.fromNeo4jValue(value, imagesPath) }
     }
 }
 

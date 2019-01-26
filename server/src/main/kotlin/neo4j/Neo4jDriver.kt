@@ -9,8 +9,8 @@ open class Neo4jDriver(user: String, password: String, boltPort: Int) {
     private val uri = "bolt://$user:$password@localhost:$boltPort"
     private val driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password))
 
-    open fun queryNodes(query: String): List<Value> {
-        return driver.session().readTransaction { tx -> tx.run(query).list() }.map { record -> record.nodeInColumn(0) }
+    open fun queryValues(query: String): List<Value> {
+        return driver.session().readTransaction { tx -> tx.run(query).list() }.map { record -> record.valueInColumn(0) }
     }
 
     fun session(): Session {
@@ -18,7 +18,7 @@ open class Neo4jDriver(user: String, password: String, boltPort: Int) {
     }
 }
 
-fun Record.nodeInColumn(columnIndex: Int): Value {
+fun Record.valueInColumn(columnIndex: Int): Value {
     return this[columnIndex]
 }
 
@@ -32,4 +32,8 @@ fun mapValue(vararg pairs: Pair<String, Value>): Value {
         hashMap[pair.first] = pair.second
     }
     return MapValue(hashMap)
+}
+
+fun neo4jCourseValue(courseName: String, imageFileRelativePath: String): Value {
+    return mapValue("name" to stringValue(courseName), "image" to stringValue(imageFileRelativePath))
 }
