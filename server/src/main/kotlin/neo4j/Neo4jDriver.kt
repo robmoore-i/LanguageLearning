@@ -1,6 +1,9 @@
 package neo4j
 
+import org.neo4j.driver.internal.value.MapValue
+import org.neo4j.driver.internal.value.StringValue
 import org.neo4j.driver.v1.*
+import java.util.*
 
 open class Neo4jDriver(user: String, password: String, boltPort: Int) {
     private val uri = "bolt://$user:$password@localhost:$boltPort"
@@ -17,4 +20,16 @@ open class Neo4jDriver(user: String, password: String, boltPort: Int) {
 
 fun Record.nodeInColumn(columnIndex: Int): Value {
     return this[columnIndex]
+}
+
+fun stringValue(s: String): Value {
+    return StringValue(s)
+}
+
+fun mapValue(vararg pairs: Pair<String, Value>): Value {
+    val hashMap = HashMap<String, Value>()
+    for (pair in pairs) {
+        hashMap[pair.first] = pair.second
+    }
+    return MapValue(hashMap)
 }
