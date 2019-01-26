@@ -13,21 +13,9 @@ type Routes []Route
 
 var routes = Routes{
 	Route{
-		"CourseMetadata",
-		"GET",
-		"/coursemetadata",
-		GetCourseMetadata,
-	},
-	Route{
 		"Lesson",
 		"POST",
 		"/lesson",
 		GetLesson,
-	},
-	Route{
-		"Courses",
-		"GET",
-		"/courses",
-		GetCourses,
 	},
 }
