@@ -5,8 +5,8 @@ import org.http4k.format.Jackson
 import org.http4k.unquoted
 import org.neo4j.driver.v1.Value
 
-data class CourseNode(val name: String, val fullImagePath: String, val imageFileType: ImageType) {
-    val json = Jackson
+data class Course(val name: String, val fullImagePath: String, val imageFileType: ImageType) {
+    private val json = Jackson
 
     fun jsonify(): JsonNode {
         val image = parseImage()
@@ -30,10 +30,10 @@ data class CourseNode(val name: String, val fullImagePath: String, val imageFile
     }
 
     companion object {
-        fun fromNode(node: Value, imagesDirectoryPath: String): CourseNode {
+        fun fromNode(node: Value, imagesDirectoryPath: String): Course {
             val imageFileRelativePath = node["image"].toString().unquoted()
             val imageFileType = ImageType.fromExtension(imageFileRelativePath.fileExtension())
-            return CourseNode(
+            return Course(
                 node["name"].toString().unquoted(),
                 imagesDirectoryPath + imageFileRelativePath,
                 imageFileType

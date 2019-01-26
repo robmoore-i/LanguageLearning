@@ -12,7 +12,11 @@ class Neo4jDatabaseAdaptor(
 
     override fun allCourses(): List<JsonNode> {
         val records = neo4jDriver.query("MATCH (c:Course) RETURN c")
-        return records.map { record -> CourseNode.fromNode(record.nodeInColumn(0), imagesPath).jsonify() }
+        return records.map { record ->
+            val courseNode = record.nodeInColumn(0)
+            val courseNodeObject = Course.fromNode(courseNode, imagesPath)
+            courseNodeObject.jsonify()
+        }
     }
 }
 
