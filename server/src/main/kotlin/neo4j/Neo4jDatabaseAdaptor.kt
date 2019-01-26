@@ -10,5 +10,14 @@ class Neo4jDatabaseAdaptor(
         val values = neo4jDriver.queryValues("MATCH (c:Course) RETURN c")
         return values.map { value -> Course.fromNeo4jValue(value, imagesPath) }
     }
+
+    override fun courseMetadata(courseName: String): CourseMetadata {
+        val valuePairs = neo4jDriver.queryTwoValuesWithParams(
+            "MATCH (c:Course {name: {courseName}})-[r:HAS_TOPIC_LESSON]->(l) RETURN l.name,r.index",
+            mapOf("courseName" to courseName)
+        )
+
+        return CourseMetadata(valuePairs)
+    }
 }
 
