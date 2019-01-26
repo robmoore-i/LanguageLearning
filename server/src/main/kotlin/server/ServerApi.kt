@@ -25,7 +25,15 @@ class ServerApi(
     }
 
     fun handleCoursemetadata(request: Request): Response {
-        return legacyServer.handleCoursemetadata(request)
+        val courseName = request.query("course") ?: throw MissingQueryParameter("course")
+        val courseMetadata = databaseAdaptor.courseMetadata(courseName)
+        val json = courseMetadata.jsonify().toString()
+
+        return Response(OK)
+            .header("Access-Control-Allow-Origin", "http://localhost:$frontendPort")
+            .header("Access-Control-Allow-Headers", "Content-Type")
+            .header("Content-Type", "application/json; charset=UTF-8")
+            .body(json)
     }
 
     fun handleLesson(request: Request): Response {
@@ -42,3 +50,5 @@ class ServerApi(
         return json
     }
 }
+
+class MissingQueryParameter(missingParameterName: String) : Throwable("Missing query parameter: $missingParameterName")
