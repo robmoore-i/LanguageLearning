@@ -20,7 +20,7 @@ import server.LegacyServer
 import server.Server
 
 /*Created on 19/01/19. */
-class ServerIntegrationTest {
+class CoursesEndpointTest {
     private val environmentLoader = EnvironmentLoader(System::getenv)
     private val environment = environmentLoader.getEnvironment()
     private val neo4jDriver = Neo4jDriver(environment.neo4jUser, environment.neo4jPassword, environment.neo4jPort)
