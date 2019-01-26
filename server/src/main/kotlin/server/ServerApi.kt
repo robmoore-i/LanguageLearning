@@ -1,6 +1,7 @@
 package server
 
 import com.fasterxml.jackson.databind.JsonNode
+import neo4j.Course
 import neo4j.DatabaseAdaptor
 import org.http4k.core.Request
 import org.http4k.core.Response
@@ -12,8 +13,9 @@ class ServerApi(
     private val frontendPort: Int
 ) {
     fun handleCourses(@Suppress("UNUSED_PARAMETER") request: Request): Response {
-        val courses: List<JsonNode> = neo4jDatabase.allCourses()
-        val json = encodeJsonArray(courses)
+        val courses: List<Course> = neo4jDatabase.allCourses()
+        val coursesJsonObjects: List<JsonNode> = courses.map { course -> course.jsonify() }
+        val json = encodeJsonArray(coursesJsonObjects)
 
         return Response(OK)
             .header("Access-Control-Allow-Origin", "http://localhost:$frontendPort")

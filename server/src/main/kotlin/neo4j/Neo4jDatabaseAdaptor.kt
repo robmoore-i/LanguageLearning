@@ -1,6 +1,5 @@
 package neo4j
 
-import com.fasterxml.jackson.databind.JsonNode
 import org.neo4j.driver.v1.Record
 import org.neo4j.driver.v1.Value
 
@@ -10,13 +9,9 @@ class Neo4jDatabaseAdaptor(
     private val extractsPath: String
 ) : DatabaseAdaptor {
 
-    override fun allCourses(): List<JsonNode> {
+    override fun allCourses(): List<Course> {
         val records = neo4jDriver.query("MATCH (c:Course) RETURN c")
-        return records.map { record ->
-            val courseNode = record.nodeInColumn(0)
-            val courseNodeObject = Course.fromNode(courseNode, imagesPath)
-            courseNodeObject.jsonify()
-        }
+        return records.map { record -> Course.fromNode(record.nodeInColumn(0), imagesPath) }
     }
 }
 
