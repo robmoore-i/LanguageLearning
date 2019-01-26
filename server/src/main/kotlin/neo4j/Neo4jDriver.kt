@@ -14,13 +14,13 @@ open class Neo4jDriver(user: String, password: String, boltPort: Int) {
         return driver.session().readTransaction { tx -> tx.run(query).list() }.map { record -> record.valueInColumn(0) }
     }
 
-    fun session(): Session {
-        return driver.session()
-    }
-
     open fun queryTwoValuesWithParams(query: String, params: Map<String, String>): List<Pair<Value, Value>> {
         return driver.session().readTransaction { tx -> tx.run(query, params).list() }
             .map { record: Record -> Pair(record.valueInColumn(0), record.valueInColumn(1)) }
+    }
+
+    fun session(): Session {
+        return driver.session()
     }
 }
 
