@@ -17,11 +17,7 @@ class ServerApi(
         val coursesJsonObjects: List<JsonNode> = courses.map { course -> course.jsonify() }
         val json = encodeJsonArray(coursesJsonObjects)
 
-        return Response(OK)
-            .header("Access-Control-Allow-Origin", "http://localhost:$frontendPort")
-            .header("Access-Control-Allow-Headers", "Content-Type")
-            .header("Content-Type", "application/json; charset=UTF-8")
-            .body(json)
+        return okResponse(json)
     }
 
     fun handleCoursemetadata(request: Request): Response {
@@ -29,11 +25,7 @@ class ServerApi(
         val courseMetadata = databaseAdaptor.courseMetadata(courseName)
         val json = courseMetadata.jsonify().toString()
 
-        return Response(OK)
-            .header("Access-Control-Allow-Origin", "http://localhost:$frontendPort")
-            .header("Access-Control-Allow-Headers", "Content-Type")
-            .header("Content-Type", "application/json; charset=UTF-8")
-            .body(json)
+        return okResponse(json)
     }
 
     fun handleLesson(request: Request): Response {
@@ -48,6 +40,14 @@ class ServerApi(
         }
         val json = stringBuilder.toString().dropLast(1) + "]"
         return json
+    }
+
+    private fun okResponse(json: String): Response {
+        return Response(OK)
+            .header("Access-Control-Allow-Origin", "http://localhost:$frontendPort")
+            .header("Access-Control-Allow-Headers", "Content-Type")
+            .header("Content-Type", "application/json; charset=UTF-8")
+            .body(json)
     }
 }
 
