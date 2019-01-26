@@ -10,15 +10,14 @@ import server.Server
 
 fun main(args: Array<String>) {
     val environmentLoader = EnvironmentLoader(System::getenv)
-    val appEnvironment = environmentLoader.getEnvironment()
+    val environment = environmentLoader.getEnvironment()
 
     val logger = ServerLogger()
-    val legacyServer = LegacyServer(appEnvironment.legacyServerPort)
+    val legacyServer = LegacyServer(environment.legacyServerPort)
 
-    val neo4jDriver = Neo4jDriver(appEnvironment.neo4jUser, appEnvironment.neo4jPassword, appEnvironment.neo4jPort)
-    val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(neo4jDriver, appEnvironment.imagesPath, appEnvironment.extractsPath)
+    val neo4jDriver = Neo4jDriver(environment.neo4jUser, environment.neo4jPassword, environment.neo4jPort)
+    val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(neo4jDriver, environment.imagesPath, environment.extractsPath)
 
-    val server =
-        Server(appEnvironment.serverPort, legacyServer, neo4jDatabaseAdaptor, appEnvironment.frontendPort, logger)
+    val server = Server(environment.serverPort, legacyServer, neo4jDatabaseAdaptor, environment.frontendPort, logger)
     server.start()
 }
