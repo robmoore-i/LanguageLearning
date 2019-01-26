@@ -89,10 +89,9 @@ class CourseMetadataEndpointTest {
         assertThat(getNodeWithName(lessonMetadata, lessonName)["index"].asInt(), equalTo(index))
     }
 
-    private fun getNodeWithName(
-        lessonMetadata: JsonNode,
-        nodeName: String
-    ) = lessonMetadata.first { node -> node["name"].toString().unquoted() == nodeName }
+    private fun getNodeWithName(lessonMetadata: JsonNode, nodeName: String): JsonNode {
+        return lessonMetadata.first { node -> node["name"].toString().unquoted() == nodeName }
+    }
 
     private fun courseMetadataRequest(courseName: String): Response {
         val request = Request(Method.GET, "$serverUrl/coursemetadata?course=$courseName")
