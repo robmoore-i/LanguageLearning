@@ -202,6 +202,6 @@ class CoursesEndpointTest {
     }
 
     private fun headerValue(headers: Headers, headerName: String): String {
-        return headers.first { header -> header.first.equals(headerName) }.second!!
+        return headers.first { header -> header.first == headerName }.second!!
     }
 }
