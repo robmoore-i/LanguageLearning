@@ -19,6 +19,8 @@ import org.junit.Before
 import org.junit.Test
 import server.LegacyServer
 import server.Server
+import java.io.File
+import java.nio.file.Paths
 
 class LessonEndpointTest {
     private val environmentLoader = EnvironmentLoader(System::getenv)
@@ -54,6 +56,7 @@ class LessonEndpointTest {
             session.run("MATCH (n) DELETE (n)")
             session.close()
         }
+        File(Paths.get(environment.extractsPath, "test.txt").toUri()).delete()
     }
 
     @Before
@@ -134,15 +137,58 @@ class LessonEndpointTest {
         assertThat(rq["type"].asInt(), equalTo(2))
         assertThat(rq["index"].asInt(), equalTo(0))
         assertThat(rq["extract"].toString().unquoted(), equalTo("inline-extract"))
+    }
 
-        println(rq)
+    @Test
+    fun canGetAnRsq() {
+        neo4jDriver.session().let { session ->
+            val query = """
+                CREATE (c:Course {name: "c", image: "img.png"})-[:HAS_TOPIC_LESSON {index: 0}]->(l:TopicLesson {name: "RQ"})
+                CREATE (l)-[:HAS_QUESTION {index: 0}]->(rq:Question:ReadingQuestion {extractInline: "inline-extract"})
+                CREATE (rq)-[:HAS_SUBQUESTION {index: 0}]->(rsq:ReadingSubQuestion {given:"What does 'საქართველო' mean in English?", answer:"Georgia"})
+                RETURN l,rq,rsq,c;
+                """
 
+            session.run(query)
+            session.close()
+        }
+
+        val responseJson = lessonRequestJson("RQ")
+        val questions = responseJson["questions"]
+        assertThat(questions.size(), equalTo(1))
+
+        val rq = questions[0]
         val subquestions = rq["questions"]
         assertThat(subquestions.size(), equalTo(1))
 
         val rsq = subquestions[0]
         assertThat(rsq["given"].toString().unquoted(), equalTo("What does 'საქართველო' mean in English?"))
         assertThat(rsq["answer"].toString().unquoted(), equalTo("Georgia"))
+    }
+
+    @Test
+    fun canGetRqWithFileExtract() {
+        File(Paths.get(environment.extractsPath, "test.txt").toUri()).writeText("file-extract")
+
+        neo4jDriver.session().let { session ->
+            val query = """
+                CREATE (c:Course {name: "c", image: "img.png"})-[:HAS_TOPIC_LESSON {index: 0}]->(l:TopicLesson {name: "RQ"})
+                CREATE (l)-[:HAS_QUESTION {index: 0}]->(rq:Question:ReadingQuestion {extractFile: "test.txt"})
+                RETURN l,rq,c;
+                """
+
+            session.run(query)
+            session.close()
+        }
+
+        val responseJson = lessonRequestJson("RQ")
+        val questions = responseJson["questions"]
+        assertThat(questions.size(), equalTo(1))
+
+        val rq = questions[0]
+        assertThat(rq["type"].asInt(), equalTo(2))
+        assertThat(rq["index"].asInt(), equalTo(0))
+        assertThat(rq["extract"].toString().unquoted(), equalTo("file-extract"))
     }
 
     private fun lessonRequest(lessonName: String): Response {
