@@ -45,7 +45,7 @@ open class Neo4jDatabaseAdaptor(
         return Lesson.fromNeo4jValuePairs(courseName, lessonName, lessonIndex, valuePairs, this)
     }
 
-    fun readingSubQuestions(courseName: String, lessonName: String, lessonIndex: Int): List<ReadingSubQuestion> {
+    open fun readingSubQuestions(courseName: String, lessonName: String, lessonIndex: Int): List<ReadingSubQuestion> {
         val valuePairs = neo4jDriver.queryTwoValuesWithParams(
             "MATCH (tl:TopicLesson {name: {lessonName}})-[:HAS_QUESTION {index: {lessonIndex}}]->(rq:ReadingQuestion)-[r:HAS_SUBQUESTION]->(rsq:ReadingSubQuestion) RETURN rsq,r.index",
             mapOf(
@@ -69,7 +69,7 @@ open class Neo4jDatabaseAdaptor(
         return subquestions
     }
 
-    fun readExtract(extractRelativePath: String): String {
+    open fun readExtract(extractRelativePath: String): String {
         return File(Paths.get(extractsPath, extractRelativePath).toUri()).readText()
     }
 }
