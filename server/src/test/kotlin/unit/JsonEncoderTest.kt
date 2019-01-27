@@ -16,21 +16,6 @@ class JsonEncoderTest {
     private val encoder = JsonEncoder()
 
     @Test
-    fun canEncodeEmptyLesson() {
-        val questions = listOf<Question>()
-        val lesson = Lesson("Georgian", "lesson-name", 0, questions)
-
-        val encoded = encoder.encodeLesson(lesson)
-
-        val node: JsonNode = json.parse(encoded)
-
-        assertThat(node["courseName"].toString().unquoted(), equalTo("Georgian"))
-        assertThat(node["name"].toString().unquoted(), equalTo("lesson-name"))
-        assertThat(node["index"].asInt(), equalTo(0))
-        assertThat(node["questions"].size(), equalTo(0))
-    }
-
-    @Test
     fun canEncodeLessonWithSingleAnswerTranslationQuestion() {
         val questions = listOf<Question>(
             TranslationQuestion("given", "answer")
@@ -40,12 +25,52 @@ class JsonEncoderTest {
         val encoded = encoder.encodeLesson(lesson)
 
         val node: JsonNode = json.parse(encoded)
-
-        assertThat(node["courseName"].toString().unquoted(), equalTo("Georgian"))
-        assertThat(node["name"].toString().unquoted(), equalTo("lesson-name"))
-        assertThat(node["index"].asInt(), equalTo(0))
         assertThat(node["questions"].size(), equalTo(1))
         assertThat(node["questions"][0]["given"].toString().unquoted(), equalTo("given"))
         assertThat(node["questions"][0]["answer"].toString().unquoted(), equalTo("answer"))
+    }
+
+    @Test
+    fun canEncodeLessonWithNoQuestions() {
+        val questions = listOf<Question>()
+        val lesson = Lesson("Georgian", "lesson-name", 0, questions)
+
+        val encoded = encoder.encodeLesson(lesson)
+
+        val node: JsonNode = json.parse(encoded)
+        assertThat(node["questions"].size(), equalTo(0))
+    }
+
+    @Test
+    fun canEncodeLessonWithCourseName() {
+        val questions = listOf<Question>()
+        val lesson = Lesson("Georgian", "lesson-name", 0, questions)
+
+        val encoded = encoder.encodeLesson(lesson)
+
+        val node: JsonNode = json.parse(encoded)
+        assertThat(node["courseName"].toString().unquoted(), equalTo("Georgian"))
+    }
+
+    @Test
+    fun canEncodeLessonWithLessonName() {
+        val questions = listOf<Question>()
+        val lesson = Lesson("Georgian", "lesson-name", 0, questions)
+
+        val encoded = encoder.encodeLesson(lesson)
+
+        val node: JsonNode = json.parse(encoded)
+        assertThat(node["name"].toString().unquoted(), equalTo("lesson-name"))
+    }
+
+    @Test
+    fun canEncodeLessonWithIndex() {
+        val questions = listOf<Question>()
+        val lesson = Lesson("Georgian", "lesson-name", 0, questions)
+
+        val encoded = encoder.encodeLesson(lesson)
+
+        val node: JsonNode = json.parse(encoded)
+        assertThat(node["index"].asInt(), equalTo(0))
     }
 }
