@@ -11,12 +11,11 @@ data class MultipleChoiceQuestion(val question: String, val choices: Map<Char, S
     }
 
     private fun fields(): MutableList<Pair<String, JsonNode>> {
-        val fields: MutableList<Pair<String, JsonNode>> = mutableListOf()
-
         if (choices.isEmpty()) {
             throw UnanswerableQuestionException("Multiple choice question must have at least one choice, got none. The question was: \"Which one of these $question?\"")
         }
 
+        val fields: MutableList<Pair<String, JsonNode>> = mutableListOf()
         for (choice in choices) {
             fields.add(choice.key.toString() to json.string(choice.value))
         }
