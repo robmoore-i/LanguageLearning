@@ -33,7 +33,7 @@ data class Lesson(val courseName: String, val lessonName: String, val lessonInde
                 val index = indexValue.asInt()
                 val question = when {
                     node.hasLabel("TranslationQuestion") -> TranslationQuestion.fromNeo4jNode(node)
-                    node.hasLabel("MultipleChoiceQuestion") -> MultipleChoiceQuestion.fromNeo4jNode(node, index)
+                    node.hasLabel("MultipleChoiceQuestion") -> MultipleChoiceQuestion.fromNeo4jNode(node)
                     node.hasLabel("ReadingQuestion") -> ReadingQuestion.fromNeo4jNode(node, index)
                     else -> throw UnsupportedQuestionType(node.labels())
                 }

@@ -2,6 +2,7 @@ package model
 
 import com.fasterxml.jackson.databind.JsonNode
 import org.http4k.format.Jackson
+import org.http4k.unquoted
 import org.neo4j.driver.v1.types.Node
 
 data class MultipleChoiceQuestion(val question: String, val choices: Map<Char, String>, val answer: Char) : Question {
@@ -28,8 +29,15 @@ data class MultipleChoiceQuestion(val question: String, val choices: Map<Char, S
     }
 
     companion object {
-        fun fromNeo4jNode(node: Node, index: Int): MultipleChoiceQuestion {
-            return MultipleChoiceQuestion("", mapOf(), 'a')
+        fun fromNeo4jNode(node: Node): MultipleChoiceQuestion {
+            val question = node["question"].toString().unquoted()
+            val a = node["a"].toString().unquoted()
+            val b = node["b"].toString().unquoted()
+            val c = node["c"].toString().unquoted()
+            val d = node["d"].toString().unquoted()
+            val answer = node["answer"].toString().unquoted().first()
+
+            return MultipleChoiceQuestion(question, mapOf('a' to a, 'b' to b, 'c' to c, 'd' to d), answer)
         }
     }
 }
