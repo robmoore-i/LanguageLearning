@@ -7,12 +7,13 @@ data class Lesson(val courseName: String, val lessonName: String, val lessonInde
     val json = Jackson
 
     fun jsonify(): JsonNode {
+        val jsonQuestions = questions.mapIndexed { i, question -> question.jsonify(i) }
         return json {
             obj(
                 "courseName" to string(courseName),
                 "name" to string(lessonName),
                 "index" to number(lessonIndex),
-                "questions" to array(questions.map(Question::jsonify))
+                "questions" to array(jsonQuestions)
             )
         }
     }

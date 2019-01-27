@@ -32,6 +32,20 @@ class MultipleChoiceQuestionEncodingTest {
     }
 
     @Test
+    fun mcqIsEncodedWithIndex() {
+        val questions = listOf<Question>(
+            MultipleChoiceQuestion("sounds like 'i' in English", mapOf('a' to "a"), 'a')
+        )
+        val lesson = Lesson("Georgian", "lesson-name", 0, questions)
+
+        val encoded = encoder.encodeLesson(lesson)
+
+        val node: JsonNode = json.parse(encoded)
+        val mcq = node["questions"][0]
+        assertThat(mcq["index"].asInt(), CoreMatchers.equalTo(0))
+    }
+
+    @Test
     fun mcqIsEncodedWithQuestion() {
         val questions = listOf<Question>(
             MultipleChoiceQuestion("sounds like 'i' in English", mapOf('a' to "a"), 'a')

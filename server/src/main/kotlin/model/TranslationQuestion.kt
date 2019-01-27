@@ -8,11 +8,12 @@ data class TranslationQuestion(val given: String, val answers: List<String>) : Q
 
     val json = Jackson
 
-    override fun jsonify(): JsonNode {
+    override fun jsonify(questionIndex: Int): JsonNode {
         val answerPair = answerPair()
         return json {
             obj(
                 "type" to number(0),
+                "index" to number(questionIndex),
                 "given" to string(given),
                 answerPair
             )

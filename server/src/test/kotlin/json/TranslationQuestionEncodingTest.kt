@@ -5,6 +5,7 @@ import model.Lesson
 import model.Question
 import model.TranslationQuestion
 import model.UnanswerableQuestionException
+import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.http4k.format.Jackson
@@ -29,6 +30,22 @@ class TranslationQuestionEncodingTest {
         val node: JsonNode = json.parse(encoded)
         val translationQuestion = node["questions"][0]
         assertThat(translationQuestion["type"].asInt(), equalTo(0))
+    }
+
+    @Test
+    fun tqIsEncodedWithIndex() {
+        val questions = listOf<Question>(
+            TranslationQuestion("given", "answer"),
+            TranslationQuestion("given", "answer"),
+            TranslationQuestion("given", "answer")
+        )
+        val lesson = Lesson("Georgian", "lesson-name", 0, questions)
+
+        val encoded = encoder.encodeLesson(lesson)
+
+        val node: JsonNode = json.parse(encoded)
+        val tq = node["questions"][2]
+        assertThat(tq["index"].asInt(), CoreMatchers.equalTo(2))
     }
 
     @Test(expected = UnanswerableQuestionException::class)

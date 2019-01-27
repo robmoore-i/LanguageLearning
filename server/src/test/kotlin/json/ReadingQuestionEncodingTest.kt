@@ -27,4 +27,18 @@ class ReadingQuestionEncodingTest {
         val readingQuestion = node["questions"][0]
         assertThat(readingQuestion["type"].asInt(), CoreMatchers.equalTo(2))
     }
+
+    @Test
+    fun rqIsEncodedWithIndex() {
+        val questions = listOf<Question>(
+            ReadingQuestion()
+        )
+        val lesson = Lesson("Georgian", "lesson-name", 0, questions)
+
+        val encoded = encoder.encodeLesson(lesson)
+
+        val node: JsonNode = json.parse(encoded)
+        val tq = node["questions"][0]
+        assertThat(tq["index"].asInt(), CoreMatchers.equalTo(0))
+    }
 }

@@ -6,10 +6,11 @@ import org.http4k.format.Jackson
 class ReadingQuestion : Question {
     private val json = Jackson
 
-    override fun jsonify(): JsonNode {
+    override fun jsonify(questionIndex: Int): JsonNode {
         return json {
             obj(
-                "type" to number(2)
+                "type" to number(2),
+                "index" to number(questionIndex)
             )
         }
     }
