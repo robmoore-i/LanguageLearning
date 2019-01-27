@@ -60,13 +60,18 @@ open class Neo4jDatabaseAdaptor(
             )
         )
 
-        val subquestions: MutableList<ReadingSubQuestion> = mutableListOf()
+        val subquestionsIndexMapped: MutableMap<Int, ReadingSubQuestion> = mutableMapOf()
+
+
         valuePairs.forEach { (nodeValue, indexValue) ->
             val index = indexValue.asInt()
             val node = nodeValue.asNode()
             val rsq = ReadingSubQuestion.fromNeo4jNode(node)
-            subquestions.add(index, rsq)
+            subquestionsIndexMapped.put(index, rsq)
         }
+
+        @Suppress("UnnecessaryVariable") val subquestions =
+            subquestionsIndexMapped.toSortedMap().map { entry -> entry.value }
 
         return subquestions
     }

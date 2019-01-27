@@ -1,15 +1,19 @@
 package server
 
+import com.fasterxml.jackson.databind.JsonNode
 import model.CourseMetadata
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.OK
+import org.http4k.format.Jackson
+import org.http4k.unquoted
 
 class ServerApi(
     private val legacyServer: LegacyServer,
     private val databaseAdaptor: DatabaseAdaptor,
     private val frontendPort: Int
 ) {
+    private val json = Jackson
     private val jsonEncoder = JsonEncoder()
 
     fun handleCourses(@Suppress("UNUSED_PARAMETER") request: Request): Response {
@@ -25,7 +29,11 @@ class ServerApi(
     }
 
     fun handleLesson(request: Request): Response {
-        return legacyServer.handleLesson(request)
+        val jsonNode: JsonNode = json.parse(request.bodyString())
+        val lessonName = jsonNode["lessonName"].toString().unquoted()
+        val lesson = databaseAdaptor.lesson("TODO-USE-THIS", lessonName)
+        val jsonEncodedLesson = jsonEncoder.encodeLesson(lesson)
+        return okResponse(jsonEncodedLesson)
     }
 
     private fun okResponse(json: String): Response {

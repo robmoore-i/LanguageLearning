@@ -28,7 +28,7 @@ data class Lesson(val courseName: String, val lessonName: String, val lessonInde
             valuePairs: List<Pair<Value, Value>>,
             neo4jDatabaseAdaptor: Neo4jDatabaseAdaptor
         ): Lesson {
-            val questions: MutableList<Question> = mutableListOf()
+            val questionsIndexMapped: MutableMap<Int, Question> = mutableMapOf()
 
             valuePairs.forEach { (nodeValue, indexValue) ->
                 val node = nodeValue.asNode()
@@ -45,8 +45,10 @@ data class Lesson(val courseName: String, val lessonName: String, val lessonInde
                     )
                     else -> throw UnsupportedQuestionType(node.labels())
                 }
-                questions.add(index, question)
+                questionsIndexMapped.put(index, question)
             }
+
+            val questions = questionsIndexMapped.toSortedMap().map { entry -> entry.value }
 
             return Lesson(courseName, lessonName, lessonIndex, questions)
         }
