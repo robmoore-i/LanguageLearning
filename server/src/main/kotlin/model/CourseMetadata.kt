@@ -12,16 +12,16 @@ class CourseMetadata(private val lessonMetadata: MutableList<LessonMetadata>) {
         return lessonMetadata[i].lessonName
     }
 
+    fun numberOfLessons(): Int {
+        return lessonMetadata.size
+    }
+
     fun jsonify(): JsonNode {
         return json {
             obj(
                 "lessonMetadata" to array(lessonMetadata.map(LessonMetadata::jsonify))
             )
         }
-    }
-
-    fun numberOfLessons(): Int {
-        return lessonMetadata.size
     }
 
     companion object {
