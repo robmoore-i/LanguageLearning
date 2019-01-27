@@ -26,7 +26,7 @@ data class Lesson(val courseName: String, val lessonName: String, val lessonInde
             lessonName: String,
             lessonIndex: Int,
             valuePairs: List<Pair<Value, Value>>,
-            adaptor: Neo4jDatabaseAdaptor
+            neo4jDatabaseAdaptor: Neo4jDatabaseAdaptor
         ): Lesson {
             val questions: MutableList<Question> = mutableListOf()
 
@@ -38,7 +38,7 @@ data class Lesson(val courseName: String, val lessonName: String, val lessonInde
                     node.hasLabel("MultipleChoiceQuestion") -> MultipleChoiceQuestion.fromNeo4jNode(node)
                     node.hasLabel("ReadingQuestion") -> ReadingQuestion.fromNeo4jNode(
                         node,
-                        adaptor,
+                        neo4jDatabaseAdaptor,
                         courseName,
                         lessonName,
                         lessonIndex
