@@ -9,6 +9,7 @@ import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.http4k.format.Jackson
 import org.http4k.unquoted
+import org.junit.Assert.assertFalse
 import org.junit.Test
 import server.JsonEncoder
 
@@ -80,5 +81,22 @@ class ReadingQuestionEncodingTest {
         val rq = node["questions"][0]
         val rsq = rq["questions"][1]
         assertThat(rsq["index"].asInt(), equalTo(1))
+    }
+
+    @Test
+    fun canEncodeMultipleAnswerSubquestions() {
+        val questions = listOf<Question>(
+            ReadingQuestion(listOf(ReadingSubQuestion("given", listOf("answer-1", "answer-2"))))
+        )
+        val lesson = Lesson("Georgian", "lesson-name", 0, questions)
+
+        val encoded = encoder.encodeLesson(lesson)
+
+        val node: JsonNode = json.parse(encoded)
+        val rq = node["questions"][0]
+        val rsq = rq["questions"][0]
+        assertThat(rsq["answers"][0].toString().unquoted(), equalTo("answer-1"))
+        assertThat(rsq["answers"][1].toString().unquoted(), equalTo("answer-2"))
+        assertFalse(rsq.has("answer"))
     }
 }
