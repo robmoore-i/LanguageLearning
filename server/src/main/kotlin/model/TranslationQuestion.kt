@@ -19,6 +19,10 @@ data class TranslationQuestion(val given: String, val answers: List<String>) : Q
     }
 
     private fun answerPair(): Pair<String, JsonNode> {
-        return "answer" to json.string(answers[0])
+        return when {
+            answers.size > 1 -> "answers" to json { array(answers.map(this::string)) }
+            answers.size == 1 -> "answer" to json.string(answers[0])
+            else -> throw AnswerlessQuestionException("Translation question must have at least one answer, got: $answers")
+        }
     }
 }
