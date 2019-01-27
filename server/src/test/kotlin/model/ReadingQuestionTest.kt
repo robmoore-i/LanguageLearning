@@ -10,6 +10,39 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 
 class ReadingQuestionTest {
+    @Test(expected = UnanswerableQuestionException::class)
+    fun throwsUnanswerableQuestionExceptionIfNoExtract() {
+        val node = neo4jNode(
+            listOf("Question", "ReadingQuestion"),
+            mapOf()
+        )
+
+        val mockNeo4jAdaptor = mock<Neo4jDatabaseAdaptor> {
+            on { readingSubQuestions("course", "lesson", 0) } doReturn listOf()
+            on { readExtract("extract.txt") } doReturn "extract-from-file"
+        }
+
+        val rq = ReadingQuestion.fromNeo4jNode(node, mockNeo4jAdaptor, "course", "lesson", 0)
+        println(rq)
+    }
+
+    @Test
+    fun canExtractAFileExtractFromNeo4jNode() {
+        val node = neo4jNode(
+            listOf("Question", "ReadingQuestion"),
+            mapOf("extractFile" to stringValue("extract.txt"))
+        )
+
+        val mockNeo4jAdaptor = mock<Neo4jDatabaseAdaptor> {
+            on { readingSubQuestions("course", "lesson", 0) } doReturn listOf()
+            on { readExtract("extract.txt") } doReturn "extract-from-file"
+        }
+
+        val rq = ReadingQuestion.fromNeo4jNode(node, mockNeo4jAdaptor, "course", "lesson", 0)
+
+        assertThat(rq.extract, equalTo("extract-from-file"))
+    }
+
     @Test
     fun canExtractAnInlineExtractFromNeo4jNode() {
         val node = neo4jNode(

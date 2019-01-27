@@ -65,6 +65,10 @@ open class Neo4jDatabaseAdaptor(
 
         return subquestions
     }
+
+    open fun readExtract(extractRelativePath: String): String {
+        return ""
+    }
 }
 
 fun main(args: Array<String>) {

@@ -30,7 +30,13 @@ data class ReadingQuestion(val extract: String, val subquestions: List<ReadingSu
             lessonIndex: Int
         ): ReadingQuestion {
             val subQuestions = adaptor.readingSubQuestions(courseName, lessonName, lessonIndex)
-            val extract = node["extractInline"].toString().unquoted()
+
+            val extract = when {
+                node.containsKey("extractInline") -> node["extractInline"].toString().unquoted()
+                node.containsKey("extractFile") -> adaptor.readExtract(node["extractFile"].toString().unquoted())
+                else -> throw UnanswerableQuestionException("Reading questions need an extract, either inline or in a file, got neither.")
+            }
+
             return ReadingQuestion(extract, subQuestions)
         }
     }
