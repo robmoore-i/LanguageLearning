@@ -17,7 +17,7 @@ class JsonEncoderTest {
     private val encoder = JsonEncoder()
 
     @Test
-    fun TranslationQuestionIsEncodedWithType0() {
+    fun translationQuestionIsEncodedWithType0() {
         val questions = listOf<Question>(
             TranslationQuestion("given", "answer")
         )
