@@ -1,7 +1,5 @@
 package server
 
-import com.fasterxml.jackson.databind.JsonNode
-import neo4j.Course
 import neo4j.CourseMetadata
 import neo4j.DatabaseAdaptor
 import org.http4k.core.Request
@@ -13,34 +11,22 @@ class ServerApi(
     private val databaseAdaptor: DatabaseAdaptor,
     private val frontendPort: Int
 ) {
-    fun handleCourses(@Suppress("UNUSED_PARAMETER") request: Request): Response {
-        val courses: List<Course> = databaseAdaptor.allCourses()
-        val coursesJsonObjects: List<JsonNode> = courses.map { course -> course.jsonify() }
-        val json = encodeJsonArray(coursesJsonObjects)
+    private val jsonEncoder = JsonEncoder()
 
+    fun handleCourses(@Suppress("UNUSED_PARAMETER") request: Request): Response {
+        val json = jsonEncoder.encodeCourses(databaseAdaptor.allCourses())
         return okResponse(json)
     }
 
     fun handleCoursemetadata(request: Request): Response {
         val courseName = request.query("course") ?: throw MissingQueryParameter("course")
         val courseMetadata: CourseMetadata = databaseAdaptor.courseMetadata(courseName)
-        val json = courseMetadata.jsonify().toString()
-
+        val json = jsonEncoder.encodeCourseMetadata(courseMetadata)
         return okResponse(json)
     }
 
     fun handleLesson(request: Request): Response {
         return legacyServer.handleLesson(request)
-    }
-
-    private fun encodeJsonArray(courses: List<JsonNode>): String {
-        val stringBuilder = StringBuilder().append("[")
-        for (course in courses) {
-            val stringCourse = course.toString()
-            stringBuilder.append(stringCourse).append(",")
-        }
-        val json = stringBuilder.toString().dropLast(1) + "]"
-        return json
     }
 
     private fun okResponse(json: String): Response {
