@@ -62,7 +62,7 @@ class LessonEndpointTest {
     }
 
     @Test
-    fun canGetLessonOrderForACourse() {
+    fun canGetMcq() {
         neo4jDriver.session().let { session ->
             val query = """
                 CREATE (hello:TopicLesson {name: "MCQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
@@ -86,6 +86,63 @@ class LessonEndpointTest {
         assertThat(mcq["b"].toString().unquoted(), equalTo("ბ"))
         assertThat(mcq["c"].toString().unquoted(), equalTo("გ"))
         assertThat(mcq["d"].toString().unquoted(), equalTo("ა"))
+    }
+
+    @Test
+    fun canGetTq() {
+        neo4jDriver.session().let { session ->
+            val query = """
+                CREATE (l:TopicLesson {name: "TQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
+                CREATE (l)-[:HAS_QUESTION {index: 0}]->(tq:Question:TranslationQuestion {given: "What are you called?", answer: "შენ რა გქვია?"})
+                RETURN l,tq,c;
+                """
+
+            session.run(query)
+            session.close()
+        }
+
+        val responseJson = lessonRequestJson("TQ")
+        val questions = responseJson["questions"]
+        assertThat(questions.size(), equalTo(1))
+
+        val tq = questions[0]
+        assertThat(tq["type"].asInt(), equalTo(0))
+        assertThat(tq["index"].asInt(), equalTo(0))
+        assertThat(tq["given"].toString().unquoted(), equalTo("What are you called?"))
+        assertThat(tq["answer"].toString().unquoted(), equalTo("შენ რა გქვია?"))
+    }
+
+    @Test
+    fun canGetRqWithInlineExtract() {
+        neo4jDriver.session().let { session ->
+            val query = """
+                CREATE (l:TopicLesson {name: "RQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
+                CREATE (l)-[:HAS_QUESTION {index: 0}]->(rq:Question:ReadingQuestion {extractInline: "inline-extract"})
+                CREATE (rq)-[:HAS_SUBQUESTION {index: 0}]->(rsq:ReadingSubQuestion {given:"What does 'საქართველო' mean in English?", answer:"Georgia"})
+                RETURN l,rq,rsq,c;
+                """
+
+            session.run(query)
+            session.close()
+        }
+
+        val responseJson = lessonRequestJson("RQ")
+        val questions = responseJson["questions"]
+        assertThat(questions.size(), equalTo(1))
+
+        val rq = questions[0]
+        assertThat(rq["type"].asInt(), equalTo(2))
+        assertThat(rq["index"].asInt(), equalTo(0))
+        assertThat(rq["extract"].toString().unquoted(), equalTo("inline-extract"))
+
+        println(rq)
+
+        val subquestions = rq["questions"]
+        assertThat(subquestions.size(), equalTo(1))
+
+        val rsq = subquestions[0]
+        assertThat(rsq["given"].toString().unquoted(), equalTo("What does 'საქართველო' mean in English?"))
+        assertThat(rsq["answer"].toString().unquoted(), equalTo("Georgia"))
     }
 
     private fun lessonRequest(lessonName: String): Response {

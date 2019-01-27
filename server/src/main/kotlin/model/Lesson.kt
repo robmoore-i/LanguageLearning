@@ -45,7 +45,7 @@ data class Lesson(val courseName: String, val lessonName: String, val lessonInde
                     )
                     else -> throw UnsupportedQuestionType(node.labels())
                 }
-                questionsIndexMapped.put(index, question)
+                questionsIndexMapped[index] = question
             }
 
             val questions = questionsIndexMapped.toSortedMap().map { entry -> entry.value }

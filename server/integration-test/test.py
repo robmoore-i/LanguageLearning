@@ -39,7 +39,7 @@ def can_get_lesson_with_mcq():
         session.run(
             """
             CREATE (hello:TopicLesson {name: "MCQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
-            CREATE (hello)-[:HAS_QUESTION {index: 1}]->(letterA:Question:MultipleChoiceQuestion {question: "sounds like \\"a\\" in English", a: "მ",b:"ბ", c:"გ", d:"ა", answer: "d"})
+            CREATE (hello)-[:HAS_QUESTION {index: 0}]->(letterA:Question:MultipleChoiceQuestion {question: "sounds like \\"a\\" in English", a: "მ",b:"ბ", c:"გ", d:"ა", answer: "d"})
             RETURN hello,letterA,c;
             """)
 
@@ -50,7 +50,7 @@ def can_get_lesson_with_mcq():
     lesson = res.json()
     questions = lesson["questions"]
 
-    expected_mcq = {'index': 1, 'type': 1, 'question': 'sounds like "a" in English',
+    expected_mcq = {'index': 0, 'type': 1, 'question': 'sounds like "a" in English',
                     'a': 'მ', 'b': 'ბ', 'c': 'გ', 'd': 'ა', 'answer': 'd'}
     assert_that(type(questions).__name__).is_equal_to('list')
     assert_that(len(questions)).is_equal_to(1)
@@ -90,7 +90,7 @@ def can_get_lesson_with_rq():
         session.run(
             """
             CREATE (l:TopicLesson {name: "RQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
-            CREATE (l)-[:HAS_QUESTION {index: 10}]->(rq:Question:ReadingQuestion {extractInline: "memes"})
+            CREATE (l)-[:HAS_QUESTION {index: 0}]->(rq:Question:ReadingQuestion {extractInline: "memes"})
             CREATE (rq)-[:HAS_SUBQUESTION {index: 0}]->(rsq:ReadingSubQuestion {given:"What does 'საქართველო' mean in English?", answer:"Georgia"})
             RETURN l,rq,rsq,c;
             """)
@@ -105,7 +105,7 @@ def can_get_lesson_with_rq():
     rq = questions[0]
     assert_that(type(rq).__name__).is_equal_to('dict')
     assert_that(rq['type']).is_equal_to(2)
-    assert_that(rq['index']).is_equal_to(10)
+    assert_that(rq['index']).is_equal_to(0)
     sub_questions = rq['questions']
     assert_that(type(sub_questions).__name__).is_equal_to('list')
     assert_that(len(sub_questions)).is_equal_to(1)
@@ -197,7 +197,7 @@ def can_get_lesson_with_mcq_with_three_choices():
         session.run(
             """
             CREATE (toBe:TopicLesson {name: "MCQ3"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "Georgian", image: "img.png"})
-            CREATE (toBe)-[:HAS_QUESTION {index: 1}]->(singularToBe:Question:MultipleChoiceQuestion {question: "means \\"I am\\" in English", a: "მე ვარ", b: "შენ ხარ", c: "ის არის", answer: "a"})
+            CREATE (toBe)-[:HAS_QUESTION {index: 0}]->(singularToBe:Question:MultipleChoiceQuestion {question: "means \\"I am\\" in English", a: "მე ვარ", b: "შენ ხარ", c: "ის არის", answer: "a"})
             RETURN toBe,singularToBe,c;
             """)
 
@@ -208,8 +208,8 @@ def can_get_lesson_with_mcq_with_three_choices():
     lesson = res.json()
     questions = lesson["questions"]
 
-    expected_mcq = {'index': 1, 'type': 1, 'question': 'means "I am" in English',
-                    'a': 'მე ვარ', 'b': 'შენ ხარ', 'c': 'ის არის', 'd': '!', 'answer': 'a'}
+    expected_mcq = {'index': 0, 'type': 1, 'question': 'means "I am" in English',
+                    'a': 'მე ვარ', 'b': 'შენ ხარ', 'c': 'ის არის', 'answer': 'a'}
     assert_that(type(questions).__name__).is_equal_to('list')
     assert_that(len(questions)).is_equal_to(1)
     mcq = questions[0]
