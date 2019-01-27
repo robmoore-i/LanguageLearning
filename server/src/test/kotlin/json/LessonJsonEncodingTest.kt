@@ -15,7 +15,7 @@ class LessonJsonEncodingTest {
 
     @Test
     fun canEncodeLessonWithThreeTypesOfQuestion() {
-        val questions = listOf<Question>(
+        val questions = listOf(
             TranslationQuestion("tq-given", listOf("tq-answer-1", "tq-answer-2")),
             MultipleChoiceQuestion("is 'a'", mapOf('a' to "a", 'b' to "b", 'c' to "c", 'd' to "d"), 'a'),
             ReadingQuestion(listOf(ReadingSubQuestion("rsq-given", "rsq-answer")))
