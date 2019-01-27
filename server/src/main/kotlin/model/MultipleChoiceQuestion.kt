@@ -7,13 +7,16 @@ data class MultipleChoiceQuestion(val question: String, val choices: Map<Char, S
     val json = Jackson
 
     override fun jsonify(): JsonNode {
-        return json {
-            obj(
-                listOf(
-                    "type" to number(1),
-                    "question" to string(question)
-                )
-            )
+        return json { obj(fields()) }
+    }
+
+    private fun fields(): MutableList<Pair<String, JsonNode>> {
+        val fields: MutableList<Pair<String, JsonNode>> = mutableListOf()
+        for (choice in choices) {
+            fields.add(choice.key.toString() to json.string(choice.value))
         }
+        fields.add("type" to json.number(1))
+        fields.add("question" to json.string(question))
+        return fields
     }
 }
