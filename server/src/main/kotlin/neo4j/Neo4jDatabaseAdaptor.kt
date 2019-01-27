@@ -3,10 +3,11 @@ package neo4j
 import model.Course
 import model.CourseMetadata
 import model.Lesson
+import model.ReadingSubQuestion
 import org.neo4j.driver.v1.Record
 import server.DatabaseAdaptor
 
-class Neo4jDatabaseAdaptor(
+open class Neo4jDatabaseAdaptor(
     private val neo4jDriver: Neo4jDriver,
     private val imagesPath: String,
     private val extractsPath: String
@@ -26,7 +27,7 @@ class Neo4jDatabaseAdaptor(
         return CourseMetadata.fromNeo4jValuePairs(valuePairs)
     }
 
-    fun lessonIndex(lessonName: String): Int {
+    fun lessonIndex(courseName: String, lessonName: String): Int {
         val queryValuesWithParams = neo4jDriver.queryValuesWithParams(
             "MATCH (tl:TopicLesson {name: {lessonName}})<-[r:HAS_TOPIC_LESSON]-(c:Course) RETURN r.index",
             mapOf("lessonName" to lessonName)
@@ -40,12 +41,30 @@ class Neo4jDatabaseAdaptor(
             mapOf("lessonName" to lessonName)
         )
 
-        val lessonIndex = lessonIndex(lessonName)
+        val lessonIndex = lessonIndex(courseName, lessonName)
 
-        return Lesson.fromNeo4jValuePairs(courseName, lessonName, lessonIndex, valuePairs)
+        return Lesson.fromNeo4jValuePairs(courseName, lessonName, lessonIndex, valuePairs, this)
     }
 
-    // questions: MATCH (tl:TopicLesson {name: {name}})-[r:HAS_QUESTION]->(q) RETURN q,r.index
+    open fun readingSubQuestions(courseName: String, lessonName: String, lessonIndex: Int): List<ReadingSubQuestion> {
+        val valuePairs = neo4jDriver.queryTwoValuesWithParams(
+            "MATCH (tl:TopicLesson {name: {lessonName}})-[:HAS_QUESTION {index: {lessonIndex}}]->(rq:ReadingQuestion)-[r:HAS_SUBQUESTION]->(rsq:ReadingSubQuestion) RETURN rsq,r.index",
+            mapOf(
+                "lessonName" to lessonName,
+                "lessonIndex" to lessonIndex.toString()
+            )
+        )
+
+        val subquestions: MutableList<ReadingSubQuestion> = mutableListOf()
+        valuePairs.forEach { (nodeValue, indexValue) ->
+            val index = indexValue.asInt()
+            val node = nodeValue.asNode()
+            val rsq = ReadingSubQuestion.fromNeo4jNode(node)
+            subquestions.add(index, rsq)
+        }
+
+        return subquestions
+    }
 }
 
 fun main(args: Array<String>) {

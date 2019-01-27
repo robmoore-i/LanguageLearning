@@ -1,6 +1,7 @@
 package model
 
 import com.fasterxml.jackson.databind.JsonNode
+import neo4j.Neo4jDatabaseAdaptor
 import org.http4k.format.Jackson
 import org.neo4j.driver.v1.Value
 
@@ -24,7 +25,8 @@ data class Lesson(val courseName: String, val lessonName: String, val lessonInde
             courseName: String,
             lessonName: String,
             lessonIndex: Int,
-            valuePairs: List<Pair<Value, Value>>
+            valuePairs: List<Pair<Value, Value>>,
+            adaptor: Neo4jDatabaseAdaptor
         ): Lesson {
             val questions: MutableList<Question> = mutableListOf()
 
@@ -34,7 +36,13 @@ data class Lesson(val courseName: String, val lessonName: String, val lessonInde
                 val question = when {
                     node.hasLabel("TranslationQuestion") -> TranslationQuestion.fromNeo4jNode(node)
                     node.hasLabel("MultipleChoiceQuestion") -> MultipleChoiceQuestion.fromNeo4jNode(node)
-                    node.hasLabel("ReadingQuestion") -> ReadingQuestion.fromNeo4jNode(node, index)
+                    node.hasLabel("ReadingQuestion") -> ReadingQuestion.fromNeo4jNode(
+                        node,
+                        adaptor,
+                        courseName,
+                        lessonName,
+                        lessonIndex
+                    )
                     else -> throw UnsupportedQuestionType(node.labels())
                 }
                 questions.add(index, question)
