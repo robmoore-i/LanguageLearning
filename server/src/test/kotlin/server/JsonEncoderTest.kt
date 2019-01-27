@@ -16,6 +16,20 @@ class JsonEncoderTest {
     private val json = Jackson
     private val encoder = JsonEncoder()
 
+    @Test
+    fun TranslationQuestionIsEncodedWithType0() {
+        val questions = listOf<Question>(
+            TranslationQuestion("given", "answer")
+        )
+        val lesson = Lesson("Georgian", "lesson-name", 0, questions)
+
+        val encoded = encoder.encodeLesson(lesson)
+
+        val node: JsonNode = json.parse(encoded)
+        val translationQuestion = node["questions"][0]
+        assertThat(translationQuestion["type"].asInt(), equalTo(0))
+    }
+
     @Test(expected = AnswerlessQuestionException::class)
     fun throwsAnswerlessQuestionExceptionIfTryingToEncodeTranslationQuestionWithoutAnswers() {
         val questions = listOf<Question>(

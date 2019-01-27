@@ -12,6 +12,7 @@ data class TranslationQuestion(val given: String, val answers: List<String>) : Q
         val answerPair = answerPair()
         return json {
             obj(
+                "type" to number(0),
                 "given" to string(given),
                 answerPair
             )
