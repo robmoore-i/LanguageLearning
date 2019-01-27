@@ -1,5 +1,9 @@
 package neo4j
 
+import model.Course
+import model.CourseMetadata
+import server.DatabaseAdaptor
+
 class Neo4jDatabaseAdaptor(
     private val neo4jDriver: Neo4jDriver,
     private val imagesPath: String,

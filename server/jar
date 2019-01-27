@@ -1,1 +1,1 @@
-./gradlew $1 build
+./gradlew $1 jar

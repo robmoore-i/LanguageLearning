@@ -1,4 +1,4 @@
-package neo4j
+package model
 
 import com.fasterxml.jackson.databind.JsonNode
 import org.http4k.format.Jackson
@@ -24,7 +24,9 @@ class CourseMetadata(private val lessonMetadata: MutableList<LessonMetadata>) {
         fun fromNeo4jValuePairs(valuePairs: List<Pair<Value, Value>>): CourseMetadata {
             val lessonMetadata: MutableList<LessonMetadata> = mutableListOf()
             valuePairs.withIndex().forEach { (i, valuePair) ->
-                lessonMetadata.add(i, LessonMetadata(valuePair.first.toString().unquoted(), valuePair.second.asInt()))
+                lessonMetadata.add(i,
+                    LessonMetadata(valuePair.first.toString().unquoted(), valuePair.second.asInt())
+                )
             }
             return CourseMetadata(lessonMetadata)
         }

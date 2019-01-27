@@ -1,4 +1,4 @@
-package neo4j
+package model
 
 enum class ImageType {
     SVG, PNG, JPG, UNKNOWN;

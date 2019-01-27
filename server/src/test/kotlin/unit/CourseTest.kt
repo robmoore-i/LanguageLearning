@@ -1,7 +1,7 @@
 package unit
 
-import neo4j.Course
-import neo4j.ImageType
+import model.Course
+import model.ImageType
 import neo4j.neo4jCourseValue
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.Assert.assertThat

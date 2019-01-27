@@ -2,6 +2,9 @@ package unit
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import model.Course
+import model.CourseMetadata
+import model.ImageType
 import neo4j.*
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.hasItem

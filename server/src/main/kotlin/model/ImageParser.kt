@@ -1,4 +1,4 @@
-package neo4j
+package model
 
 import java.io.File
 import java.util.*

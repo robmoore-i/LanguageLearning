@@ -1,9 +1,9 @@
 package server
 
 import com.fasterxml.jackson.databind.JsonNode
-import neo4j.Course
-import neo4j.CourseMetadata
-import neo4j.Lesson
+import model.Course
+import model.CourseMetadata
+import model.Lesson
 
 class JsonEncoder {
     fun encodeCourses(courses: List<Course>): String {

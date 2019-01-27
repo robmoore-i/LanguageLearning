@@ -1,7 +1,6 @@
 package server
 
-import neo4j.CourseMetadata
-import neo4j.DatabaseAdaptor
+import model.CourseMetadata
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.OK

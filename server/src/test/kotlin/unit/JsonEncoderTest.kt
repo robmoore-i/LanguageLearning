@@ -1,9 +1,9 @@
 package unit
 
 import com.fasterxml.jackson.databind.JsonNode
-import neo4j.Lesson
-import neo4j.Question
-import neo4j.TranslationQuestion
+import model.Lesson
+import model.Question
+import model.TranslationQuestion
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.http4k.format.Jackson
