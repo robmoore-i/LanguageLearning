@@ -1,11 +1,10 @@
-package unit
+package neo4j
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import model.Course
 import model.CourseMetadata
 import model.ImageType
-import neo4j.*
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.hasItem
 import org.hamcrest.MatcherAssert.assertThat

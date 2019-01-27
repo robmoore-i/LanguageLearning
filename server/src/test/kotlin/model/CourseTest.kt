@@ -1,6 +1,5 @@
-package unit
+package model
 
-import model.Course
 import model.ImageType
 import neo4j.neo4jCourseValue
 import org.hamcrest.CoreMatchers.equalTo

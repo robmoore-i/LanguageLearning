@@ -1,4 +1,4 @@
-package integration
+package endpoints
 
 import com.fasterxml.jackson.databind.JsonNode
 import environment.EnvironmentLoader

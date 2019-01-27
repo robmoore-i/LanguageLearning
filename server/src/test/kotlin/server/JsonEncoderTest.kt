@@ -1,4 +1,4 @@
-package unit
+package server
 
 import com.fasterxml.jackson.databind.JsonNode
 import model.Lesson
@@ -9,7 +9,6 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.http4k.format.Jackson
 import org.http4k.unquoted
 import org.junit.Test
-import server.JsonEncoder
 
 class JsonEncoderTest {
     private val json = Jackson
