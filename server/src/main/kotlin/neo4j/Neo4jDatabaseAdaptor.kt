@@ -4,8 +4,9 @@ import model.Course
 import model.CourseMetadata
 import model.Lesson
 import model.ReadingSubQuestion
-import org.neo4j.driver.v1.Record
 import server.DatabaseAdaptor
+import java.io.File
+import java.nio.file.Paths
 
 open class Neo4jDatabaseAdaptor(
     private val neo4jDriver: Neo4jDriver,
@@ -27,7 +28,7 @@ open class Neo4jDatabaseAdaptor(
         return CourseMetadata.fromNeo4jValuePairs(valuePairs)
     }
 
-    fun lessonIndex(courseName: String, lessonName: String): Int {
+    override fun lessonIndex(courseName: String, lessonName: String): Int {
         val queryValuesWithParams = neo4jDriver.queryValuesWithParams(
             "MATCH (tl:TopicLesson {name: {lessonName}})<-[r:HAS_TOPIC_LESSON]-(c:Course) RETURN r.index",
             mapOf("lessonName" to lessonName)
@@ -35,7 +36,7 @@ open class Neo4jDatabaseAdaptor(
         return queryValuesWithParams[0].asInt()
     }
 
-    fun lesson(courseName: String, lessonName: String): Lesson {
+    override fun lesson(courseName: String, lessonName: String): Lesson {
         val valuePairs = neo4jDriver.queryTwoValuesWithParams(
             "MATCH (tl:TopicLesson {name: {lessonName}})-[r:HAS_QUESTION]->(q) RETURN q,r.index",
             mapOf("lessonName" to lessonName)
@@ -46,7 +47,11 @@ open class Neo4jDatabaseAdaptor(
         return Lesson.fromNeo4jValuePairs(courseName, lessonName, lessonIndex, valuePairs, this)
     }
 
-    open fun readingSubQuestions(courseName: String, lessonName: String, lessonIndex: Int): List<ReadingSubQuestion> {
+    override fun readingSubQuestions(
+        courseName: String,
+        lessonName: String,
+        lessonIndex: Int
+    ): List<ReadingSubQuestion> {
         val valuePairs = neo4jDriver.queryTwoValuesWithParams(
             "MATCH (tl:TopicLesson {name: {lessonName}})-[:HAS_QUESTION {index: {lessonIndex}}]->(rq:ReadingQuestion)-[r:HAS_SUBQUESTION]->(rsq:ReadingSubQuestion) RETURN rsq,r.index",
             mapOf(
@@ -66,24 +71,8 @@ open class Neo4jDatabaseAdaptor(
         return subquestions
     }
 
-    open fun readExtract(extractRelativePath: String): String {
-        return ""
+    override fun readExtract(extractRelativePath: String): String {
+        return File(Paths.get(extractsPath, extractRelativePath).toUri()).readText()
     }
-}
-
-fun main(args: Array<String>) {
-    val neo4jDriver = Neo4jDriver("neo4j", "zuhlke", 7687)
-    val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(
-        neo4jDriver,
-        "/home/rob/Documents/language/language-learning/database/images/",
-        "/home/rob/Documents/language/language-learning/database/extracts/"
-    )
-
-    val query = "MATCH (tl:TopicLesson {name: {lessonName}})-[r:HAS_QUESTION]->(q) RETURN q,r.index"
-    val params = mapOf("lessonName" to "Peace Corps Georgia: Hello")
-    val valuePairs = neo4jDriver.driver.session().readTransaction { tx -> tx.run(query, params).list() }
-        .map { record: Record -> Pair(record.valueInColumn(0), record.valueInColumn(1)) }
-
-    println(valuePairs[0].first.asNode().labels())
 }
 
