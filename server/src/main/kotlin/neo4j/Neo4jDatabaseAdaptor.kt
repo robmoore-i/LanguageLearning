@@ -50,7 +50,7 @@ open class Neo4jDatabaseAdaptor(
             "MATCH (tl:TopicLesson {name: {lessonName}})-[:HAS_QUESTION {index: {questionIndex}}]->(rq:ReadingQuestion)-[r:HAS_SUBQUESTION]->(rsq:ReadingSubQuestion) RETURN r.index,rsq",
             mapOf(
                 "lessonName" to lessonName,
-                "questionIndex" to questionIndex.toString()
+                "questionIndex" to questionIndex
             )
         )
 
