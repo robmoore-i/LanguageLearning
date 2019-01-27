@@ -1,4 +1,4 @@
-package server
+package json
 
 import com.fasterxml.jackson.databind.JsonNode
 import model.AnswerlessQuestionException
@@ -11,8 +11,9 @@ import org.http4k.format.Jackson
 import org.http4k.unquoted
 import org.junit.Assert.assertFalse
 import org.junit.Test
+import server.JsonEncoder
 
-class JsonEncoderTest {
+class TranslationQuestionEncodingTest {
     private val json = Jackson
     private val encoder = JsonEncoder()
 
@@ -77,49 +78,5 @@ class JsonEncoderTest {
         val translationQuestion = node["questions"][0]
         assertThat(translationQuestion["given"].toString().unquoted(), equalTo("given"))
         assertThat(translationQuestion["answer"].toString().unquoted(), equalTo("answer"))
-    }
-
-    @Test
-    fun canEncodeLessonWithNoQuestions() {
-        val questions = listOf<Question>()
-        val lesson = Lesson("Georgian", "lesson-name", 0, questions)
-
-        val encoded = encoder.encodeLesson(lesson)
-
-        val node: JsonNode = json.parse(encoded)
-        assertThat(node["questions"].size(), equalTo(0))
-    }
-
-    @Test
-    fun canEncodeLessonWithCourseName() {
-        val questions = listOf<Question>()
-        val lesson = Lesson("Georgian", "lesson-name", 0, questions)
-
-        val encoded = encoder.encodeLesson(lesson)
-
-        val node: JsonNode = json.parse(encoded)
-        assertThat(node["courseName"].toString().unquoted(), equalTo("Georgian"))
-    }
-
-    @Test
-    fun canEncodeLessonWithLessonName() {
-        val questions = listOf<Question>()
-        val lesson = Lesson("Georgian", "lesson-name", 0, questions)
-
-        val encoded = encoder.encodeLesson(lesson)
-
-        val node: JsonNode = json.parse(encoded)
-        assertThat(node["name"].toString().unquoted(), equalTo("lesson-name"))
-    }
-
-    @Test
-    fun canEncodeLessonWithIndex() {
-        val questions = listOf<Question>()
-        val lesson = Lesson("Georgian", "lesson-name", 0, questions)
-
-        val encoded = encoder.encodeLesson(lesson)
-
-        val node: JsonNode = json.parse(encoded)
-        assertThat(node["index"].asInt(), equalTo(0))
     }
 }
