@@ -31,13 +31,20 @@ data class MultipleChoiceQuestion(val question: String, val choices: Map<Char, S
     companion object {
         fun fromNeo4jNode(node: Node): MultipleChoiceQuestion {
             val question = node["question"].toString().unquoted()
-            val a = node["a"].toString().unquoted()
-            val b = node["b"].toString().unquoted()
-            val c = node["c"].toString().unquoted()
-            val d = node["d"].toString().unquoted()
+
+            val choices: MutableMap<Char, String> = mutableMapOf()
+            val alphabet = "abcdef"
+            var i = 0
+            var currentLetter = alphabet[i]
+            while (node.containsKey(currentLetter.toString())) {
+                choices[currentLetter] = node[currentLetter.toString()].toString().unquoted()
+                i += 1
+                currentLetter = alphabet[i]
+            }
+
             val answer = node["answer"].toString().unquoted().first()
 
-            return MultipleChoiceQuestion(question, mapOf('a' to a, 'b' to b, 'c' to c, 'd' to d), answer)
+            return MultipleChoiceQuestion(question, choices, answer)
         }
     }
 }
