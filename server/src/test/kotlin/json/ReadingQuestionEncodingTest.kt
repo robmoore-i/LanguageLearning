@@ -18,9 +18,30 @@ class ReadingQuestionEncodingTest {
     private val encoder = JsonEncoder()
 
     @Test
+    fun readingQuestionIsEncodedWithExtract() {
+        val questions = listOf<Question>(
+            ReadingQuestion(
+                "This is the extract",
+                listOf(
+                    ReadingSubQuestion("given-1", "answer-1"),
+                    ReadingSubQuestion("given-2", "answer-2"),
+                    ReadingSubQuestion("given-3", "answer-3")
+                )
+            )
+        )
+        val lesson = Lesson("Georgian", "lesson-name", 0, questions)
+
+        val encoded = encoder.encodeLesson(lesson)
+
+        val node: JsonNode = json.parse(encoded)
+        val rq = node["questions"][0]
+        assertThat(rq["extract"].toString().unquoted(), equalTo("This is the extract"))
+    }
+
+    @Test
     fun readingQuestionIsEncodedWithType2() {
         val questions = listOf<Question>(
-            ReadingQuestion(listOf(ReadingSubQuestion("given", "answer")))
+            ReadingQuestion("", listOf(ReadingSubQuestion("given", "answer")))
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
@@ -34,7 +55,7 @@ class ReadingQuestionEncodingTest {
     @Test
     fun rqIsEncodedWithIndex() {
         val questions = listOf<Question>(
-            ReadingQuestion(listOf(ReadingSubQuestion("given", "answer")))
+            ReadingQuestion("", listOf(ReadingSubQuestion("given", "answer")))
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
@@ -48,7 +69,7 @@ class ReadingQuestionEncodingTest {
     @Test
     fun canEncodeSingleAnswerSubquestionsWithTheirQuestionInformation() {
         val questions = listOf<Question>(
-            ReadingQuestion(listOf(ReadingSubQuestion("given", "answer")))
+            ReadingQuestion("", listOf(ReadingSubQuestion("given", "answer")))
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
@@ -66,6 +87,7 @@ class ReadingQuestionEncodingTest {
     fun canEncodeSingleAnswerSubquestionsWithTheirIndex() {
         val questions = listOf<Question>(
             ReadingQuestion(
+                "",
                 listOf(
                     ReadingSubQuestion("given-1", "answer-1"),
                     ReadingSubQuestion("given-2", "answer-2"),
@@ -86,7 +108,7 @@ class ReadingQuestionEncodingTest {
     @Test
     fun canEncodeMultipleAnswerSubquestions() {
         val questions = listOf<Question>(
-            ReadingQuestion(listOf(ReadingSubQuestion("given", listOf("answer-1", "answer-2"))))
+            ReadingQuestion("", listOf(ReadingSubQuestion("given", listOf("answer-1", "answer-2"))))
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 

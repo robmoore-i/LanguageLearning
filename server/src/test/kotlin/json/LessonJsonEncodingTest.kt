@@ -18,7 +18,7 @@ class LessonJsonEncodingTest {
         val questions = listOf(
             TranslationQuestion("tq-given", listOf("tq-answer-1", "tq-answer-2")),
             MultipleChoiceQuestion("is 'a'", mapOf('a' to "a", 'b' to "b", 'c' to "c", 'd' to "d"), 'a'),
-            ReadingQuestion(listOf(ReadingSubQuestion("rsq-given", "rsq-answer")))
+            ReadingQuestion("rq-extract", listOf(ReadingSubQuestion("rsq-given", "rsq-answer")))
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
@@ -48,6 +48,7 @@ class LessonJsonEncodingTest {
         val rq = node["questions"][2]
         assertThat(rq["type"].asInt(), equalTo(2))
         assertThat(rq["index"].asInt(), equalTo(2))
+        assertThat(rq["extract"].toString().unquoted(), equalTo("rq-extract"))
 
         val rsq = rq["questions"][0]
         assertThat(rsq["given"].toString().unquoted(), equalTo("rsq-given"))
