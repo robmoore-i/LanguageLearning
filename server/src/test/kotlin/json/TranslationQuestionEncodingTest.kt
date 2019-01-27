@@ -1,10 +1,10 @@
 package json
 
 import com.fasterxml.jackson.databind.JsonNode
-import model.AnswerlessQuestionException
 import model.Lesson
 import model.Question
 import model.TranslationQuestion
+import model.UnanswerableQuestionException
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.http4k.format.Jackson
@@ -31,8 +31,8 @@ class TranslationQuestionEncodingTest {
         assertThat(translationQuestion["type"].asInt(), equalTo(0))
     }
 
-    @Test(expected = AnswerlessQuestionException::class)
-    fun throwsAnswerlessQuestionExceptionIfTryingToEncodeTranslationQuestionWithoutAnswers() {
+    @Test(expected = UnanswerableQuestionException::class)
+    fun throwsUnanswerableQuestionExceptionIfTryingToEncodeTranslationQuestionWithoutAnswers() {
         val questions = listOf<Question>(
             TranslationQuestion("given", listOf())
         )

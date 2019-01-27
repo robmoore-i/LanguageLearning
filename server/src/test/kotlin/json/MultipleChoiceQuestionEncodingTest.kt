@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import model.Lesson
 import model.MultipleChoiceQuestion
 import model.Question
+import model.UnanswerableQuestionException
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert.assertThat
 import org.http4k.format.Jackson
@@ -109,5 +110,18 @@ class MultipleChoiceQuestionEncodingTest {
         assertThat(mcq["d"].toString().unquoted(), CoreMatchers.equalTo("d"))
         assertThat(mcq["e"].toString().unquoted(), CoreMatchers.equalTo("e"))
         assertFalse(mcq.has("f"))
+    }
+
+    @Test(expected = UnanswerableQuestionException::class)
+    fun throwsUnanswerableQuestionExceptionIfThereAreNoChoices() {
+        val questions = listOf<Question>(
+            MultipleChoiceQuestion("is 'a'", mapOf(), 'a')
+        )
+        val lesson = Lesson("Georgian", "lesson-name", 0, questions)
+
+        val encoded = encoder.encodeLesson(lesson)
+
+        val node: JsonNode = json.parse(encoded)
+        println(node)
     }
 }

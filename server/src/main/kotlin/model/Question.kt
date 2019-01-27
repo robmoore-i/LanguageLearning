@@ -6,4 +6,4 @@ interface Question {
     fun jsonify(): JsonNode
 }
 
-class AnswerlessQuestionException(message: String) : Throwable(message)
+class UnanswerableQuestionException(message: String) : Throwable(message)
