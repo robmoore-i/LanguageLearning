@@ -211,15 +211,15 @@ class CoursesEndpointTest {
         assertThat(jsonNode["imageType"].toString().unquoted(), equalTo(expectedCourseImageType))
         assertThat(jsonNode["image"].toString().unquoted().replace("\\n", "\n"), equalTo(expectedImageStringBytes))
     }
+}
 
-    private fun headerValue(headers: Headers, headerName: String): String {
-        return headers.first { header -> header.first == headerName }.second!!
-    }
+fun headerValue(headers: Headers, headerName: String): String {
+    return headers.first { header -> header.first == headerName }.second!!
+}
 
-    private fun assertHasHeader(response: Response, headerName: String, headerValue: String) {
-        assertThat(
-            headerValue(response.headers, headerName),
-            equalTo(headerValue)
-        )
-    }
+fun assertHasHeader(response: Response, headerName: String, headerValue: String) {
+    assertThat(
+        headerValue(response.headers, headerName),
+        equalTo(headerValue)
+    )
 }
