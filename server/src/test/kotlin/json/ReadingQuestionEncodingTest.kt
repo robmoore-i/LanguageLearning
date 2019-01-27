@@ -45,7 +45,7 @@ class ReadingQuestionEncodingTest {
     }
 
     @Test
-    fun canEncodeSingleAnswerSubquestions() {
+    fun canEncodeSingleAnswerSubquestionsWithTheirQuestionInformation() {
         val questions = listOf<Question>(
             ReadingQuestion(listOf(ReadingSubQuestion("given", "answer")))
         )
@@ -59,5 +59,26 @@ class ReadingQuestionEncodingTest {
         val rsq = rq["questions"][0]
         assertThat(rsq["given"].toString().unquoted(), equalTo("given"))
         assertThat(rsq["answer"].toString().unquoted(), equalTo("answer"))
+    }
+
+    @Test
+    fun canEncodeSingleAnswerSubquestionsWithTheirIndex() {
+        val questions = listOf<Question>(
+            ReadingQuestion(
+                listOf(
+                    ReadingSubQuestion("given-1", "answer-1"),
+                    ReadingSubQuestion("given-2", "answer-2"),
+                    ReadingSubQuestion("given-3", "answer-3")
+                )
+            )
+        )
+        val lesson = Lesson("Georgian", "lesson-name", 0, questions)
+
+        val encoded = encoder.encodeLesson(lesson)
+
+        val node: JsonNode = json.parse(encoded)
+        val rq = node["questions"][0]
+        val rsq = rq["questions"][1]
+        assertThat(rsq["index"].asInt(), equalTo(1))
     }
 }

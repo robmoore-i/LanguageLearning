@@ -7,11 +7,12 @@ data class ReadingQuestion(val subquestions: List<ReadingSubQuestion>) : Questio
     private val json = Jackson
 
     override fun jsonify(questionIndex: Int): JsonNode {
+        val subquestions = subquestions.mapIndexed { i, subquestion -> subquestion.jsonify(i) }
         return json {
             obj(
                 "type" to number(2),
                 "index" to number(questionIndex),
-                "questions" to array(subquestions.map(ReadingSubQuestion::jsonify))
+                "questions" to array(subquestions)
             )
         }
     }
