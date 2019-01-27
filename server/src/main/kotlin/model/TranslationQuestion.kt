@@ -9,11 +9,16 @@ data class TranslationQuestion(val given: String, val answers: List<String>) : Q
     val json = Jackson
 
     override fun jsonify(): JsonNode {
+        val answerPair = answerPair()
         return json {
             obj(
                 "given" to string(given),
-                "answer" to string(answers[0])
+                answerPair
             )
         }
+    }
+
+    private fun answerPair(): Pair<String, JsonNode> {
+        return "answer" to json.string(answers[0])
     }
 }
