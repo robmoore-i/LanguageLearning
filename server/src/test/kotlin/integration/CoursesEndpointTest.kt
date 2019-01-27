@@ -130,7 +130,7 @@ class CoursesEndpointTest {
             session.close()
         }
 
-        val jsonNode = coursesRequestFirstJsonNode()
+        val jsonNode = extractCourseFromJson("svgtest")
 
         assertCourseHasProperties(
             jsonNode,
@@ -155,7 +155,7 @@ class CoursesEndpointTest {
             session.close()
         }
 
-        val jsonNode = coursesRequestFirstJsonNode()
+        val jsonNode = extractCourseFromJson("pngtest")
 
         assertCourseHasProperties(
             jsonNode,
@@ -180,7 +180,7 @@ class CoursesEndpointTest {
             session.close()
         }
 
-        val jsonNode = coursesRequestFirstJsonNode()
+        val jsonNode = extractCourseFromJson("jpgtest")
 
         assertCourseHasProperties(
             jsonNode,
@@ -195,10 +195,10 @@ class CoursesEndpointTest {
         return client.invoke(request)
     }
 
-    private fun coursesRequestFirstJsonNode(): JsonNode {
+    private fun extractCourseFromJson(courseName: String): JsonNode {
         val response = coursesRequest()
         val responseJson = json.parse(response.bodyString())
-        return responseJson[0]
+        return responseJson.first { node -> node["name"].toString().unquoted() == courseName }
     }
 
     private fun assertCourseHasProperties(
