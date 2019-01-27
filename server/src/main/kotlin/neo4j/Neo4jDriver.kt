@@ -22,6 +22,11 @@ open class Neo4jDriver(user: String, password: String, boltPort: Int) {
     fun session(): Session {
         return driver.session()
     }
+
+    fun queryValuesWithParams(query: String, params: Map<String, String>): List<Value> {
+        return driver.session().readTransaction { tx -> tx.run(query, params).list() }
+            .map { record -> record.valueInColumn(0) }
+    }
 }
 
 fun Record.valueInColumn(columnIndex: Int): Value {

@@ -23,5 +23,27 @@ class Neo4jDatabaseAdaptor(
 
         return CourseMetadata.fromNeo4jValuePairs(valuePairs)
     }
+
+    fun lessonIndex(lessonName: String): Int {
+        val queryValuesWithParams = neo4jDriver.queryValuesWithParams(
+            "MATCH (tl:TopicLesson {name: {lessonName}})<-[r:HAS_TOPIC_LESSON]-(c:Course) RETURN r.index",
+            mapOf("lessonName" to lessonName)
+        )
+        return queryValuesWithParams[0].asInt()
+    }
+
+    // questions: MATCH (tl:TopicLesson {name: {name}})-[r:HAS_QUESTION]->(q) RETURN q,r.index
 }
+
+//fun main(args: Array<String>) {
+//    val neo4jDriver = Neo4jDriver("neo4j", "zuhlke", 7687)
+//    val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(
+//        neo4jDriver,
+//        "/home/rob/Documents/language/language-learning/database/images/",
+//        "/home/rob/Documents/language/language-learning/database/extracts/"
+//    )
+//    val lessonIndex = neo4jDatabaseAdaptor.lessonIndex("Peace Corps Georgia: Hello")
+//
+//    println(lessonIndex)
+//}
 
