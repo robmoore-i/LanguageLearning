@@ -121,7 +121,7 @@ class MultipleChoiceQuestionEncodingTest {
 
         val encoded = encoder.encodeLesson(lesson)
 
-        val node: JsonNode = json.parse(encoded)
+        val node: JsonNode = json.parse(encoded) // Should throw here
         println(node)
     }
 }
