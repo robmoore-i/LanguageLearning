@@ -246,3 +246,14 @@ it("Can select choice d/4 on a 4-choice MCQ using the '4' key", () => {
     testMCQ.update()
     expect(testMCQ.state("activeChoice")).toEqual("d")
 })
+
+it("Can answer a 5-choice MCQ", () => {
+    let q = {type: 1, index: 0, question: "sounds like \"v\" in English", a: "ა", b: "ო", c: "უ", d: "ი", e: "ვ", answer: "e"}
+    let testMCQ = mount(<MultipleChoiceQuestion q={q} />)
+
+    testMCQ.find("#choice-e").simulate("click")
+    testMCQ.find("#submit-for-marking-button").simulate("click")
+
+    expect(testMCQ.find("#question-result-correct").exists()).toBe(true)
+    expect(testMCQ.find("#question-result-incorrect").exists()).toBe(false)
+})
