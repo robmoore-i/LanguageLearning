@@ -98,9 +98,20 @@ class CoursesEndpointTest {
 
         val response = coursesRequest()
 
-        assertThat(
-            headerValue(response.headers, "Access-Control-Allow-Origin"),
-            equalTo("http://localhost:" + environment.frontendPort + "")
+        assertHasHeader(
+            response,
+            "Access-Control-Allow-Origin",
+            "http://localhost:${environment.frontendPort}"
+        )
+        assertHasHeader(
+            response,
+            "Access-Control-Allow-Headers",
+            "Content-Type"
+        )
+        assertHasHeader(
+            response,
+            "Content-Type",
+            "application/json;charset=utf-8"
         )
     }
 
@@ -203,5 +214,12 @@ class CoursesEndpointTest {
 
     private fun headerValue(headers: Headers, headerName: String): String {
         return headers.first { header -> header.first == headerName }.second!!
+    }
+
+    private fun assertHasHeader(response: Response, headerName: String, headerValue: String) {
+        assertThat(
+            headerValue(response.headers, headerName),
+            equalTo(headerValue)
+        )
     }
 }
