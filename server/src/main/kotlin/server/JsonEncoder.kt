@@ -3,6 +3,7 @@ package server
 import com.fasterxml.jackson.databind.JsonNode
 import neo4j.Course
 import neo4j.CourseMetadata
+import neo4j.Lesson
 
 class JsonEncoder {
     fun encodeCourses(courses: List<Course>): String {
@@ -21,5 +22,9 @@ class JsonEncoder {
             stringBuilder.append(stringCourse).append(",")
         }
         return stringBuilder.toString().dropLast(1) + "]"
+    }
+
+    fun encodeLesson(lesson: Lesson): String {
+        return lesson.jsonify().toString()
     }
 }
