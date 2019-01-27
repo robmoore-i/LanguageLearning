@@ -81,7 +81,7 @@ class MultipleChoiceQuestionEncodingTest {
     @Test
     fun encodedWithAnswer() {
         val questions = listOf<Question>(
-            MultipleChoiceQuestion("is 'a'", mapOf('a' to "a", 'b' to "b", 'c' to "c"), 'a')
+            MultipleChoiceQuestion("is 'a'", mapOf('a' to "a", 'b' to "b", 'c' to "c"), 'c')
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
@@ -89,6 +89,25 @@ class MultipleChoiceQuestionEncodingTest {
 
         val node: JsonNode = json.parse(encoded)
         val mcq = node["questions"][0]
-        assertThat(mcq["answer"].toString().unquoted(), CoreMatchers.equalTo("a"))
+        assertThat(mcq["answer"].toString().unquoted(), CoreMatchers.equalTo("c"))
+    }
+
+    @Test
+    fun encodesAllChoicesIn5ChoiceMCQ() {
+        val questions = listOf<Question>(
+            MultipleChoiceQuestion("is 'a'", mapOf('a' to "a", 'b' to "b", 'c' to "c", 'd' to "d", 'e' to "e"), 'a')
+        )
+        val lesson = Lesson("Georgian", "lesson-name", 0, questions)
+
+        val encoded = encoder.encodeLesson(lesson)
+
+        val node: JsonNode = json.parse(encoded)
+        val mcq = node["questions"][0]
+        assertThat(mcq["a"].toString().unquoted(), CoreMatchers.equalTo("a"))
+        assertThat(mcq["b"].toString().unquoted(), CoreMatchers.equalTo("b"))
+        assertThat(mcq["c"].toString().unquoted(), CoreMatchers.equalTo("c"))
+        assertThat(mcq["d"].toString().unquoted(), CoreMatchers.equalTo("d"))
+        assertThat(mcq["e"].toString().unquoted(), CoreMatchers.equalTo("e"))
+        assertFalse(mcq.has("f"))
     }
 }
