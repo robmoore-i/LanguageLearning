@@ -20,6 +20,10 @@ class CourseMetadata(private val lessonMetadata: MutableList<LessonMetadata>) {
         }
     }
 
+    fun numberOfLessons(): Int {
+        return lessonMetadata.size
+    }
+
     companion object {
         fun fromNeo4jValuePairs(valuePairs: List<Pair<Value, Value>>): CourseMetadata {
             val lessonMetadata: MutableList<LessonMetadata> = mutableListOf()
