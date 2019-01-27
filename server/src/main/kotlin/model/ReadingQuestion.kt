@@ -27,9 +27,9 @@ data class ReadingQuestion(val extract: String, val subquestions: List<ReadingSu
             adaptor: Neo4jDatabaseAdaptor,
             courseName: String,
             lessonName: String,
-            lessonIndex: Int
+            questionIndex: Int
         ): ReadingQuestion {
-            val subQuestions = adaptor.readingSubQuestions(courseName, lessonName, lessonIndex)
+            val subQuestions = adaptor.readingSubQuestions(courseName, lessonName, questionIndex)
 
             val extract = when {
                 node.containsKey("extractInline") -> node["extractInline"].toString().unquoted()

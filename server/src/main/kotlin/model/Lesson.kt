@@ -41,7 +41,7 @@ data class Lesson(val courseName: String, val lessonName: String, val lessonInde
                         neo4jDatabaseAdaptor,
                         courseName,
                         lessonName,
-                        lessonIndex
+                        index
                     )
                     else -> throw UnsupportedQuestionType(node.labels())
                 }

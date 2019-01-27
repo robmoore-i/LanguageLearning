@@ -45,18 +45,18 @@ open class Neo4jDatabaseAdaptor(
         return queryValuesWithParams[0].asInt()
     }
 
-    open fun readingSubQuestions(courseName: String, lessonName: String, lessonIndex: Int): List<ReadingSubQuestion> {
+    open fun readingSubQuestions(courseName: String, lessonName: String, questionIndex: Int): List<ReadingSubQuestion> {
         val valuePairs = neo4jDriver.queryTwoValuesWithParams(
-            "MATCH (tl:TopicLesson {name: {lessonName}})-[:HAS_QUESTION {index: {lessonIndex}}]->(rq:ReadingQuestion)-[r:HAS_SUBQUESTION]->(rsq:ReadingSubQuestion) RETURN rsq,r.index",
+            "MATCH (tl:TopicLesson {name: {lessonName}})-[:HAS_QUESTION {index: {questionIndex}}]->(rq:ReadingQuestion)-[r:HAS_SUBQUESTION]->(rsq:ReadingSubQuestion) RETURN r.index,rsq",
             mapOf(
                 "lessonName" to lessonName,
-                "lessonIndex" to lessonIndex.toString()
+                "questionIndex" to questionIndex.toString()
             )
         )
 
         val subquestionsIndexMapped: MutableMap<Int, ReadingSubQuestion> = mutableMapOf()
 
-        valuePairs.forEach { (nodeValue, indexValue) ->
+        valuePairs.forEach { (indexValue, nodeValue) ->
             val index = indexValue.asInt()
             val node = nodeValue.asNode()
             val rsq = ReadingSubQuestion.fromNeo4jNode(node)
