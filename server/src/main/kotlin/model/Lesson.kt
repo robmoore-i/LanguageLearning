@@ -2,6 +2,7 @@ package model
 
 import com.fasterxml.jackson.databind.JsonNode
 import org.http4k.format.Jackson
+import org.neo4j.driver.v1.Value
 
 data class Lesson(val courseName: String, val lessonName: String, val lessonIndex: Int, val questions: List<Question>) {
     val json = Jackson
@@ -17,4 +18,32 @@ data class Lesson(val courseName: String, val lessonName: String, val lessonInde
             )
         }
     }
+
+    companion object {
+        fun fromNeo4jValuePairs(
+            courseName: String,
+            lessonName: String,
+            lessonIndex: Int,
+            valuePairs: List<Pair<Value, Value>>
+        ): Lesson {
+            val questions: MutableList<Question> = mutableListOf()
+
+            valuePairs.forEach { (nodeValue, indexValue) ->
+                val node = nodeValue.asNode()
+                val index = indexValue.asInt()
+                val question = when {
+                    node.hasLabel("TranslationQuestion") -> TranslationQuestion.fromNeo4jNode(node)
+                    node.hasLabel("MultipleChoiceQuestion") -> MultipleChoiceQuestion.fromNeo4jNode(node, index)
+                    node.hasLabel("ReadingQuestion") -> ReadingQuestion.fromNeo4jNode(node, index)
+                    else -> throw UnsupportedQuestionType(node.labels())
+                }
+                questions.add(index, question)
+            }
+
+            return Lesson(courseName, lessonName, lessonIndex, questions)
+        }
+    }
 }
+
+class UnsupportedQuestionType(nodeLabels: Iterable<String>) :
+    Throwable("Expected a question-type label, got: ${nodeLabels.toList()}")
