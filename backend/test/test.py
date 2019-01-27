@@ -22,7 +22,8 @@ def maplist_where(l, f, v):
 
 
 global cleanup_query
-cleanup_query = """;"""
+cleanup_query = """
+"""
 
 
 @after_each
@@ -173,26 +174,6 @@ def can_get_lesson_with_tq_with_multiple_answers():
 
 
 @test
-def courses_endpoint_gives_200_and_cors_header():
-    # Seed the database
-    with driver.session() as session:
-        session.run(
-            """
-            CREATE (georgian:Course {name: "Georgian", image: "flagGeorgia.svg"})
-            CREATE (french:Course {name: "French", image: "flagFrance.png"})
-            CREATE (german:Course {name: "German", image: "flagGermany.jpg"})
-            RETURN georgian,french,german;
-            """)
-
-    # Query the server
-    res = requests.get("http://localhost:" + str(server_port) + "/courses")
-
-    # Assert the response
-    assert_that(res.status_code).is_equal_to(200)
-    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:" + str(frontend_port) + "")
-
-
-@test
 def lesson_endpoint_gives_200_and_cors_header():
     # Seed the database
     with driver.session() as session:
@@ -209,54 +190,6 @@ def lesson_endpoint_gives_200_and_cors_header():
     # Assert the response
     assert_that(res.status_code).is_equal_to(200)
     assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:" + str(frontend_port) + "")
-
-
-@test
-def course_metadata_gives_200_and_cors_header():
-    # Seed the database
-    with driver.session() as session:
-        session.run(
-            """
-            CREATE (c:Course {name: "Course", image: "flagGeorgia.svg"})
-            CREATE (c)-[:HAS_TOPIC_LESSON {index: 0}]->(hello:TopicLesson {name: "Hello"})
-            CREATE (c)-[:HAS_TOPIC_LESSON {index: 1}]->(whatAreYouCalled:TopicLesson {name: "What are you called?"})
-            CREATE (c)-[:HAS_TOPIC_LESSON {index: 2}]->(colours:TopicLesson {name: "Colours"})
-            RETURN hello,whatAreYouCalled,colours,c;
-            """)
-
-    # Query the server
-    res = requests.get("http://localhost:" + str(server_port) + "/coursemetadata?course=Course")
-
-    # Assert the response
-    assert_that(res.status_code).is_equal_to(200)
-    assert_that(res.headers["Access-Control-Allow-Origin"]).is_equal_to("http://localhost:" + str(frontend_port) + "")
-
-
-@test
-def can_get_lesson_order_for_course():
-    # Seed the database
-    with driver.session() as session:
-        session.run(
-            """
-            CREATE (c:Course {name: "Course", image: "flagGeorgia.svg"})
-            CREATE (c)-[:HAS_TOPIC_LESSON {index: 0}]->(hello:TopicLesson {name: "Hello"})
-            CREATE (c)-[:HAS_TOPIC_LESSON {index: 1}]->(whatAreYouCalled:TopicLesson {name: "What are you called?"})
-            CREATE (c)-[:HAS_TOPIC_LESSON {index: 2}]->(colours:TopicLesson {name: "Colours"})
-            RETURN hello,whatAreYouCalled,colours,c;
-            """)
-
-    # Query the server
-    res = requests.get("http://localhost:" + str(server_port) + "/coursemetadata?course=Course")
-
-    # Assert the response
-    lesson_metadata = res.json()["lessonMetadata"]
-    hello_lesson = maplist_where(lesson_metadata, "name", "Hello")
-    what_are_you_called_lesson = maplist_where(lesson_metadata, "name", "What are you called?")
-    colours_lesson = maplist_where(lesson_metadata, "name", "Colours")
-
-    assert_that(hello_lesson["index"]).is_equal_to(0)
-    assert_that(what_are_you_called_lesson["index"]).is_equal_to(1)
-    assert_that(colours_lesson["index"]).is_equal_to(2)
 
 
 @test
