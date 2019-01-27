@@ -3,7 +3,11 @@ package model
 import com.fasterxml.jackson.databind.JsonNode
 import org.http4k.format.Jackson
 
-data class MultipleChoiceQuestion(val question: String, val choices: Map<Char, String>) : Question {
+data class MultipleChoiceQuestion(
+    val question: String,
+    val choices: Map<Char, String>,
+    val answer: Char
+) : Question {
     val json = Jackson
 
     override fun jsonify(): JsonNode {
@@ -17,6 +21,7 @@ data class MultipleChoiceQuestion(val question: String, val choices: Map<Char, S
         }
         fields.add("type" to json.number(1))
         fields.add("question" to json.string(question))
+        fields.add("answer" to json.string(answer.toString()))
         return fields
     }
 }

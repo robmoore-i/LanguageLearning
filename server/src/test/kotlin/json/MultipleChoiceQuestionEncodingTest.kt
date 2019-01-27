@@ -19,7 +19,7 @@ class MultipleChoiceQuestionEncodingTest {
     @Test
     fun mcqIsEncodedWithType1() {
         val questions = listOf<Question>(
-            MultipleChoiceQuestion("sounds like 'i' in English", mapOf('a' to "a"))
+            MultipleChoiceQuestion("sounds like 'i' in English", mapOf('a' to "a"), 'a')
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
@@ -33,7 +33,7 @@ class MultipleChoiceQuestionEncodingTest {
     @Test
     fun mcqIsEncodedWithQuestion() {
         val questions = listOf<Question>(
-            MultipleChoiceQuestion("sounds like 'i' in English", mapOf('a' to "a"))
+            MultipleChoiceQuestion("sounds like 'i' in English", mapOf('a' to "a"), 'a')
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
@@ -47,7 +47,7 @@ class MultipleChoiceQuestionEncodingTest {
     @Test
     fun encodesAllChoicesIn4ChoiceMCQ() {
         val questions = listOf<Question>(
-            MultipleChoiceQuestion("is 'a'", mapOf('a' to "a", 'b' to "b", 'c' to "c", 'd' to "d"))
+            MultipleChoiceQuestion("is 'a'", mapOf('a' to "a", 'b' to "b", 'c' to "c", 'd' to "d"), 'a')
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
@@ -64,7 +64,7 @@ class MultipleChoiceQuestionEncodingTest {
     @Test
     fun encodesAllChoicesIn3ChoiceMCQ() {
         val questions = listOf<Question>(
-            MultipleChoiceQuestion("is 'a'", mapOf('a' to "a", 'b' to "b", 'c' to "c"))
+            MultipleChoiceQuestion("is 'a'", mapOf('a' to "a", 'b' to "b", 'c' to "c"), 'a')
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
@@ -76,5 +76,19 @@ class MultipleChoiceQuestionEncodingTest {
         assertThat(mcq["b"].toString().unquoted(), CoreMatchers.equalTo("b"))
         assertThat(mcq["c"].toString().unquoted(), CoreMatchers.equalTo("c"))
         assertFalse(mcq.has("d"))
+    }
+
+    @Test
+    fun encodedWithAnswer() {
+        val questions = listOf<Question>(
+            MultipleChoiceQuestion("is 'a'", mapOf('a' to "a", 'b' to "b", 'c' to "c"), 'a')
+        )
+        val lesson = Lesson("Georgian", "lesson-name", 0, questions)
+
+        val encoded = encoder.encodeLesson(lesson)
+
+        val node: JsonNode = json.parse(encoded)
+        val mcq = node["questions"][0]
+        assertThat(mcq["answer"].toString().unquoted(), CoreMatchers.equalTo("a"))
     }
 }
