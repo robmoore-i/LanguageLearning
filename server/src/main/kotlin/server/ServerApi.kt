@@ -9,7 +9,6 @@ import org.http4k.format.Jackson
 import org.http4k.unquoted
 
 class ServerApi(
-    private val legacyServer: LegacyServer,
     private val databaseAdaptor: DatabaseAdaptor,
     private val frontendPort: Int
 ) {

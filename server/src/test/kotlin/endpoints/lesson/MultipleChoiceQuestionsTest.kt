@@ -18,7 +18,6 @@ import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Test
-import server.LegacyServer
 import server.Server
 import java.io.File
 import java.nio.file.Paths
@@ -33,12 +32,10 @@ class MultipleChoiceQuestionsTest {
         environment.extractsPath
     )
 
-    private val legacyServer = LegacyServer(environment.legacyServerPort)
     private val logger = ServerLogger()
 
     private val server: Http4kServer = Server(
         environment.serverPort,
-        legacyServer,
         neo4jDatabaseAdaptor,
         environment.frontendPort,
         logger

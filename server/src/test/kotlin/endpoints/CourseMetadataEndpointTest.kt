@@ -18,7 +18,6 @@ import org.http4k.unquoted
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import server.LegacyServer
 import server.Server
 
 class CourseMetadataEndpointTest {
@@ -31,12 +30,10 @@ class CourseMetadataEndpointTest {
         environment.extractsPath
     )
 
-    private val legacyServer = LegacyServer(environment.legacyServerPort)
     private val logger = ServerLogger()
 
     private val server: Http4kServer = Server(
         environment.serverPort,
-        legacyServer,
         neo4jDatabaseAdaptor,
         environment.frontendPort,
         logger

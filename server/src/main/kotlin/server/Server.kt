@@ -12,12 +12,11 @@ import org.http4k.server.asServer
 /*Created on 13/01/19. */
 class Server(
     private val port: Int,
-    legacyServer: LegacyServer,
     databaseAdaptor: DatabaseAdaptor,
     frontendPort: Int,
     private val logger: ServerLogger
 ) : Http4kServer {
-    private val serverApi = ServerApi(legacyServer, databaseAdaptor, frontendPort)
+    private val serverApi = ServerApi(databaseAdaptor, frontendPort)
 
     private val handler: HttpHandler = ServerFilters.CatchLensFailure.then(
         routes(
