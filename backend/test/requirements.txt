@@ -1,4 +1,0 @@
-neo4j
-requests
-assertpy
-git+git://github.com/robmoore-i/rest_test.git#egg=rest_test
