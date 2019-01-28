@@ -6,6 +6,7 @@ import logger.ServerLogger
 import neo4j.Neo4jDatabaseAdaptor
 import neo4j.Neo4jDriver
 import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.hasItem
 import org.hamcrest.MatcherAssert.assertThat
 import org.http4k.client.JavaHttpClient
 import org.http4k.core.Method
@@ -15,6 +16,7 @@ import org.http4k.format.Jackson
 import org.http4k.server.Http4kServer
 import org.http4k.unquoted
 import org.junit.After
+import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Test
 import server.LegacyServer
@@ -86,6 +88,29 @@ class TranslationQuestionsTest {
         assertThat(tq["index"].asInt(), equalTo(0))
         assertThat(tq["given"].toString().unquoted(), equalTo("What are you called?"))
         assertThat(tq["answer"].toString().unquoted(), equalTo("შენ რა გქვია?"))
+    }
+
+    @Test
+    fun canGetTqWithMultipleAnswers() {
+        neo4jDriver.session().let { session ->
+            val query = """
+                CREATE (l:TopicLesson {name: "TQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
+                CREATE (l)-[:HAS_QUESTION {index: 0}]->(tq:Question:TranslationQuestion {given: "Blue", answers: ["ლურჯი", "ცისფერი"]})
+                RETURN l,tq,c;
+                """
+
+            session.run(query)
+            session.close()
+        }
+
+        val responseJson = lessonRequestJson("TQ")
+        val questions = responseJson["questions"]
+
+        val tq = questions[0]
+        val answers = tq["answers"].map { answer -> answer.toString().unquoted() }
+        assertThat(answers, hasItem("ლურჯი"))
+        assertThat(answers, hasItem("ცისფერი"))
+        assertFalse(tq.has("answer"))
     }
 
     private fun lessonRequest(lessonName: String): Response {
