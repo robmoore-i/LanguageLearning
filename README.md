@@ -54,7 +54,6 @@ of reading the README."
 Q (3.5)
 Neo4j (3.5)
 Python3 (3.6)
-Go (1.11)
 Yarn (1.12)
 Node (10.11)
 Kotlin (1.3)
@@ -84,7 +83,3 @@ to create maths questions, vocab questions or programming questions.
 Learning something for the first time is different from practicing it later.
 There should be different exercises for learning something for the first time
 and for revisiting a topic later.
-
-# Actually delivering features again instead of pissing about
-
-Hm
