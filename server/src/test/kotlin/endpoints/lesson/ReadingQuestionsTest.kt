@@ -23,7 +23,7 @@ class ReadingQuestionsTest : EndpointTestCase() {
     fun canGetRqWithInlineExtract() {
         neo4jDriver.session().let { session ->
             val query = """
-                CREATE (c:Course {name: "c", image: "img.png"})-[:HAS_TOPIC_LESSON {index: 0}]->(l:TopicLesson {name: "RQ"})
+                CREATE (c:Course {name: "Course", image: "img.png"})-[:HAS_TOPIC_LESSON {index: 0}]->(l:TopicLesson {name: "RQ"})
                 CREATE (l)-[:HAS_QUESTION {index: 0}]->(rq:Question:ReadingQuestion {extractInline: "inline-extract"})
                 CREATE (rq)-[:HAS_SUBQUESTION {index: 0}]->(rsq:ReadingSubQuestion {given:"What does 'საქართველო' mean in English?", answer:"Georgia"})
                 RETURN l,rq,rsq,c;
@@ -33,7 +33,7 @@ class ReadingQuestionsTest : EndpointTestCase() {
             session.close()
         }
 
-        val responseJson = lessonRequestJson("RQ")
+        val responseJson = lessonRequestJson("Course", "RQ")
         val questions = responseJson["questions"]
         assertThat(questions.size(), equalTo(1))
 
@@ -47,7 +47,7 @@ class ReadingQuestionsTest : EndpointTestCase() {
     fun canGetAnRsq() {
         neo4jDriver.session().let { session ->
             val query = """
-                CREATE (c:Course {name: "c", image: "img.png"})-[:HAS_TOPIC_LESSON {index: 0}]->(l:TopicLesson {name: "RQ"})
+                CREATE (c:Course {name: "Course", image: "img.png"})-[:HAS_TOPIC_LESSON {index: 0}]->(l:TopicLesson {name: "RQ"})
                 CREATE (l)-[:HAS_QUESTION {index: 0}]->(rq:Question:ReadingQuestion {extractInline: "inline-extract"})
                 CREATE (rq)-[:HAS_SUBQUESTION {index: 0}]->(rsq:ReadingSubQuestion {given:"What does 'საქართველო' mean in English?", answer:"Georgia"})
                 RETURN l,rq,rsq,c;
@@ -57,7 +57,7 @@ class ReadingQuestionsTest : EndpointTestCase() {
             session.close()
         }
 
-        val responseJson = lessonRequestJson("RQ")
+        val responseJson = lessonRequestJson("Course", "RQ")
         val questions = responseJson["questions"]
         assertThat(questions.size(), equalTo(1))
 
@@ -77,7 +77,7 @@ class ReadingQuestionsTest : EndpointTestCase() {
 
         neo4jDriver.session().let { session ->
             val query = """
-                CREATE (c:Course {name: "c", image: "img.png"})-[:HAS_TOPIC_LESSON {index: 0}]->(l:TopicLesson {name: "RQ"})
+                CREATE (c:Course {name: "Course", image: "img.png"})-[:HAS_TOPIC_LESSON {index: 0}]->(l:TopicLesson {name: "RQ"})
                 CREATE (l)-[:HAS_QUESTION {index: 0}]->(rq:Question:ReadingQuestion {extractFile: "test.txt"})
                 RETURN l,rq,c;
                 """
@@ -86,7 +86,7 @@ class ReadingQuestionsTest : EndpointTestCase() {
             session.close()
         }
 
-        val responseJson = lessonRequestJson("RQ")
+        val responseJson = lessonRequestJson("Course", "RQ")
         val questions = responseJson["questions"]
         assertThat(questions.size(), equalTo(1))
 
@@ -100,7 +100,7 @@ class ReadingQuestionsTest : EndpointTestCase() {
     fun canGetAnRsqWithMultipleAnswers() {
         neo4jDriver.session().let { session ->
             val query = """
-                CREATE (c:Course {name: "c", image: "img.png"})-[:HAS_TOPIC_LESSON {index: 0}]->(l:TopicLesson {name: "RQ"})
+                CREATE (c:Course {name: "Course", image: "img.png"})-[:HAS_TOPIC_LESSON {index: 0}]->(l:TopicLesson {name: "RQ"})
                 CREATE (l)-[:HAS_QUESTION {index: 0}]->(rq:Question:ReadingQuestion {extractInline: "inline-extract"})
                 CREATE (rq)-[:HAS_SUBQUESTION {index: 0}]->(rsq:ReadingSubQuestion {given:"What does 'ის მოხალისეა' mean in English?", answers:["She is a volunteer", "She's a volunteer", "He is a volunteer", "He's a volunteer"]})
                 RETURN l,rq,rsq,c;
@@ -110,7 +110,7 @@ class ReadingQuestionsTest : EndpointTestCase() {
             session.close()
         }
 
-        val responseJson = lessonRequestJson("RQ")
+        val responseJson = lessonRequestJson("Course", "RQ")
         val questions = responseJson["questions"]
         assertThat(questions.size(), equalTo(1))
 
@@ -132,7 +132,7 @@ class ReadingQuestionsTest : EndpointTestCase() {
     fun canGetAnRqWithMultipleRsqs() {
         neo4jDriver.session().let { session ->
             val query = """
-                CREATE (c:Course {name: "c", image: "img.png"})-[:HAS_TOPIC_LESSON {index: 0}]->(l:TopicLesson {name: "RQ"})
+                CREATE (c:Course {name: "Course", image: "img.png"})-[:HAS_TOPIC_LESSON {index: 0}]->(l:TopicLesson {name: "RQ"})
                 CREATE (l)-[:HAS_QUESTION {index: 0}]->(rq:Question:ReadingQuestion {extractInline: "inline-extract"})
                 CREATE (rq)-[:HAS_SUBQUESTION {index: 0}]->(rsq1:ReadingSubQuestion {given:"What does 'ის მოხალისეა' mean in English?", answers:["She is a volunteer", "She's a volunteer", "He is a volunteer", "He's a volunteer"]})
                 CREATE (rq)-[:HAS_SUBQUESTION {index: 1}]->(rsq2:ReadingSubQuestion {given:"What does 'საავადმყოფო' mean in English?", answers: ["the hospital", "hospital"]})
@@ -145,7 +145,7 @@ class ReadingQuestionsTest : EndpointTestCase() {
             session.close()
         }
 
-        val responseJson = lessonRequestJson("RQ")
+        val responseJson = lessonRequestJson("Course", "RQ")
         val questions = responseJson["questions"]
 
         val rq = questions[0]

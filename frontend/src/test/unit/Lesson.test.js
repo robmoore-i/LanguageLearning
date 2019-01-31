@@ -17,7 +17,7 @@ let mockServerLoadTimeMs = 1
 
 let mockServer = lesson => {
     return {
-        fetchLesson: (lessonName, body) => {
+        fetchLesson: (courseName, lessonName) => {
             return new Promise(resolve => resolve(lesson))
         }
     }
@@ -45,7 +45,7 @@ it('Shows the lesson name from the lesson data', async () => {
 it('Shows the loading screen while loading', async () => {
     let mockSlowServer = lesson => {
         return {
-            fetchLesson: (lessonName, body) => {
+            fetchLesson: (courseName, lessonName) => {
                 return new Promise(async resolve => {
                     await sleep(500)
                     resolve(lesson)
@@ -100,4 +100,21 @@ it('Completes when the the incorrect then correct completion handlers are called
 
     expect(testLesson.state("questions").length).toEqual(2)
     expect(testLesson.state("currentQuestionIndex")).toEqual(2)
+})
+
+it('Fetches the lesson from the server based on the course name and lesson name', async () => {
+    let testServer = {
+        fetchLessonCalledWithCourseName: null,
+        fetchLessonCalledWithLessonName: null,
+        fetchLesson: (courseName, lessonName) => {
+            testServer.fetchLessonCalledWithCourseName = courseName
+            testServer.fetchLessonCalledWithLessonName = lessonName
+            return new Promise(resolve => resolve({questions: []}))
+        }
+    }
+
+    await mountRenderLesson("Georgian", "Hello", testServer)
+
+    expect(testServer.fetchLessonCalledWithCourseName).toEqual("Georgian")
+    expect(testServer.fetchLessonCalledWithLessonName).toEqual("Hello")
 })

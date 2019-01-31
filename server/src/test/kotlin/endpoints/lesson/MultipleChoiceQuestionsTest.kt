@@ -13,7 +13,7 @@ class MultipleChoiceQuestionsTest : EndpointTestCase() {
     fun canGetMcqWith4Choices() {
         neo4jDriver.session().let { session ->
             val query = """
-                CREATE (hello:TopicLesson {name: "MCQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
+                CREATE (hello:TopicLesson {name: "MCQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "Course", image: "img.png"})
                 CREATE (hello)-[:HAS_QUESTION {index: 0}]->(letterA:Question:MultipleChoiceQuestion {question: "sounds like \"a\" in English", a: "მ",b:"ბ", c:"გ", d:"ა", answer: "d"})
                 RETURN hello,letterA,c;
                 """
@@ -22,7 +22,7 @@ class MultipleChoiceQuestionsTest : EndpointTestCase() {
             session.close()
         }
 
-        val responseJson = lessonRequestJson("MCQ")
+        val responseJson = lessonRequestJson("Course", "MCQ")
         val questions = responseJson["questions"]
         assertThat(questions.size(), equalTo(1))
 
@@ -41,7 +41,7 @@ class MultipleChoiceQuestionsTest : EndpointTestCase() {
     fun canGetMcqWith3Choices() {
         neo4jDriver.session().let { session ->
             val query = """
-                CREATE (hello:TopicLesson {name: "MCQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
+                CREATE (hello:TopicLesson {name: "MCQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "Course", image: "img.png"})
                 CREATE (hello)-[:HAS_QUESTION {index: 0}]->(letterA:Question:MultipleChoiceQuestion {question: "sounds like \"a\" in English", a: "მ",b:"ბ", c:"ა", answer: "c"})
                 RETURN hello,letterA,c;
                 """
@@ -50,7 +50,7 @@ class MultipleChoiceQuestionsTest : EndpointTestCase() {
             session.close()
         }
 
-        val responseJson = lessonRequestJson("MCQ")
+        val responseJson = lessonRequestJson("Course", "MCQ")
         val questions = responseJson["questions"]
         assertThat(questions.size(), equalTo(1))
 

@@ -13,7 +13,7 @@ class TranslationQuestionsTest : EndpointTestCase() {
     fun canGetTq() {
         neo4jDriver.session().let { session ->
             val query = """
-                CREATE (l:TopicLesson {name: "TQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
+                CREATE (l:TopicLesson {name: "TQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "Georgian", image: "img.png"})
                 CREATE (l)-[:HAS_QUESTION {index: 0}]->(tq:Question:TranslationQuestion {given: "What are you called?", answer: "შენ რა გქვია?"})
                 RETURN l,tq,c;
                 """
@@ -22,7 +22,7 @@ class TranslationQuestionsTest : EndpointTestCase() {
             session.close()
         }
 
-        val responseJson = lessonRequestJson("TQ")
+        val responseJson = lessonRequestJson("Georgian", "TQ")
         val questions = responseJson["questions"]
         assertThat(questions.size(), equalTo(1))
 
@@ -37,7 +37,7 @@ class TranslationQuestionsTest : EndpointTestCase() {
     fun canGetTqWithMultipleAnswers() {
         neo4jDriver.session().let { session ->
             val query = """
-                CREATE (l:TopicLesson {name: "TQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
+                CREATE (l:TopicLesson {name: "TQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "Georgian", image: "img.png"})
                 CREATE (l)-[:HAS_QUESTION {index: 0}]->(tq:Question:TranslationQuestion {given: "Blue", answers: ["ლურჯი", "ცისფერი"]})
                 RETURN l,tq,c;
                 """
@@ -46,7 +46,7 @@ class TranslationQuestionsTest : EndpointTestCase() {
             session.close()
         }
 
-        val responseJson = lessonRequestJson("TQ")
+        val responseJson = lessonRequestJson("Georgian", "TQ")
         val questions = responseJson["questions"]
 
         val tq = questions[0]

@@ -34,7 +34,7 @@ export default class Lesson extends Component {
 
     componentDidMount() {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within promise closure.
-        this.server.fetchLesson(this.lessonName).then(lesson => {
+        this.server.fetchLesson(this.courseName, this.lessonName).then(lesson => {
             setState({
                 questions: lesson.questions,
                 numQuestions: lesson.questions.length,

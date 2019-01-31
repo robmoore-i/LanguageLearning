@@ -29,8 +29,8 @@ export function Server(backendOrigin, fetcher) {
             return fetcher.getJSON(backendOrigin + "/coursemetadata?course=" + courseName)
         },
 
-        fetchLesson: (lessonName) => {
-            return fetcher.postJSON(backendOrigin + "/lesson", {lessonName: lessonName}).then(lesson => {
+        fetchLesson: (courseName, lessonName) => {
+            return fetcher.postJSON(backendOrigin + "/lesson", {courseName: courseName, lessonName: lessonName}).then(lesson => {
                 lesson.questions.sort(keySort("index"))
                 return {
                     name: lesson.name,

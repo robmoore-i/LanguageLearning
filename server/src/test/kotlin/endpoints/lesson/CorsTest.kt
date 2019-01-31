@@ -9,7 +9,7 @@ class CorsTest : EndpointTestCase() {
     fun givesAccessControlAllowOriginCorsHeader() {
         neo4jDriver.session().let { session ->
             val query = """
-                CREATE (hello:TopicLesson {name: "lesson"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
+                CREATE (hello:TopicLesson {name: "lesson"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "Georgian", image: "img.png"})
                 CREATE (hello)-[:HAS_QUESTION {index: 0}]->(letterA:Question:MultipleChoiceQuestion {question: "sounds like \"a\" in English", a: "მ",b:"ბ", c:"ა", answer: "c"})
                 RETURN hello,letterA,c;
                 """.trimIndent()
@@ -18,7 +18,7 @@ class CorsTest : EndpointTestCase() {
             session.close()
         }
 
-        val response = lessonRequest("lesson")
+        val response = lessonRequest("Georgian", "lesson")
 
         assertHasHeader(
             response,

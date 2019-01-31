@@ -29,8 +29,9 @@ class ServerApi(
 
     fun handleLesson(request: Request): Response {
         val jsonNode: JsonNode = json.parse(request.bodyString())
+        val courseName = jsonNode["courseName"].toString().unquoted()
         val lessonName = jsonNode["lessonName"].toString().unquoted()
-        val lesson = databaseAdaptor.lesson("TODO-USE-THIS", lessonName)
+        val lesson = databaseAdaptor.lesson(courseName, lessonName)
         val jsonEncodedLesson = jsonEncoder.encodeLesson(lesson)
         return okResponse(jsonEncodedLesson)
     }

@@ -30,8 +30,11 @@ open class Neo4jDatabaseAdaptor(
 
     override fun lesson(courseName: String, lessonName: String): Lesson {
         val valuePairs = neo4jDriver.queryTwoValuesWithParams(
-            "MATCH (tl:TopicLesson {name: {lessonName}})-[r:HAS_QUESTION]->(q) RETURN q,r.index",
-            mapOf("lessonName" to lessonName)
+            "MATCH (c:Course {name: {courseName}})-[:HAS_TOPIC_LESSON]->(tl:TopicLesson {name: {lessonName}})-[r:HAS_QUESTION]->(q) RETURN q,r.index",
+            mapOf(
+                "courseName" to courseName,
+                "lessonName" to lessonName
+            )
         )
         val lessonIndex = lessonIndex(courseName, lessonName)
         return Lesson.fromNeo4jValuePairs(courseName, lessonName, lessonIndex, valuePairs, this)
@@ -39,8 +42,11 @@ open class Neo4jDatabaseAdaptor(
 
     private fun lessonIndex(courseName: String, lessonName: String): Int {
         val queryValuesWithParams = neo4jDriver.queryValuesWithParams(
-            "MATCH (tl:TopicLesson {name: {lessonName}})<-[r:HAS_TOPIC_LESSON]-(c:Course) RETURN r.index",
-            mapOf("lessonName" to lessonName)
+            "MATCH (c:Course {name: {courseName}})-[r:HAS_TOPIC_LESSON]->(tl:TopicLesson {name: {lessonName}}) RETURN r.index",
+            mapOf(
+                "courseName" to courseName,
+                "lessonName" to lessonName
+            )
         )
         return queryValuesWithParams[0].asInt()
     }

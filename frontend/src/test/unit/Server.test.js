@@ -21,7 +21,7 @@ it('Returns the sent questions when sent questions explicitly', async () => {
     let testServer = TestServer(mockFetcher)
 
     let fetchedLesson = undefined
-    await testServer.fetchLesson("ayylmao").then(lesson => {
+    await testServer.fetchLesson("course-name", "lesson-name").then(lesson => {
         fetchedLesson = lesson
     })
     expect(fetchedLesson.name).toEqual("Server Stuff")
@@ -114,9 +114,23 @@ it('Returns the questions of a lesson ordered by index', async () => {
     let testServer = TestServer(mockFetcher)
 
     let fetchedLesson = undefined
-    await testServer.fetchLesson("ayylmao").then(lesson => {
+    await testServer.fetchLesson("course-name", "lesson-name").then(lesson => {
         fetchedLesson = lesson
     })
     expect(fetchedLesson.name).toEqual("Server Stuff")
     expect(fetchedLesson.questions).toEqual([mcq, tq, rq])
+})
+
+it('Sends the course name and lesson name when fetching a lesson from the server', async () => {
+    let mockFetcher = {
+        postJSONCalledWithBody: null,
+        postJSON: (url, body) => {
+            mockFetcher.postJSONCalledWithBody = body
+            return new Promise(resolve => resolve({}))
+        }
+    }
+    
+    TestServer(mockFetcher).fetchLesson("course-name", "lesson-name")
+
+    expect(mockFetcher.postJSONCalledWithBody).toEqual({courseName: "course-name", lessonName: "lesson-name"})
 })
