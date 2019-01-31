@@ -21,26 +21,27 @@ import org.junit.Before
 import server.Server
 
 open class EndpointTestCase {
-    val environmentLoader = EnvironmentLoader(System::getenv)
+    private val environmentLoader = EnvironmentLoader(System::getenv)
     val environment = environmentLoader.getEnvironment()
+
     val neo4jDriver = Neo4jDriver(environment.neo4jUser, environment.neo4jPassword, environment.neo4jPort)
-    val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(
+    private val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(
         neo4jDriver,
         environment.imagesPath,
         environment.extractsPath
     )
 
-    val logger = ServerLogger()
+    private val logger = ServerLogger()
 
-    val server: Http4kServer = Server(
+    private val server: Http4kServer = Server(
         environment.serverPort,
         neo4jDatabaseAdaptor,
         environment.frontendPort,
         logger
     )
 
-    val client = JavaHttpClient()
-    val serverUrl = "http://localhost:${environment.serverPort}"
+    private val client = JavaHttpClient()
+    private val serverUrl = "http://localhost:${environment.serverPort}"
 
     val json = Jackson
 
@@ -72,12 +73,8 @@ open class EndpointTestCase {
     }
 
     fun courseMetadataRequest(courseName: String): Response {
-        val request = Request(Method.GET, "${serverUrl}/coursemetadata?course=$courseName")
+        val request = Request(Method.GET, "$serverUrl/coursemetadata?course=$courseName")
         return client.invoke(request)
-    }
-
-    fun headerValue(headers: Headers, headerName: String): String {
-        return headers.first { header -> header.first == headerName }.second!!
     }
 
     fun assertHasHeader(response: Response, headerName: String, headerValue: String) {
@@ -88,7 +85,7 @@ open class EndpointTestCase {
     }
 
     fun coursesRequest(): Response {
-        val request = Request(Method.GET, "${serverUrl}/courses")
+        val request = Request(Method.GET, "$serverUrl/courses")
         return client.invoke(request)
     }
 
@@ -103,6 +100,10 @@ open class EndpointTestCase {
 
     fun subquestionWithIndex(subquestions: JsonNode, index: Int): JsonNode {
         return subquestions.first { rsq -> rsq["index"].asInt() == index }
+    }
+
+    private fun headerValue(headers: Headers, headerName: String): String {
+        return headers.first { header -> header.first == headerName }.second!!
     }
 
     private fun getNodeWithName(lessonMetadata: JsonNode, nodeName: String): JsonNode {
