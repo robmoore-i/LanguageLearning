@@ -1,7 +1,6 @@
 package endpoints.lesson
 
 import endpoints.EndpointTestCase
-import endpoints.courses.assertHasHeader
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response

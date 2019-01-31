@@ -4,10 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode
 import endpoints.EndpointTestCase
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.http4k.core.Headers
-import org.http4k.core.Method
-import org.http4k.core.Request
-import org.http4k.core.Response
 import org.http4k.unquoted
 import org.junit.Test
 
@@ -90,7 +86,7 @@ class CourseImageEncodingTest : EndpointTestCase() {
     }
 
     private fun extractCourseFromJson(courseName: String): JsonNode {
-        val response = coursesRequest(this)
+        val response = coursesRequest()
         val responseJson = json.parse(response.bodyString())
         return responseJson.first { node -> node["name"].toString().unquoted() == courseName }
     }
@@ -105,20 +101,4 @@ class CourseImageEncodingTest : EndpointTestCase() {
         assertThat(jsonNode["imageType"].toString().unquoted(), equalTo(expectedCourseImageType))
         assertThat(jsonNode["image"].toString().unquoted().replace("\\n", "\n"), equalTo(expectedImageStringBytes))
     }
-}
-
-fun headerValue(headers: Headers, headerName: String): String {
-    return headers.first { header -> header.first == headerName }.second!!
-}
-
-fun assertHasHeader(response: Response, headerName: String, headerValue: String) {
-    assertThat(
-        headerValue(response.headers, headerName),
-        equalTo(headerValue)
-    )
-}
-
-fun coursesRequest(endpointTestCase: EndpointTestCase): Response {
-    val request = Request(Method.GET, "${endpointTestCase.serverUrl}/courses")
-    return endpointTestCase.client.invoke(request)
 }

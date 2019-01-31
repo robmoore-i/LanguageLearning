@@ -9,6 +9,7 @@ import neo4j.Neo4jDriver
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.http4k.client.JavaHttpClient
+import org.http4k.core.Headers
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
@@ -72,6 +73,22 @@ open class EndpointTestCase {
 
     fun courseMetadataRequest(courseName: String): Response {
         val request = Request(Method.GET, "${serverUrl}/coursemetadata?course=$courseName")
+        return client.invoke(request)
+    }
+
+    fun headerValue(headers: Headers, headerName: String): String {
+        return headers.first { header -> header.first == headerName }.second!!
+    }
+
+    fun assertHasHeader(response: Response, headerName: String, headerValue: String) {
+        MatcherAssert.assertThat(
+            headerValue(response.headers, headerName),
+            CoreMatchers.equalTo(headerValue)
+        )
+    }
+
+    fun coursesRequest(): Response {
+        val request = Request(Method.GET, "${serverUrl}/courses")
         return client.invoke(request)
     }
 

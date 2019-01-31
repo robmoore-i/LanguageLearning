@@ -1,7 +1,6 @@
 package endpoints.coursemetadata
 
 import endpoints.EndpointTestCase
-import endpoints.courses.assertHasHeader
 import org.junit.Test
 
 class CorsTest : EndpointTestCase() {

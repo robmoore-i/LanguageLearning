@@ -20,7 +20,7 @@ class CorsTest : EndpointTestCase() {
             session.close()
         }
 
-        val response = coursesRequest(this)
+        val response = coursesRequest()
 
         MatcherAssert.assertThat(response.status.code, CoreMatchers.equalTo(200))
     }
@@ -39,7 +39,7 @@ class CorsTest : EndpointTestCase() {
             session.close()
         }
 
-        val response = coursesRequest(this)
+        val response = coursesRequest()
 
         assertHasHeader(
             response,
