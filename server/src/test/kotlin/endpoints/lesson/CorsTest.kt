@@ -1,9 +1,6 @@
 package endpoints.lesson
 
 import endpoints.EndpointTestCase
-import org.http4k.core.Method
-import org.http4k.core.Request
-import org.http4k.core.Response
 import org.junit.Test
 
 class CorsTest : EndpointTestCase() {
@@ -38,10 +35,5 @@ class CorsTest : EndpointTestCase() {
             "Content-Type",
             "application/json;charset=utf-8"
         )
-    }
-
-    private fun lessonRequest(lessonName: String): Response {
-        val request = Request(Method.POST, "$serverUrl/lesson").body("{\"lessonName\":\"$lessonName\"}")
-        return client.invoke(request)
     }
 }

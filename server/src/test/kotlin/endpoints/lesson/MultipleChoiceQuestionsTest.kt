@@ -1,12 +1,8 @@
 package endpoints.lesson
 
-import com.fasterxml.jackson.databind.JsonNode
 import endpoints.EndpointTestCase
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.http4k.core.Method
-import org.http4k.core.Request
-import org.http4k.core.Response
 import org.http4k.unquoted
 import org.junit.Assert.assertFalse
 import org.junit.Test
@@ -67,14 +63,5 @@ class MultipleChoiceQuestionsTest : EndpointTestCase() {
         assertThat(mcq["b"].toString().unquoted(), equalTo("ბ"))
         assertThat(mcq["c"].toString().unquoted(), equalTo("ა"))
         assertFalse(mcq.has("d"))
-    }
-
-    private fun lessonRequest(lessonName: String): Response {
-        val request = Request(Method.POST, "$serverUrl/lesson").body("{\"lessonName\":\"$lessonName\"}")
-        return client.invoke(request)
-    }
-
-    private fun lessonRequestJson(lessonName: String): JsonNode {
-        return json.parse(lessonRequest(lessonName).bodyString())
     }
 }

@@ -92,6 +92,19 @@ open class EndpointTestCase {
         return client.invoke(request)
     }
 
+    fun lessonRequest(lessonName: String): Response {
+        val request = Request(Method.POST, "$serverUrl/lesson").body("{\"lessonName\":\"$lessonName\"}")
+        return client.invoke(request)
+    }
+
+    fun lessonRequestJson(lessonName: String): JsonNode {
+        return json.parse(lessonRequest(lessonName).bodyString())
+    }
+
+    fun subquestionWithIndex(subquestions: JsonNode, index: Int): JsonNode {
+        return subquestions.first { rsq -> rsq["index"].asInt() == index }
+    }
+
     private fun getNodeWithName(lessonMetadata: JsonNode, nodeName: String): JsonNode {
         return lessonMetadata.first { node -> node["name"].toString().unquoted() == nodeName }
     }
