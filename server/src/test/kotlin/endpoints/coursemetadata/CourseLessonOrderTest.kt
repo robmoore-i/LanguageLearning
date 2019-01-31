@@ -4,7 +4,7 @@ package endpoints.coursemetadata
 import endpoints.EndpointTestCase
 import org.junit.Test
 
-class CourseMetadataEndpointTest : EndpointTestCase() {
+class CourseLessonOrderTest : EndpointTestCase() {
 
     @Test
     fun canGetLessonOrderForACourse() {
