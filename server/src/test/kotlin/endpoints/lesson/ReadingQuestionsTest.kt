@@ -5,12 +5,19 @@ import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.hasItem
 import org.hamcrest.MatcherAssert.assertThat
 import org.http4k.unquoted
+import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Test
 import java.io.File
 import java.nio.file.Paths
 
 class ReadingQuestionsTest : EndpointTestCase() {
+
+    @After
+    override fun tearDown() {
+        super.tearDown()
+        File(Paths.get(environment.extractsPath, "test.txt").toUri()).delete()
+    }
 
     @Test
     fun canGetRqWithInlineExtract() {

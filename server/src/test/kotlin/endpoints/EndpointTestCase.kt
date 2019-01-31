@@ -46,7 +46,7 @@ open class EndpointTestCase {
     val json = Jackson
 
     @After
-    fun tearDown() {
+    open fun tearDown() {
         server.stop()
         neo4jDriver.session().let { session ->
             session.run("MATCH (n) DETACH DELETE (n)")
