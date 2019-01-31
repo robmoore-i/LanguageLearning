@@ -53,7 +53,6 @@ of reading the README."
 
 Q (3.5)
 Neo4j (3.5)
-Python3 (3.6)
 Yarn (1.12)
 Node (10.11)
 Kotlin (1.3)
