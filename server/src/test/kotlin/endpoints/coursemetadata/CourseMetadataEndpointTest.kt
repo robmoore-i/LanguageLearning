@@ -1,14 +1,7 @@
 package endpoints.coursemetadata
 
 
-import com.fasterxml.jackson.databind.JsonNode
 import endpoints.EndpointTestCase
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
-import org.http4k.core.Method
-import org.http4k.core.Request
-import org.http4k.core.Response
-import org.http4k.unquoted
 import org.junit.Test
 
 class CourseMetadataEndpointTest : EndpointTestCase() {
@@ -35,22 +28,4 @@ class CourseMetadataEndpointTest : EndpointTestCase() {
         assertLessonHasIndex(lessonMetadata, "What are you called?", 1)
         assertLessonHasIndex(lessonMetadata, "Colours", 2)
     }
-
-    private fun assertLessonHasIndex(lessonMetadata: JsonNode, lessonName: String, index: Int) {
-        assertThat(getNodeWithName(lessonMetadata, lessonName)["index"].asInt(), equalTo(index))
-    }
-
-    private fun getNodeWithName(lessonMetadata: JsonNode, nodeName: String): JsonNode {
-        return lessonMetadata.first { node -> node["name"].toString().unquoted() == nodeName }
-    }
-
-    private fun courseMetadataRequestJson(courseName: String): JsonNode {
-        val response = courseMetadataRequest(this, courseName)
-        return json.parse(response.bodyString())
-    }
-}
-
-fun courseMetadataRequest(endpointTestCase: EndpointTestCase, courseName: String): Response {
-    val request = Request(Method.GET, "${endpointTestCase.serverUrl}/coursemetadata?course=$courseName")
-    return endpointTestCase.client.invoke(request)
 }

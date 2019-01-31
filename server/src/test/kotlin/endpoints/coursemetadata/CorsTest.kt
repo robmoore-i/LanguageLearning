@@ -20,7 +20,7 @@ class CorsTest : EndpointTestCase() {
             session.close()
         }
 
-        val response = courseMetadataRequest(this, "Course")
+        val response = courseMetadataRequest("Course")
 
         assertHasHeader(
             response,
