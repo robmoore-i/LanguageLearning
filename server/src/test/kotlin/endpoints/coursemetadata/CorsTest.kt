@@ -1,28 +1,26 @@
-package endpoints.lesson
+package endpoints.coursemetadata
 
 import endpoints.EndpointTestCase
 import endpoints.courses.assertHasHeader
-import org.http4k.core.Method
-import org.http4k.core.Request
-import org.http4k.core.Response
 import org.junit.Test
 
 class CorsTest : EndpointTestCase() {
-
     @Test
     fun givesAccessControlAllowOriginCorsHeader() {
         neo4jDriver.session().let { session ->
             val query = """
-                CREATE (hello:TopicLesson {name: "lesson"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "c", image: "img.png"})
-                CREATE (hello)-[:HAS_QUESTION {index: 0}]->(letterA:Question:MultipleChoiceQuestion {question: "sounds like \"a\" in English", a: "მ",b:"ბ", c:"ა", answer: "c"})
-                RETURN hello,letterA,c;
+                CREATE (c:Course {name: "Course", image: "flagGeorgia.svg"})
+                CREATE (c)-[:HAS_TOPIC_LESSON {index: 0}]->(hello:TopicLesson {name: "Hello"})
+                CREATE (c)-[:HAS_TOPIC_LESSON {index: 1}]->(whatAreYouCalled:TopicLesson {name: "What are you called?"})
+                CREATE (c)-[:HAS_TOPIC_LESSON {index: 2}]->(colours:TopicLesson {name: "Colours"})
+                RETURN hello,whatAreYouCalled,colours,c;
                 """.trimIndent()
 
             session.run(query)
             session.close()
         }
 
-        val response = lessonRequest("lesson")
+        val response = courseMetadataRequest(this, "Course")
 
         assertHasHeader(
             response,
@@ -39,10 +37,5 @@ class CorsTest : EndpointTestCase() {
             "Content-Type",
             "application/json;charset=utf-8"
         )
-    }
-
-    private fun lessonRequest(lessonName: String): Response {
-        val request = Request(Method.POST, "$serverUrl/lesson").body("{\"lessonName\":\"$lessonName\"}")
-        return client.invoke(request)
     }
 }

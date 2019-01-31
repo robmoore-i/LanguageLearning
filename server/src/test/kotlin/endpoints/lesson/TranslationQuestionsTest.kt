@@ -1,68 +1,18 @@
 package endpoints.lesson
 
 import com.fasterxml.jackson.databind.JsonNode
-import environment.EnvironmentLoader
-import logger.ServerLogger
-import neo4j.Neo4jDatabaseAdaptor
-import neo4j.Neo4jDriver
+import endpoints.EndpointTestCase
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.hasItem
 import org.hamcrest.MatcherAssert.assertThat
-import org.http4k.client.JavaHttpClient
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
-import org.http4k.format.Jackson
-import org.http4k.server.Http4kServer
 import org.http4k.unquoted
-import org.junit.After
 import org.junit.Assert.assertFalse
-import org.junit.Before
 import org.junit.Test
-import server.Server
-import java.io.File
-import java.nio.file.Paths
 
-class TranslationQuestionsTest {
-    private val environmentLoader = EnvironmentLoader(System::getenv)
-    private val environment = environmentLoader.getEnvironment()
-    private val neo4jDriver = Neo4jDriver(environment.neo4jUser, environment.neo4jPassword, environment.neo4jPort)
-    private val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(
-        neo4jDriver,
-        environment.imagesPath,
-        environment.extractsPath
-    )
-
-    private val logger = ServerLogger()
-
-    private val server: Http4kServer = Server(
-        environment.serverPort,
-        neo4jDatabaseAdaptor,
-        environment.frontendPort,
-        logger
-    )
-
-    private val client = JavaHttpClient()
-    private val serverUrl = "http://localhost:${environment.serverPort}"
-
-    private val json = Jackson
-
-    @After
-    fun tearDown() {
-        server.stop()
-        neo4jDriver.session().let { session ->
-            session.run("MATCH (n) DETACH DELETE (n)")
-            session.run("MATCH (n) DELETE (n)")
-            session.close()
-        }
-        File(Paths.get(environment.extractsPath, "test.txt").toUri()).delete()
-    }
-
-    @Before
-    fun setUp() {
-        server.start()
-    }
-
+class TranslationQuestionsTest : EndpointTestCase() {
     @Test
     fun canGetTq() {
         neo4jDriver.session().let { session ->
