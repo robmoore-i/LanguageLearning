@@ -1,3 +1,4 @@
+curdir=`pwd`
 cd ../database
 ./reset-db.sh
-cd ../backend
+cd $curdir
