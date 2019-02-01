@@ -1,0 +1,1 @@
+./gradlew test --tests ${1}*
