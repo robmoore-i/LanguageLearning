@@ -12,7 +12,7 @@ import {configureAdapter} from "../utils"
 
 configureAdapter()
 
-it('directs the user to /courses upon pressing the [Get Started] button', () => {
+it('Directs the user to /courses upon pressing the [Get Started] button', () => {
     // Given: I'm on the home page
     let testHomePage = shallow(<Home />)
 
@@ -21,4 +21,14 @@ it('directs the user to /courses upon pressing the [Get Started] button', () => 
 
     // Then: I am redirected to /courses
     expect(coursesLink.is('[to="courses"]')).toBe(true)
+})
+
+it('Calls the web analytics when the [Get Started] button is pressed', () => {
+    let recordAction = jest.fn()
+    let mockAnalytics = { recordAction: recordAction }
+    let testHomePage = shallow(<Home analytics={mockAnalytics} />)
+
+    testHomePage.find('#courses-link').first().simulate("click")
+
+    expect(recordAction).toHaveBeenCalled()
 })
