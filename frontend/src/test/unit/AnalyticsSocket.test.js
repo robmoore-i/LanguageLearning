@@ -1,9 +1,5 @@
 import { AnalyticsSocket } from '../../main/AnalyticsSocket'
 
-function TestAnalyticsSocket(testSocketFactory) {
-    return 
-}
-
 it("On failure to establish connection, onopen gets stubbed", () => {
     let failingSocketFactory = (url) => {
         throw Error("Couldn't establish a ws connection with the server!")
