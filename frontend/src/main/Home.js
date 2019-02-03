@@ -8,7 +8,6 @@ import '../styles/Home.css'
 
 // Main
 import config from './config'
-import { defaultAnalyticsSocket } from './AnalyticsSocket'
 
 export default class Home extends Component {
     render() {

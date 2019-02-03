@@ -5,21 +5,33 @@ function defaultWebSocketFactory(url) {
     return new WebSocket(url)
 }
 
-export function AnalyticsSocket(analyticsOrigin, webSocketFactory) {
-    let socket = webSocketFactory(analyticsOrigin)
+function initialiseAnalyticsSocket(analyticsServerOrigin, webSocketFactory, clog) {
+    try {
+        return webSocketFactory(analyticsServerOrigin)
+    } catch(err) {
+        clog("Stubbing web analytics because the connection wasn't made.")
+        clog("Raw error: " + err)
+        return {
+            onopen: (f) => {
+                clog("AnalyticsSocket::onopen: Stubbed")
+            },
+            send: (msg) => {
+                clog("AnalyticsSocket::send: Stubbed => " + msg)
+            }
+        }
+    }
+}
 
-    // Connection opened
-    socket.addEventListener('open', function (event) {
+export function AnalyticsSocket(analyticsServerOrigin, webSocketFactory, clog) {
+    let socket = initialiseAnalyticsSocket(analyticsServerOrigin, webSocketFactory, clog)
+
+    socket.onopen(function (event) {
         socket.send('Hello Server!')
     })
 
-    // Listen for messages
-    socket.addEventListener('message', function (event) {
-        console.log('Message from server ', event.data)
-    })
-
-    return {}
+    return socket
 }
 
-export const LocalAnalyticsSocket = (webSocketFactory) => AnalyticsSocket(config.localAnalyticsOrigin, webSocketFactory)
+export const ConsoleLoggedAnalyticsSocket = (analyticsServerOrigin, webSocketFactory) => AnalyticsSocket(analyticsServerOrigin, webSocketFactory, console.log)
+export const LocalAnalyticsSocket = (webSocketFactory) => ConsoleLoggedAnalyticsSocket(config.localAnalyticsOrigin, webSocketFactory)
 export const defaultAnalyticsSocket = LocalAnalyticsSocket(defaultWebSocketFactory)
