@@ -2,16 +2,21 @@
 import config from './config'
 
 function defaultWebSocketFactory(url) {
-    try {
-        return new WebSocket(url)
-    } catch (err) {
-        return new WebSocket("ws://localhost:5000")
-    }
+    return new WebSocket(url)
 }
 
-function initialiseAnalytics(url, webSocketFactory, analytics) {
-    let socket = webSocketFactory(url)
-    
+function stubAnalytics(analytics) {
+    console.log("Stubbing web analytics because the connection wasn't made.")
+    analytics.messenger = {
+        stub: true,
+        send: (msg) => {
+            console.log("AnalyticsSocket::send: Stubbed => " + msg)
+        }
+    }
+    analytics.ready = true
+}
+
+function initialiseAnalyticsFromSocket(analytics, socket) {
     socket.addEventListener('open', function (event) {
         console.log("Connection made!")
         analytics.messenger = socket
@@ -20,20 +25,10 @@ function initialiseAnalytics(url, webSocketFactory, analytics) {
     })
 
     socket.addEventListener('error', () => {
-        console.log("Stubbing web analytics because the connection wasn't made.")
-        analytics.messenger = {
-            stub: true,
-            onopen: (f) => {
-                console.log("AnalyticsSocket::onopen: Stubbed")
-            },
-            send: (msg) => {
-                console.log("AnalyticsSocket::send: Stubbed => " + msg)
-            }
-        }
-        analytics.ready = true
+        stubAnalytics(analytics)
     })
 
-    return socket
+    window.llsocket = socket
 }
 
 export function Analytics(analyticsServerOrigin, webSocketFactory) {
@@ -42,9 +37,12 @@ export function Analytics(analyticsServerOrigin, webSocketFactory) {
         messenger: null
     }
 
-    let socket = initialiseAnalytics(analyticsServerOrigin, webSocketFactory, analytics)
-
-    window.llsocket = socket
+    try {
+        let socket = webSocketFactory(analyticsServerOrigin)
+        initialiseAnalyticsFromSocket(analytics, socket)
+    } catch (error) {
+        stubAnalytics(analytics)
+    }
 
     return analytics
 }
