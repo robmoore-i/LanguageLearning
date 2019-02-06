@@ -14,7 +14,7 @@ configureAdapter()
 
 it('Directs the user to /courses upon pressing the [Get Started] button', () => {
     // Given: I'm on the home page
-    let testHomePage = shallow(<Home />)
+    let testHomePage = shallow(<Home analytics={{ recordEvent: () => {} }} />)
 
     // When: I click the link to the courses page
     let coursesLink = testHomePage.find('#courses-link').first()
@@ -24,11 +24,11 @@ it('Directs the user to /courses upon pressing the [Get Started] button', () => 
 })
 
 it('Calls the web analytics when the [Get Started] button is pressed', () => {
-    let recordAction = jest.fn()
-    let mockAnalytics = { recordAction: recordAction }
+    let recordEvent = jest.fn()
+    let mockAnalytics = { recordEvent: recordEvent }
     let testHomePage = shallow(<Home analytics={mockAnalytics} />)
 
     testHomePage.find('#courses-link').first().simulate("click")
 
-    expect(recordAction).toHaveBeenCalled()
+    expect(recordEvent).toHaveBeenCalled()
 })

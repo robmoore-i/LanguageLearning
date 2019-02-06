@@ -7,12 +7,13 @@ import registerServiceWorker from "./registerServiceWorker"
 // Resources
 import '../styles/App.css'
 // Main
-import {defaultServer} from './Server'
 import Home from './Home'
 import Courses from './Courses'
 import LessonMap from './LessonMap'
 import Lesson from './Lesson'
+import {defaultServer} from './Server'
 import {defaultShuffler} from './Shuffler'
+import { defaultAnalytics } from './Analytics';
 
 export function startApp() {
     ReactDOM.render(<App />, document.getElementById('root'))
@@ -25,7 +26,7 @@ export default class App extends Component {
             <div className="App">
                 <BrowserRouter>
                     <Switch>
-                        <Route exact path="/" component={Home}/>
+                        <Route exact path="/" component={HomeWithAnalytics}/>
                         <Route exact path="/courses" component={AllCourses}/>
                         <Route exact path="/courses/:course" component={MatchedLessonMap} />
                         <Route path="/courses/:course/:lesson" component={MatchedLesson} />
@@ -34,6 +35,12 @@ export default class App extends Component {
             </div>
         )
     }
+}
+
+const HomeWithAnalytics = () => {
+    return (
+        <Home analytics={defaultAnalytics} />
+    )
 }
 
 const AllCourses = () => {

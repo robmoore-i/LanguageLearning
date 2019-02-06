@@ -6,7 +6,6 @@ function defaultWebSocketFactory(url) {
 }
 
 function stubAnalytics(analytics) {
-    console.log("Stubbing web analytics because the connection wasn't made.")
     analytics.messenger = {
         stub: true,
         send: (msg) => {
@@ -18,7 +17,6 @@ function stubAnalytics(analytics) {
 
 function initialiseAnalyticsFromSocket(analytics, socket) {
     socket.addEventListener('open', function (event) {
-        console.log("Connection made!")
         analytics.messenger = socket
         analytics.messenger.stub = false
         analytics.ready = true
@@ -44,7 +42,7 @@ export function Analytics(analyticsServerOrigin, webSocketFactory) {
         stubAnalytics(analytics)
     }
 
-    analytics.recordAction = function(eventName) {
+    analytics.recordEvent = function(eventName) {
         analytics.messenger.send(eventName)
     }
 

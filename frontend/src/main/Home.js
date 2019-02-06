@@ -10,16 +10,7 @@ import '../styles/Home.css'
 import config from './config'
 
 export default class Home extends Component {
-    analytics() {
-        if (this.props.analytics) {
-            return this.props.analytics
-        } else {
-            return { recordAction: () => {} }
-        }
-    }
-
     render() {
-        let analytics = this.analytics()
         return (
             <header className="Home-header">
                 <img src={globe} className="Home-logo" alt="logo" />
@@ -29,7 +20,7 @@ export default class Home extends Component {
                     id="courses-link"
                     to="courses"
                     className="Call-to-action-btn"
-                    onClick={analytics.recordAction}
+                    onClick={this.props.analytics.recordEvent}
                 >
                     Get Started
                 </Link>

@@ -51,7 +51,7 @@ it("Sends a message to the server on recordAction call", () => {
 
     let analytics = Analytics("testorigin", succeedingSocketFactory)
 
-    analytics.recordAction("event")
+    analytics.recordEvent("event")
 
     expect(mockSocket.sent).toEqual(["event"])
 })
