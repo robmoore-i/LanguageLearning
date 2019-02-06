@@ -44,6 +44,10 @@ export function Analytics(analyticsServerOrigin, webSocketFactory) {
         stubAnalytics(analytics)
     }
 
+    analytics.recordAction = function(eventName) {
+        analytics.messenger.send(eventName)
+    }
+
     return analytics
 }
 

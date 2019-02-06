@@ -31,3 +31,27 @@ it("On successful connection, messenger is not stubbed", () => {
 
     expect(analytics.messenger.stub).toBe(false)
 })
+
+it("Sends a message to the server on recordAction call", () => {
+    const mockSocket = {
+        addEventListener: (eventName, f) => {
+            if (eventName === 'open') {
+                f()
+            }
+        },
+        sent: [],
+        send: (msg) => {
+            mockSocket.sent.push(msg)
+        }
+    }
+    
+    const succeedingSocketFactory = (url) => {
+        return mockSocket
+    }
+
+    let analytics = Analytics("testorigin", succeedingSocketFactory)
+
+    analytics.recordAction("event")
+
+    expect(mockSocket.sent).toEqual(["event"])
+})
