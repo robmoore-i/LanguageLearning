@@ -6,9 +6,11 @@ equal:{[expected;actual]
     if[expected~actual; :1b];
     .termcolour.red "\n  Assertion failed: .assert.equal";
     .termcolour.red "\tExpected:   ",indentedString expected;
-    if[1<count expected;.termcolour.red "\tWith count: ",string count expected];
+    .termcolour.red "\tWith type:  ",string type expected;
+    .termcolour.red "\tWith count: ",string count expected;
     .termcolour.red "\tActual:     ",indentedString actual;
-    if[1<count actual;.termcolour.red "\tWith count: ",string count actual];
+    .termcolour.red "\tWith type:  ",string type actual;
+    .termcolour.red "\tWith count: ",string count actual;
     'notequal}
 
 notEqual:{[expected;actual]
