@@ -18,7 +18,11 @@ import {defaultAnalytics} from './Analytics'
 
 export function startApp() {
     ReactDOM.render(
-        <App server={defaultServer} analytics={defaultAnalytics} shuffler={defaultShuffler} />,
+        <App
+            server={defaultServer}
+            analytics={defaultAnalytics}
+            shuffler={defaultShuffler}
+        />,
         document.getElementById('root')
     )
     registerServiceWorker()
