@@ -8,6 +8,8 @@ then
     exit 1
 fi
 
-cd src
-$QHOME/$QARCH/q startAnalyticsServer.q &
+cwd=`realpath $0 | xargs dirname`
+
+cd $cwd/src
+$QHOME/$QARCH/q start.q &
 cd ..
