@@ -30,7 +30,8 @@ function initialiseAnalyticsFromSocket(analytics, socket) {
 }
 
 function randomSessionId(){
-    return Math.random().toString(36).substr(2, 10)
+    let sessionIdLength = 10
+    return Math.random().toString(36).substr(2, sessionIdLength)
 }
 
 export function Analytics(analyticsServerOrigin, webSocketFactory) {
