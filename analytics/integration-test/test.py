@@ -11,16 +11,16 @@ analytics_port_str = os.environ["APP_ANALYTICS_PORT"]
 class AnalyticsIntegrationTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        subprocess.check_call("./../start-analytics-server.sh", shell=True)
+        subprocess.check_call("./../start-analytics-server-in-background.sh", shell=True)
         time.sleep(1)
-    
+
     @classmethod
     def tearDownClass(cls):
         subprocess.check_call("./../stop-analytics-server.sh", shell=True)
 
     def setUp(self):
         self.ws = create_connection("ws://localhost:" + analytics_port_str)
-    
+
     def tearDown(self):
         self.ws.close()
 

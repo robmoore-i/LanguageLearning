@@ -29,10 +29,15 @@ function initialiseAnalyticsFromSocket(analytics, socket) {
     window.llsocket = socket
 }
 
+function randomSessionId(){
+    return Math.random().toString(36).substr(2, 10)
+}
+
 export function Analytics(analyticsServerOrigin, webSocketFactory) {
     let analytics = {
         ready: false,
-        messenger: null
+        messenger: null,
+        sessionId: randomSessionId()
     }
 
     try {
@@ -43,7 +48,12 @@ export function Analytics(analyticsServerOrigin, webSocketFactory) {
     }
 
     analytics.recordEvent = function(eventName) {
-        analytics.messenger.send(eventName)
+        let messageItems = []
+        messageItems.push(Date.now().toString())
+        messageItems.push(analytics.sessionId)
+        messageItems.push(eventName)
+        let message = messageItems.join(";")
+        analytics.messenger.send(message)
     }
 
     return analytics

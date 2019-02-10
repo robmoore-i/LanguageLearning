@@ -11,4 +11,5 @@ fi
 cwd=`realpath $0 | xargs dirname`
 
 cd $cwd/src
-$QHOME/$QARCH/q start.q
+$QHOME/$QARCH/q start.q &
+cd ..
