@@ -5,7 +5,7 @@ analyticsPort:"J"$getenv `APP_ANALYTICS_PORT
 
 events:delete from flip `timestamp`sessionId`eventName!"pss"$/:();
 
-.z.ws:.analytics.serveWs[`events;]
+.z.ws:.analytics.dotWs[`events;]
 
 .get.serve["/events/session/:sessionId";
   .res.ok {[req]
