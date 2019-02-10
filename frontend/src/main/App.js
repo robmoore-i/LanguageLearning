@@ -6,17 +6,21 @@ import {BrowserRouter, Route, Switch} from 'react-router-dom'
 import registerServiceWorker from "./registerServiceWorker"
 // Resources
 import '../styles/App.css'
-// Main
+// Components
 import Home from './Home'
 import Courses from './Courses'
 import LessonMap from './LessonMap'
 import Lesson from './Lesson'
+// Injectable
 import {defaultServer} from './Server'
 import {defaultShuffler} from './Shuffler'
-import { defaultAnalytics } from './Analytics';
+import {defaultAnalytics} from './Analytics'
 
 export function startApp() {
-    ReactDOM.render(<App />, document.getElementById('root'))
+    ReactDOM.render(
+        <App server={defaultServer} analytics={defaultAnalytics} shuffler={defaultShuffler} />,
+        document.getElementById('root')
+    )
     registerServiceWorker()
 }
 
@@ -39,25 +43,37 @@ export default class App extends Component {
 
 const HomeWithAnalytics = () => {
     return (
-        <Home analytics={defaultAnalytics} />
+        <Home
+            analytics={defaultAnalytics}
+        />
     )
 }
 
 const AllCourses = () => {
     return (
-        <Courses server={defaultServer} />
+        <Courses
+            server={defaultServer}
+        />
     )
 }
 
 const MatchedLessonMap = ({ match }) => {
     return (
-        <LessonMap courseName={match.params.course} server={defaultServer}/>
+        <LessonMap
+            courseName={match.params.course}
+            server={defaultServer}
+        />
     )
 }
 
 const MatchedLesson = ({ match }) => {
     return (
-        <Lesson courseName={match.params.course} encodedLessonName={match.params.lesson} server={defaultServer} shuffler={defaultShuffler}/>
+        <Lesson
+            courseName={match.params.course}
+            encodedLessonName={match.params.lesson}
+            server={defaultServer}
+            shuffler={defaultShuffler}
+        />
     )
 }
 
