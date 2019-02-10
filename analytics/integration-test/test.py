@@ -24,7 +24,7 @@ class AnalyticsIntegrationTest(unittest.TestCase):
     def tearDown(self):
         self.ws.close()
 
-    def testThatCanRecordAndReturnAnEvent(self):
+    def testThatCanRecordAndReturnAnEventInMemory(self):
         session_id = "session-id"
         self.ws.send("1549820560103;" + session_id + ";event-name")
 
