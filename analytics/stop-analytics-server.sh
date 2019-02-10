@@ -1,0 +1,1 @@
+lsof -i :$APP_ANALYTICS_PORT | grep q | tail -1 | cut -c 9-13 | xargs kill -9
