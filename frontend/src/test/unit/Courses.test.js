@@ -103,3 +103,12 @@ it("Sends analytics message with the course's name when the course button is cli
 
     expect(testAnalytics.recordEvent).toHaveBeenCalledWith("click@course-button-georgian")
 })
+
+it("Doesn't send analytics message if a button isn't clicked", async () => {
+    let testAnalytics = {recordEvent: jest.fn()}
+    let testServer = mockServer(["Georgian", "German"])
+    let testCoursesPage = await fullRenderCoursesWithAnalytics(testServer, testAnalytics)
+    testCoursesPage.update()
+
+    expect(testAnalytics.recordEvent).not.toHaveBeenCalled()
+})
