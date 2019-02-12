@@ -58,6 +58,7 @@ const AllCourses = () => {
     return (
         <Courses
             server={defaultServer}
+            analytics={defaultAnalytics}
         />
     )
 }
