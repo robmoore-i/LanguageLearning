@@ -68,6 +68,7 @@ const MatchedLessonMap = ({ match }) => {
         <LessonMap
             courseName={match.params.course}
             server={defaultServer}
+            analytics={defaultAnalytics}
         />
     )
 }
