@@ -1,5 +1,8 @@
 import Mark from "./Mark"
-import {formatAnswer} from "./Question"
+
+function formatAnswer(rawAnswer) {
+    return rawAnswer.replace(/\s+/g, ' ').trim().toLowerCase().replace(/[?!.,]/g, "")
+}
 
 export function Marker() {
     function compareFormattedAnswers(formattedActual, formattedExpected) {

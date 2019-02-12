@@ -16,9 +16,9 @@ function _continueButton(onClick, enabled) {
     let className = enabled ? "mark-continue-button" : "mark-continue-button-disabled"
     return (
         <span id="continue-button" className={className} key="continue-button"
-           onClick={() => {
-               onClick()
-           }}>
+              onClick={() => {
+                  onClick()
+              }}>
            Continue
         </span>
     )
@@ -34,8 +34,4 @@ export const QuestionTypes = {
     TRANSLATION: 0,
     MULTIPLE_CHOICE: 1,
     READING: 2
-}
-
-export function formatAnswer(rawAnswer) {
-    return rawAnswer.replace(/\s+/g,' ').trim().toLowerCase().replace(/[?!.,]/g, "")
 }
