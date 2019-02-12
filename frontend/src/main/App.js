@@ -19,6 +19,7 @@ import {defaultAnalytics} from './Analytics'
 export function startApp() {
     ReactDOM.render(
         <App
+            // These props aren't used currently. I should find a way to inject them downwards from here.
             server={defaultServer}
             analytics={defaultAnalytics}
             shuffler={defaultShuffler}
