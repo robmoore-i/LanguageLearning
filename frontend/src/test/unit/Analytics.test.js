@@ -1,7 +1,7 @@
-import { Analytics } from '../../main/Analytics'
+import {Analytics} from '../../main/Analytics'
 
 it("On failure to establish connection, messenger gets stubbed", () => {
-    const failingSocketFactory = (url) => {
+    const failingSocketFactory = () => {
         return {
             addEventListener: (eventName, f) => {
                 if (eventName === 'error') {
@@ -17,7 +17,7 @@ it("On failure to establish connection, messenger gets stubbed", () => {
 })
 
 it("On successful connection, messenger is not stubbed", () => {
-    const succeedingSocketFactory = (url) => {
+    const succeedingSocketFactory = () => {
         return {
             addEventListener: (eventName, f) => {
                 if (eventName === 'open') {
@@ -44,8 +44,8 @@ it("Sends a semicolon delimited message of timestamp, sessionId and eventName to
             mockSocket.sent.push(msg)
         }
     }
-    
-    const succeedingSocketFactory = (url) => {
+
+    const succeedingSocketFactory = () => {
         return mockSocket
     }
 
@@ -61,4 +61,20 @@ it("Sends a semicolon delimited message of timestamp, sessionId and eventName to
     expect(messageParts[1]).toEqual("fake-session-id")
     expect(messageParts[2]).toEqual("event")
     expect(mockSocket.sent.length).toEqual(1)
+})
+
+it("Is initialised with an empty context", () => {
+    const succeedingSocketFactory = () => {
+        return {
+            addEventListener: (eventName, f) => {
+                if (eventName === 'open') {
+                    f()
+                }
+            }
+        }
+    }
+
+    let analytics = Analytics("testorigin", succeedingSocketFactory)
+
+    expect(analytics.context).toEqual({})
 })

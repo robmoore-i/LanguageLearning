@@ -16,7 +16,7 @@ function stubAnalytics(analytics) {
 }
 
 function initialiseAnalyticsFromSocket(analytics, socket) {
-    socket.addEventListener('open', function (event) {
+    socket.addEventListener('open', function () {
         analytics.messenger = socket
         analytics.messenger.stub = false
         analytics.ready = true
@@ -38,7 +38,8 @@ export function Analytics(analyticsServerOrigin, webSocketFactory) {
     let analytics = {
         ready: false,
         messenger: null,
-        sessionId: randomSessionId()
+        sessionId: randomSessionId(),
+        context: {}
     }
 
     try {

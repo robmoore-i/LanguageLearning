@@ -37,7 +37,10 @@ export default class CourseButton extends Component {
                 <a
                     id={"course-link-" + this.props.courseName}
                     href={this.href}
-                    onClick={() => this.props.analytics.recordEvent("click@course-button-" + this.props.courseName.toLowerCase())}
+                    onClick={() => {
+                        this.props.analytics.context.course = "georgian"
+                        this.props.analytics.recordEvent("click@course-button-" + this.props.courseName.toLowerCase())
+                    }}
                 >
                     {this.img}
                 </a>
