@@ -28,7 +28,9 @@ export default class Courses extends Component {
         return this.state.courses.map(course => {
             return <CourseButton id={"course-button-" + course.name} key={course.name}
                                  courseName={course.name}
-                                 image={{type: course.imageType, src: course.image}} />
+                                 image={{type: course.imageType, src: course.image}}
+                                 analytics={this.props.analytics}
+            />
         })
     }
 

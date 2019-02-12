@@ -34,7 +34,11 @@ export default class CourseButton extends Component {
         return (
             <div>
                 <h3 className="Course-title">{this.props.courseName}</h3>
-                <a id={"course-link-" + this.props.courseName} href={this.href}>
+                <a
+                    id={"course-link-" + this.props.courseName}
+                    href={this.href}
+                    onClick={this.props.analytics.recordEvent("click@course-button-" + this.props.courseName.toLowerCase())}
+                >
                     {this.img}
                 </a>
                 <br/>

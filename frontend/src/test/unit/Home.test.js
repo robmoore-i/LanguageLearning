@@ -30,5 +30,5 @@ it('Calls the web analytics when the [Get Started] button is pressed', () => {
 
     testHomePage.find('#courses-link').first().simulate("click")
 
-    expect(recordEvent).toHaveBeenCalled()
+    expect(recordEvent).toHaveBeenCalledWith("click@get-started-button")
 })

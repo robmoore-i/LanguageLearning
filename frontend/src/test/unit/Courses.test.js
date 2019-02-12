@@ -1,12 +1,9 @@
 // React
 import React from 'react'
-
 // Testing
-import { shallow, mount } from 'enzyme'
-
+import {mount} from 'enzyme'
 // Main
 import Courses from '../../main/Courses'
-
 // Enzyme react-adapter configuration
 import {configureAdapter, sleep} from "../utils"
 
@@ -27,7 +24,13 @@ let mockServer = courseNames => {
 }
 
 async function fullRenderCourses(server) {
-    let courses = mount(<Courses server={server} />)
+    let courses = mount(<Courses server={server} analytics={{recordEvent: jest.fn()}}/>)
+    await sleep(mockServerLoadTimeMs)
+    return courses
+}
+
+async function fullRenderCoursesWithAnalytics(server, analytics) {
+    let courses = mount(<Courses server={server} analytics={analytics}/>)
     await sleep(mockServerLoadTimeMs)
     return courses
 }
@@ -56,7 +59,7 @@ it('Requests the list of course names from the server', async () => {
     let testServer = mockServer(["Georgian", "German"])
     const spyFetch = jest.spyOn(testServer, "fetchCourses")
 
-    let _testCoursesPage = await fullRenderCourses(testServer)
+    await fullRenderCourses(testServer)
 
     expect(spyFetch).toHaveBeenCalled()
 })
@@ -77,4 +80,26 @@ it("Courses list is empty if server fetches no courses", async () => {
     let testCoursesPage = await fullRenderCourses(testServer)
 
     expect(testCoursesPage.state().courses).toEqual([])
+})
+
+it("Sends analytics message when a course button is clicked", async () => {
+    let testAnalytics = {recordEvent: jest.fn()}
+    let testServer = mockServer(["Georgian", "German"])
+    let testCoursesPage = await fullRenderCoursesWithAnalytics(testServer, testAnalytics)
+    testCoursesPage.update()
+
+    testCoursesPage.find('#course-link-German').simulate("click")
+
+    expect(testAnalytics.recordEvent).toHaveBeenCalledWith("click@course-button-german")
+})
+
+it("Sends analytics message with the course's name when the course button is clicked", async () => {
+    let testAnalytics = {recordEvent: jest.fn()}
+    let testServer = mockServer(["Georgian", "German"])
+    let testCoursesPage = await fullRenderCoursesWithAnalytics(testServer, testAnalytics)
+    testCoursesPage.update()
+
+    testCoursesPage.find('#course-link-Georgian').simulate("click")
+
+    expect(testAnalytics.recordEvent).toHaveBeenCalledWith("click@course-button-georgian")
 })

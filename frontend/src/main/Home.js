@@ -20,7 +20,7 @@ export default class Home extends Component {
                     id="courses-link"
                     to="courses"
                     className="Call-to-action-btn"
-                    onClick={(event) => this.props.analytics.recordEvent("Home->Courses")}
+                    onClick={() => this.props.analytics.recordEvent("click@get-started-button")}
                 >
                     Get Started
                 </Link>
