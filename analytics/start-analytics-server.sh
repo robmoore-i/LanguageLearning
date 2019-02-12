@@ -10,7 +10,7 @@ fi
 
 if [[ `uname` == "Darwin" ]]
 then
-    cwd=`python -c "import os; print(os.path.realpath('$1'))"`
+    cwd=`python -c "import os; print(os.path.realpath('$0'))" | xargs dirname`
 else
     cwd=`realpath $0 | xargs dirname`
 fi
