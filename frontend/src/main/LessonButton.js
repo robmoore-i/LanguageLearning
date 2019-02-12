@@ -23,10 +23,10 @@ export default class LessonButton extends Component {
     render() {
         return (
             <a
-                id="lesson-button-hello"
+                id={"lesson-button-" + this.encodedLessonName}
                 className="Lesson-button"
                 href={this.href}
-                onClick={() => this.props.analytics.recordEvent("click@lesson-button-georgian-hello")}
+                onClick={() => this.props.analytics.recordEvent("click@lesson-button-" + this.props.courseName + "-" + this.encodedLessonName)}
             >
                 {this.props.lessonName}
             </a>

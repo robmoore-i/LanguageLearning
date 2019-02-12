@@ -138,3 +138,13 @@ it("Sends analytics message when a lesson is clicked", async () => {
 
     expect(analytics.recordEvent).toHaveBeenCalledWith("click@lesson-button-georgian-hello")
 })
+
+it("Sends analytics message for the specific lesson that is clicked on", async () => {
+    let server = mockServer(lessonNames(["hello", "hi"]))
+    let analytics = {recordEvent: jest.fn()}
+    let testLessonMap = await fullRenderLessonMapWithAnalytics("georgian", server, analytics)
+
+    testLessonMap.find("#lesson-button-hi").simulate("click")
+
+    expect(analytics.recordEvent).toHaveBeenCalledWith("click@lesson-button-georgian-hi")
+})
