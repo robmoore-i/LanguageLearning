@@ -22,7 +22,12 @@ export default class LessonButton extends Component {
 
     render() {
         return (
-            <a className="Lesson-button" href={this.href}>
+            <a
+                id="lesson-button-hello"
+                className="Lesson-button"
+                href={this.href}
+                onClick={() => this.props.analytics.recordEvent("click@lesson-button-georgian-hello")}
+            >
                 {this.props.lessonName}
             </a>
         )

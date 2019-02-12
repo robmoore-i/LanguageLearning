@@ -1,7 +1,7 @@
 // React
 import React from 'react'
 // Testing
-import {shallow} from 'enzyme'
+import {shallow, mount} from 'enzyme'
 // Main
 import LessonMap from '../../main/LessonMap'
 // Enzyme react-adapter configuration & others
@@ -39,8 +39,15 @@ function lessonNames(topicLessonNames) {
 }
 
 async function shallowRenderLessonMap(course, server) {
-    let lessonMap = shallow(<LessonMap courseName={course} server={server} />)
+    let lessonMap = shallow(<LessonMap courseName={course} server={server}/>)
     await sleep(mockServerLoadTimeMs)
+    return lessonMap
+}
+
+async function fullRenderLessonMapWithAnalytics(course, server, analytics) {
+    let lessonMap = mount(<LessonMap courseName={course} server={server} analytics={analytics}/>)
+    await sleep(mockServerLoadTimeMs)
+    lessonMap.update()
     return lessonMap
 }
 
@@ -120,4 +127,14 @@ it('Shows the lessons in order it recieves them from the server', async () => {
     expect(lessonsList.children().at(0).dive().childAt(0).text()).toEqual("b")
     expect(lessonsList.children().at(1).dive().childAt(0).text()).toEqual("c")
     expect(lessonsList.children().at(2).dive().childAt(0).text()).toEqual("a")
+})
+
+it("Sends analytics message when a lesson is clicked", async () => {
+    let server = mockServer(lessonNames(["hello"]))
+    let analytics = {recordEvent: jest.fn()}
+    let testLessonMap = await fullRenderLessonMapWithAnalytics("georgian", server, analytics)
+
+    testLessonMap.find("#lesson-button-hello").simulate("click")
+
+    expect(analytics.recordEvent).toHaveBeenCalledWith("click@lesson-button-georgian-hello")
 })

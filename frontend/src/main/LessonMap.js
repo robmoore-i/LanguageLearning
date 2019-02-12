@@ -38,7 +38,7 @@ export default class LessonMap extends Component {
 
     renderLoaded() {
         let lessonButtons = this.state.lessonNames.map(lessonName => {
-            return <LessonButton key={lessonName} lessonName={lessonName} courseName={this.courseName} />
+            return <LessonButton key={lessonName} lessonName={lessonName} courseName={this.courseName} analytics={this.props.analytics} />
         })
         return [
             <header key="header" className="Lesson-map-header">
