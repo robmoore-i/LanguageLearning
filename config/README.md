@@ -1,7 +1,7 @@
 # Configuration Assumptions
 
-- Frontend, server and db are all running on the same machine
-- That machine is a linux machine.
+- Frontend, analytics, server, db are all running on the same machine
+- That machine is a linux or mac machine.
 
  To create a `apprc` environment variable file:
 
