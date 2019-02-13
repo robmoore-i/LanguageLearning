@@ -5,7 +5,7 @@ import {mount} from 'enzyme'
 // Main
 import Courses from '../../main/Courses'
 // Enzyme react-adapter configuration
-import {configureAdapter, sleep} from "../utils"
+import {configureAdapter, sleep, stubAnalytics} from "../utils"
 
 configureAdapter()
 
@@ -24,7 +24,7 @@ let mockServer = courseNames => {
 }
 
 async function fullRenderCourses(server) {
-    let courses = mount(<Courses server={server} analytics={{recordEvent: jest.fn()}}/>)
+    let courses = mount(<Courses server={server} analytics={stubAnalytics}/>)
     await sleep(mockServerLoadTimeMs)
     return courses
 }
