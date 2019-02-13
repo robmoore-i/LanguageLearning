@@ -33,13 +33,13 @@ data class MultipleChoiceQuestion(val question: String, val choices: Map<Char, S
             val question = node["question"].toString().unquoted()
 
             val choices: MutableMap<Char, String> = mutableMapOf()
-            val alphabet = "abcdef"
+            val lowercaseAlphabet = "abcdef"
             var i = 0
-            var currentLetter = alphabet[i]
+            var currentLetter = lowercaseAlphabet[i]
             while (node.containsKey(currentLetter.toString())) {
                 choices[currentLetter] = node[currentLetter.toString()].toString().unquoted()
                 i += 1
-                currentLetter = alphabet[i]
+                currentLetter = lowercaseAlphabet[i]
             }
 
             val answer = node["answer"].toString().unquoted().first()

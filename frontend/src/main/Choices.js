@@ -1,8 +1,10 @@
 import {randomCharChoice, randomChoice} from './random'
 import {isLowercaseLetter, isOneDigitNumber} from './string'
 
+export const capitalAlphabet = "ABCDEF"
+export const lowercaseAlphabet = "abcdef"
+
 export function Choices(nChoices) {
-    let capitalAlphabet = "ABCDEF"
     let NONE = "!"
     let o = {}
     let choiceEnumValues = []
@@ -45,5 +47,5 @@ export function Choices(nChoices) {
 }
 
 export function randomMultipleQuestionChoice(n) {
-    return randomCharChoice("abcdef".substring(0, n))
+    return randomCharChoice(lowercaseAlphabet.substring(0, n))
 }

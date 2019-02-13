@@ -1,18 +1,18 @@
 // React
 import React from 'react'
-
 // Main
 import {Shuffler} from "../../main/Shuffler"
 import {randomChoice} from '../../main/random.js'
+import {lowercaseAlphabet} from "../../main/Choices";
 
 function assertGeneratedMCQIsValid(mcq, nChoices) {
     expect(mcq[mcq.answer]).toEqual("YES")
-    let alphabet = "abcdef"
+    let alphabet = lowercaseAlphabet
     let mcqKeys = Object.keys(mcq)
-    for (var i = 0; i < nChoices; i++) {
+    for (let i = 0; i < nChoices; i++) {
         expect(mcqKeys).toContain(alphabet[i])
     }
-    for (var i = nChoices; i < 6; i++) {
+    for (let i = nChoices; i < 6; i++) {
         expect(mcqKeys).not.toContain(alphabet[i])
     }
 }
@@ -35,16 +35,6 @@ it('Shuffles 4-question MCQs consistently', () => {
         let mcq = generateMCQ4()
         let shuffledMCQ = shuffler.shuffleChoices(mcq)
         assertGeneratedMCQIsValid(shuffledMCQ, 4)
-    }
-})
-
-it('Shuffles single answer TQs consistently', () => {
-    let shuffler = Shuffler()
-    let tq = {type: 0, given: "A", answer: "B"}
-
-    for (var i = 0; i < 50; i++) {
-        let shuffledTQ = shuffler.shuffleTranslation(tq)
-
     }
 })
 
