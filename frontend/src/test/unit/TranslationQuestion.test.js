@@ -264,3 +264,16 @@ it("Sends analytics message when incorrect answer submitted", () => {
 
     expect(analytics.recordEvent).toHaveBeenCalledWith("click@submit-for-marking-button&incorrect#translationquestion-hello->incorrect-answer")
 })
+
+it("Sends analytics message when correction completed", () => {
+    let analytics = {recordEvent: jest.fn()}
+
+    let q = {type: 0, given: "hello", answer: "გამარჯობა"}
+    let testTQ = mount(<TranslationQuestion q={q} analytics={analytics}/>)
+
+    testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("incorrect-answer"))
+    testTQ.find("#submit-for-marking-button").simulate("click")
+    testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("გამარჯობა"))
+
+    expect(analytics.recordEvent).toHaveBeenCalledWith("corrected#translationquestion-hello->incorrect-answer->გამარჯობა")
+})

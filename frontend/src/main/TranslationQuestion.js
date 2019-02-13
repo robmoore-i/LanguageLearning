@@ -14,7 +14,8 @@ export default class TranslationQuestion extends Component {
 
         this.state = {
             currentAnswer: "",
-            transitionState: TransitionState.UNMARKED
+            transitionState: TransitionState.UNMARKED,
+            submittedAnswer: null
         }
 
         this.marker = Marker()
@@ -88,6 +89,7 @@ export default class TranslationQuestion extends Component {
         if (this.state.transitionState.isCorrectingState()) {
             onChange = (event) => {
                 if (this.marker.mark(this.props.q, event.target.value) === Mark.CORRECT) {
+                    this.props.analytics.recordEvent("corrected#translationquestion-" + this.props.q.given + "->" + this.state.submittedAnswer + "->" + event.target.value)
                     this.setState({transitionState: TransitionState.CORRECTED})
                 }
             }
@@ -136,12 +138,18 @@ export default class TranslationQuestion extends Component {
             case Mark.CORRECT:
                 return submitForMarkingButton(() => {
                     this.props.analytics.recordEvent("click@submit-for-marking-button&correct#translationquestion-" + this.props.q.given + "->" + this.state.currentAnswer)
-                    setState({transitionState: TransitionState.CORRECT})
+                    setState({
+                        transitionState: TransitionState.CORRECT,
+                        submittedAnswer: this.state.currentAnswer
+                    })
                 })
             case Mark.INCORRECT:
                 return submitForMarkingButton(() => {
                     this.props.analytics.recordEvent("click@submit-for-marking-button&incorrect#translationquestion-" + this.props.q.given + "->" + this.state.currentAnswer)
-                    setState({transitionState: TransitionState.INCORRECT})
+                    setState({
+                        transitionState: TransitionState.INCORRECT,
+                        submittedAnswer: this.state.currentAnswer
+                    })
                 })
             default:
                 return submitForMarkingButton(() => {})
