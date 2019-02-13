@@ -10,6 +10,11 @@ import {configureAdapter, doNothing, questionSubmitAndContinue, stubAnalytics} f
 
 configureAdapter()
 
+function pressKey(mcqComponent, key) {
+    window.onkeydown({key: key})
+    mcqComponent.update()
+}
+
 it('Shows the question of a translation question', () => {
     let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testMCQ = shallow(<MultipleChoiceQuestion q={q} analytics={stubAnalytics}/>)
@@ -152,8 +157,8 @@ it('Can select choices using ABCD', () => {
     let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testMCQ = mount(<MultipleChoiceQuestion q={q} analytics={stubAnalytics}/>)
 
-    window.onkeydown({key: "a"})
-    testMCQ.update()
+    pressKey(testMCQ, "a")
+
     expect(testMCQ.state("activeChoice")).toEqual("a")
 })
 
@@ -161,8 +166,8 @@ it('Can select choices using 1234', () => {
     let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testMCQ = mount(<MultipleChoiceQuestion q={q} analytics={stubAnalytics}/>)
 
-    window.onkeydown({key: "2"})
-    testMCQ.update()
+    pressKey(testMCQ, "2")
+
     expect(testMCQ.state("activeChoice")).toEqual("b")
 })
 
@@ -172,7 +177,7 @@ it('Can submit choice for marking using enter', () => {
 
     testMCQ.find("#choice-c").simulate("click")
 
-    window.onkeydown({key: "Enter"})
+    pressKey(testMCQ, "Enter")
 
     expect(testMCQ.state("markResult")).toEqual(Mark.INCORRECT)
 })
@@ -185,8 +190,8 @@ it('Can press continue button using enter', () => {
 
     testMCQ.find("#choice-d").simulate("click")
 
-    window.onkeydown({key: "Enter"})
-    window.onkeydown({key: "Enter"})
+    pressKey(testMCQ, "Enter")
+    pressKey(testMCQ, "Enter")
 
     expect(questionCompletedCorrectly).toHaveBeenCalled()
 })
@@ -232,10 +237,9 @@ it("Can't deselect choice on a 3-choice MCQ by using number keys greater than 3"
     let q = {type: 1, index: 0, question: "sounds like \"u\" in English", a: "ა", b: "ო", c: "უ", answer: "c"}
     let testMCQ = mount(<MultipleChoiceQuestion q={q} analytics={stubAnalytics}/>)
 
-    window.onkeydown({key: "1"})
-    testMCQ.update()
-    window.onkeydown({key: "4"})
-    testMCQ.update()
+    pressKey(testMCQ, "1")
+    pressKey(testMCQ, "4")
+
     expect(testMCQ.state("activeChoice")).toEqual("a")
 })
 
@@ -243,10 +247,9 @@ it("Can select choice d/4 on a 4-choice MCQ using the '4' key", () => {
     let q = {type: 1, index: 0, question: "sounds like \"u\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "c"}
     let testMCQ = mount(<MultipleChoiceQuestion q={q} analytics={stubAnalytics}/>)
 
-    window.onkeydown({key: "1"})
-    testMCQ.update()
-    window.onkeydown({key: "4"})
-    testMCQ.update()
+    pressKey(testMCQ, "1")
+    pressKey(testMCQ, "4")
+
     expect(testMCQ.state("activeChoice")).toEqual("d")
 })
 
