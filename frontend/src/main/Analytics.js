@@ -23,7 +23,6 @@ export class Analytics {
     constructor(analyticsServerOrigin, webSocketFactory) {
         this.ready = false
         this.messenger = stubMessenger()
-        this.context = {}
         this.sessionId = randomSessionId()
 
         try {

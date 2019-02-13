@@ -83,7 +83,7 @@ it("Courses list is empty if server fetches no courses", async () => {
 })
 
 it("Sends analytics message when a course button is clicked", async () => {
-    let testAnalytics = {recordEvent: jest.fn(), context: {}}
+    let testAnalytics = {recordEvent: jest.fn()}
     let testServer = mockServer(["Georgian", "German"])
     let testCoursesPage = await fullRenderCoursesWithAnalytics(testServer, testAnalytics)
     testCoursesPage.update()
@@ -94,7 +94,7 @@ it("Sends analytics message when a course button is clicked", async () => {
 })
 
 it("Sends analytics message with the course's name when the course button is clicked", async () => {
-    let testAnalytics = {recordEvent: jest.fn(), context: {}}
+    let testAnalytics = {recordEvent: jest.fn()}
     let testServer = mockServer(["Georgian", "German"])
     let testCoursesPage = await fullRenderCoursesWithAnalytics(testServer, testAnalytics)
     testCoursesPage.update()
@@ -105,21 +105,10 @@ it("Sends analytics message with the course's name when the course button is cli
 })
 
 it("Doesn't send analytics message if a button isn't clicked", async () => {
-    let testAnalytics = {recordEvent: jest.fn(), context: {}}
+    let testAnalytics = {recordEvent: jest.fn()}
     let testServer = mockServer(["Georgian", "German"])
     let testCoursesPage = await fullRenderCoursesWithAnalytics(testServer, testAnalytics)
     testCoursesPage.update()
 
     expect(testAnalytics.recordEvent).not.toHaveBeenCalled()
-})
-
-it("Adds the clicked course to the current analytics context", async () => {
-    let testAnalytics = {recordEvent: jest.fn(), context: {}}
-    let testServer = mockServer(["Georgian", "German"])
-    let testCoursesPage = await fullRenderCoursesWithAnalytics(testServer, testAnalytics)
-    testCoursesPage.update()
-
-    testCoursesPage.find('#course-link-Georgian').simulate("click")
-
-    expect(testAnalytics.context.course).toEqual("georgian")
 })

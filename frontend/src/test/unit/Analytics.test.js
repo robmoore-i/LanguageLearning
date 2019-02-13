@@ -62,19 +62,3 @@ it("Sends a semicolon delimited message of timestamp, sessionId and eventName to
     expect(messageParts[2]).toEqual("event")
     expect(mockSocket.sent.length).toEqual(1)
 })
-
-it("Is initialised with an empty context", () => {
-    const succeedingSocketFactory = () => {
-        return {
-            addEventListener: (eventName, f) => {
-                if (eventName === 'open') {
-                    f()
-                }
-            }
-        }
-    }
-
-    let analytics = new Analytics("testorigin", succeedingSocketFactory)
-
-    expect(analytics.context).toEqual({})
-})
