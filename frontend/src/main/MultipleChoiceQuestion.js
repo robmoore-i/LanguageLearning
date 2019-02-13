@@ -99,6 +99,15 @@ export default class MultipleChoiceQuestion extends Component {
             return Mark.INCORRECT
         }
     }
+
+    barSeparateChoices() {
+        let result = "|"
+        let q = this.props.q
+        this.choices.forEach((choiceLetter) => {
+            result = result.concat(q[choiceLetter]).concat("|")
+        })
+        return result
+    }
 }
 
 function MultipleChoiceCheckBox(choice, MCQ) {
@@ -132,7 +141,11 @@ function MultipleChoiceCheckBox(choice, MCQ) {
         if (hasBeenMarked) {
             return () => {}
         } else {
-            return () => {MCQ.setState({activeChoice: choice})}
+            return () => {
+                let vertcicalBarSeparatedChoices = MCQ.barSeparateChoices()
+                MCQ.props.analytics.recordEvent("select@choice-" + choice + "&click#multiplechoicequestion-" + MCQ.props.q.question + "-" + vertcicalBarSeparatedChoices)
+                MCQ.setState({activeChoice: choice})
+            }
         }
     }
 
@@ -157,7 +170,7 @@ export function numberOfChoices(mcq) {
 
 export function rmExcessChoices(mcq) {
     let newMCQ = {}
-    for (var k in mcq) {
+    for (let k in mcq) {
         if (mcq[k] !== "!") {
             newMCQ[k] = mcq[k]
         }

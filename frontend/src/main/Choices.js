@@ -1,4 +1,4 @@
-import {randomChoice, randomCharChoice} from './random'
+import {randomCharChoice, randomChoice} from './random'
 import {isLowercaseLetter, isOneDigitNumber} from './string'
 
 export function Choices(nChoices) {
@@ -32,6 +32,11 @@ export function Choices(nChoices) {
 
     o.fromKey = fromKey
     o.isChoiceKey = (k) => fromKey(k) !== NONE
+    o.forEach = (f) => {
+        for (let i = 0; i < nChoices; i++) {
+            f(choiceEnumValues[i])
+        }
+    }
     return o
 }
 
