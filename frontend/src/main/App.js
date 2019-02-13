@@ -80,6 +80,7 @@ const MatchedLesson = ({ match }) => {
             encodedLessonName={match.params.lesson}
             server={defaultServer}
             shuffler={defaultShuffler}
+            analytics={defaultAnalytics}
         />
     )
 }

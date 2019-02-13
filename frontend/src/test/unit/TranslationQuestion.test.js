@@ -5,13 +5,9 @@ import {mount, shallow} from 'enzyme'
 // Main
 import TranslationQuestion from '../../main/TranslationQuestion'
 // Enzyme react-adapter configuration & others
-import {configureAdapter, questionSubmitAndContinue, textBoxInputEvent} from "../utils"
+import {configureAdapter, doNothing, questionSubmitAndContinue, stubAnalytics, textBoxInputEvent} from "../utils"
 
 configureAdapter()
-
-const stubAnalytics = {
-    recordEvent: jest.fn()
-}
 
 it('Shows the question of a translation question', () => {
     let q = {type: 0, given: "hello", answer: "გამარჯობა"}
@@ -91,8 +87,7 @@ it('Calls the onCorrect completion listener after clicking continue when questio
 
 it('Disables continue button when question answered incorrectly', () => {
     let q = {type: 0, given: "hello", answer: "გამარჯობა"}
-    let testTQ = mount(<TranslationQuestion q={q} completionListener={() => {
-    }} analytics={stubAnalytics}/>)
+    let testTQ = mount(<TranslationQuestion q={q} completionListener={doNothing} analytics={stubAnalytics}/>)
 
     testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
     testTQ.find("#submit-for-marking-button").simulate("click")
@@ -104,8 +99,7 @@ it('Prompts for correction when question answered incorrectly', () => {
     let correctAnswer = "გამარჯობა"
 
     let q = {type: 0, given: "hello", answer: correctAnswer}
-    let testTQ = mount(<TranslationQuestion q={q} completionListener={() => {
-    }} analytics={stubAnalytics}/>)
+    let testTQ = mount(<TranslationQuestion q={q} completionListener={doNothing} analytics={stubAnalytics}/>)
 
     testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
     testTQ.find("#submit-for-marking-button").simulate("click")
@@ -124,7 +118,6 @@ it('Doesnt call either the onCorrect or onIncorrect completion listeners when di
     let q = {type: 0, given: "hello", answer: correctAnswer}
     let testTQ = mount(<TranslationQuestion q={q} onCorrect={questionCompletedCorrectly}
                                             onIncorrect={questionCompletedIncorrectly} analytics={stubAnalytics}/>)
-
     testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
     questionSubmitAndContinue(testTQ)
 
@@ -136,8 +129,7 @@ it('Enables the previously disabled continue button when the correction is typed
     let correctAnswer = "გამარჯობა"
 
     let q = {type: 0, given: "hello", answer: correctAnswer}
-    let testTQ = mount(<TranslationQuestion q={q} completionListener={() => {
-    }} analytics={stubAnalytics}/>)
+    let testTQ = mount(<TranslationQuestion q={q} completionListener={doNothing} analytics={stubAnalytics}/>)
 
     testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
     testTQ.find("#submit-for-marking-button").simulate("click")
@@ -150,8 +142,7 @@ it('Disables typing into the text area once the correction is typed out', () => 
     let correctAnswer = "გამარჯობა"
 
     let q = {type: 0, given: "hello", answer: correctAnswer}
-    let testTQ = mount(<TranslationQuestion q={q} completionListener={() => {
-    }} analytics={stubAnalytics}/>)
+    let testTQ = mount(<TranslationQuestion q={q} completionListener={doNothing} analytics={stubAnalytics}/>)
 
     testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
     testTQ.find("#submit-for-marking-button").simulate("click")
@@ -164,8 +155,7 @@ it('Text area becomes read-only if a correct answer is marked', () => {
     let correctAnswer = "გამარჯობა"
 
     let q = {type: 0, given: "hello", answer: correctAnswer}
-    let testTQ = mount(<TranslationQuestion q={q} completionListener={() => {
-    }} analytics={stubAnalytics}/>)
+    let testTQ = mount(<TranslationQuestion q={q} completionListener={doNothing} analytics={stubAnalytics}/>)
 
     testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
     testTQ.find("#submit-for-marking-button").simulate("click")
@@ -251,10 +241,7 @@ it('Autofocuses text area input box', () => {
 })
 
 it("Sends analytics message when correct answer submitted", () => {
-    let analytics = {
-        recordEvent: jest.fn()
-    }
-
+    let analytics = {recordEvent: jest.fn()}
     let correctAnswer = "გამარჯობა"
 
     let q = {type: 0, given: "hello", answer: correctAnswer}
@@ -267,9 +254,7 @@ it("Sends analytics message when correct answer submitted", () => {
 })
 
 it("Sends analytics message when incorrect answer submitted", () => {
-    let analytics = {
-        recordEvent: jest.fn()
-    }
+    let analytics = {recordEvent: jest.fn()}
 
     let q = {type: 0, given: "hello", answer: "გამარჯობა"}
     let testTQ = mount(<TranslationQuestion q={q} analytics={analytics}/>)

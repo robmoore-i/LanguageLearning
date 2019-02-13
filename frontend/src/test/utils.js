@@ -1,4 +1,4 @@
-import { configure } from 'enzyme'
+import {configure} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
 export function configureAdapter() {
@@ -17,3 +17,8 @@ export function questionSubmitAndContinue(componentWrapper) {
   componentWrapper.find("#submit-for-marking-button").simulate("click")
   componentWrapper.find("#continue-button").simulate("click")
 }
+
+export const doNothing = () => {
+}
+
+export const stubAnalytics = {recordEvent: jest.fn()}

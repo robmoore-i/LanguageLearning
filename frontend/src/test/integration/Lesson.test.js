@@ -1,16 +1,12 @@
 // React
 import React from 'react'
-
 // Testing
 import {mount} from 'enzyme'
-
 // Main
 import Lesson from '../../main/Lesson'
-import {encodeUrl} from "../../main/App"
 import {nonShuffler} from "../../main/Shuffler"
-
 // Enzyme react-adapter configuration & others
-import {configureAdapter, sleep, textBoxInputEvent, questionSubmitAndContinue} from "../utils"
+import {configureAdapter, questionSubmitAndContinue, sleep, stubAnalytics, textBoxInputEvent} from "../utils"
 
 configureAdapter()
 
@@ -18,14 +14,15 @@ let mockServerLoadTimeMs = 1
 
 let mockServer = lesson => {
     return {
-        fetchLesson: (lessonNameInUrl) => {
+        fetchLesson: () => {
             return new Promise(resolve => resolve(lesson))
         }
     }
 }
 
 async function mountRenderLesson(course, lessonName, server) {
-    let lesson = mount(<Lesson courseName={course} encodedLessonName={encodeURIComponent(lessonName)} server={server} shuffler={nonShuffler} />)
+    let lesson = mount(<Lesson courseName={course} encodedLessonName={encodeURIComponent(lessonName)} server={server}
+                               shuffler={nonShuffler} analytics={stubAnalytics}/>)
     await sleep(mockServerLoadTimeMs)
     lesson.update()
     return lesson

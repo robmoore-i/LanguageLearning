@@ -1,9 +1,7 @@
 // React
 import React, {Component} from "react"
-
 // Resources
 import '../styles/Lesson.css'
-
 // Main
 import {decodeUrl} from "./App"
 import {QuestionTypes} from "./Question"
@@ -82,7 +80,8 @@ export default class Lesson extends Component {
             q: q,
             onCorrect: completionHandlers.onCorrect,
             onIncorrect: completionHandlers.onIncorrect,
-            onCompletion: completionHandlers.onCompletion
+            onCompletion: completionHandlers.onCompletion,
+            analytics: this.props.analytics
         }
         switch (q.type) {
             case QuestionTypes.TRANSLATION:
@@ -92,7 +91,9 @@ export default class Lesson extends Component {
                     key={questionProps.key}
                     onCorrect={questionProps.onCorrect}
                     onIncorrect={questionProps.onIncorrect}
-                    onCompletion={questionProps.onCompletion} />
+                    onCompletion={questionProps.onCompletion}
+                    analytics={questionProps.analytics}
+                />
             case QuestionTypes.MULTIPLE_CHOICE:
                 let withoutExcessChoices = rmExcessChoices(questionProps.q)
                 let shuffledMCQ = this.shuffler.shuffleChoices(withoutExcessChoices)
