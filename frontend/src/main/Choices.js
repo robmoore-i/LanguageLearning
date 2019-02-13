@@ -37,6 +37,15 @@ export function Choices(nChoices) {
             f(choiceEnumValues[i])
         }
     }
+
+    o.toBarSeparatedString = (q) => {
+        let result = "|"
+        for (let i = 0; i < nChoices; i++) {
+            result = result.concat(q[choiceEnumValues[i]]).concat("|")
+        }
+        return result
+    }
+
     return o
 }
 

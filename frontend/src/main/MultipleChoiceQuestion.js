@@ -101,12 +101,7 @@ export default class MultipleChoiceQuestion extends Component {
     }
 
     barSeparateChoices() {
-        let result = "|"
-        let q = this.props.q
-        this.choices.forEach((choiceLetter) => {
-            result = result.concat(q[choiceLetter]).concat("|")
-        })
-        return result
+        return this.choices.toBarSeparatedString(this.props.q)
     }
 }
 
