@@ -245,7 +245,7 @@ it('Ignores whitespace, case, commas, fullstops, exclamation marks and question 
 
 it('Autofocuses text area input box', () => {
     let q = {type: 0, given: "შენ რა გქვია?", answer: "What are you called?"}
-    let testTQ = mount(<TranslationQuestion q={q} />)
+    mount(<TranslationQuestion q={q}/>)
 
     expect("answer-input-textbox").toEqual(document.activeElement.id)
 })
