@@ -6,7 +6,7 @@ import {mount, shallow} from 'enzyme'
 import MultipleChoiceQuestion, {rmExcessChoices} from '../../main/MultipleChoiceQuestion'
 import Mark from "../../main/Mark"
 // Enzyme react-adapter configuration & others
-import {configureAdapter, questionSubmitAndContinue} from "../utils"
+import {configureAdapter, doNothing, questionSubmitAndContinue} from "../utils"
 
 configureAdapter()
 
@@ -117,7 +117,7 @@ it('Calls the onIncorrect completion handler when question answered incorrectly'
 
 it('Shows the correction for after answering incorrectly', () => {
     let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
-    let testMCQ = mount(<MultipleChoiceQuestion q={q} onIncorrect={() => {}} />)
+    let testMCQ = mount(<MultipleChoiceQuestion q={q} onIncorrect={doNothing}/>)
 
     testMCQ.find("#choice-b").simulate("click")
     testMCQ.find("#submit-for-marking-button").simulate("click")
@@ -127,7 +127,7 @@ it('Shows the correction for after answering incorrectly', () => {
 
 it('Clicking checkboxes after marking doesnt change the active choice', () => {
     let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
-    let testMCQ = mount(<MultipleChoiceQuestion q={q} onIncorrect={() => {}} />)
+    let testMCQ = mount(<MultipleChoiceQuestion q={q} onIncorrect={doNothing}/>)
 
     testMCQ.find("#choice-b").simulate("click")
     questionSubmitAndContinue(testMCQ)
