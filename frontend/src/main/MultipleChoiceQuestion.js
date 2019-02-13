@@ -105,8 +105,8 @@ export default class MultipleChoiceQuestion extends Component {
     }
 }
 
-function MultipleChoiceCheckBox(choice, MCQ) {
-    let checked = MCQ.state.activeChoice === choice
+function MultipleChoiceCheckBox(choice, mcq) {
+    let checked = mcq.state.activeChoice === choice
 
     function classes() {
         let classes = ["choice"]
@@ -117,8 +117,8 @@ function MultipleChoiceCheckBox(choice, MCQ) {
             classes.push("choice-unchecked")
         }
 
-        let isCorrectAnswer = choice === MCQ.props.q.answer
-        let questionHasBeenMarkedIncorrect = MCQ.state.markResult === Mark.INCORRECT
+        let isCorrectAnswer = choice === mcq.props.q.answer
+        let questionHasBeenMarkedIncorrect = mcq.state.markResult === Mark.INCORRECT
 
         if (questionHasBeenMarkedIncorrect) {
             if (isCorrectAnswer) {
@@ -132,14 +132,14 @@ function MultipleChoiceCheckBox(choice, MCQ) {
     }
 
     function onClick() {
-        let hasBeenMarked = MCQ.state.markResult !== Mark.UNMARKED
+        let hasBeenMarked = mcq.state.markResult !== Mark.UNMARKED
         if (hasBeenMarked) {
             return () => {}
         } else {
             return () => {
-                let vertcicalBarSeparatedChoices = MCQ.barSeparateChoices()
-                MCQ.props.analytics.recordEvent("select@choice-" + choice + "&click#multiplechoicequestion-" + MCQ.props.q.question + "-" + vertcicalBarSeparatedChoices)
-                MCQ.setState({activeChoice: choice})
+                let vertcicalBarSeparatedChoices = mcq.barSeparateChoices()
+                mcq.props.analytics.recordEvent("select@choice-" + choice + "&click#multiplechoicequestion-" + mcq.props.q.question + "-" + vertcicalBarSeparatedChoices)
+                mcq.setState({activeChoice: choice})
             }
         }
     }
@@ -154,7 +154,7 @@ function MultipleChoiceCheckBox(choice, MCQ) {
                    key={"checkbox-" + choice}
                    checked={checked}
                    onChange={() => {} /* This removes a warning about having a `checked` prop without an `onChange` handler.*/}/>
-            <span id={"choiceValue-" + choice} key="choiceValue">{MCQ.props.q[choice]}</span>
+            <span id={"choiceValue-" + choice} key="choiceValue">{mcq.props.q[choice]}</span>
         </div>
     )
 }
@@ -165,8 +165,11 @@ export function numberOfChoices(mcq) {
 
 export function rmExcessChoices(mcq) {
     let newMCQ = {}
+
     for (let k in mcq) {
+        // noinspection JSUnfilteredForInLoop
         if (mcq[k] !== "!") {
+            // noinspection JSUnfilteredForInLoop
             newMCQ[k] = mcq[k]
         }
     }

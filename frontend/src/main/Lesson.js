@@ -102,7 +102,9 @@ export default class Lesson extends Component {
                     key={questionProps.key}
                     onCorrect={questionProps.onCorrect}
                     onIncorrect={questionProps.onIncorrect}
-                    onCompletion={questionProps.onCompletion} />
+                    onCompletion={questionProps.onCompletion}
+                    analytics={questionProps.analytics}
+                />
             case QuestionTypes.READING:
                 return <ReadingQuestion
                     q={questionProps.q}
