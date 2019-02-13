@@ -24,8 +24,12 @@ function pressKey(mcqComponent, key) {
     mcqComponent.update()
 }
 
-function clickChoice(mcq, choiceLetter) {
-    mcq.find("#choice-" + choiceLetter).simulate("click")
+function clickChoice(mcqComponent, choiceLetter) {
+    mcqComponent.find("#choice-" + choiceLetter).simulate("click")
+}
+
+function submitForMarking(mcqComponent) {
+    mcqComponent.find("#submit-for-marking-button").simulate("click")
 }
 
 it('Shows the question of a translation question', () => {
@@ -71,7 +75,7 @@ it('Marks a correct answer as correct', () => {
 
     clickChoice(mcq, "d")
 
-    mcq.find("#submit-for-marking-button").simulate("click")
+    submitForMarking(mcq)
 
     expect(mcq.find("#question-result-correct").exists()).toBe(true)
 })
@@ -82,7 +86,7 @@ it('Marks an incorrect answer as incorrect', () => {
 
     clickChoice(mcq, "c")
 
-    mcq.find("#submit-for-marking-button").simulate("click")
+    submitForMarking(mcq)
 
     expect(mcq.find("#question-result-incorrect").exists()).toBe(true)
     expect(mcq.find("#question-result-correct").exists()).toBe(false)
@@ -92,7 +96,7 @@ it('Doesnt mark if no answer is given', () => {
     let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let mcq = mountMcq(q)
 
-    mcq.find("#submit-for-marking-button").simulate("click")
+    submitForMarking(mcq)
 
     expect(mcq.find("#question-result-incorrect").exists()).toBe(false)
     expect(mcq.find("#question-result-correct").exists()).toBe(false)
@@ -105,7 +109,7 @@ it('Transforms submit button into continue button after correct answer', () => {
 
     clickChoice(mcq, "d")
 
-    mcq.find("#submit-for-marking-button").simulate("click")
+    submitForMarking(mcq)
 
     expect(mcq.find("#submit-for-marking-button").exists()).toBe(false)
     expect(mcq.find("#continue-button").exists()).toBe(true)
@@ -139,7 +143,7 @@ it('Shows the correction for after answering incorrectly', () => {
     let mcq = mount(<MultipleChoiceQuestion q={q} onIncorrect={doNothing} analytics={stubAnalytics}/>)
 
     clickChoice(mcq, "b")
-    mcq.find("#submit-for-marking-button").simulate("click")
+    submitForMarking(mcq)
 
     expect(mcq.find("#choice-d").is(".choice-correction")).toBe(true)
 })
@@ -159,7 +163,7 @@ it('An incorrect answer changes class after marking', () => {
     let mcq = mountMcq(q)
 
     clickChoice(mcq, "c")
-    mcq.find("#submit-for-marking-button").simulate("click")
+    submitForMarking(mcq)
 
     expect(mcq.find("#choice-c").is(".choice-marked-incorrect")).toBe(true)
 })
@@ -268,7 +272,7 @@ it("Can answer a 5-choice MCQ", () => {
     let mcq = mountMcq(q)
 
     clickChoice(mcq, "e")
-    mcq.find("#submit-for-marking-button").simulate("click")
+    submitForMarking(mcq)
 
     expect(mcq.find("#question-result-correct").exists()).toBe(true)
     expect(mcq.find("#question-result-incorrect").exists()).toBe(false)
