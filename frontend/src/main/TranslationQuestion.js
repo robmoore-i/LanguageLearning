@@ -6,7 +6,7 @@ import '../styles/TranslationQuestion.css'
 // Main
 import Mark from "./Mark"
 import {Marker} from "./Marker"
-import {submitForMarkingButton, continueButton, disabledContinueButton} from "./Question"
+import {continueButton, disabledContinueButton, submitForMarkingButton} from "./Question"
 
 export default class TranslationQuestion extends Component {
     constructor(props) {
@@ -134,7 +134,10 @@ export default class TranslationQuestion extends Component {
         // Issue: It is inefficient to be re-rendering the submitForMarkingButton every time the currentAnswer changes
         switch (this.marker.mark(this.props.q, this.state.currentAnswer)) {
             case Mark.CORRECT:
-                return submitForMarkingButton(() => {setState({transitionState: TransitionState.CORRECT})})
+                return submitForMarkingButton(() => {
+                    this.props.analytics.recordEvent("click@submit-for-marking-button&correct#translationquestion-" + this.props.q.given + "->" + this.state.currentAnswer)
+                    setState({transitionState: TransitionState.CORRECT})
+                })
             case Mark.INCORRECT:
                 return submitForMarkingButton(() => {setState({transitionState: TransitionState.INCORRECT})})
             default:
