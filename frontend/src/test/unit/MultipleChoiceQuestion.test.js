@@ -10,10 +10,6 @@ import {configureAdapter, doNothing, questionSubmitAndContinue, stubAnalytics} f
 
 configureAdapter()
 
-function pressKey(mcqComponent, key) {
-    window.onkeydown({key: key})
-    mcqComponent.update()
-}
 
 function shallowMcq(q) {
     return shallow(<MultipleChoiceQuestion q={q} analytics={stubAnalytics}/>)
@@ -21,6 +17,15 @@ function shallowMcq(q) {
 
 function mountMcq(q) {
     return mount(<MultipleChoiceQuestion q={q} analytics={stubAnalytics}/>)
+}
+
+function pressKey(mcqComponent, key) {
+    window.onkeydown({key: key})
+    mcqComponent.update()
+}
+
+function clickChoice(mcq, choiceLetter) {
+    mcq.find("#choice-" + choiceLetter).simulate("click")
 }
 
 it('Shows the question of a translation question', () => {
@@ -44,7 +49,7 @@ it('Can select a choice', () => {
     let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let mcq = mountMcq(q)
 
-    mcq.find("#choice-a").simulate("click")
+    clickChoice(mcq, "a")
 
     expect(mcq.find("#choicebox-a").props().checked).toBe(true)
 })
@@ -53,8 +58,8 @@ it('Can select only one choice at a time', () => {
     let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let mcq = mountMcq(q)
 
-    mcq.find("#choice-a").simulate("click")
-    mcq.find("#choice-b").simulate("click")
+    clickChoice(mcq, "a")
+    clickChoice(mcq, "b")
 
     expect(mcq.find("#choicebox-a").props().checked).toBe(false)
     expect(mcq.find("#choicebox-b").props().checked).toBe(true)
@@ -64,7 +69,7 @@ it('Marks a correct answer as correct', () => {
     let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let mcq = mountMcq(q)
 
-    mcq.find("#choice-d").simulate("click")
+    clickChoice(mcq, "d")
 
     mcq.find("#submit-for-marking-button").simulate("click")
 
@@ -75,7 +80,7 @@ it('Marks an incorrect answer as incorrect', () => {
     let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let mcq = mountMcq(q)
 
-    mcq.find("#choice-c").simulate("click")
+    clickChoice(mcq, "c")
 
     mcq.find("#submit-for-marking-button").simulate("click")
 
@@ -98,7 +103,7 @@ it('Transforms submit button into continue button after correct answer', () => {
     let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let mcq = mountMcq(q)
 
-    mcq.find("#choice-d").simulate("click")
+    clickChoice(mcq, "d")
 
     mcq.find("#submit-for-marking-button").simulate("click")
 
@@ -109,10 +114,9 @@ it('Transforms submit button into continue button after correct answer', () => {
 it('Calls the onCorrect completion handler when question answered correctly', () => {
     let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let questionCompletedCorrectly = jest.fn()
-    let mcq = mount(<MultipleChoiceQuestion q={q} onCorrect={questionCompletedCorrectly}
-                                            analytics={stubAnalytics}/>)
+    let mcq = mount(<MultipleChoiceQuestion q={q} onCorrect={questionCompletedCorrectly} analytics={stubAnalytics}/>)
 
-    mcq.find("#choice-d").simulate("click")
+    clickChoice(mcq, "d")
     questionSubmitAndContinue(mcq)
 
     expect(questionCompletedCorrectly).toHaveBeenCalled()
@@ -124,7 +128,7 @@ it('Calls the onIncorrect completion handler when question answered incorrectly'
     let mcq = mount(<MultipleChoiceQuestion q={q} onIncorrect={questionCompletedIncorrectly}
                                             analytics={stubAnalytics}/>)
 
-    mcq.find("#choice-b").simulate("click")
+    clickChoice(mcq, "b")
     questionSubmitAndContinue(mcq)
 
     expect(questionCompletedIncorrectly).toHaveBeenCalled()
@@ -134,7 +138,7 @@ it('Shows the correction for after answering incorrectly', () => {
     let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let mcq = mount(<MultipleChoiceQuestion q={q} onIncorrect={doNothing} analytics={stubAnalytics}/>)
 
-    mcq.find("#choice-b").simulate("click")
+    clickChoice(mcq, "b")
     mcq.find("#submit-for-marking-button").simulate("click")
 
     expect(mcq.find("#choice-d").is(".choice-correction")).toBe(true)
@@ -144,7 +148,7 @@ it('Clicking checkboxes after marking doesnt change the active choice', () => {
     let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let mcq = mount(<MultipleChoiceQuestion q={q} onIncorrect={doNothing} analytics={stubAnalytics}/>)
 
-    mcq.find("#choice-b").simulate("click")
+    clickChoice(mcq, "b")
     questionSubmitAndContinue(mcq)
 
     expect(mcq.state("activeChoice")).toEqual("b")
@@ -154,8 +158,7 @@ it('An incorrect answer changes class after marking', () => {
     let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let mcq = mountMcq(q)
 
-    mcq.find("#choice-c").simulate("click")
-
+    clickChoice(mcq, "c")
     mcq.find("#submit-for-marking-button").simulate("click")
 
     expect(mcq.find("#choice-c").is(".choice-marked-incorrect")).toBe(true)
@@ -183,7 +186,7 @@ it('Can submit choice for marking using enter', () => {
     let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let mcq = mountMcq(q)
 
-    mcq.find("#choice-c").simulate("click")
+    clickChoice(mcq, "c")
 
     pressKey(mcq, "Enter")
 
@@ -195,7 +198,7 @@ it('Can press continue button using enter', () => {
     let questionCompletedCorrectly = jest.fn()
     let mcq = mount(<MultipleChoiceQuestion q={q} onCorrect={questionCompletedCorrectly} analytics={stubAnalytics}/>)
 
-    mcq.find("#choice-d").simulate("click")
+    clickChoice(mcq, "d")
 
     pressKey(mcq, "Enter")
     pressKey(mcq, "Enter")
@@ -264,7 +267,7 @@ it("Can answer a 5-choice MCQ", () => {
     let q = {type: 1, index: 0, question: "sounds like \"v\" in English", a: "ა", b: "ო", c: "უ", d: "ი", e: "ვ", answer: "e"}
     let mcq = mountMcq(q)
 
-    mcq.find("#choice-e").simulate("click")
+    clickChoice(mcq, "e")
     mcq.find("#submit-for-marking-button").simulate("click")
 
     expect(mcq.find("#question-result-correct").exists()).toBe(true)
@@ -276,7 +279,7 @@ it("Sends analytics message when a choice checkbox is clicked", () => {
     let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let mcq = mount(<MultipleChoiceQuestion q={q} analytics={analytics}/>)
 
-    mcq.find("#choice-a").simulate("click")
+    clickChoice(mcq, "a")
 
     expect(analytics.recordEvent).toHaveBeenCalledWith("select@choice-a&click#multiplechoicequestion-sounds like \"i\" in English-|ა|ო|უ|ი|")
 })
@@ -284,9 +287,9 @@ it("Sends analytics message when a choice checkbox is clicked", () => {
 it("Sends analytics message with the choices listed when a choice checkbox is clicked", () => {
     let analytics = {recordEvent: jest.fn()}
     let q = {type: 1, index: 0, question: "some question", a: "xyz", b: "abc", c: "123", d: "do re mi", answer: "d"}
-    let testMCQ = mount(<MultipleChoiceQuestion q={q} analytics={analytics}/>)
+    let mcq = mount(<MultipleChoiceQuestion q={q} analytics={analytics}/>)
 
-    testMCQ.find("#choice-c").simulate("click")
+    clickChoice(mcq, "c")
 
     expect(analytics.recordEvent).toHaveBeenCalledWith("select@choice-c&click#multiplechoicequestion-some question-|xyz|abc|123|do re mi|")
 })
