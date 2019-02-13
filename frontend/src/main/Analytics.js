@@ -5,60 +5,56 @@ function defaultWebSocketFactory(url) {
     return new WebSocket(url)
 }
 
-function stubAnalytics(analytics) {
-    analytics.messenger = {
+function randomSessionId() {
+    let sessionIdLength = 10
+    return Math.random().toString(36).substr(2, sessionIdLength)
+}
+
+function stubMessenger() {
+    return {
         stub: true,
         send: (msg) => {
             console.log("AnalyticsSocket::send: Stubbed => " + msg)
         }
     }
-    analytics.ready = true
 }
 
-function initialiseAnalyticsFromSocket(analytics, socket) {
-    socket.addEventListener('open', function () {
-        analytics.messenger = socket
-        analytics.messenger.stub = false
-        analytics.ready = true
-    })
+export class Analytics {
+    constructor(analyticsServerOrigin, webSocketFactory) {
+        this.ready = false
+        this.messenger = stubMessenger()
+        this.context = {}
+        this.sessionId = randomSessionId()
 
-    socket.addEventListener('error', () => {
-        stubAnalytics(analytics)
-    })
+        try {
+            let socket = webSocketFactory(analyticsServerOrigin)
+            let analytics = this
 
-    window.llsocket = socket
-}
+            socket.addEventListener('open', function () {
+                analytics.messenger = socket
+                analytics.messenger.stub = false
+                analytics.ready = true
+            })
 
-function randomSessionId(){
-    let sessionIdLength = 10
-    return Math.random().toString(36).substr(2, sessionIdLength)
-}
+            socket.addEventListener('error', () => {
+                // Stub analytics are used
+            })
 
-export function Analytics(analyticsServerOrigin, webSocketFactory) {
-    let analytics = {
-        ready: false,
-        messenger: null,
-        sessionId: randomSessionId(),
-        context: {}
+            window.llsocket = socket
+        } catch (error) {
+            // Stub analytics are used
+        }
     }
 
-    try {
-        let socket = webSocketFactory(analyticsServerOrigin)
-        initialiseAnalyticsFromSocket(analytics, socket)
-    } catch (error) {
-        stubAnalytics(analytics)
-    }
-
-    analytics.recordEvent = function(eventName) {
+    recordEvent(eventName) {
         let messageItems = []
         messageItems.push(Date.now().toString())
-        messageItems.push(analytics.sessionId)
+        messageItems.push(this.sessionId)
         messageItems.push(eventName)
         let message = messageItems.join(";")
-        analytics.messenger.send(message)
+        this.messenger.send(message)
     }
-
-    return analytics
 }
 
-export const defaultAnalytics = Analytics(config.localAnalyticsOrigin, defaultWebSocketFactory)
+
+export const defaultAnalytics = new Analytics(config.localAnalyticsOrigin, defaultWebSocketFactory)

@@ -1,4 +1,4 @@
-import {Analytics} from '../../main/Analytics'
+import {Analytics, AnalyticsC} from '../../main/Analytics'
 
 it("On failure to establish connection, messenger gets stubbed", () => {
     const failingSocketFactory = () => {
@@ -11,7 +11,7 @@ it("On failure to establish connection, messenger gets stubbed", () => {
         }
     }
 
-    let analytics = Analytics("testorigin", failingSocketFactory)
+    let analytics = new Analytics("testorigin", failingSocketFactory)
 
     expect(analytics.messenger.stub).toBe(true)
 })
@@ -27,7 +27,7 @@ it("On successful connection, messenger is not stubbed", () => {
         }
     }
 
-    let analytics = Analytics("testorigin", succeedingSocketFactory)
+    let analytics = new Analytics("testorigin", succeedingSocketFactory)
 
     expect(analytics.messenger.stub).toBe(false)
 })
@@ -49,7 +49,7 @@ it("Sends a semicolon delimited message of timestamp, sessionId and eventName to
         return mockSocket
     }
 
-    let analytics = Analytics("testorigin", succeedingSocketFactory)
+    let analytics = new Analytics("testorigin", succeedingSocketFactory)
     analytics.sessionId = "fake-session-id"
 
     analytics.recordEvent("event")
@@ -74,7 +74,7 @@ it("Is initialised with an empty context", () => {
         }
     }
 
-    let analytics = Analytics("testorigin", succeedingSocketFactory)
+    let analytics = new Analytics("testorigin", succeedingSocketFactory)
 
     expect(analytics.context).toEqual({})
 })
