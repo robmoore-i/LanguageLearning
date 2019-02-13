@@ -139,7 +139,10 @@ export default class TranslationQuestion extends Component {
                     setState({transitionState: TransitionState.CORRECT})
                 })
             case Mark.INCORRECT:
-                return submitForMarkingButton(() => {setState({transitionState: TransitionState.INCORRECT})})
+                return submitForMarkingButton(() => {
+                    this.props.analytics.recordEvent("click@submit-for-marking-button&incorrect#translationquestion-" + this.props.q.given + "->" + this.state.currentAnswer)
+                    setState({transitionState: TransitionState.INCORRECT})
+                })
             default:
                 return submitForMarkingButton(() => {})
         }
