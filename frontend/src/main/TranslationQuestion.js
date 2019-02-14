@@ -105,16 +105,16 @@ export default class TranslationQuestion extends Component {
 
         return (
             <textarea autoFocus id="answer-input-textbox" key="answer-input-textbox" ref={this.answerInputTextBoxRef}
-                rows="5"
-                cols="50"
-                readOnly={this.state.transitionState.isDoneState()}
-                onChange={onChange}
-                onKeyDown={onKeyDown}/>
+                      rows="5"
+                      cols="50"
+                      readOnly={this.state.transitionState.isDoneState()}
+                      onChange={onChange}
+                      onKeyDown={onKeyDown}/>
         )
     }
 
     button(submissionMethod) {
-        switch(this.state.transitionState.id) {
+        switch (this.state.transitionState.id) {
             case TransitionState.IDs.UNMARKED:
                 return this.submitForMarkingButton(submissionMethod)
             case TransitionState.IDs.CORRECT:
@@ -130,25 +130,32 @@ export default class TranslationQuestion extends Component {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
 
         // Issue: It is inefficient to be re-rendering the submitForMarkingButton every time the currentAnswer changes
+        let nextTransitionState = this.markCurrentAnswer()
+
+        if (nextTransitionState === TransitionState.UNMARKED) {
+            return submitForMarkingButton(() => {
+            })
+        }
+
+        return submitForMarkingButton(() => {
+            this.props.analytics.recordEvent("submit@mark-answer-button&" + submissionMethod + "&" + nextTransitionState.toString() + "#translationquestion-" + this.props.q.given + "->" + this.state.currentAnswer)
+            setState({
+                transitionState: nextTransitionState,
+                submittedAnswer: this.state.currentAnswer
+            })
+        })
+    }
+
+    markCurrentAnswer() {
         switch (this.marker.mark(this.props.q, this.state.currentAnswer)) {
             case Mark.CORRECT:
-                return submitForMarkingButton(() => {
-                    this.props.analytics.recordEvent("submit@mark-answer-button&" + submissionMethod + "&correct#translationquestion-" + this.props.q.given + "->" + this.state.currentAnswer)
-                    setState({
-                        transitionState: TransitionState.CORRECT,
-                        submittedAnswer: this.state.currentAnswer
-                    })
-                })
+                return TransitionState.CORRECT
+
             case Mark.INCORRECT:
-                return submitForMarkingButton(() => {
-                    this.props.analytics.recordEvent("submit@mark-answer-button&" + submissionMethod + "&incorrect#translationquestion-" + this.props.q.given + "->" + this.state.currentAnswer)
-                    setState({
-                        transitionState: TransitionState.INCORRECT,
-                        submittedAnswer: this.state.currentAnswer
-                    })
-                })
+                return TransitionState.INCORRECT
+
             default:
-                return submitForMarkingButton(() => {})
+                return TransitionState.UNMARKED
         }
     }
 }
@@ -162,7 +169,7 @@ const TransitionState = (() => {
         CORRECTED: 4,
     }
 
-    function init(id, mark) {
+    function init(id, name, mark) {
         return {
             mark: mark,
             id: id,
@@ -173,15 +180,19 @@ const TransitionState = (() => {
 
             isCorrectingState: () => {
                 return id === TransitionStateIds.INCORRECT || id === TransitionStateIds.CORRECTED
+            },
+
+            toString: () => {
+                return name
             }
         }
     }
 
     return {
-        UNMARKED:  init(TransitionStateIds.UNMARKED,  Mark.UNMARKED),
-        CORRECT:   init(TransitionStateIds.CORRECT,   Mark.CORRECT),
-        INCORRECT: init(TransitionStateIds.INCORRECT, Mark.INCORRECT),
-        CORRECTED: init(TransitionStateIds.CORRECTED, Mark.INCORRECT),
+        UNMARKED: init(TransitionStateIds.UNMARKED, "unmarked", Mark.UNMARKED),
+        CORRECT: init(TransitionStateIds.CORRECT, "correct", Mark.CORRECT),
+        INCORRECT: init(TransitionStateIds.INCORRECT, "incorrect", Mark.INCORRECT),
+        CORRECTED: init(TransitionStateIds.CORRECTED, "correct", Mark.INCORRECT),
         IDs: TransitionStateIds
     }
 })()
