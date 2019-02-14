@@ -13,6 +13,10 @@ function clickSubmitForMarkingButton(tqComponent) {
     tqComponent.find("#submit-for-marking-button").simulate("click")
 }
 
+function pressButtonWithEnterKey(tqComponent) {
+    tqComponent.find("#answer-input-textbox").simulate("keydown", {key: "Enter"})
+}
+
 function typeAnswer(tqComponent, answer) {
     tqComponent.find("#answer-input-textbox").simulate("change", textBoxInputEvent(answer))
 }
@@ -46,7 +50,6 @@ it('Marks an incorrect answer as incorrect', () => {
     let tq = mountTq(q)
 
     typeAnswer(tq, "memes")
-
     clickSubmitForMarkingButton(tq)
 
     expect(tq.find("#question-result-incorrect").exists()).toBe(true)
@@ -112,13 +115,12 @@ it('Prompts for correction when question answered incorrectly', () => {
 })
 
 it('Doesnt call either the onCorrect or onIncorrect completion listeners when disabled continue button is clicked', () => {
-    let correctAnswer = "გამარჯობა"
-
     let questionCompletedCorrectly = jest.fn()
     let questionCompletedIncorrectly = jest.fn()
-    let q = {type: 0, given: "hello", answer: correctAnswer}
+    let q = {type: 0, given: "hello", answer: "გამარჯობა"}
     let tq = mount(<TranslationQuestion q={q} onCorrect={questionCompletedCorrectly}
                                         onIncorrect={questionCompletedIncorrectly} analytics={stubAnalytics}/>)
+
     typeAnswer(tq, "wrong answer")
     questionSubmitAndContinue(tq)
 
@@ -176,9 +178,8 @@ it('Calls the onIncorrect completion listener after clicking continue when quest
 })
 
 it('Ignores whitespace, case, commas, fullstops, exclamation marks and question mark when marking', () => {
-    let correctAnswer = "What are you called?"
     let questionCompletedCorrectly = jest.fn()
-    let q = {type: 0, given: "შენ რა გქვია?", answer: correctAnswer}
+    let q = {type: 0, given: "შენ რა გქვია?", answer: "What are you called?"}
     let tq = mount(<TranslationQuestion q={q} onCorrect={questionCompletedCorrectly} analytics={stubAnalytics}/>)
 
     typeAnswer(tq, "  WhaT!  aRe,   yOU! callED.     ")
@@ -193,7 +194,7 @@ it('Can submit for marking using enter key', () => {
     let tq = mountTq(q)
 
     typeAnswer(tq, correctAnswer)
-    tq.find("#answer-input-textbox").simulate("keydown", {key: "Enter"})
+    pressButtonWithEnterKey(tq)
 
     expect(tq.find("#submit-for-marking-button").exists()).toBe(false)
     expect(tq.find("#continue-button").exists()).toBe(true)
@@ -206,16 +207,15 @@ it('Can continue using enter key', () => {
     let tq = mount(<TranslationQuestion q={q} onCorrect={questionCompletedCorrectly} analytics={stubAnalytics}/>)
 
     typeAnswer(tq, correctAnswer)
-    tq.find("#answer-input-textbox").simulate("keydown", {key: "Enter"})
-    tq.find("#answer-input-textbox").simulate("keydown", {key: "Enter"})
+    pressButtonWithEnterKey(tq)
+    pressButtonWithEnterKey(tq)
 
     expect(questionCompletedCorrectly).toHaveBeenCalled()
 })
 
 it('Ignores whitespace, case, commas, fullstops, exclamation marks and question mark when checking a correction', () => {
-    let correctAnswer = "What are you called?"
     let questionCompletedCorrectly = jest.fn()
-    let q = {type: 0, given: "შენ რა გქვია?", answer: correctAnswer}
+    let q = {type: 0, given: "შენ რა გქვია?", answer: "What are you called?"}
     let tq = mount(<TranslationQuestion q={q} onCorrect={questionCompletedCorrectly} analytics={stubAnalytics}/>)
 
     typeAnswer(tq, "wrong")
