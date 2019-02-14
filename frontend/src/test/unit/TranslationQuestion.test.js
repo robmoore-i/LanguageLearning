@@ -13,6 +13,10 @@ function clickSubmitForMarkingButton(tqComponent) {
     tqComponent.find("#submit-for-marking-button").simulate("click")
 }
 
+function typeAnswer(tqComponent, answer) {
+    tqComponent.find("#answer-input-textbox").simulate("change", textBoxInputEvent(answer))
+}
+
 it('Shows the question of a translation question', () => {
     let q = {type: 0, given: "hello", answer: "გამარჯობა"}
     let tq = shallow(<TranslationQuestion q={q} analytics={stubAnalytics}/>)
@@ -31,10 +35,8 @@ it('Marks a correct answer as correct', () => {
     let q = {type: 0, given: "hello", answer: "გამარჯობა"}
     let tq = mountTq(q)
 
-    let testInput = "გამარჯობა"
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent(testInput))
-
-    tq.find("#submit-for-marking-button").simulate("click")
+    typeAnswer(tq, "გამარჯობა")
+    clickSubmitForMarkingButton(tq)
 
     expect(tq.find("#question-result-correct").exists()).toBe(true)
 })
@@ -43,10 +45,9 @@ it('Marks an incorrect answer as incorrect', () => {
     let q = {type: 0, given: "hello", answer: "გამარჯობა"}
     let tq = mountTq(q)
 
-    let testInput = "memes"
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent(testInput))
+    typeAnswer(tq, "memes")
 
-    tq.find("#submit-for-marking-button").simulate("click")
+    clickSubmitForMarkingButton(tq)
 
     expect(tq.find("#question-result-incorrect").exists()).toBe(true)
 })
@@ -55,8 +56,7 @@ it('Wont mark an empty string as an answer', () => {
     let q = {type: 0, given: "hello", answer: "გამარჯობა"}
     let tq = mountTq(q)
 
-    let markButton = tq.find("#submit-for-marking-button")
-    markButton.simulate("click")
+    clickSubmitForMarkingButton(tq)
 
     expect(tq.find("#question-result-incorrect").exists()).toBe(false)
     expect(tq.find("#question-result-correct").exists()).toBe(false)
@@ -65,11 +65,10 @@ it('Wont mark an empty string as an answer', () => {
 
 it('Transforms submit button into continue button after correct answer', () => {
     let correctAnswer = "გამარჯობა"
-
     let q = {type: 0, given: "hello", answer: correctAnswer}
     let tq = mountTq(q)
 
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
+    typeAnswer(tq, correctAnswer)
     clickSubmitForMarkingButton(tq)
 
     expect(tq.find("#submit-for-marking-button").exists()).toBe(false)
@@ -78,12 +77,11 @@ it('Transforms submit button into continue button after correct answer', () => {
 
 it('Calls the onCorrect completion listener after clicking continue when question answered correctly', () => {
     let correctAnswer = "გამარჯობა"
-
     let questionCompletedCorrectly = jest.fn()
     let q = {type: 0, given: "hello", answer: correctAnswer}
     let tq = mount(<TranslationQuestion q={q} onCorrect={questionCompletedCorrectly} analytics={stubAnalytics}/>)
 
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
+    typeAnswer(tq, correctAnswer)
     questionSubmitAndContinue(tq)
 
     expect(questionCompletedCorrectly).toHaveBeenCalled()
@@ -93,7 +91,7 @@ it('Disables continue button when question answered incorrectly', () => {
     let q = {type: 0, given: "hello", answer: "გამარჯობა"}
     let tq = mount(<TranslationQuestion q={q} completionListener={doNothing} analytics={stubAnalytics}/>)
 
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
+    typeAnswer(tq, "wrong answer")
     clickSubmitForMarkingButton(tq)
 
     expect(tq.find("#continue-button").is(".mark-continue-button-disabled")).toEqual(true)
@@ -104,7 +102,7 @@ it('Prompts for correction when question answered incorrectly', () => {
     let q = {type: 0, given: "hello", answer: correctAnswer}
     let tq = mount(<TranslationQuestion q={q} completionListener={doNothing} analytics={stubAnalytics}/>)
 
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
+    typeAnswer(tq, "wrong answer")
     clickSubmitForMarkingButton(tq)
 
     // Note: The trailing space is important, because when copy-pasting the correct, when I double click the answer,
@@ -121,7 +119,7 @@ it('Doesnt call either the onCorrect or onIncorrect completion listeners when di
     let q = {type: 0, given: "hello", answer: correctAnswer}
     let tq = mount(<TranslationQuestion q={q} onCorrect={questionCompletedCorrectly}
                                         onIncorrect={questionCompletedIncorrectly} analytics={stubAnalytics}/>)
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
+    typeAnswer(tq, "wrong answer")
     questionSubmitAndContinue(tq)
 
     expect(questionCompletedCorrectly).toHaveBeenCalledTimes(0)
@@ -133,9 +131,9 @@ it('Enables the previously disabled continue button when the correction is typed
     let q = {type: 0, given: "hello", answer: correctAnswer}
     let tq = mount(<TranslationQuestion q={q} completionListener={doNothing} analytics={stubAnalytics}/>)
 
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
+    typeAnswer(tq, "wrong answer")
     clickSubmitForMarkingButton(tq)
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
+    typeAnswer(tq, correctAnswer)
 
     expect(tq.find("#continue-button").is(".mark-continue-button")).toEqual(true)
 })
@@ -145,9 +143,9 @@ it('Disables typing into the text area once the correction is typed out', () => 
     let q = {type: 0, given: "hello", answer: correctAnswer}
     let tq = mount(<TranslationQuestion q={q} completionListener={doNothing} analytics={stubAnalytics}/>)
 
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
+    typeAnswer(tq, "wrong answer")
     clickSubmitForMarkingButton(tq)
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
+    typeAnswer(tq, correctAnswer)
 
     expect(tq.find("#answer-input-textbox").prop("readOnly")).toEqual(true)
 })
@@ -157,7 +155,7 @@ it('Text area becomes read-only if a correct answer is marked', () => {
     let q = {type: 0, given: "hello", answer: correctAnswer}
     let tq = mount(<TranslationQuestion q={q} completionListener={doNothing} analytics={stubAnalytics}/>)
 
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
+    typeAnswer(tq, correctAnswer)
     clickSubmitForMarkingButton(tq)
 
     expect(tq.find("#answer-input-textbox").prop("readOnly")).toEqual(true)
@@ -169,9 +167,9 @@ it('Calls the onIncorrect completion listener after clicking continue when quest
     let q = {type: 0, given: "hello", answer: correctAnswer}
     let tq = mount(<TranslationQuestion q={q} onIncorrect={questionCompletedIncorrectly} analytics={stubAnalytics}/>)
 
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
+    typeAnswer(tq, "wrong answer")
     clickSubmitForMarkingButton(tq)
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
+    typeAnswer(tq, correctAnswer)
     tq.find("#continue-button").simulate("click")
 
     expect(questionCompletedIncorrectly).toHaveBeenCalled()
@@ -183,7 +181,7 @@ it('Ignores whitespace, case, commas, fullstops, exclamation marks and question 
     let q = {type: 0, given: "შენ რა გქვია?", answer: correctAnswer}
     let tq = mount(<TranslationQuestion q={q} onCorrect={questionCompletedCorrectly} analytics={stubAnalytics}/>)
 
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent("  WhaT!  aRe,   yOU! callED.     "))
+    typeAnswer(tq, "  WhaT!  aRe,   yOU! callED.     ")
     questionSubmitAndContinue(tq)
 
     expect(questionCompletedCorrectly).toHaveBeenCalled()
@@ -194,7 +192,7 @@ it('Can submit for marking using enter key', () => {
     let q = {type: 0, given: "შენ რა გქვია?", answer: correctAnswer}
     let tq = mountTq(q)
 
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
+    typeAnswer(tq, correctAnswer)
     tq.find("#answer-input-textbox").simulate("keydown", {key: "Enter"})
 
     expect(tq.find("#submit-for-marking-button").exists()).toBe(false)
@@ -207,7 +205,7 @@ it('Can continue using enter key', () => {
     let questionCompletedCorrectly = jest.fn()
     let tq = mount(<TranslationQuestion q={q} onCorrect={questionCompletedCorrectly} analytics={stubAnalytics}/>)
 
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
+    typeAnswer(tq, correctAnswer)
     tq.find("#answer-input-textbox").simulate("keydown", {key: "Enter"})
     tq.find("#answer-input-textbox").simulate("keydown", {key: "Enter"})
 
@@ -220,9 +218,9 @@ it('Ignores whitespace, case, commas, fullstops, exclamation marks and question 
     let q = {type: 0, given: "შენ რა გქვია?", answer: correctAnswer}
     let tq = mount(<TranslationQuestion q={q} onCorrect={questionCompletedCorrectly} analytics={stubAnalytics}/>)
 
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong"))
+    typeAnswer(tq, "wrong")
     clickSubmitForMarkingButton(tq)
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent("  WhaT!  aRe,   yOU! callED.     "))
+    typeAnswer(tq, "  WhaT!  aRe,   yOU! callED.     ")
 
     expect(tq.find("#answer-input-textbox").prop("readOnly")).toEqual(true)
 })
@@ -241,7 +239,7 @@ it("Sends analytics message when correct answer submitted", () => {
     let q = {type: 0, given: "hello", answer: correctAnswer}
     let tq = mount(<TranslationQuestion q={q} analytics={analytics}/>)
 
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
+    typeAnswer(tq, correctAnswer)
     clickSubmitForMarkingButton(tq)
 
     expect(analytics.recordEvent).toHaveBeenCalledWith("submit@mark-answer-button&click&correct#translationquestion-hello->გამარჯობა")
@@ -252,8 +250,7 @@ it("Sends analytics message when incorrect answer submitted", () => {
     let q = {type: 0, given: "hello", answer: "გამარჯობა"}
     let tq = mount(<TranslationQuestion q={q} analytics={analytics}/>)
 
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent("incorrect-answer"))
-
+    typeAnswer(tq, "incorrect-answer")
     clickSubmitForMarkingButton(tq)
 
     expect(analytics.recordEvent).toHaveBeenCalledWith("submit@mark-answer-button&click&incorrect#translationquestion-hello->incorrect-answer")
@@ -264,9 +261,9 @@ it("Sends analytics message when correction completed", () => {
     let q = {type: 0, given: "hello", answer: "გამარჯობა"}
     let tq = mount(<TranslationQuestion q={q} analytics={analytics}/>)
 
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent("incorrect-answer"))
+    typeAnswer(tq, "incorrect-answer")
     clickSubmitForMarkingButton(tq)
-    tq.find("#answer-input-textbox").simulate("change", textBoxInputEvent("გამარჯობა"))
+    typeAnswer(tq, "გამარჯობა")
 
     expect(analytics.recordEvent).toHaveBeenCalledWith("corrected#translationquestion-hello->incorrect-answer->გამარჯობა")
 })
