@@ -48,16 +48,16 @@ export default class MultipleChoiceQuestion extends Component {
             <div id="question-title" key="question-title">
                 <span id="question">{"Which of these " + this.props.q.question + "?"}</span>
                 <span id={this.state.markResult.id}>
-                    <img src={this.state.markResult.img} className="question-result" alt="mark-result-status" />
+                    <img src={this.state.markResult.img} className="question-result" alt="mark-result-status"/>
                 </span>
             </div>,
-            <br key="question-title--break--choices" />,
+            <br key="question-title--break--choices"/>,
             <div key="choices">
                 {this.choiceCheckBoxes()}
             </div>,
             <div key="choices--break--submit-button">
-                <br />
-                <br />
+                <br/>
+                <br/>
             </div>,
             this.button()
         ]
@@ -88,7 +88,14 @@ export default class MultipleChoiceQuestion extends Component {
     submitForMarkingButton() {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
         const markResult = this.mark(this.state.activeChoice)
-        let onClick = () => {setState({markResult: markResult})}
+        let onClick = () => {
+            if (markResult === Mark.CORRECT) {
+                this.props.analytics.recordEvent("click@submit-for-marking-button&correct#multiplechoicequestion-" + this.props.q.question + "-" + this.barSeparateChoices())
+            } else {
+                this.props.analytics.recordEvent("click@submit-for-marking-button&incorrect#multiplechoicequestion-" + this.props.q.question + "-" + this.barSeparateChoices())
+            }
+            setState({markResult: markResult})
+        }
         return submitForMarkingButton(onClick)
     }
 

@@ -307,3 +307,26 @@ it("Sends analytics message when a choice is selected by keyboard", () => {
 
     expect(analytics.recordEvent).toHaveBeenCalledWith("select@choice-c&keypress-3#multiplechoicequestion-sounds like \"i\" in English-|ა|ო|უ|ი|")
 })
+
+it("Sends analytics message when correct answer submitted", () => {
+    let analytics = {recordEvent: jest.fn()}
+    let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
+    let mcq = mount(<MultipleChoiceQuestion q={q} analytics={analytics}/>)
+
+    clickChoice(mcq, "d")
+    submitForMarking(mcq)
+
+    expect(analytics.recordEvent).toHaveBeenCalledWith("click@submit-for-marking-button&correct#multiplechoicequestion-sounds like \"i\" in English-|ა|ო|უ|ი|")
+})
+
+it("Sends analytics message when incorrect answer submitted", () => {
+    let analytics = {recordEvent: jest.fn()}
+
+    let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
+    let mcq = mount(<MultipleChoiceQuestion q={q} analytics={analytics}/>)
+
+    clickChoice(mcq, "a")
+    submitForMarking(mcq)
+
+    expect(analytics.recordEvent).toHaveBeenCalledWith("click@submit-for-marking-button&incorrect#multiplechoicequestion-sounds like \"i\" in English-|ა|ო|უ|ი|")
+})
