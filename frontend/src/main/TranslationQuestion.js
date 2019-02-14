@@ -43,7 +43,7 @@ export default class TranslationQuestion extends Component {
             this.answerInputTextBox(),
 
             <div key="textarea--break--submit-button">
-                <br />
+                <br/>
             </div>,
 
             this.button("click")
@@ -57,7 +57,7 @@ export default class TranslationQuestion extends Component {
                 <span id="question-instruction">What is the translation of </span>
                 <span id="question-given">{this.props.q.given} </span>
                 <span id={this.state.transitionState.mark.id}>
-                    <img src={this.state.transitionState.mark.img} className="question-result" alt="mark-result-status" />
+                    <img src={this.state.transitionState.mark.img} className="question-result" alt="mark-result-status"/>
                 </span>
                 {prompt}
             </div>
@@ -67,7 +67,7 @@ export default class TranslationQuestion extends Component {
     correctionPrompt() {
         return [
             <div key="question-title--break--correction-prompt">
-                <br />
+                <br/>
             </div>,
             <div key="correction-prompt">
                 <span id="correction-prompt">Type out the correct answer </span>
@@ -126,24 +126,27 @@ export default class TranslationQuestion extends Component {
         }
     }
 
+    // Issue: It is inefficient to be re-rendering the submitForMarkingButton every time the currentAnswer changes
     submitForMarkingButton(submissionMethod) {
-        const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
+        let onClick = this.submitCurrentAnswer(submissionMethod);
+        return submitForMarkingButton(onClick)
+    }
 
-        // Issue: It is inefficient to be re-rendering the submitForMarkingButton every time the currentAnswer changes
+    submitCurrentAnswer(submissionMethod) {
         let nextTransitionState = this.markCurrentAnswer()
-
         if (nextTransitionState === TransitionState.UNMARKED) {
-            return submitForMarkingButton(() => {
-            })
+            return () => {
+            }
+        } else {
+             // Bind 'this' reference for use within callback.
+            return () => {
+                this.props.analytics.recordEvent("submit@mark-answer-button&" + submissionMethod + "&" + nextTransitionState.toString() + "#translationquestion-" + this.props.q.given + "->" + this.state.currentAnswer)
+                this.setState.bind(this)({
+                    transitionState: nextTransitionState,
+                    submittedAnswer: this.state.currentAnswer
+                })
+            }
         }
-
-        return submitForMarkingButton(() => {
-            this.props.analytics.recordEvent("submit@mark-answer-button&" + submissionMethod + "&" + nextTransitionState.toString() + "#translationquestion-" + this.props.q.given + "->" + this.state.currentAnswer)
-            setState({
-                transitionState: nextTransitionState,
-                submittedAnswer: this.state.currentAnswer
-            })
-        })
     }
 
     markCurrentAnswer() {
