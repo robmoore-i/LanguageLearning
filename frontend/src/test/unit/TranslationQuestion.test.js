@@ -267,3 +267,26 @@ it("Sends analytics message when correction completed", () => {
 
     expect(analytics.recordEvent).toHaveBeenCalledWith("corrected#translationquestion-hello->incorrect-answer->გამარჯობა")
 })
+
+it("Sends analytics message when correct answer submitted with enter key", () => {
+    let analytics = {recordEvent: jest.fn()}
+    let correctAnswer = "გამარჯობა"
+    let q = {type: 0, given: "hello", answer: correctAnswer}
+    let tq = mount(<TranslationQuestion q={q} analytics={analytics}/>)
+
+    typeAnswer(tq, correctAnswer)
+    pressButtonWithEnterKey(tq)
+
+    expect(analytics.recordEvent).toHaveBeenCalledWith("submit@mark-answer-button&press-enter&correct#translationquestion-hello->გამარჯობა")
+})
+
+it("Sends analytics message when incorrect answer submitted", () => {
+    let analytics = {recordEvent: jest.fn()}
+    let q = {type: 0, given: "hello", answer: "გამარჯობა"}
+    let tq = mount(<TranslationQuestion q={q} analytics={analytics}/>)
+
+    typeAnswer(tq, "incorrect-answer")
+    pressButtonWithEnterKey(tq)
+
+    expect(analytics.recordEvent).toHaveBeenCalledWith("submit@mark-answer-button&press-enter&incorrect#translationquestion-hello->incorrect-answer")
+})

@@ -46,7 +46,7 @@ export default class TranslationQuestion extends Component {
                 <br />
             </div>,
 
-            this.button()
+            this.button("click")
         ]
     }
 
@@ -98,7 +98,7 @@ export default class TranslationQuestion extends Component {
             onChange = (event) => {this.setState({currentAnswer: event.target.value})}
             onKeyDown = (event) => {
                 if (event.key === "Enter") {
-                    this.pressButton()
+                    this.button("press-enter").props.onClick()
                 }
             }
         }
@@ -113,14 +113,10 @@ export default class TranslationQuestion extends Component {
         )
     }
 
-    pressButton() {
-        this.button().props.onClick()
-    }
-
-    button() {
+    button(submissionMethod) {
         switch(this.state.transitionState.id) {
             case TransitionState.IDs.UNMARKED:
-                return this.submitForMarkingButton()
+                return this.submitForMarkingButton(submissionMethod)
             case TransitionState.IDs.CORRECT:
                 return continueButton(this.props.onCorrect)
             case TransitionState.IDs.CORRECTED:
@@ -130,14 +126,14 @@ export default class TranslationQuestion extends Component {
         }
     }
 
-    submitForMarkingButton() {
+    submitForMarkingButton(submissionMethod) {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
 
         // Issue: It is inefficient to be re-rendering the submitForMarkingButton every time the currentAnswer changes
         switch (this.marker.mark(this.props.q, this.state.currentAnswer)) {
             case Mark.CORRECT:
                 return submitForMarkingButton(() => {
-                    this.props.analytics.recordEvent("submit@mark-answer-button&click&correct#translationquestion-" + this.props.q.given + "->" + this.state.currentAnswer)
+                    this.props.analytics.recordEvent("submit@mark-answer-button&" + submissionMethod + "&correct#translationquestion-" + this.props.q.given + "->" + this.state.currentAnswer)
                     setState({
                         transitionState: TransitionState.CORRECT,
                         submittedAnswer: this.state.currentAnswer
@@ -145,7 +141,7 @@ export default class TranslationQuestion extends Component {
                 })
             case Mark.INCORRECT:
                 return submitForMarkingButton(() => {
-                    this.props.analytics.recordEvent("submit@mark-answer-button&click&incorrect#translationquestion-" + this.props.q.given + "->" + this.state.currentAnswer)
+                    this.props.analytics.recordEvent("submit@mark-answer-button&" + submissionMethod + "&incorrect#translationquestion-" + this.props.q.given + "->" + this.state.currentAnswer)
                     setState({
                         transitionState: TransitionState.INCORRECT,
                         submittedAnswer: this.state.currentAnswer
