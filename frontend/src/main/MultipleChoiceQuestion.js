@@ -65,7 +65,7 @@ export default class MultipleChoiceQuestion extends Component {
 
     choiceCheckBoxes() {
         let choices = []
-        for (var i = 0; i < this.nChoices ; i++) {
+        for (let i = 0; i < this.nChoices; i++) {
             let choice = this.choices.fromInt(i)
             choices.push(MultipleChoiceCheckBox(choice, this))
         }
