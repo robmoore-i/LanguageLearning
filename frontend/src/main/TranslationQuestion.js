@@ -137,7 +137,7 @@ export default class TranslationQuestion extends Component {
         switch (this.marker.mark(this.props.q, this.state.currentAnswer)) {
             case Mark.CORRECT:
                 return submitForMarkingButton(() => {
-                    this.props.analytics.recordEvent("click@submit-for-marking-button&correct#translationquestion-" + this.props.q.given + "->" + this.state.currentAnswer)
+                    this.props.analytics.recordEvent("submit@mark-answer-button&click&correct#translationquestion-" + this.props.q.given + "->" + this.state.currentAnswer)
                     setState({
                         transitionState: TransitionState.CORRECT,
                         submittedAnswer: this.state.currentAnswer
@@ -145,7 +145,7 @@ export default class TranslationQuestion extends Component {
                 })
             case Mark.INCORRECT:
                 return submitForMarkingButton(() => {
-                    this.props.analytics.recordEvent("click@submit-for-marking-button&incorrect#translationquestion-" + this.props.q.given + "->" + this.state.currentAnswer)
+                    this.props.analytics.recordEvent("submit@mark-answer-button&click&incorrect#translationquestion-" + this.props.q.given + "->" + this.state.currentAnswer)
                     setState({
                         transitionState: TransitionState.INCORRECT,
                         submittedAnswer: this.state.currentAnswer

@@ -250,7 +250,7 @@ it("Sends analytics message when correct answer submitted", () => {
     testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent(correctAnswer))
     testTQ.find("#submit-for-marking-button").simulate("click")
 
-    expect(analytics.recordEvent).toHaveBeenCalledWith("click@submit-for-marking-button&correct#translationquestion-hello->გამარჯობა")
+    expect(analytics.recordEvent).toHaveBeenCalledWith("submit@mark-answer-button&click&correct#translationquestion-hello->გამარჯობა")
 })
 
 it("Sends analytics message when incorrect answer submitted", () => {
@@ -262,7 +262,7 @@ it("Sends analytics message when incorrect answer submitted", () => {
     testTQ.find("#answer-input-textbox").simulate("change", textBoxInputEvent("incorrect-answer"))
     testTQ.find("#submit-for-marking-button").simulate("click")
 
-    expect(analytics.recordEvent).toHaveBeenCalledWith("click@submit-for-marking-button&incorrect#translationquestion-hello->incorrect-answer")
+    expect(analytics.recordEvent).toHaveBeenCalledWith("submit@mark-answer-button&click&incorrect#translationquestion-hello->incorrect-answer")
 })
 
 it("Sends analytics message when correction completed", () => {
