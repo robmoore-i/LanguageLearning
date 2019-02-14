@@ -316,7 +316,7 @@ it("Sends analytics message when correct answer submitted", () => {
     clickChoice(mcq, "d")
     clickSubmitForMarkingButton(mcq)
 
-    expect(analytics.recordEvent).toHaveBeenCalledWith("click@submit-for-marking-button&correct#multiplechoicequestion-sounds like \"i\" in English-|ა|ო|უ|ი|")
+    expect(analytics.recordEvent).toHaveBeenCalledWith("submit@mark-answer-button&click&correct#multiplechoicequestion-sounds like \"i\" in English-|ა|ო|უ|ი|")
 })
 
 it("Sends analytics message when incorrect answer submitted", () => {
@@ -328,7 +328,7 @@ it("Sends analytics message when incorrect answer submitted", () => {
     clickChoice(mcq, "a")
     clickSubmitForMarkingButton(mcq)
 
-    expect(analytics.recordEvent).toHaveBeenCalledWith("click@submit-for-marking-button&incorrect#multiplechoicequestion-sounds like \"i\" in English-|ა|ო|უ|ი|")
+    expect(analytics.recordEvent).toHaveBeenCalledWith("submit@mark-answer-button&click&incorrect#multiplechoicequestion-sounds like \"i\" in English-|ა|ო|უ|ი|")
 })
 
 it("Sends analytics message when correct answer submitted using enter key", () => {
@@ -339,7 +339,7 @@ it("Sends analytics message when correct answer submitted using enter key", () =
     clickChoice(mcq, "d")
     pressKey(mcq, "Enter")
 
-    expect(analytics.recordEvent).toHaveBeenCalledWith("pressenter@submit-for-marking-button&correct#multiplechoicequestion-sounds like \"i\" in English-|ა|ო|უ|ი|")
+    expect(analytics.recordEvent).toHaveBeenCalledWith("submit@mark-answer-button&press-enter&correct#multiplechoicequestion-sounds like \"i\" in English-|ა|ო|უ|ი|")
 })
 
 it("Sends analytics message when incorrect answer submitted using enter key", () => {
@@ -351,5 +351,5 @@ it("Sends analytics message when incorrect answer submitted using enter key", ()
     clickChoice(mcq, "a")
     pressKey(mcq, "Enter")
 
-    expect(analytics.recordEvent).toHaveBeenCalledWith("pressenter@submit-for-marking-button&incorrect#multiplechoicequestion-sounds like \"i\" in English-|ა|ო|უ|ი|")
+    expect(analytics.recordEvent).toHaveBeenCalledWith("submit@mark-answer-button&press-enter&incorrect#multiplechoicequestion-sounds like \"i\" in English-|ა|ო|უ|ი|")
 })

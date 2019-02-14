@@ -25,7 +25,7 @@ export default class MultipleChoiceQuestion extends Component {
         return (event) => {
             let k = event.key
             if (k === "Enter") {
-                mcq.button("pressenter").props.onClick()
+                mcq.button("press-enter").props.onClick()
             } else if (mcq.choices.isChoiceKey(k)) {
                 let choice = mcq.choices.fromKey(k);
                 mcq.props.analytics.recordEvent("select@choice-" + choice + "&keypress-" + k + "#multiplechoicequestion-" + mcq.props.q.question + "-" + this.barSeparateChoices())
@@ -96,9 +96,9 @@ export default class MultipleChoiceQuestion extends Component {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
         return () => {
             if (markResult === Mark.CORRECT) {
-                this.props.analytics.recordEvent(submissionMethod + "@submit-for-marking-button&correct#multiplechoicequestion-" + this.props.q.question + "-" + this.barSeparateChoices())
+                this.props.analytics.recordEvent("submit@mark-answer-button&" + submissionMethod + "&correct#multiplechoicequestion-" + this.props.q.question + "-" + this.barSeparateChoices())
             } else {
-                this.props.analytics.recordEvent(submissionMethod + "@submit-for-marking-button&incorrect#multiplechoicequestion-" + this.props.q.question + "-" + this.barSeparateChoices())
+                this.props.analytics.recordEvent("submit@mark-answer-button&" + submissionMethod + "&incorrect#multiplechoicequestion-" + this.props.q.question + "-" + this.barSeparateChoices())
             }
             setState({markResult: markResult})
         }
