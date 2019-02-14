@@ -28,7 +28,7 @@ function clickChoice(mcqComponent, choiceLetter) {
     mcqComponent.find("#choice-" + choiceLetter).simulate("click")
 }
 
-function submitForMarking(mcqComponent) {
+function clickSubmitForMarkingButton(mcqComponent) {
     mcqComponent.find("#submit-for-marking-button").simulate("click")
 }
 
@@ -75,7 +75,7 @@ it('Marks a correct answer as correct', () => {
 
     clickChoice(mcq, "d")
 
-    submitForMarking(mcq)
+    clickSubmitForMarkingButton(mcq)
 
     expect(mcq.find("#question-result-correct").exists()).toBe(true)
 })
@@ -86,7 +86,7 @@ it('Marks an incorrect answer as incorrect', () => {
 
     clickChoice(mcq, "c")
 
-    submitForMarking(mcq)
+    clickSubmitForMarkingButton(mcq)
 
     expect(mcq.find("#question-result-incorrect").exists()).toBe(true)
     expect(mcq.find("#question-result-correct").exists()).toBe(false)
@@ -96,7 +96,7 @@ it('Doesnt mark if no answer is given', () => {
     let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let mcq = mountMcq(q)
 
-    submitForMarking(mcq)
+    clickSubmitForMarkingButton(mcq)
 
     expect(mcq.find("#question-result-incorrect").exists()).toBe(false)
     expect(mcq.find("#question-result-correct").exists()).toBe(false)
@@ -109,7 +109,7 @@ it('Transforms submit button into continue button after correct answer', () => {
 
     clickChoice(mcq, "d")
 
-    submitForMarking(mcq)
+    clickSubmitForMarkingButton(mcq)
 
     expect(mcq.find("#submit-for-marking-button").exists()).toBe(false)
     expect(mcq.find("#continue-button").exists()).toBe(true)
@@ -143,7 +143,7 @@ it('Shows the correction for after answering incorrectly', () => {
     let mcq = mount(<MultipleChoiceQuestion q={q} onIncorrect={doNothing} analytics={stubAnalytics}/>)
 
     clickChoice(mcq, "b")
-    submitForMarking(mcq)
+    clickSubmitForMarkingButton(mcq)
 
     expect(mcq.find("#choice-d").is(".choice-correction")).toBe(true)
 })
@@ -163,7 +163,7 @@ it('An incorrect answer changes class after marking', () => {
     let mcq = mountMcq(q)
 
     clickChoice(mcq, "c")
-    submitForMarking(mcq)
+    clickSubmitForMarkingButton(mcq)
 
     expect(mcq.find("#choice-c").is(".choice-marked-incorrect")).toBe(true)
 })
@@ -272,7 +272,7 @@ it("Can answer a 5-choice MCQ", () => {
     let mcq = mountMcq(q)
 
     clickChoice(mcq, "e")
-    submitForMarking(mcq)
+    clickSubmitForMarkingButton(mcq)
 
     expect(mcq.find("#question-result-correct").exists()).toBe(true)
     expect(mcq.find("#question-result-incorrect").exists()).toBe(false)
@@ -314,7 +314,7 @@ it("Sends analytics message when correct answer submitted", () => {
     let mcq = mount(<MultipleChoiceQuestion q={q} analytics={analytics}/>)
 
     clickChoice(mcq, "d")
-    submitForMarking(mcq)
+    clickSubmitForMarkingButton(mcq)
 
     expect(analytics.recordEvent).toHaveBeenCalledWith("click@submit-for-marking-button&correct#multiplechoicequestion-sounds like \"i\" in English-|ა|ო|უ|ი|")
 })
@@ -326,7 +326,30 @@ it("Sends analytics message when incorrect answer submitted", () => {
     let mcq = mount(<MultipleChoiceQuestion q={q} analytics={analytics}/>)
 
     clickChoice(mcq, "a")
-    submitForMarking(mcq)
+    clickSubmitForMarkingButton(mcq)
 
     expect(analytics.recordEvent).toHaveBeenCalledWith("click@submit-for-marking-button&incorrect#multiplechoicequestion-sounds like \"i\" in English-|ა|ო|უ|ი|")
+})
+
+it("Sends analytics message when correct answer submitted using enter key", () => {
+    let analytics = {recordEvent: jest.fn()}
+    let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
+    let mcq = mount(<MultipleChoiceQuestion q={q} analytics={analytics}/>)
+
+    clickChoice(mcq, "d")
+    pressKey(mcq, "Enter")
+
+    expect(analytics.recordEvent).toHaveBeenCalledWith("pressenter@submit-for-marking-button&correct#multiplechoicequestion-sounds like \"i\" in English-|ა|ო|უ|ი|")
+})
+
+it("Sends analytics message when incorrect answer submitted using enter key", () => {
+    let analytics = {recordEvent: jest.fn()}
+
+    let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
+    let mcq = mount(<MultipleChoiceQuestion q={q} analytics={analytics}/>)
+
+    clickChoice(mcq, "a")
+    pressKey(mcq, "Enter")
+
+    expect(analytics.recordEvent).toHaveBeenCalledWith("pressenter@submit-for-marking-button&incorrect#multiplechoicequestion-sounds like \"i\" in English-|ა|ო|უ|ი|")
 })

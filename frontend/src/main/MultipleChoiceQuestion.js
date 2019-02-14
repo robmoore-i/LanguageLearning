@@ -25,7 +25,7 @@ export default class MultipleChoiceQuestion extends Component {
         return (event) => {
             let k = event.key
             if (k === "Enter") {
-                mcq.button().props.onClick()
+                mcq.button("pressenter").props.onClick()
             } else if (mcq.choices.isChoiceKey(k)) {
                 let choice = mcq.choices.fromKey(k);
                 mcq.props.analytics.recordEvent("select@choice-" + choice + "&keypress-" + k + "#multiplechoicequestion-" + mcq.props.q.question + "-" + this.barSeparateChoices())
@@ -35,7 +35,8 @@ export default class MultipleChoiceQuestion extends Component {
     }
 
     componentWillUnmount() {
-        window.onkeydown = (event) => {}
+        window.onkeydown = (event) => {
+        }
     }
 
     componentDidMount() {
@@ -59,7 +60,7 @@ export default class MultipleChoiceQuestion extends Component {
                 <br/>
                 <br/>
             </div>,
-            this.button()
+            this.button("click")
         ]
     }
 
@@ -72,10 +73,10 @@ export default class MultipleChoiceQuestion extends Component {
         return choices
     }
 
-    button() {
+    button(submissionMethod) {
         switch (this.state.markResult) {
             case Mark.UNMARKED:
-                return this.submitForMarkingButton()
+                return this.submitForMarkingButton(submissionMethod)
             case Mark.CORRECT:
                 return continueButton(this.props.onCorrect)
             case Mark.INCORRECT:
@@ -85,18 +86,22 @@ export default class MultipleChoiceQuestion extends Component {
         }
     }
 
-    submitForMarkingButton() {
-        const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
+    submitForMarkingButton(submissionMethod) {
         const markResult = this.mark(this.state.activeChoice)
-        let onClick = () => {
+        let onClick = this.submitMark(markResult, submissionMethod)
+        return submitForMarkingButton(onClick)
+    }
+
+    submitMark(markResult, submissionMethod) {
+        const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
+        return () => {
             if (markResult === Mark.CORRECT) {
-                this.props.analytics.recordEvent("click@submit-for-marking-button&correct#multiplechoicequestion-" + this.props.q.question + "-" + this.barSeparateChoices())
+                this.props.analytics.recordEvent(submissionMethod + "@submit-for-marking-button&correct#multiplechoicequestion-" + this.props.q.question + "-" + this.barSeparateChoices())
             } else {
-                this.props.analytics.recordEvent("click@submit-for-marking-button&incorrect#multiplechoicequestion-" + this.props.q.question + "-" + this.barSeparateChoices())
+                this.props.analytics.recordEvent(submissionMethod + "@submit-for-marking-button&incorrect#multiplechoicequestion-" + this.props.q.question + "-" + this.barSeparateChoices())
             }
             setState({markResult: markResult})
         }
-        return submitForMarkingButton(onClick)
     }
 
     mark(choice) {
@@ -143,7 +148,8 @@ function MultipleChoiceCheckBox(choice, mcq) {
     function onClick() {
         let hasBeenMarked = mcq.state.markResult !== Mark.UNMARKED
         if (hasBeenMarked) {
-            return () => {}
+            return () => {
+            }
         } else {
             return () => {
                 let vertcicalBarSeparatedChoices = mcq.barSeparateChoices()
@@ -162,7 +168,8 @@ function MultipleChoiceCheckBox(choice, mcq) {
                    type="radio"
                    key={"checkbox-" + choice}
                    checked={checked}
-                   onChange={() => {} /* This removes a warning about having a `checked` prop without an `onChange` handler.*/}/>
+                   onChange={() => {
+                   } /* This removes a warning about having a `checked` prop without an `onChange` handler.*/}/>
             <span id={"choiceValue-" + choice} key="choiceValue">{mcq.props.q[choice]}</span>
         </div>
     )
