@@ -297,3 +297,13 @@ it("Sends analytics message with the choices listed when a choice checkbox is cl
 
     expect(analytics.recordEvent).toHaveBeenCalledWith("select@choice-c&click#multiplechoicequestion-some question-|xyz|abc|123|do re mi|")
 })
+
+it("Sends analytics message when a choice is selected by keyboard", () => {
+    let analytics = {recordEvent: jest.fn()}
+    let q = {type: 1, index: 0, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
+    let mcq = mount(<MultipleChoiceQuestion q={q} analytics={analytics}/>)
+
+    pressKey(mcq, "3")
+
+    expect(analytics.recordEvent).toHaveBeenCalledWith("select@choice-c&keypress-3#multiplechoicequestion-sounds like \"i\" in English-|ა|ო|უ|ი|")
+})

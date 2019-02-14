@@ -27,7 +27,9 @@ export default class MultipleChoiceQuestion extends Component {
             if (k === "Enter") {
                 mcq.button().props.onClick()
             } else if (mcq.choices.isChoiceKey(k)) {
-                mcq.setState({activeChoice: mcq.choices.fromKey(k)})
+                let choice = mcq.choices.fromKey(k);
+                mcq.props.analytics.recordEvent("select@choice-" + choice + "&keypress-" + k + "#multiplechoicequestion-" + mcq.props.q.question + "-" + this.barSeparateChoices())
+                mcq.setState({activeChoice: choice})
             }
         }
     }
