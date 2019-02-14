@@ -128,24 +128,18 @@ export default class TranslationQuestion extends Component {
 
     // Issue: It is inefficient to be re-rendering the submitForMarkingButton every time the currentAnswer changes
     submitForMarkingButton(submissionMethod) {
-        let onClick = this.submitCurrentAnswer(submissionMethod);
+        let onClick = () => this.submitCurrentAnswer(submissionMethod);
         return submitForMarkingButton(onClick)
     }
 
     submitCurrentAnswer(submissionMethod) {
         let nextTransitionState = this.markCurrentAnswer()
-        if (nextTransitionState === TransitionState.UNMARKED) {
-            return () => {
-            }
-        } else {
-             // Bind 'this' reference for use within callback.
-            return () => {
-                this.props.analytics.recordEvent("submit@mark-answer-button&" + submissionMethod + "&" + nextTransitionState.toString() + "#translationquestion-" + this.props.q.given + "->" + this.state.currentAnswer)
-                this.setState.bind(this)({
-                    transitionState: nextTransitionState,
-                    submittedAnswer: this.state.currentAnswer
-                })
-            }
+        if (nextTransitionState !== TransitionState.UNMARKED) {
+            this.props.analytics.recordEvent("submit@mark-answer-button&" + submissionMethod + "&" + nextTransitionState.toString() + "#translationquestion-" + this.props.q.given + "->" + this.state.currentAnswer)
+            this.setState.bind(this)({
+                transitionState: nextTransitionState,
+                submittedAnswer: this.state.currentAnswer
+            })
         }
     }
 
