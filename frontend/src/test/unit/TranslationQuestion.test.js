@@ -21,6 +21,10 @@ function typeAnswer(tqComponent, answer) {
     tqComponent.find("#answer-input-textbox").simulate("change", textBoxInputEvent(answer))
 }
 
+function mountTq(q) {
+    return mount(<TranslationQuestion q={q} analytics={stubAnalytics}/>)
+}
+
 it('Shows the question of a translation question', () => {
     let q = {type: 0, given: "hello", answer: "გამარჯობა"}
     let tq = shallow(<TranslationQuestion q={q} analytics={stubAnalytics}/>)
@@ -30,10 +34,6 @@ it('Shows the question of a translation question', () => {
     expect(tq.find("#question-instruction").text()).toBe("What is the translation of ")
     expect(tq.find("#question-given").text()).toBe("hello ")
 })
-
-function mountTq(q) {
-    return mount(<TranslationQuestion q={q} analytics={stubAnalytics}/>)
-}
 
 it('Marks a correct answer as correct', () => {
     let q = {type: 0, given: "hello", answer: "გამარჯობა"}
