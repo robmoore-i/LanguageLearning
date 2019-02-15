@@ -132,7 +132,7 @@ export default class Lesson extends Component {
             onIncorrect: () => {
                 setState((state) => {
                     return {
-                        questionQueue: this.addQuestionBackIntoQueue(state.questionQueue),
+                        questionQueue: state.questionQueue.reinsertIncorrectQuestion(),
                         incorrect: state.incorrect + 1
                     }
                 })
@@ -148,11 +148,6 @@ export default class Lesson extends Component {
                 })
             }
         }
-    }
-
-    addQuestionBackIntoQueue(questionQueue) {
-        let currentQuestionIndex = questionQueue.currentIndex()
-        return QuestionQueue(questionQueue.repositionIncorrectlyAnsweredQuestion(currentQuestionIndex), currentQuestionIndex + 1)
     }
 
     renderLoading() {
