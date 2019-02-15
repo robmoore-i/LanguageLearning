@@ -152,7 +152,7 @@ export default class Lesson extends Component {
 
     addQuestionBackIntoQueue(questionQueue) {
         let currentQuestionIndex = questionQueue.currentIndex()
-        return QuestionQueue(QuestionQueue(questionQueue.toList(), currentQuestionIndex).repositionIncorrectlyAnsweredQuestion(currentQuestionIndex), currentQuestionIndex + 1)
+        return QuestionQueue(questionQueue.repositionIncorrectlyAnsweredQuestion(currentQuestionIndex), currentQuestionIndex + 1)
     }
 
     renderLoading() {
