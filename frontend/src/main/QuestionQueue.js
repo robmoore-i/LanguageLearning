@@ -5,7 +5,7 @@ export function QuestionQueue(questionQueue) {
             let incorrectQuestion = qq[index];
             let currentQuestionType = incorrectQuestion.type
             let i = index
-            while (qq[i].type === currentQuestionType) {
+            while (i < qq.length && qq[i].type === currentQuestionType) {
                 i += 1
             }
 
