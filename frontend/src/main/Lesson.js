@@ -91,7 +91,7 @@ export default class Lesson extends Component {
                     key={questionProps.key}
                     onCorrect={questionProps.onCorrect}
                     onIncorrect={questionProps.onIncorrect}
-                    onCompletion={questionProps.onCompletion}
+                    onCompletion={questionProps.onCompletion} // remove, its confusing
                     analytics={questionProps.analytics}
                 />
             case QuestionTypes.MULTIPLE_CHOICE:
@@ -102,7 +102,7 @@ export default class Lesson extends Component {
                     key={questionProps.key}
                     onCorrect={questionProps.onCorrect}
                     onIncorrect={questionProps.onIncorrect}
-                    onCompletion={questionProps.onCompletion}
+                    onCompletion={questionProps.onCompletion} // remove, its confusing
                     analytics={questionProps.analytics}
                 />
             case QuestionTypes.READING:
@@ -131,7 +131,7 @@ export default class Lesson extends Component {
                 setState((state) => {
                     return {
                         currentQuestionIndex: state.currentQuestionIndex + 1,
-                        questions: state.questions.concat([state.questions[state.currentQuestionIndex]]),
+                        questions: this.addQuestionBackIntoQueue(state.questions, state.currentQuestionIndex),
                         incorrect: state.incorrect + 1
                     }
                 })
@@ -147,6 +147,10 @@ export default class Lesson extends Component {
                 })
             }
         }
+    }
+
+    addQuestionBackIntoQueue(questionQueue, currentQuestionIndex) {
+        return questionQueue.concat(questionQueue[currentQuestionIndex])
     }
 
     renderLoading() {
