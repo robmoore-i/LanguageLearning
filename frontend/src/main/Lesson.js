@@ -55,21 +55,23 @@ export default class Lesson extends Component {
         let capitalise = (s => s[0].toUpperCase() + s.substring(1))
         let capitalisedCourseName = capitalise(this.courseName)
 
-        let mainContent
-        if (this.state.currentQuestionIndex >= this.state.questionQueue.count()) {
-            let accuracyPercentage = 100 * this.state.correct / (this.state.correct + this.state.incorrect)
-            let lessonTimeSeconds = ((new Date()).getTime() - this.state.startTime.getTime()) / 1000
-            mainContent = <LessonStats key="lesson-stats-component" accuracyPercentage={accuracyPercentage} lessonTime={lessonTimeSeconds} courseName={this.courseName} />
-        } else {
-            mainContent = this.renderQuestion(this.state.questionQueue.get(this.state.currentQuestionIndex))
-        }
-
         return [
             <header className="Lesson-header" key="header">
                 <h1 className="Lesson-title">{capitalisedCourseName}: {this.lessonName}</h1>
             </header>,
-            mainContent
+            this.mainContent()
         ]
+    }
+
+    mainContent() {
+        let completedAllQuestions = this.state.currentQuestionIndex >= this.state.questionQueue.count();
+        if (completedAllQuestions) {
+            let accuracyPercentage = 100 * this.state.correct / (this.state.correct + this.state.incorrect)
+            let lessonTimeSeconds = ((new Date()).getTime() - this.state.startTime.getTime()) / 1000
+            return <LessonStats key="lesson-stats-component" accuracyPercentage={accuracyPercentage} lessonTime={lessonTimeSeconds} courseName={this.courseName}/>
+        } else {
+            return this.renderQuestion(this.state.questionQueue.get(this.state.currentQuestionIndex))
+        }
     }
 
     renderQuestion(q) {
