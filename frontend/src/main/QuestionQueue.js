@@ -17,8 +17,6 @@ export function QuestionQueue(questionQueue, currentIndex) {
 
         get: (i) => questionQueue[i],
 
-        toList: () => questionQueue,
-
         completedAllQuestions: () => {
             return currentIndex >= questionQueue.length
         },
