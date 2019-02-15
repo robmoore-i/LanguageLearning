@@ -23,7 +23,6 @@ export default class Lesson extends Component {
         this.state = {
             loaded: false,
             questionQueue: QuestionQueue([], 0),
-            numQuestions: -1, // -1 will cause something note-worthily weird in the case of premature usage in an accuracy calculation.
             startTime: (new Date()),
             correct: 0,
             incorrect: 0
@@ -35,7 +34,6 @@ export default class Lesson extends Component {
         this.server.fetchLesson(this.courseName, this.lessonName).then(lesson => {
             setState({
                 questionQueue: QuestionQueue(lesson.questions, 0),
-                numQuestions: lesson.questions.length,
                 loaded: true,
                 startTime: (new Date())
             })
