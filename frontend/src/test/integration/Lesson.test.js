@@ -72,7 +72,7 @@ it('Can repeats TQ and MCQ if answered incorrectly', async () => {
     expect(testLesson.find("#lesson-accuracy").text()).toEqual("Accuracy: 50%")
 })
 
-it('Repeats a question even if its the last question', async () => {
+it('Repeats an incorrectly answered question even if its the last question', async () => {
     let mcq = {index: 0, type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testServer = mockServer({name: "Hello!", questions: [mcq]})
     let testLesson = await mountRenderLesson("Georgian", "hello", testServer)
