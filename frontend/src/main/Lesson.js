@@ -93,7 +93,6 @@ export default class Lesson extends Component {
                     key={questionProps.key}
                     onCorrect={questionProps.onCorrect}
                     onIncorrect={questionProps.onIncorrect}
-                    onCompletion={questionProps.onCompletion} // remove, its confusing
                     analytics={questionProps.analytics}
                 />
             case QuestionTypes.MULTIPLE_CHOICE:
@@ -104,7 +103,6 @@ export default class Lesson extends Component {
                     key={questionProps.key}
                     onCorrect={questionProps.onCorrect}
                     onIncorrect={questionProps.onIncorrect}
-                    onCompletion={questionProps.onCompletion} // remove, its confusing
                     analytics={questionProps.analytics}
                 />
             case QuestionTypes.READING:
