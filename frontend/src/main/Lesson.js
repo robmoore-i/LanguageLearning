@@ -9,7 +9,7 @@ import MultipleChoiceQuestion, {rmExcessChoices} from "./MultipleChoiceQuestion"
 import TranslationQuestion from "./TranslationQuestion"
 import ReadingQuestion from "./ReadingQuestion"
 import LessonStats from "./LessonStats"
-import {QuestionQueue} from "./QuestionQueue";
+import {QuestionQueue} from "./QuestionQueue"
 
 export default class Lesson extends Component {
     constructor(props) {

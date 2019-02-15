@@ -1,7 +1,7 @@
 export function QuestionQueue(questionQueue, currentIndex) {
     return {
         repositionIncorrectlyAnsweredQuestion: (index) => {
-            let incorrectQuestion = questionQueue[index];
+            let incorrectQuestion = questionQueue[index]
             let currentQuestionType = incorrectQuestion.type
             let i = index
             while (i < questionQueue.length && questionQueue[i].type === currentQuestionType) {
@@ -34,7 +34,7 @@ export function QuestionQueue(questionQueue, currentIndex) {
         },
 
         reinsertIncorrectQuestion: () => {
-            let incorrectQuestion = questionQueue[currentIndex];
+            let incorrectQuestion = questionQueue[currentIndex]
             let currentQuestionType = incorrectQuestion.type
             let i = currentIndex
             while (i < questionQueue.length && questionQueue[i].type === currentQuestionType) {
