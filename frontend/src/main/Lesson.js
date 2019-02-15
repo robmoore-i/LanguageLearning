@@ -22,7 +22,6 @@ export default class Lesson extends Component {
 
         this.state = {
             loaded: false,
-            currentQuestionIndex: 0,
             questionQueue: QuestionQueue([], 0),
             numQuestions: -1, // -1 will cause something note-worthily weird in the case of premature usage in an accuracy calculation.
             startTime: (new Date()),
@@ -76,7 +75,7 @@ export default class Lesson extends Component {
     renderQuestion(q) {
         let completionHandlers = this.questionCompletionHandlers()
         let questionProps = {
-            // Note - The uniqueness of 'key' here is crucial. If it's not unique (aka doesn't take currentQuestionIndex into account),
+            // Note - The uniqueness of 'key' here is crucial. If it's not unique (aka doesn't take the current question index into account),
             //        then it will not be re-rendered upon completion if two questions are the same type.
             key: "questionIndex-" + this.state.questionQueue.currentIndex(),
             q: q,
