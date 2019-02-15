@@ -45,7 +45,7 @@ it('Can advance through an MCQ and a TQ in index order', async () => {
     expect(testLesson.find("#lesson-accuracy").text()).toEqual("Accuracy: 100%")
 })
 
-it('Can repeats TQ and MCQ if answered incorrectly', async () => {
+it('Repeats TQ and MCQ if they are both answered incorrectly', async () => {
     let tq = {index: 1, type: 0, given: "hello", answer: "გამარჯობა"}
     let mcq = {index: 0, type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
     let testServer = mockServer({name: "Hello!", questions: [mcq, tq]})
@@ -167,7 +167,7 @@ it('Shows the lesson stats page when all questions are complete', async () => {
     let dummyQuestion = {type: -1}
     let testServer = mockServer({name: "Hello!", questions: [dummyQuestion, dummyQuestion, dummyQuestion, dummyQuestion]})
     let testLesson = await mountRenderLesson("Georgian", "hello", testServer)
-    testLesson.setState({currentQuestionIndex: 4, correct: 4, incorrect: 0})
+    testLesson.setState({questionQueue: {completedAllQuestions: () => true}, correct: 4, incorrect: 0})
     testLesson.update()
 
     expect(testLesson.find("#lesson-accuracy").text()).toEqual("Accuracy: 100%")
@@ -177,7 +177,7 @@ it('Accurately shows a lesson accuracy of less than 100% when appropriate', asyn
     let dummyQuestion = {type: -1}
     let testServer = mockServer({name: "Hello!", questions: [dummyQuestion, dummyQuestion, dummyQuestion, dummyQuestion]})
     let testLesson = await mountRenderLesson("Georgian", "hello", testServer)
-    testLesson.setState({currentQuestionIndex: 10, correct: 4, incorrect: 6})
+    testLesson.setState({questionQueue: {completedAllQuestions: () => true}, correct: 4, incorrect: 6})
     testLesson.update()
 
     expect(testLesson.find("#lesson-accuracy").text()).toEqual("Accuracy: 40%")
@@ -192,4 +192,52 @@ it('Shows an MCQ with only three choices', async () => {
     expect(testLesson.find("#choiceValue-b").text()).toBe("ო")
     expect(testLesson.find("#choiceValue-c").text()).toBe("უ")
     expect(testLesson.find("#choiceValue-d").exists()).toBe(false)
+})
+
+it('Pushes incorrectly answered MCQ only back up to the next RQ', async () => {
+    let rq1 = {type: 2, extract: "First you'll learn about the alphabet!", questions: [], index: 0}
+    let mcq1 = {type: 1, index: 1, question: "sounds like \"a\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "a"}
+    let mcq2 = {type: 1, index: 2, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
+    let rq2 = {type: 2, extract: "Next you'll learn a word.", questions: [], index: 3}
+    let tq = {type: 0, index: 4, given: "hello", answer: "გამარჯობა"}
+
+    let testServer = mockServer({name: "Hello!", questions: [rq1, mcq1, mcq2, rq2, tq]})
+    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
+
+    let completionHandlers = testLesson.instance().questionCompletionHandlers()
+
+    completionHandlers.onCompletion(0, 0)
+    completionHandlers.onIncorrect()
+    completionHandlers.onCorrect()
+
+    expect(testLesson.state("questionQueue").currentQuestion()).toEqual(mcq1)
+})
+
+it('Adds incorrectly answered translation question back into the questions list', async () => {
+    let tq = {type: 0, given: "hello", answer: "გამარჯობა"}
+    let testServer = mockServer({name: "Hello!", questions: [tq]})
+    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
+
+    let completionHandlers = testLesson.instance().questionCompletionHandlers()
+    completionHandlers.onIncorrect()
+
+    expect(testLesson.state("questionQueue").count()).toEqual(2)
+})
+
+it('Completes when the the incorrect then correct completion handlers are called', async () => {
+    let tq = {type: 0, given: "hello", answer: "გამარჯობა"}
+    let testServer = mockServer({name: "Hello!", questions: [tq]})
+    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
+    await sleep(mockServerLoadTimeMs)
+    testLesson.update()
+
+    let completionHandlers = testLesson.instance().questionCompletionHandlers()
+    completionHandlers.onIncorrect()
+    testLesson.update()
+    let completionHandlers2 = testLesson.instance().questionCompletionHandlers()
+    completionHandlers2.onCorrect()
+
+    let questionQueue = testLesson.state("questionQueue");
+    expect(questionQueue.count()).toEqual(2)
+    expect(questionQueue.currentIndex()).toEqual(2)
 })

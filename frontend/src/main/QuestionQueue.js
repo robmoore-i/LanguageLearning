@@ -1,5 +1,6 @@
-export function QuestionQueue(questionQueue) {
+export function QuestionQueue(questionQueue, currentIndex) {
     let qq = questionQueue
+    let curIndex = currentIndex
     return {
         repositionIncorrectlyAnsweredQuestion: (index) => {
             let incorrectQuestion = qq[index];
@@ -18,6 +19,22 @@ export function QuestionQueue(questionQueue) {
 
         get: (i) => qq[i],
 
-        toList: () => qq
+        toList: () => qq,
+
+        completedAllQuestions: () => {
+            return curIndex >= qq.length
+        },
+
+        currentQuestion: () => {
+            return qq[curIndex]
+        },
+
+        currentIndex: () => {
+            return curIndex
+        },
+
+        advance: () => {
+            return QuestionQueue(qq, curIndex + 1)
+        }
     }
 }

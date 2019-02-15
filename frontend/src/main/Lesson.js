@@ -23,7 +23,7 @@ export default class Lesson extends Component {
         this.state = {
             loaded: false,
             currentQuestionIndex: 0,
-            questionQueue: QuestionQueue([]),
+            questionQueue: QuestionQueue([], 0),
             numQuestions: -1, // -1 will cause something note-worthily weird in the case of premature usage in an accuracy calculation.
             startTime: (new Date()),
             correct: 0,
@@ -35,7 +35,7 @@ export default class Lesson extends Component {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within promise closure.
         this.server.fetchLesson(this.courseName, this.lessonName).then(lesson => {
             setState({
-                questionQueue: QuestionQueue(lesson.questions),
+                questionQueue: QuestionQueue(lesson.questions, 0),
                 numQuestions: lesson.questions.length,
                 loaded: true,
                 startTime: (new Date())
@@ -64,13 +64,12 @@ export default class Lesson extends Component {
     }
 
     mainContent() {
-        let completedAllQuestions = this.state.currentQuestionIndex >= this.state.questionQueue.count();
-        if (completedAllQuestions) {
+        if (this.state.questionQueue.completedAllQuestions()) {
             let accuracyPercentage = 100 * this.state.correct / (this.state.correct + this.state.incorrect)
             let lessonTimeSeconds = ((new Date()).getTime() - this.state.startTime.getTime()) / 1000
             return <LessonStats key="lesson-stats-component" accuracyPercentage={accuracyPercentage} lessonTime={lessonTimeSeconds} courseName={this.courseName}/>
         } else {
-            return this.renderQuestion(this.state.questionQueue.get(this.state.currentQuestionIndex))
+            return this.renderQuestion(this.state.questionQueue.currentQuestion())
         }
     }
 
@@ -79,7 +78,7 @@ export default class Lesson extends Component {
         let questionProps = {
             // Note - The uniqueness of 'key' here is crucial. If it's not unique (aka doesn't take currentQuestionIndex into account),
             //        then it will not be re-rendered upon completion if two questions are the same type.
-            key: "questionIndex-" + this.state.currentQuestionIndex,
+            key: "questionIndex-" + this.state.questionQueue.currentIndex(),
             q: q,
             onCorrect: completionHandlers.onCorrect,
             onIncorrect: completionHandlers.onIncorrect,
@@ -124,7 +123,7 @@ export default class Lesson extends Component {
             onCorrect: () => {
                 setState((state) => {
                     return {
-                        currentQuestionIndex: state.currentQuestionIndex + 1,
+                        questionQueue: state.questionQueue.advance(),
                         correct: state.correct + 1
                     }
                 })
@@ -133,8 +132,7 @@ export default class Lesson extends Component {
             onIncorrect: () => {
                 setState((state) => {
                     return {
-                        currentQuestionIndex: state.currentQuestionIndex + 1,
-                        questionQueue: this.addQuestionBackIntoQueue(state.questionQueue, state.currentQuestionIndex),
+                        questionQueue: this.addQuestionBackIntoQueue(state.questionQueue, state.questionQueue.currentIndex()).advance(),
                         incorrect: state.incorrect + 1
                     }
                 })
@@ -143,9 +141,9 @@ export default class Lesson extends Component {
             onCompletion: (numCorrectAnswers, numIncorrectAnswers) => {
                 setState((state) => {
                     return {
-                      currentQuestionIndex: state.currentQuestionIndex + 1,
-                      correct: state.correct + numCorrectAnswers,
-                      incorrect: state.incorrect + numIncorrectAnswers
+                        questionQueue: state.questionQueue.advance(),
+                        correct: state.correct + numCorrectAnswers,
+                        incorrect: state.incorrect + numIncorrectAnswers
                     }
                 })
             }
@@ -153,7 +151,7 @@ export default class Lesson extends Component {
     }
 
     addQuestionBackIntoQueue(questionQueue, currentQuestionIndex) {
-        return QuestionQueue(QuestionQueue(questionQueue.toList()).repositionIncorrectlyAnsweredQuestion(currentQuestionIndex))
+        return QuestionQueue(QuestionQueue(questionQueue.toList(), currentQuestionIndex).repositionIncorrectlyAnsweredQuestion(currentQuestionIndex), currentQuestionIndex)
     }
 
     renderLoading() {

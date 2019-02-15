@@ -71,34 +71,6 @@ async function mountRenderLesson(course, lessonName, server) {
     return lesson
 }
 
-it('Adds incorrectly answered translation question back into the questions list', async () => {
-    let tq = {type: 0, given: "hello", answer: "გამარჯობა"}
-    let testServer = mockServer({name: "Hello!", questions: [tq]})
-    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
-
-    let completionHandlers = testLesson.instance().questionCompletionHandlers()
-    completionHandlers.onIncorrect()
-
-    expect(testLesson.state("questionQueue").count()).toEqual(2)
-})
-
-it('Completes when the the incorrect then correct completion handlers are called', async () => {
-    let tq = {type: 0, given: "hello", answer: "გამარჯობა"}
-    let testServer = mockServer({name: "Hello!", questions: [tq]})
-    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
-    await sleep(mockServerLoadTimeMs)
-    testLesson.update()
-
-    let completionHandlers = testLesson.instance().questionCompletionHandlers()
-    completionHandlers.onIncorrect()
-    testLesson.update()
-    let completionHandlers2 = testLesson.instance().questionCompletionHandlers()
-    completionHandlers2.onCorrect()
-
-    expect(testLesson.state("questionQueue").count()).toEqual(2)
-    expect(testLesson.state("currentQuestionIndex")).toEqual(2)
-})
-
 it('Fetches the lesson from the server based on the course name and lesson name', async () => {
     let testServer = {
         fetchLessonCalledWithCourseName: null,
@@ -114,23 +86,4 @@ it('Fetches the lesson from the server based on the course name and lesson name'
 
     expect(testServer.fetchLessonCalledWithCourseName).toEqual("Georgian")
     expect(testServer.fetchLessonCalledWithLessonName).toEqual("Hello")
-})
-
-it('Pushes incorrectly answered MCQ only back up to the next RQ', async () => {
-    let rq1 = {type: 2, extract: "First you'll learn about the alphabet!", questions: [], index: 0}
-    let mcq1 = {type: 1, index: 1, question: "sounds like \"a\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "a"}
-    let mcq2 = {type: 1, index: 2, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
-    let rq2 = {type: 2, extract: "Next you'll learn a word.", questions: [], index: 3}
-    let tq = {type: 0, index: 4, given: "hello", answer: "გამარჯობა"}
-
-    let testServer = mockServer({name: "Hello!", questions: [rq1, mcq1, mcq2, rq2, tq]})
-    let testLesson = await mountRenderLesson("georgian", "hello", testServer)
-
-    let completionHandlers = testLesson.instance().questionCompletionHandlers()
-
-    completionHandlers.onCompletion(0, 0)
-    completionHandlers.onIncorrect()
-    completionHandlers.onCorrect()
-
-    expect(testLesson.state("questionQueue").get(testLesson.state("currentQuestionIndex"))).toEqual(mcq1)
 })
