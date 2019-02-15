@@ -1,13 +1,10 @@
 // React
 import React from 'react'
-
 // Testing
-import {shallow, mount} from 'enzyme'
-
+import {mount, shallow} from 'enzyme'
 // Main
 import Lesson from '../../main/Lesson'
 import {nonShuffler} from "../../main/Shuffler"
-
 // Enzyme react-adapter configuration & others
 import {configureAdapter, sleep} from "../utils"
 
@@ -119,7 +116,7 @@ it('Fetches the lesson from the server based on the course name and lesson name'
     expect(testServer.fetchLessonCalledWithLessonName).toEqual("Hello")
 })
 
-it('Pushes incorrectly answered mcq only back up to the next RQ', async () => {
+it('Pushes incorrectly answered MCQ only back up to the next RQ', async () => {
     let rq1 = {
         type: 2,
         extract: "First you'll learn about the alphabet!",
