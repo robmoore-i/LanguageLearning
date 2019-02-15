@@ -74,7 +74,7 @@ async function mountRenderLesson(course, lessonName, server) {
     return lesson
 }
 
-it('Adds questions which are answered incorrectly back into the questions list', async () => {
+it('Adds incorrectly answered translation question back into the questions list', async () => {
     let tq = {type: 0, given: "hello", answer: "გამარჯობა"}
     let testServer = mockServer({name: "Hello!", questions: [tq]})
     let testLesson = await mountRenderLesson("georgian", "hello", testServer)
