@@ -117,20 +117,10 @@ it('Fetches the lesson from the server based on the course name and lesson name'
 })
 
 it('Pushes incorrectly answered MCQ only back up to the next RQ', async () => {
-    let rq1 = {
-        type: 2,
-        extract: "First you'll learn about the alphabet!",
-        questions: [],
-        index: 0
-    }
+    let rq1 = {type: 2, extract: "First you'll learn about the alphabet!", questions: [], index: 0}
     let mcq1 = {type: 1, index: 1, question: "sounds like \"a\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "a"}
     let mcq2 = {type: 1, index: 2, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
-    let rq2 = {
-        type: 2,
-        extract: "Next you'll learn a word.",
-        questions: [],
-        index: 3
-    }
+    let rq2 = {type: 2, extract: "Next you'll learn a word.", questions: [], index: 3}
     let tq = {type: 0, index: 4, given: "hello", answer: "გამარჯობა"}
 
     let testServer = mockServer({name: "Hello!", questions: [rq1, mcq1, mcq2, rq2, tq]})
