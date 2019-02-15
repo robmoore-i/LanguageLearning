@@ -2,8 +2,6 @@ export function QuestionQueue(questionQueue, currentIndex) {
     return {
         count: () => questionQueue.length,
 
-        get: (i) => questionQueue[i],
-
         completedAllQuestions: () => {
             return currentIndex >= questionQueue.length
         },
