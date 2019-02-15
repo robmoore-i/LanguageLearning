@@ -23,7 +23,7 @@ export default class Lesson extends Component {
         this.state = {
             loaded: false,
             currentQuestionIndex: 0,
-            questions: [],
+            questionQueue: QuestionQueue([]),
             numQuestions: -1, // -1 will cause something note-worthily weird in the case of premature usage in an accuracy calculation.
             startTime: (new Date()),
             correct: 0,
@@ -35,7 +35,7 @@ export default class Lesson extends Component {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within promise closure.
         this.server.fetchLesson(this.courseName, this.lessonName).then(lesson => {
             setState({
-                questions: lesson.questions,
+                questionQueue: QuestionQueue(lesson.questions),
                 numQuestions: lesson.questions.length,
                 loaded: true,
                 startTime: (new Date())
@@ -56,12 +56,12 @@ export default class Lesson extends Component {
         let capitalisedCourseName = capitalise(this.courseName)
 
         let mainContent
-        if (this.state.currentQuestionIndex >= this.state.questions.length) {
+        if (this.state.currentQuestionIndex >= this.state.questionQueue.count()) {
             let accuracyPercentage = 100 * this.state.correct / (this.state.correct + this.state.incorrect)
             let lessonTimeSeconds = ((new Date()).getTime() - this.state.startTime.getTime()) / 1000
             mainContent = <LessonStats key="lesson-stats-component" accuracyPercentage={accuracyPercentage} lessonTime={lessonTimeSeconds} courseName={this.courseName} />
         } else {
-            mainContent = this.renderQuestion(this.state.questions[this.state.currentQuestionIndex])
+            mainContent = this.renderQuestion(this.state.questionQueue.get(this.state.currentQuestionIndex))
         }
 
         return [
@@ -132,7 +132,7 @@ export default class Lesson extends Component {
                 setState((state) => {
                     return {
                         currentQuestionIndex: state.currentQuestionIndex + 1,
-                        questions: this.addQuestionBackIntoQueue(state.questions, state.currentQuestionIndex),
+                        questionQueue: this.addQuestionBackIntoQueue(state.questionQueue, state.currentQuestionIndex),
                         incorrect: state.incorrect + 1
                     }
                 })
@@ -151,7 +151,7 @@ export default class Lesson extends Component {
     }
 
     addQuestionBackIntoQueue(questionQueue, currentQuestionIndex) {
-        return QuestionQueue(questionQueue).repositionIncorrectlyAnsweredQuestion(currentQuestionIndex)
+        return QuestionQueue(QuestionQueue(questionQueue.toList()).repositionIncorrectlyAnsweredQuestion(currentQuestionIndex))
     }
 
     renderLoading() {

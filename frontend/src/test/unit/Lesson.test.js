@@ -79,7 +79,7 @@ it('Adds incorrectly answered translation question back into the questions list'
     let completionHandlers = testLesson.instance().questionCompletionHandlers()
     completionHandlers.onIncorrect()
 
-    expect(testLesson.state("questions").length).toEqual(2)
+    expect(testLesson.state("questionQueue").count()).toEqual(2)
 })
 
 it('Completes when the the incorrect then correct completion handlers are called', async () => {
@@ -95,7 +95,7 @@ it('Completes when the the incorrect then correct completion handlers are called
     let completionHandlers2 = testLesson.instance().questionCompletionHandlers()
     completionHandlers2.onCorrect()
 
-    expect(testLesson.state("questions").length).toEqual(2)
+    expect(testLesson.state("questionQueue").count()).toEqual(2)
     expect(testLesson.state("currentQuestionIndex")).toEqual(2)
 })
 
@@ -132,5 +132,5 @@ it('Pushes incorrectly answered MCQ only back up to the next RQ', async () => {
     completionHandlers.onIncorrect()
     completionHandlers.onCorrect()
 
-    expect(testLesson.state("questions")[testLesson.state("currentQuestionIndex")]).toEqual(mcq1)
+    expect(testLesson.state("questionQueue").get(testLesson.state("currentQuestionIndex"))).toEqual(mcq1)
 })

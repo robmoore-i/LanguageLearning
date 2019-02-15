@@ -12,6 +12,12 @@ export function QuestionQueue(questionQueue) {
             let head = qq.slice(0, i)
             let tail = qq.slice(i, qq.length)
             return head.concat([incorrectQuestion]).concat(tail)
-        }
+        },
+
+        count: () => qq.length,
+
+        get: (i) => qq[i],
+
+        toList: () => qq
     }
 }
