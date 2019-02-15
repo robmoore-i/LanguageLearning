@@ -1,40 +1,38 @@
 export function QuestionQueue(questionQueue, currentIndex) {
-    let qq = questionQueue
-    let curIndex = currentIndex
     return {
         repositionIncorrectlyAnsweredQuestion: (index) => {
-            let incorrectQuestion = qq[index];
+            let incorrectQuestion = questionQueue[index];
             let currentQuestionType = incorrectQuestion.type
             let i = index
-            while (i < qq.length && qq[i].type === currentQuestionType) {
+            while (i < questionQueue.length && questionQueue[i].type === currentQuestionType) {
                 i += 1
             }
 
-            let head = qq.slice(0, i)
-            let tail = qq.slice(i, qq.length)
+            let head = questionQueue.slice(0, i)
+            let tail = questionQueue.slice(i, questionQueue.length)
             return head.concat([incorrectQuestion]).concat(tail)
         },
 
-        count: () => qq.length,
+        count: () => questionQueue.length,
 
-        get: (i) => qq[i],
+        get: (i) => questionQueue[i],
 
-        toList: () => qq,
+        toList: () => questionQueue,
 
         completedAllQuestions: () => {
-            return curIndex >= qq.length
+            return currentIndex >= questionQueue.length
         },
 
         currentQuestion: () => {
-            return qq[curIndex]
+            return questionQueue[currentIndex]
         },
 
         currentIndex: () => {
-            return curIndex
+            return currentIndex
         },
 
         advance: () => {
-            return QuestionQueue(qq, curIndex + 1)
+            return QuestionQueue(questionQueue, currentIndex + 1)
         }
     }
 }
