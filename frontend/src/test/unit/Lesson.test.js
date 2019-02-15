@@ -128,9 +128,9 @@ it('Pushes incorrectly answered MCQ only back up to the next RQ', async () => {
 
     let completionHandlers = testLesson.instance().questionCompletionHandlers()
 
-    completionHandlers.onCompletion(0, 0) // Complete RQ
-    completionHandlers.onCorrect() // Complete MCQ1 incorrectly
-    completionHandlers.onIncorrect() // Complete MCQ1 correctly
+    completionHandlers.onCompletion(0, 0)
+    completionHandlers.onIncorrect()
+    completionHandlers.onCorrect()
 
     expect(testLesson.state("questions")[testLesson.state("currentQuestionIndex")]).toEqual(mcq1)
 })

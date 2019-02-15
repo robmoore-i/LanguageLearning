@@ -48,8 +48,16 @@ it('Can advance through an MCQ and a TQ in index order', async () => {
 it('Can repeats TQ and MCQ if answered incorrectly', async () => {
     let tq = {index: 1, type: 0, given: "hello", answer: "გამარჯობა"}
     let mcq = {index: 0, type: 1, question: "sounds like \"i\" in English", a: "ა", b: "ო", c: "უ", d: "ი", answer: "d"}
-    let testServer = mockServer({name: "Hello!", questions: [tq, mcq]})
+    let testServer = mockServer({name: "Hello!", questions: [mcq, tq]})
     let testLesson = await mountRenderLesson("Georgian", "hello", testServer)
+
+    // MCQ Incorrect
+    testLesson.find("#choice-c").simulate("click")
+    questionSubmitAndContinue(testLesson)
+
+    // MCQ Repeated
+    testLesson.find("#choice-d").simulate("click")
+    questionSubmitAndContinue(testLesson)
 
     // TQ Incorrect
     testLesson.find("#answer-input-textbox").simulate("change", textBoxInputEvent("wrong answer"))
@@ -57,16 +65,8 @@ it('Can repeats TQ and MCQ if answered incorrectly', async () => {
     testLesson.find("#answer-input-textbox").simulate("change", textBoxInputEvent("გამარჯობა"))
     testLesson.find("#continue-button").simulate("click")
 
-    // MCQ Incorrect
-    testLesson.find("#choice-c").simulate("click")
-    questionSubmitAndContinue(testLesson)
-
     // TQ Repeated
     testLesson.find("#answer-input-textbox").simulate("change", textBoxInputEvent("გამარჯობა"))
-    questionSubmitAndContinue(testLesson)
-
-    // MCQ Repeated
-    testLesson.find("#choice-d").simulate("click")
     questionSubmitAndContinue(testLesson)
 
     expect(testLesson.find("#lesson-accuracy").text()).toEqual("Accuracy: 50%")

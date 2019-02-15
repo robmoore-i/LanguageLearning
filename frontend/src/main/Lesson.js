@@ -9,6 +9,7 @@ import MultipleChoiceQuestion, {rmExcessChoices} from "./MultipleChoiceQuestion"
 import TranslationQuestion from "./TranslationQuestion"
 import ReadingQuestion from "./ReadingQuestion"
 import LessonStats from "./LessonStats"
+import {QuestionQueue} from "./QuestionQueue";
 
 export default class Lesson extends Component {
     constructor(props) {
@@ -150,7 +151,7 @@ export default class Lesson extends Component {
     }
 
     addQuestionBackIntoQueue(questionQueue, currentQuestionIndex) {
-        return questionQueue.concat(questionQueue[currentQuestionIndex])
+        return QuestionQueue(questionQueue).repositionIncorrectlyAnsweredQuestion(currentQuestionIndex)
     }
 
     renderLoading() {
