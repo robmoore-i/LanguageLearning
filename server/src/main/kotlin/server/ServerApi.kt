@@ -1,34 +1,27 @@
 package server
 
 import model.CourseMetadata
-import org.http4k.core.Response
 
-class ServerApi(
-        private val databaseAdaptor: DatabaseAdaptor,
-        private val serverResponseFactory: ServerResponseFactory
-) {
+class ServerApi(private val databaseAdaptor: DatabaseAdaptor) {
     private val jsonEncoder = JsonEncoder()
 
-    fun courses(): Response {
-        val json = jsonEncoder.encodeCourses(databaseAdaptor.allCourses())
-        return serverResponseFactory.okResponse(json)
+    fun courses(): String {
+        return jsonEncoder.encodeCourses(databaseAdaptor.allCourses())
     }
 
-    fun courseMetadata(courseName: String): Response {
+    fun courseMetadata(courseName: String): String {
         val courseMetadata: CourseMetadata = databaseAdaptor.courseMetadata(courseName)
-        val json = jsonEncoder.encodeCourseMetadata(courseMetadata)
-        return serverResponseFactory.okResponse(json)
+        return jsonEncoder.encodeCourseMetadata(courseMetadata)
     }
 
-    fun lesson(courseName: String, lessonName: String): Response {
-        return try {
+    fun lesson(courseName: String, lessonName: String): String {
+        try {
             val lesson = databaseAdaptor.lesson(courseName, lessonName)
-            val jsonEncodedLesson = jsonEncoder.encodeLesson(lesson)
-            serverResponseFactory.okResponse(jsonEncodedLesson)
+            return jsonEncoder.encodeLesson(lesson)
         } catch (error: IndexOutOfBoundsException) {
-            val cause = "NoSuchLesson"
-            val jsonEncodedError = "{\"cause\":\"$cause\"}"
-            serverResponseFactory.notFoundResponse(jsonEncodedError)
+            throw NoSuchLessonException(error)
         }
     }
 }
+
+class NoSuchLessonException(cause: Throwable) : Throwable(cause)
