@@ -30,7 +30,11 @@ let assertIncorrect = (rq, i) => {
 }
 
 function shallowRq(q) {
-    return shallow(<ReadingQuestion q={q}/>);
+    return shallow(<ReadingQuestion q={q}/>)
+}
+
+function mountRq(q) {
+    return mount(<ReadingQuestion q={q}/>)
 }
 
 it('Shows the extract', () => {
@@ -71,7 +75,7 @@ it('Marks correct answers as correct', () => {
             {given: "What did he get there?", answer: "Cake"}
         ]
     }
-    let rq = mount(<ReadingQuestion q={q} />)
+    let rq = mountRq(q)
 
     rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Kitchen"))
     rq.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
@@ -90,7 +94,7 @@ it('Marks incorrect answers as incorrect', () => {
             {given: "What did he get there?", answer: "Cake"}
         ]
     }
-    let rq = mount(<ReadingQuestion q={q} />)
+    let rq = mountRq(q)
 
     rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Ayy"))
     rq.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Lmao"))
@@ -112,7 +116,7 @@ it('Marks questions separately', () => {
             {given: "And who are you?", answer: "A reading question, dummy"}
         ]
     }
-    let rq = mount(<ReadingQuestion q={q} />)
+    let rq = mountRq(q)
 
     rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Wrong"))
     rq.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
@@ -138,7 +142,7 @@ it('Shows corrections for questions answered incorrectly', () => {
             {given: "What's this guy's name again?", answer: "Vlad"}
         ]
     }
-    let rq = mount(<ReadingQuestion q={q} />)
+    let rq = mountRq(q)
 
     rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Wrong"))
     rq.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
@@ -158,7 +162,7 @@ it('The continue button appears after marking', () => {
             {given: "Where did Vlad go?", answer: "Kitchen"}
         ]
     }
-    let rq = mount(<ReadingQuestion q={q} />)
+    let rq = mountRq(q)
 
     rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Wrong"))
     clickSubmitForMarkingButton(rq)
@@ -211,7 +215,7 @@ it('Warns user before marking if an answer box is empty', () => {
           {given: "Where did Vlad go?", answer: "Kitchen"}
       ]
   }
-  let rq = mount(<ReadingQuestion q={q} />)
+  let rq = mountRq(q)
 
   clickSubmitForMarkingButton(rq)
 
@@ -230,7 +234,7 @@ it('Warns user before marking if any answer box is empty', () => {
           {given: "What's this guy's name again?", answer: "Vlad"}
       ]
   }
-  let rq = mount(<ReadingQuestion q={q} />)
+  let rq = mountRq(q)
 
   rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Kitchen"))
   rq.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
@@ -273,7 +277,7 @@ it('Shows corrections for subquestions with multiple potential correct answers',
             {given: "What's this guy's name again?", answer: "Vlad"}
         ]
     }
-    let rq = mount(<ReadingQuestion q={q} />)
+    let rq = mountRq(q)
 
     rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Kitchen"))
     rq.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Wrong"))
@@ -312,7 +316,7 @@ it('Renders subquestions in index order', () => {
             {index: 1, given: "What did he get there?", answers: ["Cake", "Some cake"]}
         ]
     }
-    let rq = mount(<ReadingQuestion q={q} />)
+    let rq = mountRq(q)
 
     let questionsDiv = rq.find("#questions")
     expect(questionsDiv.childAt(0).prop("id")).toEqual("sub-question-0")
@@ -330,7 +334,7 @@ it('Marks all answers as correct when all answers are correct', () => {
             {index: 1, given: "What colour is the car?", answer: "red"}
         ]
     }
-    let rq = mount(<ReadingQuestion q={q} />)
+    let rq = mountRq(q)
 
     rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("blue"))
     rq.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("red"))
@@ -350,7 +354,7 @@ it('Text area becomes read-only if a correct answer is marked', () => {
             {index: 0, given: "What is said to be green?", answers: ["Grass", "The grass"]}
         ]
     }
-    let testRQ = mount(<ReadingQuestion q={q} />)
+    let testRQ = mountRq(q)
 
     testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("grass"))
     clickSubmitForMarkingButton(testRQ)
@@ -367,7 +371,7 @@ it('Text area becomes read-only if an incorrect answer is marked', () => {
             {index: 0, given: "What is said to be green?", answers: ["Grass", "The grass"]}
         ]
     }
-    let rq = mount(<ReadingQuestion q={q} />)
+    let rq = mountRq(q)
 
     rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("wrong"))
     clickSubmitForMarkingButton(rq)
