@@ -49,7 +49,7 @@ private val neo4jDatabaseAdaptor = object : TestDatabaseAdaptor {
     }
 }
 
-private val httpRequester = object : TestRequester {
+private val httpServerClient = object : TestServerClient {
     private val client = JavaHttpClient()
     private val serverUrl = "http://localhost:${environment.serverPort}"
 
@@ -80,7 +80,7 @@ private val server: Server = Server(
 open class IntegrationEndpointTestCase : EndpointTestCase(
         environment,
         neo4jDatabaseAdaptor,
-        httpRequester
+        httpServerClient
 ) {
     @Before
     fun setUp() {

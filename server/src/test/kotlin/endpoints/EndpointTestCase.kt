@@ -12,7 +12,7 @@ import org.http4k.unquoted
 abstract class EndpointTestCase(
     val environment: AppEnvironment,
     val testDatabaseAdaptor: TestDatabaseAdaptor,
-    private val testRequester: TestRequester
+    private val testServerClient: TestServerClient
 ) {
 
     private val json = Jackson
@@ -28,7 +28,7 @@ abstract class EndpointTestCase(
     }
 
     fun coursesRequest(): Response {
-        return testRequester.coursesRequest()
+        return testServerClient.coursesRequest()
     }
 
     fun coursesJson(): JsonNode {
@@ -36,7 +36,7 @@ abstract class EndpointTestCase(
     }
 
     fun lessonRequest(courseName: String, lessonName: String): Response {
-        return testRequester.lessonRequest(courseName, lessonName)
+        return testServerClient.lessonRequest(courseName, lessonName)
     }
 
     fun lessonRequestJson(courseName: String, lessonName: String): JsonNode {
@@ -44,7 +44,7 @@ abstract class EndpointTestCase(
     }
 
     fun courseMetadataRequest(courseName: String): Response {
-        return testRequester.courseMetadataRequest(courseName)
+        return testServerClient.courseMetadataRequest(courseName)
     }
 
     fun courseMetadataRequestJson(courseName: String): JsonNode {
