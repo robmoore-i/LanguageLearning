@@ -319,3 +319,18 @@ it("Shows only the continue button if there isn't a questions property", () => {
 
     expect(rq.find("#continue-button").exists()).toBe(true)
 })
+
+it("Sends analytics containing the question index when continuing on an rq with no subquestions", () => {
+    let analytics = {recordEvent: jest.fn()}
+    let q = {
+        type: 2,
+        index: 5,
+        extract: "A question-less extract",
+        questions: []
+    }
+    let rq = mount(<ReadingQuestion q={q} analytics={analytics} onCompletion={() => {}}/>)
+
+    rq.find("#continue-button").simulate("click")
+
+    expect(analytics.recordEvent).toHaveBeenCalledWith("click@continue-button#readingquestion-noquestions-index-5")
+})

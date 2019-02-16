@@ -6,7 +6,7 @@ import '../styles/ReadingQuestion.css'
 // Main
 import Mark from "./Mark"
 import {Marker} from "./Marker"
-import {submitForMarkingButton, continueButton} from "./Question"
+import {continueButton, submitForMarkingButton} from "./Question"
 import {keySort} from './sorting'
 
 export default class ReadingQuestion extends Component {
@@ -69,7 +69,10 @@ export default class ReadingQuestion extends Component {
     }
 
     renderNoQuestions() {
-        let button = continueButton(() => {this.props.onCompletion(0, 0)})
+        let button = continueButton(() => {
+            this.props.analytics.recordEvent("click@continue-button#readingquestion-noquestions-index-" + this.props.q.index)
+            this.props.onCompletion(0, 0)
+        })
         return this.renderExtractPrompt("").concat([button])
     }
 
