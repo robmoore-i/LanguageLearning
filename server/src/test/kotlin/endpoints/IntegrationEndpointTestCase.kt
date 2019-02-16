@@ -7,16 +7,16 @@ import model.Lesson
 import neo4j.Neo4jDatabaseAdaptor
 import neo4j.Neo4jDriver
 
-val appEnvironment = EnvironmentLoader(System::getenv).getEnvironment()
+private val environment = EnvironmentLoader(System::getenv).getEnvironment()
 
 open class IntegrationEndpointTestCase : EndpointTestCase(
-        appEnvironment,
+        environment,
         object : TestDatabaseAdaptor {
-            val neo4jDriver = Neo4jDriver(appEnvironment.neo4jUser, appEnvironment.neo4jPassword, appEnvironment.neo4jPort)
+            val neo4jDriver = Neo4jDriver(environment.neo4jUser, environment.neo4jPassword, environment.neo4jPort)
             val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(
                     neo4jDriver,
-                    appEnvironment.imagesPath,
-                    appEnvironment.extractsPath
+                    environment.imagesPath,
+                    environment.extractsPath
             )
 
             override fun allCourses(): List<Course> {
@@ -42,5 +42,5 @@ open class IntegrationEndpointTestCase : EndpointTestCase(
                 }
             }
         },
-        HttpTestRequester(appEnvironment)
+        HttpTestRequester(environment)
 )
