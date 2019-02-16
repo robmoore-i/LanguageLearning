@@ -304,7 +304,7 @@ it('Text area becomes read-only if an incorrect answer is marked', () => {
     expect(rq.find("#answer-input-textbox-0").hasClass("colourclass-question-result-incorrect")).toBe(true)
 })
 
-it('Shows only the continue button if questions is a empty list', () => {
+it('Shows only the continue button if subquestions is a empty list', () => {
     let q = rqObject("A question-less extract", [])
 
     let rq = shallowRq(q)
