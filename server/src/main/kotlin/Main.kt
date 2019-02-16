@@ -20,5 +20,6 @@ fun main(args: Array<String>) {
     val httpRequestHandler = HttpRequestHandler(ServerApi(neo4jDatabaseAdaptor), HttpResponseFactory(environment.frontendPort))
 
     val httpServer = HttpServer(httpRequestHandler, environment.serverPort, ServerLogger())
+
     httpServer.start()
 }
