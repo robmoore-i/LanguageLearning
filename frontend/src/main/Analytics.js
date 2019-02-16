@@ -14,7 +14,7 @@ function stubMessenger() {
     return {
         stub: true,
         send: (msg) => {
-            console.log("AnalyticsSocket::send: Stubbed => " + msg)
+            console.log("AnalyticsStubSocket::send => " + msg)
         }
     }
 }
