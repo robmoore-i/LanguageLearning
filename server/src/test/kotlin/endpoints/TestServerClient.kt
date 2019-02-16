@@ -3,7 +3,7 @@ package endpoints
 import org.http4k.core.Response
 
 interface TestServerClient {
-    fun courseMetadataRequest(courseName: String): Response
-    fun coursesRequest(): Response
-    fun lessonRequest(courseName: String, lessonName: String): Response
+    fun courses(): Response
+    fun courseMetadata(courseName: String): Response
+    fun lesson(courseName: String, lessonName: String): Response
 }

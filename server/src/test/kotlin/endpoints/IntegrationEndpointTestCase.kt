@@ -14,6 +14,7 @@ import org.http4k.core.Response
 import org.junit.After
 import org.junit.Before
 import server.Server
+import server.ServerResponseFactory
 
 private val environment = EnvironmentLoader(System::getenv).getEnvironment()
 
@@ -53,17 +54,17 @@ private val httpServerClient = object : TestServerClient {
     private val client = JavaHttpClient()
     private val serverUrl = "http://localhost:${environment.serverPort}"
 
-    override fun courseMetadataRequest(courseName: String): Response {
+    override fun courseMetadata(courseName: String): Response {
         val request = Request(Method.GET, "$serverUrl/coursemetadata?course=$courseName")
         return client.invoke(request)
     }
 
-    override fun coursesRequest(): Response {
+    override fun courses(): Response {
         val request = Request(Method.GET, "$serverUrl/courses")
         return client.invoke(request)
     }
 
-    override fun lessonRequest(courseName: String, lessonName: String): Response {
+    override fun lesson(courseName: String, lessonName: String): Response {
         val request = Request(Method.POST, "$serverUrl/lesson")
                 .body("{\"lessonName\":\"$lessonName\",\"courseName\":\"$courseName\"}")
         return client.invoke(request)
@@ -73,7 +74,7 @@ private val httpServerClient = object : TestServerClient {
 private val server: Server = Server(
         environment.serverPort,
         neo4jDatabaseAdaptor,
-        environment.frontendPort,
+        ServerResponseFactory(environment.frontendPort),
         ServerLogger()
 )
 

@@ -6,6 +6,7 @@ import logger.ServerLogger
 import neo4j.Neo4jDatabaseAdaptor
 import neo4j.Neo4jDriver
 import server.Server
+import server.ServerResponseFactory
 
 fun main(args: Array<String>) {
     val environmentLoader = EnvironmentLoader(System::getenv)
@@ -16,6 +17,6 @@ fun main(args: Array<String>) {
     val neo4jDriver = Neo4jDriver(environment.neo4jUser, environment.neo4jPassword, environment.neo4jPort)
     val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(neo4jDriver, environment.imagesPath, environment.extractsPath)
 
-    val server = Server(environment.serverPort, neo4jDatabaseAdaptor, environment.frontendPort, logger)
+    val server = Server(environment.serverPort, neo4jDatabaseAdaptor, ServerResponseFactory(environment.frontendPort), logger)
     server.start()
 }

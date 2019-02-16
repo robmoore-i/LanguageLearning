@@ -13,16 +13,19 @@ import org.http4k.server.asServer
 class Server(
     private val port: Int,
     databaseAdaptor: DatabaseAdaptor,
-    frontendPort: Int,
+    responseFactory: ServerResponseFactory,
     private val logger: ServerLogger
 ) : Http4kServer {
-    private val serverApi = ServerHttpApi(databaseAdaptor, frontendPort)
+
+    private val jsonEncoder = JsonEncoder()
+    private val serverApi = ServerApi(jsonEncoder, databaseAdaptor, responseFactory)
+    private val serverHttpApi = ServerHttpApi(serverApi)
 
     private val handler: HttpHandler = ServerFilters.CatchLensFailure.then(
         routes(
-            "/courses" bind Method.GET to loggedResponse(serverApi::handleCourses),
-            "/lesson" bind Method.POST to loggedResponse(serverApi::handleLesson),
-            "/coursemetadata" bind Method.GET to loggedResponse(serverApi::handleCoursemetadata)
+            "/courses" bind Method.GET to loggedResponse(serverHttpApi::handleCourses),
+            "/lesson" bind Method.POST to loggedResponse(serverHttpApi::handleLesson),
+            "/coursemetadata" bind Method.GET to loggedResponse(serverHttpApi::handleCoursemetadata)
         )
     )
 

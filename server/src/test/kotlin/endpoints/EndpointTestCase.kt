@@ -28,7 +28,7 @@ abstract class EndpointTestCase(
     }
 
     fun coursesRequest(): Response {
-        return testServerClient.coursesRequest()
+        return testServerClient.courses()
     }
 
     fun coursesJson(): JsonNode {
@@ -36,7 +36,7 @@ abstract class EndpointTestCase(
     }
 
     fun lessonRequest(courseName: String, lessonName: String): Response {
-        return testServerClient.lessonRequest(courseName, lessonName)
+        return testServerClient.lesson(courseName, lessonName)
     }
 
     fun lessonRequestJson(courseName: String, lessonName: String): JsonNode {
@@ -44,7 +44,7 @@ abstract class EndpointTestCase(
     }
 
     fun courseMetadataRequest(courseName: String): Response {
-        return testServerClient.courseMetadataRequest(courseName)
+        return testServerClient.courseMetadata(courseName)
     }
 
     fun courseMetadataRequestJson(courseName: String): JsonNode {
