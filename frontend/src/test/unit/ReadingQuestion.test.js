@@ -5,7 +5,7 @@ import {mount, shallow} from 'enzyme'
 // Main
 import ReadingQuestion from '../../main/ReadingQuestion'
 // Enzyme react-adapter configuration & others
-import {configureAdapter, textBoxInputEvent, questionSubmitAndContinue} from "../utils"
+import {configureAdapter, questionSubmitAndContinue, textBoxInputEvent} from "../utils"
 
 configureAdapter()
 
@@ -177,8 +177,6 @@ it('Calls the onCompletion prop when clicking continue', () => {
 
 it('Ignores whitespace, case, commas, fullstops, exclamation marks and question mark when marking', () => {
     let correctAnswer = "He went to the kitchen! Would you BELIEVE IT?!!"
-
-    let questionCompletedCorrectly = jest.fn()
     let q = {
         type: 2,
         extract: "Vlad went to the kitchen and got some cake",
