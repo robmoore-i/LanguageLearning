@@ -28,10 +28,9 @@ open class EndpointTestCase {
 
     val json = Jackson
 
-    constructor() {
+    init {
         val environmentLoader = EnvironmentLoader(System::getenv)
         environment = environmentLoader.getEnvironment()
-
         testDatabaseAdaptor = object : TestDatabaseAdaptor {
             val neo4jDriver = Neo4jDriver(environment.neo4jUser, environment.neo4jPassword, environment.neo4jPort)
             val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(
@@ -63,9 +62,7 @@ open class EndpointTestCase {
                 }
             }
         }
-
         requester = HttpTestRequester(environment)
-
         val logger = ServerLogger()
         server = Server(
                 environment.serverPort,
@@ -73,7 +70,6 @@ open class EndpointTestCase {
                 environment.frontendPort,
                 logger
         )
-
     }
 
     @Before
