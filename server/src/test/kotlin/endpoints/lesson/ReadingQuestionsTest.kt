@@ -21,17 +21,12 @@ class ReadingQuestionsTest : EndpointTestCase() {
 
     @Test
     fun canGetRqWithInlineExtract() {
-        neo4jDriver.session().let { session ->
-            val query = """
+        testDatabaseAdaptor.runQuery("""
                 CREATE (c:Course {name: "Course", image: "img.png"})-[:HAS_TOPIC_LESSON {index: 0}]->(l:TopicLesson {name: "RQ"})
                 CREATE (l)-[:HAS_QUESTION {index: 0}]->(rq:Question:ReadingQuestion {extractInline: "inline-extract"})
                 CREATE (rq)-[:HAS_SUBQUESTION {index: 0}]->(rsq:ReadingSubQuestion {given:"What does 'საქართველო' mean in English?", answer:"Georgia"})
                 RETURN l,rq,rsq,c;
-                """
-
-            session.run(query)
-            session.close()
-        }
+                """)
 
         val responseJson = lessonRequestJson("Course", "RQ")
         val questions = responseJson["questions"]
@@ -45,17 +40,12 @@ class ReadingQuestionsTest : EndpointTestCase() {
 
     @Test
     fun canGetAnRsq() {
-        neo4jDriver.session().let { session ->
-            val query = """
+        testDatabaseAdaptor.runQuery("""
                 CREATE (c:Course {name: "Course", image: "img.png"})-[:HAS_TOPIC_LESSON {index: 0}]->(l:TopicLesson {name: "RQ"})
                 CREATE (l)-[:HAS_QUESTION {index: 0}]->(rq:Question:ReadingQuestion {extractInline: "inline-extract"})
                 CREATE (rq)-[:HAS_SUBQUESTION {index: 0}]->(rsq:ReadingSubQuestion {given:"What does 'საქართველო' mean in English?", answer:"Georgia"})
                 RETURN l,rq,rsq,c;
-                """
-
-            session.run(query)
-            session.close()
-        }
+                """)
 
         val responseJson = lessonRequestJson("Course", "RQ")
         val questions = responseJson["questions"]
@@ -75,16 +65,11 @@ class ReadingQuestionsTest : EndpointTestCase() {
     fun canGetRqWithFileExtract() {
         File(Paths.get(environment.extractsPath, "test.txt").toUri()).writeText("file-extract")
 
-        neo4jDriver.session().let { session ->
-            val query = """
+        testDatabaseAdaptor.runQuery("""
                 CREATE (c:Course {name: "Course", image: "img.png"})-[:HAS_TOPIC_LESSON {index: 0}]->(l:TopicLesson {name: "RQ"})
                 CREATE (l)-[:HAS_QUESTION {index: 0}]->(rq:Question:ReadingQuestion {extractFile: "test.txt"})
                 RETURN l,rq,c;
-                """
-
-            session.run(query)
-            session.close()
-        }
+                """)
 
         val responseJson = lessonRequestJson("Course", "RQ")
         val questions = responseJson["questions"]
@@ -98,17 +83,12 @@ class ReadingQuestionsTest : EndpointTestCase() {
 
     @Test
     fun canGetAnRsqWithMultipleAnswers() {
-        neo4jDriver.session().let { session ->
-            val query = """
+        testDatabaseAdaptor.runQuery("""
                 CREATE (c:Course {name: "Course", image: "img.png"})-[:HAS_TOPIC_LESSON {index: 0}]->(l:TopicLesson {name: "RQ"})
                 CREATE (l)-[:HAS_QUESTION {index: 0}]->(rq:Question:ReadingQuestion {extractInline: "inline-extract"})
                 CREATE (rq)-[:HAS_SUBQUESTION {index: 0}]->(rsq:ReadingSubQuestion {given:"What does 'ის მოხალისეა' mean in English?", answers:["She is a volunteer", "She's a volunteer", "He is a volunteer", "He's a volunteer"]})
                 RETURN l,rq,rsq,c;
-                """
-
-            session.run(query)
-            session.close()
-        }
+                """)
 
         val responseJson = lessonRequestJson("Course", "RQ")
         val questions = responseJson["questions"]
@@ -130,8 +110,7 @@ class ReadingQuestionsTest : EndpointTestCase() {
 
     @Test
     fun canGetAnRqWithMultipleRsqs() {
-        neo4jDriver.session().let { session ->
-            val query = """
+        testDatabaseAdaptor.runQuery("""
                 CREATE (c:Course {name: "Course", image: "img.png"})-[:HAS_TOPIC_LESSON {index: 0}]->(l:TopicLesson {name: "RQ"})
                 CREATE (l)-[:HAS_QUESTION {index: 0}]->(rq:Question:ReadingQuestion {extractInline: "inline-extract"})
                 CREATE (rq)-[:HAS_SUBQUESTION {index: 0}]->(rsq1:ReadingSubQuestion {given:"What does 'ის მოხალისეა' mean in English?", answers:["She is a volunteer", "She's a volunteer", "He is a volunteer", "He's a volunteer"]})
@@ -139,11 +118,7 @@ class ReadingQuestionsTest : EndpointTestCase() {
                 CREATE (rq)-[:HAS_SUBQUESTION {index: 2}]->(rsq3:ReadingSubQuestion {given:"What does 'გმადლობ' mean in English?", answer: "thanks!"})
                 CREATE (rq)-[:HAS_SUBQUESTION {index: 3}]->(rsq4:ReadingSubQuestion {given:"What does 'გული' mean in English?", answer: "heart"})
                 RETURN l,rq,rsq1,rsq2,rsq3,rsq4,c;
-                """
-
-            session.run(query)
-            session.close()
-        }
+                """)
 
         val responseJson = lessonRequestJson("Course", "RQ")
         val questions = responseJson["questions"]

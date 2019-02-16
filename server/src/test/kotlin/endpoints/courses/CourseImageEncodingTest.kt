@@ -12,18 +12,13 @@ class CourseImageEncodingTest : EndpointTestCase() {
 
     @Test
     fun canGetAnSvgCourseIcon() {
-        neo4jDriver.session().let { session ->
-            val query = """
+        testDatabaseAdaptor.runQuery("""
                 CREATE (georgian:Course {name: "svgtest", image: "flagGeorgia.svg"})
                 CREATE (georgian)-[:HAS_TOPIC_LESSON {index: 0}]->(hello:TopicLesson {name: "Hello"})
                 CREATE (georgian)-[:HAS_TOPIC_LESSON {index: 1}]->(whatAreYouCalled:TopicLesson {name: "What are you called?"})
                 CREATE (georgian)-[:HAS_TOPIC_LESSON {index: 2}]->(colours:TopicLesson {name: "Colours"})
                 RETURN georgian,hello,whatAreYouCalled,colours;
-                """.trimIndent()
-
-            session.run(query)
-            session.close()
-        }
+                """.trimIndent())
 
         val jsonNode = extractCourseFromJson("svgtest")
 
@@ -37,18 +32,13 @@ class CourseImageEncodingTest : EndpointTestCase() {
 
     @Test
     fun canGetAPngCourseIcon() {
-        neo4jDriver.session().let { session ->
-            val query = """
+        testDatabaseAdaptor.runQuery("""
                 CREATE (c:Course {name: "pngtest", image: "flagFrance.png"})
                 CREATE (c)-[:HAS_TOPIC_LESSON {index: 0}]->(l1:TopicLesson {name: "l3"})
                 CREATE (c)-[:HAS_TOPIC_LESSON {index: 1}]->(l2:TopicLesson {name: "l2"})
                 CREATE (c)-[:HAS_TOPIC_LESSON {index: 2}]->(l3:TopicLesson {name: "l1"})
                 RETURN c,l1,l2,l3;
-                """.trimIndent()
-
-            session.run(query)
-            session.close()
-        }
+                """.trimIndent())
 
         val jsonNode = extractCourseFromJson("pngtest")
 
@@ -62,18 +52,13 @@ class CourseImageEncodingTest : EndpointTestCase() {
 
     @Test
     fun canGetAJpgCourseIcon() {
-        neo4jDriver.session().let { session ->
-            val query = """
-                CREATE (c:Course {name: "jpgtest", image: "flagGermany.jpg"})
-                CREATE (c)-[:HAS_TOPIC_LESSON {index: 0}]->(l1:TopicLesson {name: "l3"})
-                CREATE (c)-[:HAS_TOPIC_LESSON {index: 1}]->(l2:TopicLesson {name: "l2"})
-                CREATE (c)-[:HAS_TOPIC_LESSON {index: 2}]->(l3:TopicLesson {name: "l1"})
-                RETURN c,l1,l2,l3;
-                """.trimIndent()
-
-            session.run(query)
-            session.close()
-        }
+        testDatabaseAdaptor.runQuery("""
+            CREATE (c:Course {name: "jpgtest", image: "flagGermany.jpg"})
+            CREATE (c)-[:HAS_TOPIC_LESSON {index: 0}]->(l1:TopicLesson {name: "l3"})
+            CREATE (c)-[:HAS_TOPIC_LESSON {index: 1}]->(l2:TopicLesson {name: "l2"})
+            CREATE (c)-[:HAS_TOPIC_LESSON {index: 2}]->(l3:TopicLesson {name: "l1"})
+            RETURN c,l1,l2,l3;
+            """.trimIndent())
 
         val jsonNode = extractCourseFromJson("jpgtest")
 
@@ -86,9 +71,7 @@ class CourseImageEncodingTest : EndpointTestCase() {
     }
 
     private fun extractCourseFromJson(courseName: String): JsonNode {
-        val response = coursesRequest()
-        val responseJson = json.parse(response.bodyString())
-        return responseJson.first { node -> node["name"].toString().unquoted() == courseName }
+        return coursesJson().first { node -> node["name"].toString().unquoted() == courseName }
     }
 
     private fun assertCourseHasProperties(

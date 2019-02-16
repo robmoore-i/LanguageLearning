@@ -9,15 +9,10 @@ import org.junit.Test
 class ErrorHandling : EndpointTestCase() {
     @Test
     fun reportsWhenCantFindTheSpecifiedLesson() {
-        neo4jDriver.session().let { session ->
-            val query = """
+        testDatabaseAdaptor.runQuery("""
                 CREATE (c:Course {name: "Course", image: "img.png"})-[:HAS_TOPIC_LESSON {index: 0}]->(l:TopicLesson {name: "Lesson"})
                 RETURN c,l;
-                """
-
-            session.run(query)
-            session.close()
-        }
+                """)
 
         val response = lessonRequest("Course", "NonExistantLesson")
 

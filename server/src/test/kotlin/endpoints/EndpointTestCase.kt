@@ -2,8 +2,12 @@ package endpoints
 
 
 import com.fasterxml.jackson.databind.JsonNode
+import environment.AppEnvironment
 import environment.EnvironmentLoader
 import logger.ServerLogger
+import model.Course
+import model.CourseMetadata
+import model.Lesson
 import neo4j.Neo4jDatabaseAdaptor
 import neo4j.Neo4jDriver
 import org.hamcrest.CoreMatchers.equalTo
@@ -11,36 +15,66 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.http4k.core.Headers
 import org.http4k.core.Response
 import org.http4k.format.Jackson
-import org.http4k.server.Http4kServer
 import org.http4k.unquoted
 import org.junit.After
 import org.junit.Before
 import server.Server
 
 open class EndpointTestCase {
-    private val environmentLoader = EnvironmentLoader(System::getenv)
-    val environment = environmentLoader.getEnvironment()
-
-    val neo4jDriver = Neo4jDriver(environment.neo4jUser, environment.neo4jPassword, environment.neo4jPort)
-
-    private val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(
-            neo4jDriver,
-            environment.imagesPath,
-            environment.extractsPath
-    )
-
-    private val logger = ServerLogger()
-
-    private val server: Http4kServer = Server(
-            environment.serverPort,
-            neo4jDatabaseAdaptor,
-            environment.frontendPort,
-            logger
-    )
-
-    private val requester: TestRequester = HttpTestRequester(environment)
+    val environment: AppEnvironment
+    val testDatabaseAdaptor: TestDatabaseAdaptor
+    private val requester: TestRequester
+    private val server: Server
 
     val json = Jackson
+
+    constructor() {
+        val environmentLoader = EnvironmentLoader(System::getenv)
+        environment = environmentLoader.getEnvironment()
+
+        testDatabaseAdaptor = object : TestDatabaseAdaptor {
+            val neo4jDriver = Neo4jDriver(environment.neo4jUser, environment.neo4jPassword, environment.neo4jPort)
+            val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(
+                    neo4jDriver,
+                    environment.imagesPath,
+                    environment.extractsPath
+            )
+
+            override fun allCourses(): List<Course> {
+                return neo4jDatabaseAdaptor.allCourses()
+            }
+
+            override fun courseMetadata(courseName: String): CourseMetadata {
+                return neo4jDatabaseAdaptor.courseMetadata(courseName)
+            }
+
+            override fun lesson(courseName: String, lessonName: String): Lesson {
+                return neo4jDatabaseAdaptor.lesson(courseName, lessonName)
+            }
+
+            override fun clearDatabase() {
+                neo4jDatabaseAdaptor.clearDatabase()
+            }
+
+            override fun runQuery(query: String) {
+                neo4jDriver.session().let { session ->
+                    session.run(query)
+                    session.close()
+                }
+            }
+        }
+
+        requester = HttpTestRequester(environment)
+
+        val logger = ServerLogger()
+        server = Server(
+                environment.serverPort,
+                testDatabaseAdaptor,
+                environment.frontendPort,
+                logger
+        )
+
+    }
 
     @Before
     fun setUp() {
@@ -50,11 +84,7 @@ open class EndpointTestCase {
     @After
     open fun tearDown() {
         server.stop()
-        neo4jDriver.session().let { session ->
-            session.run("MATCH (n) DETACH DELETE (n)")
-            session.run("MATCH (n) DELETE (n)")
-            session.close()
-        }
+        testDatabaseAdaptor.clearDatabase()
     }
 
     fun assertLessonHasIndex(lessonMetadata: JsonNode, lessonName: String, index: Int) {
@@ -67,6 +97,10 @@ open class EndpointTestCase {
 
     fun coursesRequest(): Response {
         return requester.coursesRequest()
+    }
+
+    fun coursesJson(): JsonNode {
+        return json.parse(coursesRequest().bodyString())
     }
 
     fun lessonRequest(courseName: String, lessonName: String): Response {

@@ -9,8 +9,7 @@ import org.junit.Test
 class DifferentCourseSameLessonNameTest : EndpointTestCase() {
     @Test
     fun canGetALessonSharingTheNameWithALessonFromADiferentCourse() {
-        neo4jDriver.session().let { session ->
-            val query = """
+        testDatabaseAdaptor.runQuery("""
                 CREATE (ge:Course {name: "Georgian", image: "img.png"})
                 CREATE (fr:Course {name: "French", image: "img.png"})
 
@@ -21,11 +20,7 @@ class DifferentCourseSameLessonNameTest : EndpointTestCase() {
                 CREATE (gehello)-[:HAS_QUESTION {index: 0}]->(getq:Question:TranslationQuestion {given: "Hello", answer: "გამარჯობა"})
 
                 RETURN ge,fr,gehello,frhello,frtq,getq;
-                """
-
-            session.run(query)
-            session.close()
-        }
+                """)
 
         val frenchQuestion = lessonRequestJson("French", "Hello!")["questions"][0]
         assertThat(frenchQuestion["given"].toString().unquoted(), CoreMatchers.equalTo("Hi"))
