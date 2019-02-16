@@ -2,13 +2,14 @@ package endpoints.courses
 
 import com.fasterxml.jackson.databind.JsonNode
 import endpoints.EndpointTestCase
+import endpoints.IntegrationEndpointTestCase
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.http4k.unquoted
 import org.junit.Test
 
 /*Created on 19/01/19. */
-class CourseImageEncodingTest : EndpointTestCase() {
+class CourseImageEncodingTest : IntegrationEndpointTestCase() {
 
     @Test
     fun canGetAnSvgCourseIcon() {

@@ -1,12 +1,12 @@
 package endpoints.courses
 
 import endpoints.EndpointTestCase
+import endpoints.IntegrationEndpointTestCase
 import org.hamcrest.CoreMatchers
-import org.hamcrest.MatcherAssert
 import org.hamcrest.MatcherAssert.*
 import org.junit.Test
 
-class CorsTest : EndpointTestCase() {
+class CorsTest : IntegrationEndpointTestCase() {
     @Test
     fun givesOkResponse() {
         testDatabaseAdaptor.runQuery("""

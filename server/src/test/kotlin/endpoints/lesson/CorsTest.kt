@@ -1,9 +1,10 @@
 package endpoints.lesson
 
 import endpoints.EndpointTestCase
+import endpoints.IntegrationEndpointTestCase
 import org.junit.Test
 
-class CorsTest : EndpointTestCase() {
+class CorsTest : IntegrationEndpointTestCase() {
 
     @Test
     fun givesAccessControlAllowOriginCorsHeader() {

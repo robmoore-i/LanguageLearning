@@ -1,12 +1,13 @@
 package endpoints.lesson
 
 import endpoints.EndpointTestCase
+import endpoints.IntegrationEndpointTestCase
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert.assertThat
 import org.http4k.unquoted
 import org.junit.Test
 
-class DifferentCourseSameLessonNameTest : EndpointTestCase() {
+class DifferentCourseSameLessonNameTest : IntegrationEndpointTestCase() {
     @Test
     fun canGetALessonSharingTheNameWithALessonFromADiferentCourse() {
         testDatabaseAdaptor.runQuery("""

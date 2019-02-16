@@ -1,12 +1,13 @@
 package endpoints.lesson
 
 import endpoints.EndpointTestCase
+import endpoints.IntegrationEndpointTestCase
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.http4k.unquoted
 import org.junit.Test
 
-class ErrorHandling : EndpointTestCase() {
+class ErrorHandling : IntegrationEndpointTestCase() {
     @Test
     fun reportsWhenCantFindTheSpecifiedLesson() {
         testDatabaseAdaptor.runQuery("""

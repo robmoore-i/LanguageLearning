@@ -2,9 +2,10 @@ package endpoints.coursemetadata
 
 
 import endpoints.EndpointTestCase
+import endpoints.IntegrationEndpointTestCase
 import org.junit.Test
 
-class CourseLessonOrderTest : EndpointTestCase() {
+class CourseLessonOrderTest : IntegrationEndpointTestCase() {
 
     @Test
     fun canGetLessonOrderForACourse() {

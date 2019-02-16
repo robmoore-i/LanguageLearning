@@ -2,6 +2,7 @@ package endpoints.lesson
 
 import com.fasterxml.jackson.databind.JsonNode
 import endpoints.EndpointTestCase
+import endpoints.IntegrationEndpointTestCase
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.hasItem
 import org.hamcrest.MatcherAssert.assertThat
@@ -12,7 +13,7 @@ import org.junit.Test
 import java.io.File
 import java.nio.file.Paths
 
-class ReadingQuestionsTest : EndpointTestCase() {
+class ReadingQuestionsTest : IntegrationEndpointTestCase() {
 
     @After
     override fun tearDown() {
