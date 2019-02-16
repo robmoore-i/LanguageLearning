@@ -67,14 +67,14 @@ open class EndpointTestCase {
         )
     }
 
+    private val httpTestRequester : TestRequester = HttpTestRequester(environment)
+
     fun courseMetadataRequestJson(courseName: String): JsonNode {
-        val response = courseMetadataRequest(courseName)
-        return json.parse(response.bodyString())
+        return httpTestRequester.courseMetadataRequestJson(courseName)
     }
 
     fun courseMetadataRequest(courseName: String): Response {
-        val request = Request(Method.GET, "$serverUrl/coursemetadata?course=$courseName")
-        return client.invoke(request)
+        return httpTestRequester.courseMetadataRequest(courseName)
     }
 
     fun assertHasHeader(response: Response, headerName: String, headerValue: String) {
