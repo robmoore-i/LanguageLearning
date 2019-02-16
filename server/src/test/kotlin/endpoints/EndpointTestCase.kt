@@ -6,8 +6,8 @@ import environment.EnvironmentLoader
 import logger.ServerLogger
 import neo4j.Neo4jDatabaseAdaptor
 import neo4j.Neo4jDriver
-import org.hamcrest.CoreMatchers
-import org.hamcrest.MatcherAssert
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.MatcherAssert.assertThat
 import org.http4k.core.Headers
 import org.http4k.core.Response
 import org.http4k.format.Jackson
@@ -24,18 +24,18 @@ open class EndpointTestCase {
     val neo4jDriver = Neo4jDriver(environment.neo4jUser, environment.neo4jPassword, environment.neo4jPort)
 
     private val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(
-        neo4jDriver,
-        environment.imagesPath,
-        environment.extractsPath
+            neo4jDriver,
+            environment.imagesPath,
+            environment.extractsPath
     )
 
     private val logger = ServerLogger()
 
     private val server: Http4kServer = Server(
-        environment.serverPort,
-        neo4jDatabaseAdaptor,
-        environment.frontendPort,
-        logger
+            environment.serverPort,
+            neo4jDatabaseAdaptor,
+            environment.frontendPort,
+            logger
     )
 
     private val requester: TestRequester = HttpTestRequester(environment)
@@ -58,17 +58,11 @@ open class EndpointTestCase {
     }
 
     fun assertLessonHasIndex(lessonMetadata: JsonNode, lessonName: String, index: Int) {
-        MatcherAssert.assertThat(
-            getNodeWithName(lessonMetadata, lessonName)["index"].asInt(),
-            CoreMatchers.equalTo(index)
-        )
+        assertThat(getNodeWithName(lessonMetadata, lessonName)["index"].asInt(), equalTo(index))
     }
 
     fun assertHasHeader(response: Response, headerName: String, headerValue: String) {
-        MatcherAssert.assertThat(
-                headerValue(response.headers, headerName),
-                CoreMatchers.equalTo(headerValue)
-        )
+        assertThat(headerValue(response.headers, headerName), equalTo(headerValue))
     }
 
     fun coursesRequest(): Response {
