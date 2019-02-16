@@ -28,8 +28,8 @@ open class EndpointTestCase {
     val json = Jackson
 
     init {
-        val environmentLoader = EnvironmentLoader(System::getenv)
-        environment = environmentLoader.getEnvironment()
+        environment = EnvironmentLoader(System::getenv).getEnvironment()
+
         testDatabaseAdaptor = object : TestDatabaseAdaptor {
             val neo4jDriver = Neo4jDriver(environment.neo4jUser, environment.neo4jPassword, environment.neo4jPort)
             val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(
