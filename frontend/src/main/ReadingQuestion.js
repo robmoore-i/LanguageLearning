@@ -40,32 +40,32 @@ export default class ReadingQuestion extends Component {
 
     renderExtractPrompt(prompt) {
         return [
-            <br key="lesson-header--break--prompt" />,
-            <div id="read-the-extract-prompt" key="read-the-extract-prompt" >{prompt}</div>,
-            <br key="prompt--break--extract" />,
+            <br key="lesson-header--break--prompt"/>,
+            <div id="read-the-extract-prompt" key="read-the-extract-prompt">{prompt}</div>,
+            <br key="prompt--break--extract"/>,
             <div id="question-extract" key="question-extract">
                 {this.props.q.extract}
             </div>,
             <div key="extract--break--questions">
-                <br />
-                <br />
-                <br />
+                <br/>
+                <br/>
+                <br/>
             </div>
         ]
     }
 
     renderWithQuestions() {
         return this.renderExtractPrompt("Read the text, then answer the questions below").concat(
-                [
-                    <div key="questions" id="questions">
-                        {this.questions()}
-                    </div>,
-                    <br key="questions--break--unanswered-questions-warning" />,
-                    this.unansweredQuestionsWarning(),
-                    <br key="unanswered-questions-warning--break--button" />,
-                    this.button()
-                ]
-            )
+            [
+                <div key="questions" id="questions">
+                    {this.questions()}
+                </div>,
+                <br key="questions--break--unanswered-questions-warning"/>,
+                this.unansweredQuestionsWarning(),
+                <br key="unanswered-questions-warning--break--button"/>,
+                this.button()
+            ]
+        )
     }
 
     renderNoQuestions() {
@@ -83,42 +83,45 @@ export default class ReadingQuestion extends Component {
         let inOrderSubquestions = Array(this.props.q.questions.length).fill({})
         this.props.q.questions.forEach((q, idx) => {
             let i = q.index === undefined ? idx : q.index
-            inOrderSubquestions[i] = <SubQuestion id={"sub-question-" + String(i)} key={"sub-question-" + String(i)}
-                                  i={i}
-                                  question={q}
-                                  mark={this.state.marks[i]}
-                                  setParentState={setState} />
+            inOrderSubquestions[i] = (
+                <ReadingSubQuestion
+                    id={"sub-question-" + String(i)}
+                    key={"sub-question-" + String(i)}
+                    i={i}
+                    question={q}
+                    mark={this.state.marks[i]}
+                    setParentState={setState}
+                />
+            )
         })
         return inOrderSubquestions
     }
 
     button() {
         if (!this.state.marked) {
-          return this.submitForMarkingButton()
+            return this.submitForMarkingButton()
         } else {
-          let numCorrectAnswers = this.state.marks.map((mark) => + (mark === Mark.CORRECT)).reduce((a, b) => a + b)
-          let numIncorrectAnswers = this.props.q.questions.length - numCorrectAnswers
-          return continueButton(() => {this.props.onCompletion(numCorrectAnswers, numIncorrectAnswers)})
+            let numCorrectAnswers = this.state.marks.map((mark) => +(mark === Mark.CORRECT)).reduce((a, b) => a + b)
+            let numIncorrectAnswers = this.props.q.questions.length - numCorrectAnswers
+            return continueButton(() => {this.props.onCompletion(numCorrectAnswers, numIncorrectAnswers)})
         }
     }
 
     submitForMarkingButton() {
-      const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
+        const setState = this.setState.bind(this) // Bind 'this' reference for use within callback.
 
-      if (this.anySubQuestionsUnanswered() && !this.state.warning) {
-        return submitForMarkingButton(() => { // Possible 'key' re-rendering issue
-            setState({
-                warning: true
+        if (this.anySubQuestionsUnanswered() && !this.state.warning) {
+            return submitForMarkingButton(() => { // Possible 'key' re-rendering issue
+                setState({warning: true})
             })
-        })
-      } else {
-        return submitForMarkingButton(() => {
-            setState({
-                marked: true,
-                marks: this.markAnswers()
+        } else {
+            return submitForMarkingButton(() => {
+                setState({
+                    marked: true,
+                    marks: this.markAnswers()
+                })
             })
-        })
-      }
+        }
     }
 
     // Matches this.state.currentAnswers against this.props.q.questions
@@ -138,7 +141,8 @@ export default class ReadingQuestion extends Component {
         if (this.state.warning) {
             return (
                 <div id="unanswered-questions-warning" key="unanswered-questions-warning">
-                    <span id="you-have-unanswered-questions">You have unanswered questions!</span><br/>
+                    <span id="you-have-unanswered-questions">You have unanswered questions!</span>
+                    <br/>
                     Press 'Mark' again to mark your answers as they are.
                 </div>
             )
@@ -150,23 +154,32 @@ export default class ReadingQuestion extends Component {
 
 // The (i)th posed (question) about the extract. Shows the given (mark) and changing the textbox
 // makes a call to (setParentState) to update the parent-level list of answers.
-class SubQuestion extends React.Component {
+class ReadingSubQuestion extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    withRsqIndex(str) {
+        return str + "-" + String(this.props.i)
+
+    }
+
     render() {
         let correction = this.props.mark === Mark.INCORRECT ? this.correction() : null
         return [
-            <br key={"top-side-break-" + String(this.props.i)} />,
-            <div className="question-header" id={"question-header-" + String(this.props.i)} key={"question-header-" + String(this.props.i)}>
-                <div className="question-given" id={"question-given-" + String(this.props.i)} key={"question-given-" + String(this.props.i)}>
+            <br key={this.withRsqIndex("top-side-break")}/>,
+            <div className="question-header" id={this.withRsqIndex("question-header")} key={this.withRsqIndex("question-header")}>
+                <div className="question-given" id={this.withRsqIndex("question-given")} key={this.withRsqIndex("question-given")}>
                     {this.props.question.given}
                 </div>
-                <span id={this.props.mark.id + "-" + String(this.props.i)} key={this.props.mark.id + "-" + String(this.props.i)}>
-                    <img src={this.props.mark.img} className="question-result-img" alt="mark-result-status" />
+                <span id={this.withRsqIndex(this.props.mark.id)} key={this.withRsqIndex(this.props.mark.id)}>
+                    <img src={this.props.mark.img} className="question-result-img" alt="mark-result-status"/>
                 </span>
                 {correction}
             </div>,
-            <br key={"question-header--break--textarea-" + String(this.props.i)} />,
+            <br key={this.withRsqIndex("question-header--break--textarea")}/>,
             this.answerInputTextBox(),
-            <br key={"low-side-break-" + String(this.props.i)} />,
+            <br key={this.withRsqIndex("low-side-break")}/>,
         ]
     }
 
@@ -183,8 +196,8 @@ class SubQuestion extends React.Component {
         let colourClass = "colourclass-" + this.props.mark.id
         let hasBeenMarked = this.props.mark === Mark.CORRECT || this.props.mark === Mark.INCORRECT
         return <textarea className={["answer-input-textbox", colourClass].join(" ")}
-                         id={"answer-input-textbox-" + String(this.props.i)}
-                         key={"answer-input-textbox-" + String(this.props.i)}
+                         id={this.withRsqIndex("answer-input-textbox")}
+                         key={this.withRsqIndex("answer-input-textbox")}
                          rows="5" cols="50"
                          readOnly={hasBeenMarked}
                          onChange={onChange}/>;
@@ -192,7 +205,7 @@ class SubQuestion extends React.Component {
 
     correction() {
         return (
-            <div className="question-correction" id={"question-correction-" + String(this.props.i)} key={"question-correction-" + String(this.props.i)}>
+            <div className="question-correction" id={this.withRsqIndex("question-correction")} key={this.withRsqIndex("question-correction")}>
                 {this.correctionAnswer()}
             </div>
         )
