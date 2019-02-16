@@ -106,7 +106,9 @@ export default class Lesson extends Component {
                 return <ReadingQuestion
                     q={questionProps.q}
                     key={questionProps.key}
-                    onCompletion={questionProps.onCompletion} />
+                    onCompletion={questionProps.onCompletion}
+                    analytics={questionProps.analytics}
+                />
             default:
                 return <div key="sorry pal">Can't render that question pal</div>
         }
