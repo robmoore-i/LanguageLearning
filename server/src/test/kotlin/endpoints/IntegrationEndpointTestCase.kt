@@ -62,10 +62,8 @@ private val httpRequester = object : TestRequester {
     }
 
     override fun lessonRequest(courseName: String, lessonName: String): Response {
-        val request = Request(
-                Method.POST,
-                "$serverUrl/lesson"
-        ).body("{\"lessonName\":\"$lessonName\",\"courseName\":\"$courseName\"}")
+        val request = Request(Method.POST, "$serverUrl/lesson")
+                .body("{\"lessonName\":\"$lessonName\",\"courseName\":\"$courseName\"}")
         return client.invoke(request)
     }
 }
