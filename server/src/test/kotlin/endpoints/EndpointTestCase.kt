@@ -8,7 +8,6 @@ import neo4j.Neo4jDatabaseAdaptor
 import neo4j.Neo4jDriver
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
-import org.http4k.client.JavaHttpClient
 import org.http4k.core.Headers
 import org.http4k.core.Response
 import org.http4k.format.Jackson
@@ -23,6 +22,7 @@ open class EndpointTestCase {
     val environment = environmentLoader.getEnvironment()
 
     val neo4jDriver = Neo4jDriver(environment.neo4jUser, environment.neo4jPassword, environment.neo4jPort)
+
     private val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(
         neo4jDriver,
         environment.imagesPath,
@@ -38,10 +38,14 @@ open class EndpointTestCase {
         logger
     )
 
-    private val client = JavaHttpClient()
-    private val serverUrl = "http://localhost:${environment.serverPort}"
+    private val requester: TestRequester = HttpTestRequester(environment)
 
     val json = Jackson
+
+    @Before
+    fun setUp() {
+        server.start()
+    }
 
     @After
     open fun tearDown() {
@@ -53,11 +57,6 @@ open class EndpointTestCase {
         }
     }
 
-    @Before
-    fun setUp() {
-        server.start()
-    }
-
     fun assertLessonHasIndex(lessonMetadata: JsonNode, lessonName: String, index: Int) {
         MatcherAssert.assertThat(
             getNodeWithName(lessonMetadata, lessonName)["index"].asInt(),
@@ -65,33 +64,31 @@ open class EndpointTestCase {
         )
     }
 
-    private val httpTestRequester : TestRequester = HttpTestRequester(environment)
-
-    fun courseMetadataRequestJson(courseName: String): JsonNode {
-        return httpTestRequester.courseMetadataRequestJson(courseName)
-    }
-
-    fun courseMetadataRequest(courseName: String): Response {
-        return httpTestRequester.courseMetadataRequest(courseName)
-    }
-
     fun assertHasHeader(response: Response, headerName: String, headerValue: String) {
         MatcherAssert.assertThat(
-            headerValue(response.headers, headerName),
-            CoreMatchers.equalTo(headerValue)
+                headerValue(response.headers, headerName),
+                CoreMatchers.equalTo(headerValue)
         )
     }
 
     fun coursesRequest(): Response {
-        return httpTestRequester.coursesRequest()
+        return requester.coursesRequest()
     }
 
     fun lessonRequest(courseName: String, lessonName: String): Response {
-        return httpTestRequester.lessonRequest(courseName, lessonName)
+        return requester.lessonRequest(courseName, lessonName)
     }
 
     fun lessonRequestJson(courseName: String, lessonName: String): JsonNode {
-        return httpTestRequester.lessonRequestJson(courseName, lessonName)
+        return json.parse(lessonRequest(courseName, lessonName).bodyString())
+    }
+
+    fun courseMetadataRequest(courseName: String): Response {
+        return requester.courseMetadataRequest(courseName)
+    }
+
+    fun courseMetadataRequestJson(courseName: String): JsonNode {
+        return json.parse(courseMetadataRequest(courseName).bodyString())
     }
 
     fun subquestionWithIndex(subquestions: JsonNode, index: Int): JsonNode {
