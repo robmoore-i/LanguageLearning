@@ -41,29 +41,25 @@ function typeRsqAnswer(rqComponent, rsqIndex, rsqAnswer) {
     rqComponent.find("#answer-input-textbox-" + rsqIndex.toString()).simulate("change", textBoxInputEvent(rsqAnswer))
 }
 
-it('Shows the extract', () => {
-    let q = {
+function rqObject(extract, rsqs) {
+    return {
         type: 2,
-        extract: "Vlad went to the kitchen and got some cake",
-        questions: [
-            {given: "Where did Vlad go?", answer: "Kitchen"},
-            {given: "What did he get there?", answer: "Cake"}
-            ]
+        extract: extract,
+        questions: rsqs
     }
+}
+
+it('Shows the extract', () => {
+    let q = rqObject("Vlad went to the kitchen and got some cake",
+        [{given: "Where did Vlad go?", answer: "Kitchen"}, {given: "What did he get there?", answer: "Cake"}])
     let rq = shallowRq(q)
 
     expect(rq.find("#question-extract").text()).toBe("Vlad went to the kitchen and got some cake")
 })
 
 it('Shows all the questions', () => {
-    let q = {
-        type: 2,
-        extract: "Vlad went to the kitchen and got some cake",
-        questions: [
-            {given: "Where did Vlad go?", answer: "Kitchen"},
-            {given: "What did he get there?", answer: "Cake"}
-        ]
-    }
+    let q = rqObject("Vlad went to the kitchen and got some cake",
+        [{given: "Where did Vlad go?", answer: "Kitchen"}, {given: "What did he get there?", answer: "Cake"}])
     let rq = shallowRq(q)
 
     expect(rq.find("#sub-question-0").dive().find("#question-given-0").text()).toBe("Where did Vlad go?")
@@ -71,20 +67,12 @@ it('Shows all the questions', () => {
 })
 
 it('Marks correct answers as correct', () => {
-    let rsq1Answer = "Kitchen"
-    let rsq2Answer = "Cake"
-    let q = {
-        type: 2,
-        extract: "Vlad went to the kitchen and got some cake",
-        questions: [
-            {given: "Where did Vlad go?", answer: rsq1Answer},
-            {given: "What did he get there?", answer: rsq2Answer}
-        ]
-    }
+    let q = rqObject("Vlad went to the kitchen and got some cake",
+        [{given: "Where did Vlad go?", answer: "Kitchen"}, {given: "What did he get there?", answer: "Cake"}])
     let rq = mountRq(q)
 
-    typeRsqAnswer(rq, 0, rsq1Answer)
-    typeRsqAnswer(rq, 1, rsq2Answer)
+    typeRsqAnswer(rq, 0, "Kitchen")
+    typeRsqAnswer(rq, 1, "Cake")
     clickSubmitForMarkingButton(rq)
 
     assertCorrect(rq, 0)
@@ -92,14 +80,8 @@ it('Marks correct answers as correct', () => {
 })
 
 it('Marks incorrect answers as incorrect', () => {
-    let q = {
-        type: 2,
-        extract: "Vlad went to the kitchen and got some cake",
-        questions: [
-            {given: "Where did Vlad go?", answer: "Kitchen"},
-            {given: "What did he get there?", answer: "Cake"}
-        ]
-    }
+    let q = rqObject("Vlad went to the kitchen and got some cake",
+        [{given: "Where did Vlad go?", answer: "Kitchen"}, {given: "What did he get there?", answer: "Cake"}])
     let rq = mountRq(q)
 
     typeRsqAnswer(rq, 0, "Ayy")
@@ -111,17 +93,14 @@ it('Marks incorrect answers as incorrect', () => {
 })
 
 it('Marks questions separately', () => {
-    let q = {
-        type: 2,
-        extract: "Vlad went to the kitchen and got some cake",
-        questions: [
+    let q = rqObject("Vlad went to the kitchen and got some cake",
+        [
             {given: "Where did Vlad go?", answer: "Kitchen"},
             {given: "What did he get there?", answer: "Cake"},
             {given: "What's this guy's name again?", answer: "Vlad"},
             {given: "What even is a kitchen?", answer: "A type of room"},
             {given: "And who are you?", answer: "A reading question, dummy"}
-        ]
-    }
+        ])
     let rq = mountRq(q)
 
     typeRsqAnswer(rq, 0, "Wrong")
@@ -139,15 +118,12 @@ it('Marks questions separately', () => {
 })
 
 it('Shows corrections for questions answered incorrectly', () => {
-    let q = {
-        type: 2,
-        extract: "Vlad went to the kitchen and got some cake",
-        questions: [
+    let q = rqObject("Vlad went to the kitchen and got some cake",
+        [
             {given: "Where did Vlad go?", answer: "Kitchen"},
             {given: "What did he get there?", answer: "Cake"},
             {given: "What's this guy's name again?", answer: "Vlad"}
-        ]
-    }
+        ])
     let rq = mountRq(q)
 
     typeRsqAnswer(rq, 0, "Wrong")
@@ -161,13 +137,8 @@ it('Shows corrections for questions answered incorrectly', () => {
 })
 
 it('The continue button appears after marking', () => {
-    let q = {
-        type: 2,
-        extract: "Vlad went to the kitchen and got some cake",
-        questions: [
-            {given: "Where did Vlad go?", answer: "Kitchen"}
-        ]
-    }
+    let q = rqObject("Vlad went to the kitchen and got some cake",
+        [{given: "Where did Vlad go?", answer: "Kitchen"}])
     let rq = mountRq(q)
 
     typeRsqAnswer(rq, 0, "Wrong")
@@ -177,14 +148,9 @@ it('The continue button appears after marking', () => {
 })
 
 it('Calls the onCompletion prop when clicking continue', () => {
-    let q = {
-        type: 2,
-        extract: "Vlad went to the kitchen and got some cake",
-        questions: [
-            {given: "Where did Vlad go?", answer: "Kitchen"}
-        ]
-    }
     let spyOnCompletion = jest.fn()
+    let q = rqObject("Vlad went to the kitchen and got some cake",
+        [{given: "Where did Vlad go?", answer: "Kitchen"}])
     let rq = mount(<ReadingQuestion q={q} onCompletion={spyOnCompletion} />)
 
     typeRsqAnswer(rq, 0, "Kitchen")
@@ -194,15 +160,9 @@ it('Calls the onCompletion prop when clicking continue', () => {
 })
 
 it('Ignores whitespace, case, commas, fullstops, exclamation marks and question mark when marking', () => {
-    let correctAnswer = "He went to the kitchen! Would you BELIEVE IT?!!"
-    let q = {
-        type: 2,
-        extract: "Vlad went to the kitchen and got some cake",
-        questions: [
-            {given: "Where did Vlad go?", answer: correctAnswer}
-        ]
-    }
     let spyOnCompletion = jest.fn()
+    let correctAnswer = "He went to the kitchen! Would you BELIEVE IT?!!"
+    let q = rqObject("Vlad went to the kitchen and got some cake", [{given: "Where did Vlad go?", answer: correctAnswer}])
     let rq = mount(<ReadingQuestion q={q} onCompletion={spyOnCompletion} />)
 
     typeRsqAnswer(rq, 0, "  He  went   to    THE  KITCHEN!?  would. yOU. beliEVE it.")
@@ -221,6 +181,7 @@ it('Warns user before marking if an answer box is empty', () => {
             {given: "Where did Vlad go?", answer: "Kitchen"}
         ]
     }
+
     let rq = mountRq(q)
 
     clickSubmitForMarkingButton(rq)
