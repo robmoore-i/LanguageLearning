@@ -1,5 +1,6 @@
 package endpoints.lesson
 
+import com.fasterxml.jackson.databind.JsonNode
 import endpoints.EndpointTestCase
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.hasItem
@@ -143,5 +144,9 @@ class ReadingQuestionsTest : EndpointTestCase() {
             subquestionWithIndex(subquestions, 3)["given"].toString().unquoted(),
             equalTo("What does 'გული' mean in English?")
         )
+    }
+
+    private fun subquestionWithIndex(subquestions: JsonNode, index: Int): JsonNode {
+        return subquestions.first { rsq -> rsq["index"].asInt() == index }
     }
 }

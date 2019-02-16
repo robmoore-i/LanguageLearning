@@ -12,7 +12,6 @@ import neo4j.Neo4jDatabaseAdaptor
 import neo4j.Neo4jDriver
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.http4k.core.Headers
 import org.http4k.core.Response
 import org.http4k.format.Jackson
 import org.http4k.unquoted
@@ -62,13 +61,14 @@ open class EndpointTestCase {
                 }
             }
         }
+
         requester = HttpTestRequester(environment)
-        val logger = ServerLogger()
+
         server = Server(
-                environment.serverPort,
-                testDatabaseAdaptor,
-                environment.frontendPort,
-                logger
+            environment.serverPort,
+            testDatabaseAdaptor,
+            environment.frontendPort,
+            ServerLogger()
         )
     }
 
@@ -84,11 +84,13 @@ open class EndpointTestCase {
     }
 
     fun assertLessonHasIndex(lessonMetadata: JsonNode, lessonName: String, index: Int) {
-        assertThat(getNodeWithName(lessonMetadata, lessonName)["index"].asInt(), equalTo(index))
+        val lesson = lessonMetadata.first { node -> node["name"].toString().unquoted() == lessonName }
+        assertThat(lesson["index"].asInt(), equalTo(index))
     }
 
-    fun assertHasHeader(response: Response, headerName: String, headerValue: String) {
-        assertThat(headerValue(response.headers, headerName), equalTo(headerValue))
+    fun assertHasHeader(response: Response, headerName: String, expectedHeaderValue: String) {
+        val responseHeaderValue = response.headers.first { header -> header.first == headerName }.second!!
+        assertThat(responseHeaderValue, equalTo(expectedHeaderValue))
     }
 
     fun coursesRequest(): Response {
@@ -96,7 +98,7 @@ open class EndpointTestCase {
     }
 
     fun coursesJson(): JsonNode {
-        return json.parse(coursesRequest().bodyString())
+        return extractJsonBody(coursesRequest())
     }
 
     fun lessonRequest(courseName: String, lessonName: String): Response {
@@ -104,7 +106,7 @@ open class EndpointTestCase {
     }
 
     fun lessonRequestJson(courseName: String, lessonName: String): JsonNode {
-        return json.parse(lessonRequest(courseName, lessonName).bodyString())
+        return extractJsonBody(lessonRequest(courseName, lessonName))
     }
 
     fun courseMetadataRequest(courseName: String): Response {
@@ -112,18 +114,8 @@ open class EndpointTestCase {
     }
 
     fun courseMetadataRequestJson(courseName: String): JsonNode {
-        return json.parse(courseMetadataRequest(courseName).bodyString())
+        return extractJsonBody(courseMetadataRequest(courseName))
     }
 
-    fun subquestionWithIndex(subquestions: JsonNode, index: Int): JsonNode {
-        return subquestions.first { rsq -> rsq["index"].asInt() == index }
-    }
-
-    private fun headerValue(headers: Headers, headerName: String): String {
-        return headers.first { header -> header.first == headerName }.second!!
-    }
-
-    private fun getNodeWithName(lessonMetadata: JsonNode, nodeName: String): JsonNode {
-        return lessonMetadata.first { node -> node["name"].toString().unquoted() == nodeName }
-    }
+    private fun extractJsonBody(response: Response) = json.parse(response.bodyString())
 }
