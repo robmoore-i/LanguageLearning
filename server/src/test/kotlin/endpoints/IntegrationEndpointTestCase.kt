@@ -13,10 +13,10 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.junit.After
 import org.junit.Before
+import server.HttpRequestHandler
 import server.HttpResponseFactory
 import server.HttpServer
 import server.ServerApi
-import server.ServerHttpApi
 
 private val environment = EnvironmentLoader(System::getenv).getEnvironment()
 
@@ -73,27 +73,27 @@ private val httpServerClient = object : TestServerClient {
     }
 }
 
-private val serverHttpApi = ServerHttpApi(ServerApi(neo4jDatabaseAdaptor), HttpResponseFactory(environment.frontendPort))
+private val httpRequestHandler = HttpRequestHandler(ServerApi(neo4jDatabaseAdaptor), HttpResponseFactory(environment.frontendPort))
 
-private val HTTP_SERVER: HttpServer = HttpServer(
-        serverHttpApi,
-        environment.serverPort,
-        ServerLogger()
+private val httpServer: HttpServer = HttpServer(
+    httpRequestHandler,
+    environment.serverPort,
+    ServerLogger()
 )
 
 open class IntegrationEndpointTestCase : EndpointTestCase(
-        environment,
-        neo4jDatabaseAdaptor,
-        httpServerClient
+    environment,
+    neo4jDatabaseAdaptor,
+    httpServerClient
 ) {
     @Before
     fun setUp() {
-        HTTP_SERVER.start()
+        httpServer.start()
     }
 
     @After
     open fun tearDown() {
-        HTTP_SERVER.stop()
+        httpServer.stop()
         testDatabaseAdaptor.clearDatabase()
     }
 }

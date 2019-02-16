@@ -11,16 +11,16 @@ import org.http4k.server.asServer
 
 /*Created on 13/01/19. */
 class HttpServer(
-        serverHttpApi: ServerHttpApi,
+        httpRequestHandler: HttpRequestHandler,
         private val port: Int,
         private val logger: ServerLogger
 ) : Http4kServer {
 
     private val handler: HttpHandler = ServerFilters.CatchLensFailure.then(
         routes(
-            "/courses" bind Method.GET to loggedResponse(serverHttpApi::handleCourses),
-            "/lesson" bind Method.POST to loggedResponse(serverHttpApi::handleLesson),
-            "/coursemetadata" bind Method.GET to loggedResponse(serverHttpApi::handleCoursemetadata)
+            "/courses" bind Method.GET to loggedResponse(httpRequestHandler::handleCourses),
+            "/lesson" bind Method.POST to loggedResponse(httpRequestHandler::handleLesson),
+            "/coursemetadata" bind Method.GET to loggedResponse(httpRequestHandler::handleCoursemetadata)
         )
     )
 
