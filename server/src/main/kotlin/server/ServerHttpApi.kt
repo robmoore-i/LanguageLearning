@@ -9,7 +9,7 @@ import org.http4k.core.Status.Companion.OK
 import org.http4k.format.Jackson
 import org.http4k.unquoted
 
-class ServerApi(
+class ServerHttpApi(
     private val databaseAdaptor: DatabaseAdaptor,
     private val frontendPort: Int
 ) {

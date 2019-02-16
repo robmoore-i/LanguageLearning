@@ -16,7 +16,7 @@ class Server(
     frontendPort: Int,
     private val logger: ServerLogger
 ) : Http4kServer {
-    private val serverApi = ServerApi(databaseAdaptor, frontendPort)
+    private val serverApi = ServerHttpApi(databaseAdaptor, frontendPort)
 
     private val handler: HttpHandler = ServerFilters.CatchLensFailure.then(
         routes(
