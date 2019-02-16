@@ -29,6 +29,10 @@ let assertIncorrect = (rq, i) => {
     expect(rq.find("#question-correction-" + i).exists()).toBe(true)
 }
 
+function shallowRq(q) {
+    return shallow(<ReadingQuestion q={q}/>);
+}
+
 it('Shows the extract', () => {
     let q = {
         type: 2,
@@ -38,7 +42,7 @@ it('Shows the extract', () => {
             {given: "What did he get there?", answer: "Cake"}
             ]
     }
-    let rq = shallow(<ReadingQuestion q={q} />)
+    let rq = shallowRq(q)
 
     expect(rq.find("#question-extract").text()).toBe("Vlad went to the kitchen and got some cake")
 })
@@ -52,7 +56,7 @@ it('Shows all the questions', () => {
             {given: "What did he get there?", answer: "Cake"}
         ]
     }
-    let rq = shallow(<ReadingQuestion q={q} />)
+    let rq = shallowRq(q)
 
     expect(rq.find("#sub-question-0").dive().find("#question-given-0").text()).toBe("Where did Vlad go?")
     expect(rq.find("#sub-question-1").dive().find("#question-given-1").text()).toBe("What did he get there?")
@@ -291,7 +295,7 @@ it('Indexes subquestions in the correct order if order is given', () => {
             {index: 1, given: "What did he get there?", answers: ["Cake", "Some cake"]}
         ]
     }
-    let rq = shallow(<ReadingQuestion q={q} />)
+    let rq = shallowRq(q)
 
     expect(rq.find("#sub-question-0").dive().find("#question-given-0").text()).toBe("Where did Vlad go?")
     expect(rq.find("#sub-question-1").dive().find("#question-given-1").text()).toBe("What did he get there?")
@@ -375,7 +379,7 @@ it('Text area becomes read-only if an incorrect answer is marked', () => {
 it('Shows only the continue button if questions is a empty list', () => {
     let q = {type: 2, extract: "A question-less extract", questions: []}
 
-    let testRQ = shallow(<ReadingQuestion q={q} />)
+    let testRQ = shallowRq(q)
 
     expect(testRQ.find("#continue-button").exists()).toBe(true)
 })
@@ -383,7 +387,7 @@ it('Shows only the continue button if questions is a empty list', () => {
 it('Shows only the continue button if there isnt a questions property', () => {
     let q = {type: 2, extract: "A question-less extract"}
 
-    let testRQ = shallow(<ReadingQuestion q={q} />)
+    let testRQ = shallowRq(q)
 
     expect(testRQ.find("#continue-button").exists()).toBe(true)
 })
