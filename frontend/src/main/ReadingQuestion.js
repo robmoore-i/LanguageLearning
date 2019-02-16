@@ -155,15 +155,6 @@ export default class ReadingQuestion extends Component {
 // The (i)th posed (question) about the extract. Shows the given (mark) and changing the textbox
 // makes a call to (setParentState) to update the parent-level list of answers.
 class ReadingSubQuestion extends React.Component {
-    constructor(props) {
-        super(props)
-    }
-
-    withRsqIndex(str) {
-        return str + "-" + String(this.props.i)
-
-    }
-
     render() {
         let correction = this.props.mark === Mark.INCORRECT ? this.correction() : null
         return [
@@ -217,5 +208,9 @@ class ReadingSubQuestion extends React.Component {
         } else {
             return this.props.question.answers[0]
         }
+    }
+
+    withRsqIndex(str) {
+        return str + "-" + String(this.props.i)
     }
 }
