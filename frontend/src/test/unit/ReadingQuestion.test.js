@@ -375,24 +375,17 @@ it('Text area becomes read-only if an incorrect answer is marked', () => {
 })
 
 it('Shows only the continue button if questions is a empty list', () => {
-    let q = {
-        type: 2,
-        extract: "A question-less extract",
-        questions: []
-    }
+    let q = {type: 2, extract: "A question-less extract", questions: []}
+
     let testRQ = shallow(<ReadingQuestion q={q} />)
 
-    expect(testRQ.find("#read-the-extract-prompt").text()).toBe("")
-    expect(testRQ.find("#read-the-extract-prompt").exists()).toBe(true)
+    expect(testRQ.find("#continue-button").exists()).toBe(true)
 })
 
 it('Shows only the continue button if there isnt a questions property', () => {
-    let q = {
-        type: 2,
-        extract: "A question-less extract"
-    }
+    let q = {type: 2, extract: "A question-less extract"}
+
     let testRQ = shallow(<ReadingQuestion q={q} />)
 
-    expect(testRQ.find("#read-the-extract-prompt").text()).toBe("")
-    expect(testRQ.find("#read-the-extract-prompt").exists()).toBe(true)
+    expect(testRQ.find("#continue-button").exists()).toBe(true)
 })
