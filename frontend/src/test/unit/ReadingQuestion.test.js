@@ -13,35 +13,6 @@ function clickSubmitForMarkingButton(rqComponent) {
     rqComponent.find("#submit-for-marking-button").simulate("click")
 }
 
-it('Shows the extract', () => {
-    let q = {
-        type: 2,
-        extract: "Vlad went to the kitchen and got some cake",
-        questions: [
-            {given: "Where did Vlad go?", answer: "Kitchen"},
-            {given: "What did he get there?", answer: "Cake"}
-            ]
-    }
-    let testRQ = shallow(<ReadingQuestion q={q} />)
-
-    expect(testRQ.find("#question-extract").text()).toBe("Vlad went to the kitchen and got some cake")
-})
-
-it('Shows all the questions', () => {
-    let q = {
-        type: 2,
-        extract: "Vlad went to the kitchen and got some cake",
-        questions: [
-            {given: "Where did Vlad go?", answer: "Kitchen"},
-            {given: "What did he get there?", answer: "Cake"}
-        ]
-    }
-    let testRQ = shallow(<ReadingQuestion q={q} />)
-
-    expect(testRQ.find("#sub-question-0").dive().find("#question-given-0").text()).toBe("Where did Vlad go?")
-    expect(testRQ.find("#sub-question-1").dive().find("#question-given-1").text()).toBe("What did he get there?")
-})
-
 // Asserts that the (i)th sub question in the reading question(rq) is correct
 let assertCorrect = (rq, i) => {
     expect(rq.find("#question-result-correct-" + i).exists()).toBe(true)
@@ -58,6 +29,35 @@ let assertIncorrect = (rq, i) => {
     expect(rq.find("#question-correction-" + i).exists()).toBe(true)
 }
 
+it('Shows the extract', () => {
+    let q = {
+        type: 2,
+        extract: "Vlad went to the kitchen and got some cake",
+        questions: [
+            {given: "Where did Vlad go?", answer: "Kitchen"},
+            {given: "What did he get there?", answer: "Cake"}
+            ]
+    }
+    let rq = shallow(<ReadingQuestion q={q} />)
+
+    expect(rq.find("#question-extract").text()).toBe("Vlad went to the kitchen and got some cake")
+})
+
+it('Shows all the questions', () => {
+    let q = {
+        type: 2,
+        extract: "Vlad went to the kitchen and got some cake",
+        questions: [
+            {given: "Where did Vlad go?", answer: "Kitchen"},
+            {given: "What did he get there?", answer: "Cake"}
+        ]
+    }
+    let rq = shallow(<ReadingQuestion q={q} />)
+
+    expect(rq.find("#sub-question-0").dive().find("#question-given-0").text()).toBe("Where did Vlad go?")
+    expect(rq.find("#sub-question-1").dive().find("#question-given-1").text()).toBe("What did he get there?")
+})
+
 it('Marks correct answers as correct', () => {
     let q = {
         type: 2,
@@ -67,14 +67,14 @@ it('Marks correct answers as correct', () => {
             {given: "What did he get there?", answer: "Cake"}
         ]
     }
-    let testRQ = mount(<ReadingQuestion q={q} />)
+    let rq = mount(<ReadingQuestion q={q} />)
 
-    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Kitchen"))
-    testRQ.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
-    testRQ.find("#submit-for-marking-button").simulate("click")
+    rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Kitchen"))
+    rq.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
+    clickSubmitForMarkingButton(rq)
 
-    assertCorrect(testRQ, 0)
-    assertCorrect(testRQ, 1)
+    assertCorrect(rq, 0)
+    assertCorrect(rq, 1)
 })
 
 it('Marks incorrect answers as incorrect', () => {
@@ -86,14 +86,14 @@ it('Marks incorrect answers as incorrect', () => {
             {given: "What did he get there?", answer: "Cake"}
         ]
     }
-    let testRQ = mount(<ReadingQuestion q={q} />)
+    let rq = mount(<ReadingQuestion q={q} />)
 
-    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Ayy"))
-    testRQ.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Lmao"))
-    testRQ.find("#submit-for-marking-button").simulate("click")
+    rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Ayy"))
+    rq.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Lmao"))
+    clickSubmitForMarkingButton(rq)
 
-    assertIncorrect(testRQ, 0)
-    assertIncorrect(testRQ, 1)
+    assertIncorrect(rq, 0)
+    assertIncorrect(rq, 1)
 })
 
 it('Marks questions separately', () => {
@@ -108,20 +108,20 @@ it('Marks questions separately', () => {
             {given: "And who are you?", answer: "A reading question, dummy"}
         ]
     }
-    let testRQ = mount(<ReadingQuestion q={q} />)
+    let rq = mount(<ReadingQuestion q={q} />)
 
-    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Wrong"))
-    testRQ.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
-    testRQ.find("#answer-input-textbox-2").simulate("change", textBoxInputEvent("Wrong"))
-    testRQ.find("#answer-input-textbox-3").simulate("change", textBoxInputEvent("A type of room"))
-    testRQ.find("#answer-input-textbox-4").simulate("change", textBoxInputEvent("Wrong"))
-    testRQ.find("#submit-for-marking-button").simulate("click")
+    rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Wrong"))
+    rq.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
+    rq.find("#answer-input-textbox-2").simulate("change", textBoxInputEvent("Wrong"))
+    rq.find("#answer-input-textbox-3").simulate("change", textBoxInputEvent("A type of room"))
+    rq.find("#answer-input-textbox-4").simulate("change", textBoxInputEvent("Wrong"))
+    clickSubmitForMarkingButton(rq)
 
-    assertIncorrect(testRQ, 0)
-    assertCorrect(testRQ, 1)
-    assertIncorrect(testRQ, 2)
-    assertCorrect(testRQ, 3)
-    assertIncorrect(testRQ, 4)
+    assertIncorrect(rq, 0)
+    assertCorrect(rq, 1)
+    assertIncorrect(rq, 2)
+    assertCorrect(rq, 3)
+    assertIncorrect(rq, 4)
 })
 
 it('Shows corrections for questions answered incorrectly', () => {
@@ -134,16 +134,16 @@ it('Shows corrections for questions answered incorrectly', () => {
             {given: "What's this guy's name again?", answer: "Vlad"}
         ]
     }
-    let testRQ = mount(<ReadingQuestion q={q} />)
+    let rq = mount(<ReadingQuestion q={q} />)
 
-    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Wrong"))
-    testRQ.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
-    testRQ.find("#answer-input-textbox-2").simulate("change", textBoxInputEvent("Wrong"))
-    testRQ.find("#submit-for-marking-button").simulate("click")
+    rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Wrong"))
+    rq.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
+    rq.find("#answer-input-textbox-2").simulate("change", textBoxInputEvent("Wrong"))
+    clickSubmitForMarkingButton(rq)
 
-    expect(testRQ.find("#question-correction-0").text()).toEqual("Kitchen")
-    expect(testRQ.find("#question-correction-1").exists()).toBe(false)
-    expect(testRQ.find("#question-correction-2").text()).toEqual("Vlad")
+    expect(rq.find("#question-correction-0").text()).toEqual("Kitchen")
+    expect(rq.find("#question-correction-1").exists()).toBe(false)
+    expect(rq.find("#question-correction-2").text()).toEqual("Vlad")
 })
 
 it('The continue button appears after marking', () => {
@@ -154,12 +154,12 @@ it('The continue button appears after marking', () => {
             {given: "Where did Vlad go?", answer: "Kitchen"}
         ]
     }
-    let testRQ = mount(<ReadingQuestion q={q} />)
+    let rq = mount(<ReadingQuestion q={q} />)
 
-    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Wrong"))
-    testRQ.find("#submit-for-marking-button").simulate("click")
+    rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Wrong"))
+    clickSubmitForMarkingButton(rq)
 
-    expect(testRQ.find("#continue-button").exists()).toBe(true)
+    expect(rq.find("#continue-button").exists()).toBe(true)
 })
 
 it('Calls the onCompletion prop when clicking continue', () => {
@@ -171,10 +171,10 @@ it('Calls the onCompletion prop when clicking continue', () => {
         ]
     }
     let spyOnCompletion = jest.fn()
-    let testRQ = mount(<ReadingQuestion q={q} onCompletion={spyOnCompletion} />)
+    let rq = mount(<ReadingQuestion q={q} onCompletion={spyOnCompletion} />)
 
-    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Kitchen"))
-    questionSubmitAndContinue(testRQ)
+    rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Kitchen"))
+    questionSubmitAndContinue(rq)
 
     expect(spyOnCompletion).toHaveBeenCalled()
 })
@@ -189,10 +189,10 @@ it('Ignores whitespace, case, commas, fullstops, exclamation marks and question 
         ]
     }
     let spyOnCompletion = jest.fn()
-    let testRQ = mount(<ReadingQuestion q={q} onCompletion={spyOnCompletion} />)
+    let rq = mount(<ReadingQuestion q={q} onCompletion={spyOnCompletion} />)
 
-    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("  He  went   to    THE  KITCHEN!?  would. yOU. beliEVE it."))
-    questionSubmitAndContinue(testRQ)
+    rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("  He  went   to    THE  KITCHEN!?  would. yOU. beliEVE it."))
+    questionSubmitAndContinue(rq)
 
     let expectedCorrect = 1
     let expectedIncorrect = 0
@@ -207,14 +207,13 @@ it('Warns user before marking if an answer box is empty', () => {
           {given: "Where did Vlad go?", answer: "Kitchen"}
       ]
   }
+  let rq = mount(<ReadingQuestion q={q} />)
 
-  let testRQ = mount(<ReadingQuestion q={q} />)
+  clickSubmitForMarkingButton(rq)
 
-  testRQ.find("#submit-for-marking-button").simulate("click")
-
-  expect(testRQ.find("#unanswered-questions-warning").exists()).toBe(true)
-  expect(testRQ.find("#submit-for-marking-button").exists()).toBe(true)
-  expect(testRQ.find("#continue-button").exists()).toBe(false)
+  expect(rq.find("#unanswered-questions-warning").exists()).toBe(true)
+  expect(rq.find("#submit-for-marking-button").exists()).toBe(true)
+  expect(rq.find("#continue-button").exists()).toBe(false)
 })
 
 it('Warns user before marking if any answer box is empty', () => {
@@ -227,14 +226,13 @@ it('Warns user before marking if any answer box is empty', () => {
           {given: "What's this guy's name again?", answer: "Vlad"}
       ]
   }
+  let rq = mount(<ReadingQuestion q={q} />)
 
-  let testRQ = mount(<ReadingQuestion q={q} />)
+  rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Kitchen"))
+  rq.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
+  clickSubmitForMarkingButton(rq)
 
-  testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Kitchen"))
-  testRQ.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
-  testRQ.find("#submit-for-marking-button").simulate("click")
-
-  expect(testRQ.find("#unanswered-questions-warning").exists()).toBe(true)
+  expect(rq.find("#unanswered-questions-warning").exists()).toBe(true)
 })
 
 it('Can have subquestions with multiple potential correct answers', () => {
@@ -249,12 +247,12 @@ it('Can have subquestions with multiple potential correct answers', () => {
     }
 
     let spyOnCompletion = jest.fn()
-    let testRQ = mount(<ReadingQuestion q={q} onCompletion={spyOnCompletion} />)
+    let rq = mount(<ReadingQuestion q={q} onCompletion={spyOnCompletion} />)
 
-    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("The kitchen"))
-    testRQ.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
-    testRQ.find("#answer-input-textbox-2").simulate("change", textBoxInputEvent("Vlad"))
-    questionSubmitAndContinue(testRQ)
+    rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("The kitchen"))
+    rq.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
+    rq.find("#answer-input-textbox-2").simulate("change", textBoxInputEvent("Vlad"))
+    questionSubmitAndContinue(rq)
 
     let expectedCorrect = 3
     let expectedIncorrect = 0
@@ -271,16 +269,16 @@ it('Shows corrections for subquestions with multiple potential correct answers',
             {given: "What's this guy's name again?", answer: "Vlad"}
         ]
     }
-    let testRQ = mount(<ReadingQuestion q={q} />)
+    let rq = mount(<ReadingQuestion q={q} />)
 
-    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Kitchen"))
-    testRQ.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Wrong"))
-    testRQ.find("#answer-input-textbox-2").simulate("change", textBoxInputEvent("Wrong"))
-    testRQ.find("#submit-for-marking-button").simulate("click")
+    rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Kitchen"))
+    rq.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Wrong"))
+    rq.find("#answer-input-textbox-2").simulate("change", textBoxInputEvent("Wrong"))
+    clickSubmitForMarkingButton(rq)
 
-    expect(testRQ.find("#question-correction-0").exists()).toBe(false)
-    expect(testRQ.find("#question-correction-1").text()).toBe("Cake")
-    expect(testRQ.find("#question-correction-2").text()).toEqual("Vlad")
+    expect(rq.find("#question-correction-0").exists()).toBe(false)
+    expect(rq.find("#question-correction-1").text()).toBe("Cake")
+    expect(rq.find("#question-correction-2").text()).toEqual("Vlad")
 })
 
 it('Indexes subquestions in the correct order if order is given', () => {
@@ -293,11 +291,11 @@ it('Indexes subquestions in the correct order if order is given', () => {
             {index: 1, given: "What did he get there?", answers: ["Cake", "Some cake"]}
         ]
     }
-    let testRQ = shallow(<ReadingQuestion q={q} />)
+    let rq = shallow(<ReadingQuestion q={q} />)
 
-    expect(testRQ.find("#sub-question-0").dive().find("#question-given-0").text()).toBe("Where did Vlad go?")
-    expect(testRQ.find("#sub-question-1").dive().find("#question-given-1").text()).toBe("What did he get there?")
-    expect(testRQ.find("#sub-question-2").dive().find("#question-given-2").text()).toBe("What's this guy's name again?")
+    expect(rq.find("#sub-question-0").dive().find("#question-given-0").text()).toBe("Where did Vlad go?")
+    expect(rq.find("#sub-question-1").dive().find("#question-given-1").text()).toBe("What did he get there?")
+    expect(rq.find("#sub-question-2").dive().find("#question-given-2").text()).toBe("What's this guy's name again?")
 })
 
 it('Renders subquestions in index order', () => {
@@ -310,9 +308,9 @@ it('Renders subquestions in index order', () => {
             {index: 1, given: "What did he get there?", answers: ["Cake", "Some cake"]}
         ]
     }
-    let testRQ = mount(<ReadingQuestion q={q} />)
+    let rq = mount(<ReadingQuestion q={q} />)
 
-    let questionsDiv = testRQ.find("#questions")
+    let questionsDiv = rq.find("#questions")
     expect(questionsDiv.childAt(0).prop("id")).toEqual("sub-question-0")
     expect(questionsDiv.childAt(1).prop("id")).toEqual("sub-question-1")
     expect(questionsDiv.childAt(2).prop("id")).toEqual("sub-question-2")
@@ -328,18 +326,16 @@ it('Marks all answers as correct when all answers are correct', () => {
             {index: 1, given: "What colour is the car?", answer: "red"}
         ]
     }
+    let rq = mount(<ReadingQuestion q={q} />)
 
-    let testRQ = mount(<ReadingQuestion q={q} />)
+    rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("blue"))
+    rq.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("red"))
+    rq.find("#answer-input-textbox-2").simulate("change", textBoxInputEvent("grass"))
+    clickSubmitForMarkingButton(rq)
 
-    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("blue"))
-    testRQ.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("red"))
-    testRQ.find("#answer-input-textbox-2").simulate("change", textBoxInputEvent("grass"))
-
-    testRQ.find("#submit-for-marking-button").simulate("click")
-
-    assertCorrect(testRQ, 0)
-    assertCorrect(testRQ, 1)
-    assertCorrect(testRQ, 2)
+    assertCorrect(rq, 0)
+    assertCorrect(rq, 1)
+    assertCorrect(rq, 2)
 })
 
 it('Text area becomes read-only if a correct answer is marked', () => {
@@ -350,7 +346,6 @@ it('Text area becomes read-only if a correct answer is marked', () => {
             {index: 0, given: "What is said to be green?", answers: ["Grass", "The grass"]}
         ]
     }
-
     let testRQ = mount(<ReadingQuestion q={q} />)
 
     testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("grass"))
@@ -368,14 +363,13 @@ it('Text area becomes read-only if an incorrect answer is marked', () => {
             {index: 0, given: "What is said to be green?", answers: ["Grass", "The grass"]}
         ]
     }
+    let rq = mount(<ReadingQuestion q={q} />)
 
-    let testRQ = mount(<ReadingQuestion q={q} />)
+    rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("wrong"))
+    clickSubmitForMarkingButton(rq)
 
-    testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("wrong"))
-    testRQ.find("#submit-for-marking-button").simulate("click")
-
-    expect(testRQ.find("#answer-input-textbox-0").prop("readOnly")).toBe(true)
-    expect(testRQ.find("#answer-input-textbox-0").hasClass("colourclass-question-result-incorrect")).toBe(true)
+    expect(rq.find("#answer-input-textbox-0").prop("readOnly")).toBe(true)
+    expect(rq.find("#answer-input-textbox-0").hasClass("colourclass-question-result-incorrect")).toBe(true)
 })
 
 it('Shows only the continue button if questions is a empty list', () => {
