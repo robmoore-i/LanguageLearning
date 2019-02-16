@@ -3,7 +3,6 @@ package endpoints
 
 import com.fasterxml.jackson.databind.JsonNode
 import environment.AppEnvironment
-import logger.ServerLogger
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.http4k.core.Response
