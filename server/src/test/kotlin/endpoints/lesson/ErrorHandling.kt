@@ -1,6 +1,5 @@
 package endpoints.lesson
 
-import endpoints.EndpointTestCase
 import endpoints.IntegrationEndpointTestCase
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -18,6 +17,6 @@ class ErrorHandling : IntegrationEndpointTestCase() {
         val response = lessonRequest("Course", "NonExistantLesson")
 
         assertThat(response.status.code, equalTo(404))
-        assertThat(json.parse(response.bodyString())["cause"].toString().unquoted(), equalTo("NoSuchLesson"))
+        assertThat(extractJsonBody(response)["cause"].toString().unquoted(), equalTo("NoSuchLesson"))
     }
 }

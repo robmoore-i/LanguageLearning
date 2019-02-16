@@ -19,7 +19,7 @@ abstract class EndpointTestCase(
     private val server: Server
 ) {
 
-    val json = Jackson
+    private val json = Jackson
 
     @Before
     fun setUp() {
@@ -66,5 +66,5 @@ abstract class EndpointTestCase(
         return extractJsonBody(courseMetadataRequest(courseName))
     }
 
-    private fun extractJsonBody(response: Response) = json.parse(response.bodyString())
+    fun extractJsonBody(response: Response) = json.parse(response.bodyString())
 }
