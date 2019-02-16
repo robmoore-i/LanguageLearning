@@ -11,15 +11,10 @@ import org.http4k.server.asServer
 
 /*Created on 13/01/19. */
 class Server(
-    private val port: Int,
-    databaseAdaptor: DatabaseAdaptor,
-    responseFactory: ServerResponseFactory,
-    private val logger: ServerLogger
+        serverHttpApi: ServerHttpApi,
+        private val port: Int,
+        private val logger: ServerLogger
 ) : Http4kServer {
-
-    private val jsonEncoder = JsonEncoder()
-    private val serverApi = ServerApi(jsonEncoder, databaseAdaptor, responseFactory)
-    private val serverHttpApi = ServerHttpApi(serverApi)
 
     private val handler: HttpHandler = ServerFilters.CatchLensFailure.then(
         routes(
