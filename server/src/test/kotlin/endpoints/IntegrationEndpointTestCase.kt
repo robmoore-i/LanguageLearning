@@ -11,6 +11,8 @@ import org.http4k.client.JavaHttpClient
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
+import org.junit.After
+import org.junit.Before
 import server.Server
 
 private val environment = EnvironmentLoader(System::getenv).getEnvironment()
@@ -78,6 +80,16 @@ private val server: Server = Server(
 open class IntegrationEndpointTestCase : EndpointTestCase(
         environment,
         neo4jDatabaseAdaptor,
-        httpRequester,
-        server
-)
+        httpRequester
+) {
+    @Before
+    fun setUp() {
+        server.start()
+    }
+
+    @After
+    open fun tearDown() {
+        server.stop()
+        testDatabaseAdaptor.clearDatabase()
+    }
+}

@@ -8,29 +8,14 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.http4k.core.Response
 import org.http4k.format.Jackson
 import org.http4k.unquoted
-import org.junit.After
-import org.junit.Before
-import server.Server
 
 abstract class EndpointTestCase(
     val environment: AppEnvironment,
     val testDatabaseAdaptor: TestDatabaseAdaptor,
-    private val testRequester: TestRequester,
-    private val server: Server
+    private val testRequester: TestRequester
 ) {
 
     private val json = Jackson
-
-    @Before
-    fun setUp() {
-        server.start()
-    }
-
-    @After
-    open fun tearDown() {
-        server.stop()
-        testDatabaseAdaptor.clearDatabase()
-    }
 
     fun assertLessonHasIndex(lessonMetadata: JsonNode, lessonName: String, index: Int) {
         val lesson = lessonMetadata.first { node -> node["name"].toString().unquoted() == lessonName }
