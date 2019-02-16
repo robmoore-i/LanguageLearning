@@ -37,6 +37,10 @@ function mountRq(q) {
     return mount(<ReadingQuestion q={q}/>)
 }
 
+function typeRsqAnswer(rqComponent, rsqIndex, rsqAnswer) {
+    rqComponent.find("#answer-input-textbox-" + rsqIndex.toString()).simulate("change", textBoxInputEvent(rsqAnswer))
+}
+
 it('Shows the extract', () => {
     let q = {
         type: 2,
@@ -67,18 +71,20 @@ it('Shows all the questions', () => {
 })
 
 it('Marks correct answers as correct', () => {
+    let rsq1Answer = "Kitchen"
+    let rsq2Answer = "Cake"
     let q = {
         type: 2,
         extract: "Vlad went to the kitchen and got some cake",
         questions: [
-            {given: "Where did Vlad go?", answer: "Kitchen"},
-            {given: "What did he get there?", answer: "Cake"}
+            {given: "Where did Vlad go?", answer: rsq1Answer},
+            {given: "What did he get there?", answer: rsq2Answer}
         ]
     }
     let rq = mountRq(q)
 
-    rq.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("Kitchen"))
-    rq.find("#answer-input-textbox-1").simulate("change", textBoxInputEvent("Cake"))
+    typeRsqAnswer(rq, 0, rsq1Answer)
+    typeRsqAnswer(rq, 1, rsq2Answer)
     clickSubmitForMarkingButton(rq)
 
     assertCorrect(rq, 0)
