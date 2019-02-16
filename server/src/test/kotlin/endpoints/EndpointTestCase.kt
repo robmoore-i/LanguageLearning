@@ -16,15 +16,9 @@ import server.Server
 abstract class EndpointTestCase(
     val environment: AppEnvironment,
     val testDatabaseAdaptor: TestDatabaseAdaptor,
-    private val testRequester: TestRequester
+    private val testRequester: TestRequester,
+    private val server: Server
 ) {
-
-    private val server: Server = Server(
-        environment.serverPort,
-        testDatabaseAdaptor,
-        environment.frontendPort,
-        ServerLogger()
-    )
 
     val json = Jackson
 
