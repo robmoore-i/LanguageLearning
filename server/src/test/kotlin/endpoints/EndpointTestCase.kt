@@ -10,8 +10,6 @@ import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.http4k.client.JavaHttpClient
 import org.http4k.core.Headers
-import org.http4k.core.Method
-import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.format.Jackson
 import org.http4k.server.Http4kServer
@@ -85,20 +83,15 @@ open class EndpointTestCase {
     }
 
     fun coursesRequest(): Response {
-        val request = Request(Method.GET, "$serverUrl/courses")
-        return client.invoke(request)
+        return httpTestRequester.coursesRequest()
     }
 
     fun lessonRequest(courseName: String, lessonName: String): Response {
-        val request = Request(
-            Method.POST,
-            "$serverUrl/lesson"
-        ).body("{\"lessonName\":\"$lessonName\",\"courseName\":\"$courseName\"}")
-        return client.invoke(request)
+        return httpTestRequester.lessonRequest(courseName, lessonName)
     }
 
     fun lessonRequestJson(courseName: String, lessonName: String): JsonNode {
-        return json.parse(lessonRequest(courseName, lessonName).bodyString())
+        return httpTestRequester.lessonRequestJson(courseName, lessonName)
     }
 
     fun subquestionWithIndex(subquestions: JsonNode, index: Int): JsonNode {

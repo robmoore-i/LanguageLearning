@@ -23,4 +23,21 @@ class HttpTestRequester(environment: AppEnvironment) : TestRequester {
         val request = Request(Method.GET, "$serverUrl/coursemetadata?course=$courseName")
         return client.invoke(request)
     }
+
+    override fun coursesRequest(): Response {
+        val request = Request(Method.GET, "$serverUrl/courses")
+        return client.invoke(request)
+    }
+
+    override fun lessonRequest(courseName: String, lessonName: String): Response {
+        val request = Request(
+                Method.POST,
+                "$serverUrl/lesson"
+        ).body("{\"lessonName\":\"$lessonName\",\"courseName\":\"$courseName\"}")
+        return client.invoke(request)
+    }
+
+    override fun lessonRequestJson(courseName: String, lessonName: String): JsonNode {
+        return json.parse(lessonRequest(courseName, lessonName).bodyString())
+    }
 }
