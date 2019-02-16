@@ -6,7 +6,7 @@ import logger.ServerLogger
 import neo4j.Neo4jDatabaseAdaptor
 import neo4j.Neo4jDriver
 import server.HttpResponseFactory
-import server.Server
+import server.HttpServer
 import server.ServerApi
 import server.ServerHttpApi
 
@@ -21,6 +21,6 @@ fun main(args: Array<String>) {
 
     val serverHttpApi = ServerHttpApi(ServerApi(neo4jDatabaseAdaptor), HttpResponseFactory(environment.frontendPort))
 
-    val server = Server(serverHttpApi, environment.serverPort, logger)
+    val server = HttpServer(serverHttpApi, environment.serverPort, logger)
     server.start()
 }

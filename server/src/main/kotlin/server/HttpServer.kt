@@ -10,7 +10,7 @@ import org.http4k.server.Jetty
 import org.http4k.server.asServer
 
 /*Created on 13/01/19. */
-class Server(
+class HttpServer(
         serverHttpApi: ServerHttpApi,
         private val port: Int,
         private val logger: ServerLogger
