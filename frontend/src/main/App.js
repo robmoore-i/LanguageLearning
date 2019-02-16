@@ -19,10 +19,9 @@ import {defaultAnalytics} from './Analytics'
 export function startApp() {
     ReactDOM.render(
         <App
-            // These props aren't used currently. I should find a way to inject them downwards from here.
             server={defaultServer}
-            analytics={defaultAnalytics}
             shuffler={defaultShuffler}
+            analytics={defaultAnalytics}
         />,
         document.getElementById('root')
     )
@@ -48,7 +47,7 @@ export default class App extends Component {
     HomeWithAnalytics = () => {
         return (
             <Home
-                analytics={defaultAnalytics}
+                analytics={this.props.analytics}
             />
         )
     }
@@ -56,8 +55,8 @@ export default class App extends Component {
     AllCourses = () => {
         return (
             <Courses
-                server={defaultServer}
-                analytics={defaultAnalytics}
+                server={this.props.server}
+                analytics={this.props.analytics}
             />
         )
     }
@@ -66,8 +65,8 @@ export default class App extends Component {
         return (
             <LessonMap
                 courseName={match.params.course}
-                server={defaultServer}
-                analytics={defaultAnalytics}
+                server={this.props.server}
+                analytics={this.props.analytics}
             />
         )
     }
@@ -77,9 +76,9 @@ export default class App extends Component {
             <Lesson
                 courseName={match.params.course}
                 encodedLessonName={match.params.lesson}
-                server={defaultServer}
-                shuffler={defaultShuffler}
-                analytics={defaultAnalytics}
+                server={this.props.server}
+                shuffler={this.props.shuffler}
+                analytics={this.props.analytics}
             />
         )
     }
