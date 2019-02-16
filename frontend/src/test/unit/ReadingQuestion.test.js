@@ -9,7 +9,11 @@ import {configureAdapter, questionSubmitAndContinue, textBoxInputEvent} from "..
 
 configureAdapter()
 
-it('Shows the source', () => {
+function clickSubmitForMarkingButton(rqComponent) {
+    rqComponent.find("#submit-for-marking-button").simulate("click")
+}
+
+it('Shows the extract', () => {
     let q = {
         type: 2,
         extract: "Vlad went to the kitchen and got some cake",
@@ -350,7 +354,7 @@ it('Text area becomes read-only if a correct answer is marked', () => {
     let testRQ = mount(<ReadingQuestion q={q} />)
 
     testRQ.find("#answer-input-textbox-0").simulate("change", textBoxInputEvent("grass"))
-    testRQ.find("#submit-for-marking-button").simulate("click")
+    clickSubmitForMarkingButton(testRQ)
 
     expect(testRQ.find("#answer-input-textbox-0").prop("readOnly")).toBe(true)
     expect(testRQ.find("#answer-input-textbox-0").hasClass("colourclass-question-result-correct")).toBe(true)
