@@ -35,60 +35,52 @@ export default class App extends Component {
             <div className="App">
                 <BrowserRouter>
                     <Switch>
-                        <Route exact path="/" component={HomeWithAnalytics}/>
-                        <Route exact path="/courses" component={AllCourses}/>
-                        <Route exact path="/courses/:course" component={MatchedLessonMap} />
-                        <Route path="/courses/:course/:lesson" component={MatchedLesson} />
+                        <Route exact path="/" component={this.HomeWithAnalytics}/>
+                        <Route exact path="/courses" component={this.AllCourses}/>
+                        <Route exact path="/courses/:course" component={this.MatchedLessonMap} />
+                        <Route path="/courses/:course/:lesson" component={this.MatchedLesson} />
                     </Switch>
                 </BrowserRouter>
             </div>
         )
     }
-}
 
-const HomeWithAnalytics = () => {
-    return (
-        <Home
-            analytics={defaultAnalytics}
-        />
-    )
-}
+    HomeWithAnalytics = () => {
+        return (
+            <Home
+                analytics={defaultAnalytics}
+            />
+        )
+    }
 
-const AllCourses = () => {
-    return (
-        <Courses
-            server={defaultServer}
-            analytics={defaultAnalytics}
-        />
-    )
-}
+    AllCourses = () => {
+        return (
+            <Courses
+                server={defaultServer}
+                analytics={defaultAnalytics}
+            />
+        )
+    }
 
-const MatchedLessonMap = ({ match }) => {
-    return (
-        <LessonMap
-            courseName={match.params.course}
-            server={defaultServer}
-            analytics={defaultAnalytics}
-        />
-    )
-}
+    MatchedLessonMap = ({ match }) => {
+        return (
+            <LessonMap
+                courseName={match.params.course}
+                server={defaultServer}
+                analytics={defaultAnalytics}
+            />
+        )
+    }
 
-const MatchedLesson = ({ match }) => {
-    return (
-        <Lesson
-            courseName={match.params.course}
-            encodedLessonName={match.params.lesson}
-            server={defaultServer}
-            shuffler={defaultShuffler}
-            analytics={defaultAnalytics}
-        />
-    )
-}
-
-export function encodeUrl(string) {
-    return encodeURIComponent(string.split(" ").join("_"))
-}
-
-export function decodeUrl(url) {
-    return decodeURIComponent(url.split("_").join(" "))
+    MatchedLesson = ({ match }) => {
+        return (
+            <Lesson
+                courseName={match.params.course}
+                encodedLessonName={match.params.lesson}
+                server={defaultServer}
+                shuffler={defaultShuffler}
+                analytics={defaultAnalytics}
+            />
+        )
+    }
 }

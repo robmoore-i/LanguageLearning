@@ -3,7 +3,6 @@ import React, {Component} from "react"
 // Resources
 import '../styles/Lesson.css'
 // Main
-import {decodeUrl} from "./App"
 import {QuestionTypes} from "./Question"
 import MultipleChoiceQuestion, {rmExcessChoices} from "./MultipleChoiceQuestion"
 import TranslationQuestion from "./TranslationQuestion"
@@ -17,7 +16,7 @@ export default class Lesson extends Component {
 
         this.server = this.props.server
         this.courseName = this.props.courseName
-        this.lessonName = decodeUrl(this.props.encodedLessonName)
+        this.lessonName = this.decodeUrl(this.props.encodedLessonName)
         this.shuffler = this.props.shuffler
 
         this.state = {
@@ -151,5 +150,9 @@ export default class Lesson extends Component {
         return (
             <h1>Loading {this.courseName}: {this.lessonName}</h1>
         )
+    }
+
+    decodeUrl(url) {
+        return decodeURIComponent(url.split("_").join(" "))
     }
 }
