@@ -93,14 +93,13 @@ it('Marks incorrect answers as incorrect', () => {
 })
 
 it('Marks questions separately', () => {
-    let q = rqObject("Vlad went to the kitchen and got some cake",
-        [
-            {given: "Where did Vlad go?", answer: "Kitchen"},
-            {given: "What did he get there?", answer: "Cake"},
-            {given: "What's this guy's name again?", answer: "Vlad"},
-            {given: "What even is a kitchen?", answer: "A type of room"},
-            {given: "And who are you?", answer: "A reading question, dummy"}
-        ])
+    let q = rqObject("Vlad went to the kitchen and got some cake", [
+        {given: "Where did Vlad go?", answer: "Kitchen"},
+        {given: "What did he get there?", answer: "Cake"},
+        {given: "What's this guy's name again?", answer: "Vlad"},
+        {given: "What even is a kitchen?", answer: "A type of room"},
+        {given: "And who are you?", answer: "A reading question, dummy"}
+    ])
     let rq = mountRq(q)
 
     typeRsqAnswer(rq, 0, "Wrong")
@@ -118,12 +117,11 @@ it('Marks questions separately', () => {
 })
 
 it('Shows corrections for questions answered incorrectly', () => {
-    let q = rqObject("Vlad went to the kitchen and got some cake",
-        [
-            {given: "Where did Vlad go?", answer: "Kitchen"},
-            {given: "What did he get there?", answer: "Cake"},
-            {given: "What's this guy's name again?", answer: "Vlad"}
-        ])
+    let q = rqObject("Vlad went to the kitchen and got some cake", [
+        {given: "Where did Vlad go?", answer: "Kitchen"},
+        {given: "What did he get there?", answer: "Cake"},
+        {given: "What's this guy's name again?", answer: "Vlad"}
+    ])
     let rq = mountRq(q)
 
     typeRsqAnswer(rq, 0, "Wrong")
@@ -151,7 +149,7 @@ it('Calls the onCompletion prop when clicking continue', () => {
     let spyOnCompletion = jest.fn()
     let q = rqObject("Vlad went to the kitchen and got some cake",
         [{given: "Where did Vlad go?", answer: "Kitchen"}])
-    let rq = mount(<ReadingQuestion q={q} onCompletion={spyOnCompletion} />)
+    let rq = mount(<ReadingQuestion q={q} onCompletion={spyOnCompletion}/>)
 
     typeRsqAnswer(rq, 0, "Kitchen")
     questionSubmitAndContinue(rq)
@@ -163,7 +161,7 @@ it('Ignores whitespace, case, commas, fullstops, exclamation marks and question 
     let spyOnCompletion = jest.fn()
     let correctAnswer = "He went to the kitchen! Would you BELIEVE IT?!!"
     let q = rqObject("Vlad went to the kitchen and got some cake", [{given: "Where did Vlad go?", answer: correctAnswer}])
-    let rq = mount(<ReadingQuestion q={q} onCompletion={spyOnCompletion} />)
+    let rq = mount(<ReadingQuestion q={q} onCompletion={spyOnCompletion}/>)
 
     typeRsqAnswer(rq, 0, "  He  went   to    THE  KITCHEN!?  would. yOU. beliEVE it.")
     questionSubmitAndContinue(rq)
@@ -174,14 +172,8 @@ it('Ignores whitespace, case, commas, fullstops, exclamation marks and question 
 })
 
 it('Warns user before marking if an answer box is empty', () => {
-    let q = {
-        type: 2,
-        extract: "Vlad went to the kitchen and got some cake",
-        questions: [
-            {given: "Where did Vlad go?", answer: "Kitchen"}
-        ]
-    }
-
+    let q = rqObject("Vlad went to the kitchen and got some cake",
+        [{given: "Where did Vlad go?", answer: "Kitchen"}])
     let rq = mountRq(q)
 
     clickSubmitForMarkingButton(rq)
@@ -192,15 +184,11 @@ it('Warns user before marking if an answer box is empty', () => {
 })
 
 it('Warns user before marking if any answer box is empty', () => {
-    let q = {
-        type: 2,
-        extract: "Vlad went to the kitchen and got some cake",
-        questions: [
-            {given: "Where did Vlad go?", answer: "Kitchen"},
-            {given: "What did he get there?", answer: "Cake"},
-            {given: "What's this guy's name again?", answer: "Vlad"}
-        ]
-    }
+    let q = rqObject("Vlad went to the kitchen and got some cake", [
+        {given: "Where did Vlad go?", answer: "Kitchen"},
+        {given: "What did he get there?", answer: "Cake"},
+        {given: "What's this guy's name again?", answer: "Vlad"}
+    ])
     let rq = mountRq(q)
 
     typeRsqAnswer(rq, 0, "Kitchen")
@@ -211,17 +199,13 @@ it('Warns user before marking if any answer box is empty', () => {
 })
 
 it('Can have subquestions with multiple potential correct answers', () => {
-    let q = {
-        type: 2,
-        extract: "Vlad went to the kitchen and got some cake",
-        questions: [
-            {given: "Where did Vlad go?", answers: ["The kitchen", "Kitchen"]},
-            {given: "What did he get there?", answers: ["The cake", "Cake"]},
-            {given: "Who is this guy again?", answer: "Vlad"}
-        ]
-    }
     let spyOnCompletion = jest.fn()
-    let rq = mount(<ReadingQuestion q={q} onCompletion={spyOnCompletion} />)
+    let q = rqObject("Vlad went to the kitchen and got some cake", [
+        {given: "Where did Vlad go?", answers: ["The kitchen", "Kitchen"]},
+        {given: "What did he get there?", answers: ["The cake", "Cake"]},
+        {given: "Who is this guy again?", answer: "Vlad"}
+    ])
+    let rq = mount(<ReadingQuestion q={q} onCompletion={spyOnCompletion}/>)
 
     typeRsqAnswer(rq, 0, "The kitchen")
     typeRsqAnswer(rq, 1, "Cake")
@@ -234,15 +218,11 @@ it('Can have subquestions with multiple potential correct answers', () => {
 })
 
 it('Shows corrections for subquestions with multiple potential correct answers', () => {
-    let q = {
-        type: 2,
-        extract: "Vlad went to the kitchen and got some cake",
-        questions: [
-            {given: "Where did Vlad go?", answer: "Kitchen"},
-            {given: "What did he get there?", answers: ["Cake", "Some cake"]},
-            {given: "What's this guy's name again?", answer: "Vlad"}
-        ]
-    }
+    let q = rqObject("Vlad went to the kitchen and got some cake", [
+        {given: "Where did Vlad go?", answer: "Kitchen"},
+        {given: "What did he get there?", answers: ["Cake", "Some cake"]},
+        {given: "What's this guy's name again?", answer: "Vlad"}
+    ])
     let rq = mountRq(q)
 
     typeRsqAnswer(rq, 0, "Kitchen")
@@ -256,15 +236,11 @@ it('Shows corrections for subquestions with multiple potential correct answers',
 })
 
 it('Indexes subquestions in the correct order if order is given', () => {
-    let q = {
-        type: 2,
-        extract: "Vlad went to the kitchen and got some cake",
-        questions: [
-            {index: 2, given: "What's this guy's name again?", answer: "Vlad"},
-            {index: 0, given: "Where did Vlad go?", answer: "Kitchen"},
-            {index: 1, given: "What did he get there?", answers: ["Cake", "Some cake"]}
-        ]
-    }
+    let q = rqObject("Vlad went to the kitchen and got some cake", [
+        {index: 2, given: "What's this guy's name again?", answer: "Vlad"},
+        {index: 0, given: "Where did Vlad go?", answer: "Kitchen"},
+        {index: 1, given: "What did he get there?", answers: ["Cake", "Some cake"]}
+    ])
     let rq = shallowRq(q)
 
     expect(rq.find("#sub-question-0").dive().find("#question-given-0").text()).toBe("Where did Vlad go?")
@@ -273,15 +249,11 @@ it('Indexes subquestions in the correct order if order is given', () => {
 })
 
 it('Renders subquestions in index order', () => {
-    let q = {
-        type: 2,
-        extract: "Vlad went to the kitchen and got some cake",
-        questions: [
-            {index: 2, given: "What's this guy's name again?", answer: "Vlad"},
-            {index: 0, given: "Where did Vlad go?", answer: "Kitchen"},
-            {index: 1, given: "What did he get there?", answers: ["Cake", "Some cake"]}
-        ]
-    }
+    let q = rqObject("Vlad went to the kitchen and got some cake", [
+        {index: 2, given: "What's this guy's name again?", answer: "Vlad"},
+        {index: 0, given: "Where did Vlad go?", answer: "Kitchen"},
+        {index: 1, given: "What did he get there?", answers: ["Cake", "Some cake"]}
+    ])
     let rq = mountRq(q)
 
     let questionsDiv = rq.find("#questions")
@@ -291,15 +263,11 @@ it('Renders subquestions in index order', () => {
 })
 
 it('Marks all answers as correct when all answers are correct', () => {
-    let q = {
-        type: 2,
-        extract: "მატარებელი ლურჯია და მანქანა წითელი არის. ბალახი მწვანეა.",
-        questions: [
-            {index: 2, given: "What is said to be green?", answers: ["Grass", "The grass"]},
-            {index: 0, given: "What colour is the train?", answer: "blue"},
-            {index: 1, given: "What colour is the car?", answer: "red"}
-        ]
-    }
+    let q = rqObject("მატარებელი ლურჯია და მანქანა წითელი არის. ბალახი მწვანეა.", [
+        {index: 2, given: "What is said to be green?", answers: ["Grass", "The grass"]},
+        {index: 0, given: "What colour is the train?", answer: "blue"},
+        {index: 1, given: "What colour is the car?", answer: "red"}
+    ])
     let rq = mountRq(q)
 
     typeRsqAnswer(rq, 0, "blue")
@@ -313,13 +281,8 @@ it('Marks all answers as correct when all answers are correct', () => {
 })
 
 it('Text area becomes read-only if a correct answer is marked', () => {
-    let q = {
-        type: 2,
-        extract: "მატარებელი ლურჯია და მანქანა წითელი არის. ბალახი მწვანეა.",
-        questions: [
-            {index: 0, given: "What is said to be green?", answers: ["Grass", "The grass"]}
-        ]
-    }
+    let q = rqObject("მატარებელი ლურჯია და მანქანა წითელი არის. ბალახი მწვანეა.",
+        [{index: 0, given: "What is said to be green?", answers: ["Grass", "The grass"]}])
     let rq = mountRq(q)
 
     typeRsqAnswer(rq, 0, "grass")
@@ -330,13 +293,8 @@ it('Text area becomes read-only if a correct answer is marked', () => {
 })
 
 it('Text area becomes read-only if an incorrect answer is marked', () => {
-    let q = {
-        type: 2,
-        extract: "მატარებელი ლურჯია და მანქანა წითელი არის. ბალახი მწვანეა.",
-        questions: [
-            {index: 0, given: "What is said to be green?", answers: ["Grass", "The grass"]}
-        ]
-    }
+    let q = rqObject("მატარებელი ლურჯია და მანქანა წითელი არის. ბალახი მწვანეა.",
+        [{index: 0, given: "What is said to be green?", answers: ["Grass", "The grass"]}])
     let rq = mountRq(q)
 
     typeRsqAnswer(rq, 0, "wrong")
@@ -347,14 +305,14 @@ it('Text area becomes read-only if an incorrect answer is marked', () => {
 })
 
 it('Shows only the continue button if questions is a empty list', () => {
-    let q = {type: 2, extract: "A question-less extract", questions: []}
+    let q = rqObject("A question-less extract", [])
 
     let rq = shallowRq(q)
 
     expect(rq.find("#continue-button").exists()).toBe(true)
 })
 
-it('Shows only the continue button if there isnt a questions property', () => {
+it("Shows only the continue button if there isn't a questions property", () => {
     let q = {type: 2, extract: "A question-less extract"}
 
     let rq = shallowRq(q)
