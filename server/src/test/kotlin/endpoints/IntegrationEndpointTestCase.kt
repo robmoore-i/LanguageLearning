@@ -41,7 +41,11 @@ private val neo4jDatabaseAdaptor = object : TestDatabaseAdaptor {
     }
 
     override fun clearDatabase() {
-        neo4jDatabaseAdaptor.clearDatabase()
+        neo4jDriver.session().let { session ->
+            session.run("MATCH (n) DETACH DELETE (n)")
+            session.run("MATCH (n) DELETE (n)")
+            session.close()
+        }
     }
 
     override fun runQuery(query: String) {
