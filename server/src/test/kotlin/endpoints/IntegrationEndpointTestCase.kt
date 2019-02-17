@@ -23,9 +23,9 @@ private val environment = EnvironmentLoader(System::getenv).getEnvironment()
 private val neo4jDatabaseAdaptor = object : TestDatabaseAdaptor {
     val neo4jDriver = Neo4jDriver(environment.neo4jUser, environment.neo4jPassword, environment.neo4jPort)
     val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(
-            neo4jDriver,
-            environment.imagesPath,
-            environment.extractsPath
+        neo4jDriver,
+        environment.imagesPath,
+        environment.extractsPath
     )
 
     override fun allCourses(): List<Course> {
