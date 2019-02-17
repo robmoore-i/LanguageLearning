@@ -4,10 +4,10 @@ import model.JsonEncodable
 import org.http4k.core.Response
 import org.http4k.core.Status
 
-class HttpResponseFactory(private val frontendPort: Int) {
+class HttpResponseFactory(private val frontendPort: Int) : ServerResponseFactory {
     private val jsonEncoder = JsonEncoder()
 
-    fun ok(jsonEncodable: JsonEncodable): Response {
+    override fun ok(jsonEncodable: JsonEncodable): Response {
         val json = jsonEncoder.encode(jsonEncodable)
         return Response(Status.OK)
                 .header("Access-Control-Allow-Origin", "http://localhost:$frontendPort")
@@ -16,7 +16,7 @@ class HttpResponseFactory(private val frontendPort: Int) {
                 .body(json)
     }
 
-    fun ok(jsonEncodables: List<JsonEncodable>): Response {
+    override fun ok(jsonEncodables: List<JsonEncodable>): Response {
         val json = jsonEncoder.encode(jsonEncodables)
         return Response(Status.OK)
                 .header("Access-Control-Allow-Origin", "http://localhost:$frontendPort")
@@ -25,7 +25,7 @@ class HttpResponseFactory(private val frontendPort: Int) {
                 .body(json)
     }
 
-    fun notFound(cause: String): Response {
+    override fun notFound(cause: String): Response {
         val jsonEncodedError = "{\"cause\":\"$cause\"}"
         return Response(Status.NOT_FOUND)
                 .header("Access-Control-Allow-Origin", "http://localhost:$frontendPort")
