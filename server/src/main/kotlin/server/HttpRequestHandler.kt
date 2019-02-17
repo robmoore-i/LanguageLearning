@@ -8,14 +8,18 @@ import org.http4k.unquoted
 
 class HttpRequestHandler(private val serverApi: ServerApi, private val httpResponseFactory: HttpResponseFactory) {
     private val json = Jackson
+    private val jsonEncoder = JsonEncoder()
 
     fun handleCourses(@Suppress("UNUSED_PARAMETER") request: Request): Response {
-        return httpResponseFactory.okResponse(serverApi.courses())
+        val courses = serverApi.courses()
+        val coursesJson = jsonEncoder.encodeCourses(courses)
+        return httpResponseFactory.ok(coursesJson)
     }
 
     fun handleCoursemetadata(request: Request): Response {
         val courseName = request.query("course") ?: throw MissingQueryParameter("course")
-        return httpResponseFactory.okResponse(serverApi.courseMetadata(courseName))
+        val courseMetadata = serverApi.courseMetadata(courseName)
+        return httpResponseFactory.ok(jsonEncoder.encode(courseMetadata))
     }
 
     fun handleLesson(request: Request): Response {
@@ -24,11 +28,10 @@ class HttpRequestHandler(private val serverApi: ServerApi, private val httpRespo
         val lessonName = jsonNode["lessonName"].toString().unquoted()
 
         return try {
-            return httpResponseFactory.okResponse(serverApi.lesson(courseName, lessonName))
+            val lesson = serverApi.lesson(courseName, lessonName)
+            return httpResponseFactory.ok(jsonEncoder.encode(lesson))
         } catch (error: NoSuchLessonException) {
-            val cause = "NoSuchLesson"
-            val jsonEncodedError = "{\"cause\":\"$cause\"}"
-            httpResponseFactory.notFoundResponse(jsonEncodedError)
+            httpResponseFactory.notFound("NoSuchLesson")
         }
     }
 }

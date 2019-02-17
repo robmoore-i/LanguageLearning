@@ -5,8 +5,16 @@ import org.http4k.format.Jackson
 import org.http4k.unquoted
 import org.neo4j.driver.v1.Value
 
-class CourseMetadata(private val lessonMetadata: MutableList<LessonMetadata>) {
+class CourseMetadata(private val lessonMetadata: MutableList<LessonMetadata>) : JsonEncodable {
     private val json = Jackson
+
+    override fun jsonify(): JsonNode {
+        return json {
+            obj(
+                    "lessonMetadata" to array(lessonMetadata.map(LessonMetadata::jsonify))
+            )
+        }
+    }
 
     fun titleOfLessonAtIndex(i: Int): String {
         return lessonMetadata[i].lessonName
@@ -14,14 +22,6 @@ class CourseMetadata(private val lessonMetadata: MutableList<LessonMetadata>) {
 
     fun numberOfLessons(): Int {
         return lessonMetadata.size
-    }
-
-    fun jsonify(): JsonNode {
-        return json {
-            obj(
-                "lessonMetadata" to array(lessonMetadata.map(LessonMetadata::jsonify))
-            )
-        }
     }
 
     companion object {

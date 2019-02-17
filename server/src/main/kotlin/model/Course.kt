@@ -5,10 +5,10 @@ import org.http4k.format.Jackson
 import org.http4k.unquoted
 import org.neo4j.driver.v1.Value
 
-data class Course(val name: String, val fullImagePath: String, val imageFileType: ImageType) {
+data class Course(val name: String, val fullImagePath: String, val imageFileType: ImageType) : JsonEncodable {
     private val json = Jackson
 
-    fun jsonify(): JsonNode {
+    override fun jsonify(): JsonNode {
         val image = parseImage()
         return json {
             obj(

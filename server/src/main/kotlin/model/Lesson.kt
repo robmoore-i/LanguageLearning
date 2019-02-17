@@ -5,10 +5,10 @@ import neo4j.Neo4jDatabaseAdaptor
 import org.http4k.format.Jackson
 import org.neo4j.driver.v1.Value
 
-data class Lesson(val courseName: String, val lessonName: String, val lessonIndex: Int, val questions: List<Question>) {
+data class Lesson(val courseName: String, val lessonName: String, val lessonIndex: Int, val questions: List<Question>) : JsonEncodable {
     val json = Jackson
 
-    fun jsonify(): JsonNode {
+    override fun jsonify(): JsonNode {
         val jsonQuestions = questions.mapIndexed { i, question -> question.jsonify(i) }
         return json {
             obj(

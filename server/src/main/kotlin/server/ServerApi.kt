@@ -1,23 +1,21 @@
 package server
 
+import model.Course
 import model.CourseMetadata
+import model.Lesson
 
 class ServerApi(private val databaseAdaptor: DatabaseAdaptor) {
-    private val jsonEncoder = JsonEncoder()
-
-    fun courses(): String {
-        return jsonEncoder.encodeCourses(databaseAdaptor.allCourses())
+    fun courses(): List<Course> {
+        return databaseAdaptor.allCourses()
     }
 
-    fun courseMetadata(courseName: String): String {
-        val courseMetadata: CourseMetadata = databaseAdaptor.courseMetadata(courseName)
-        return jsonEncoder.encodeCourseMetadata(courseMetadata)
+    fun courseMetadata(courseName: String): CourseMetadata {
+        return databaseAdaptor.courseMetadata(courseName)
     }
 
-    fun lesson(courseName: String, lessonName: String): String {
+    fun lesson(courseName: String, lessonName: String): Lesson {
         try {
-            val lesson = databaseAdaptor.lesson(courseName, lessonName)
-            return jsonEncoder.encodeLesson(lesson)
+            return databaseAdaptor.lesson(courseName, lessonName)
         } catch (error: IndexOutOfBoundsException) {
             throw NoSuchLessonException(error)
         }

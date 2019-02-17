@@ -4,7 +4,7 @@ import org.http4k.core.Response
 import org.http4k.core.Status
 
 class HttpResponseFactory(private val frontendPort: Int) {
-    fun okResponse(json: String): Response {
+    fun ok(json: String): Response {
         return Response(Status.OK)
                 .header("Access-Control-Allow-Origin", "http://localhost:$frontendPort")
                 .header("Access-Control-Allow-Headers", "Content-Type")
@@ -12,11 +12,12 @@ class HttpResponseFactory(private val frontendPort: Int) {
                 .body(json)
     }
 
-    fun notFoundResponse(json: String): Response {
+    fun notFound(cause: String): Response {
+        val jsonEncodedError = "{\"cause\":\"$cause\"}"
         return Response(Status.NOT_FOUND)
                 .header("Access-Control-Allow-Origin", "http://localhost:$frontendPort")
                 .header("Access-Control-Allow-Headers", "Content-Type")
                 .header("Content-Type", "application/json; charset=UTF-8")
-                .body(json)
+                .body(jsonEncodedError)
     }
 }
