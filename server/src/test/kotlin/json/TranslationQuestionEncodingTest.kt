@@ -25,7 +25,7 @@ class TranslationQuestionEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         val translationQuestion = node["questions"][0]
@@ -41,7 +41,7 @@ class TranslationQuestionEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         val tq = node["questions"][2]
@@ -55,7 +55,7 @@ class TranslationQuestionEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node = json.parse(encoded) // Should throw here
         println(node)
@@ -68,7 +68,7 @@ class TranslationQuestionEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         assertThat(node["questions"].size(), equalTo(1))
@@ -88,7 +88,7 @@ class TranslationQuestionEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         assertThat(node["questions"].size(), equalTo(1))

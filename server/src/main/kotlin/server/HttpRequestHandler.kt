@@ -12,7 +12,7 @@ class HttpRequestHandler(private val serverApi: ServerApi, private val httpRespo
 
     fun handleCourses(@Suppress("UNUSED_PARAMETER") request: Request): Response {
         val courses = serverApi.courses()
-        val coursesJson = jsonEncoder.encodeCourses(courses)
+        val coursesJson = jsonEncoder.encode(courses)
         return httpResponseFactory.ok(coursesJson)
     }
 
