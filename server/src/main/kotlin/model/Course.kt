@@ -44,6 +44,6 @@ data class Course(val name: String, val fullImagePath: String, val imageFileType
 
 class UnknownImageTypeException(msg: String) : Exception(msg)
 
-fun String.fileExtension(): String {
+private fun String.fileExtension(): String {
     return this.takeLast(3)
 }
