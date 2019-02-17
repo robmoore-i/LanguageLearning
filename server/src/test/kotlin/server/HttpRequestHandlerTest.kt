@@ -12,33 +12,54 @@ import org.http4k.core.Response
 import org.http4k.core.Status
 import org.junit.Test
 
+private open class TestServerApi : ServerApi {
+    override fun courses(): List<Course> {
+        throw Exception("Either should have not been called or been overriden")
+    }
+
+    override fun courseMetadata(courseName: String): CourseMetadata {
+        throw Exception("Either should have not been called or been overriden")
+    }
+
+    override fun lesson(courseName: String, lessonName: String): Lesson {
+        throw Exception("Either should have not been called or been overriden")
+    }
+}
+
+private open class TestServerResponseFactory : ServerResponseFactory {
+    override fun ok(jsonEncodable: JsonEncodable): Response {
+        throw Exception("Either should have not been called or been overriden")
+    }
+
+    override fun ok(jsonEncodables: List<JsonEncodable>): Response {
+        throw Exception("Either should have not been called or been overriden")
+    }
+
+    override fun notFound(cause: String): Response {
+        throw Exception("Either should have not been called or been overriden")
+    }
+
+    override fun badRequest(cause: String): Response {
+        throw Exception("Either should have not been called or been overriden")
+    }
+}
+
 class HttpRequestHandlerTest {
     @Test
     fun ifServerApiFindsNoSuchLessonThenCallsNotFoundWithReasonThatLessonNotFound() {
-        val stubThrowingServerApi = object : ServerApi {
-            override fun courses(): List<Course> { return listOf() }
-
-            override fun courseMetadata(courseName: String): CourseMetadata { return CourseMetadata(mutableListOf()) }
-
+        val stubThrowingServerApi = object : TestServerApi() {
             override fun lesson(courseName: String, lessonName: String): Lesson {
                 throw NoSuchLessonException()
             }
         }
 
-        val mockResponseFactory = object : ServerResponseFactory {
+        val mockResponseFactory = object : TestServerResponseFactory() {
             var notFoundCalledWith : String = ""
-
-            override fun ok(jsonEncodable: JsonEncodable): Response { return Response(Status.OK) }
-
-            override fun ok(jsonEncodables: List<JsonEncodable>): Response { return Response(Status.OK) }
-
-            override fun badRequest(cause: String): Response { return Response(Status.BAD_REQUEST) }
 
             override fun notFound(cause: String): Response {
                 notFoundCalledWith = cause
                 return Response(Status.NOT_FOUND)
             }
-
         }
 
         val httpRequestHandler = HttpRequestHandler(stubThrowingServerApi, mockResponseFactory)
@@ -52,22 +73,10 @@ class HttpRequestHandlerTest {
 
     @Test
     fun ifCourseMetadataRequestMissingQueryParamReturnsBadRequestWithReasonThatRequestWasMissingQueryParam() {
-        val dummyServerApi = object : ServerApi {
-            override fun courses(): List<Course> { return listOf() }
+        val dummyServerApi = TestServerApi()
 
-            override fun courseMetadata(courseName: String): CourseMetadata { return CourseMetadata(mutableListOf()) }
-
-            override fun lesson(courseName: String, lessonName: String): Lesson { return Lesson("", "", 0, listOf()) }
-        }
-
-        val mockResponseFactory = object : ServerResponseFactory {
+        val mockResponseFactory = object : TestServerResponseFactory() {
             var badRequestCalledWith : String = ""
-
-            override fun ok(jsonEncodable: JsonEncodable): Response { return Response(Status.OK) }
-
-            override fun ok(jsonEncodables: List<JsonEncodable>): Response { return Response(Status.OK) }
-
-            override fun notFound(cause: String): Response { return Response(Status.NOT_FOUND) }
 
             override fun badRequest(cause: String): Response {
                 badRequestCalledWith = cause
