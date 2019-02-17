@@ -6,7 +6,7 @@ import org.http4k.core.Response
 import org.http4k.format.Jackson
 import org.http4k.unquoted
 
-class HttpRequestHandler(private val serverApi: ServerApi, private val httpResponseFactory: HttpResponseFactory) {
+class HttpRequestHandler(private val serverApi: ServerApi, private val httpResponseFactory: ServerResponseFactory) {
     private val json = Jackson
 
     fun handleCourses(@Suppress("UNUSED_PARAMETER") request: Request): Response {

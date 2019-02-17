@@ -22,4 +22,6 @@ class DatabaseServingApi(private val databaseAdaptor: DatabaseAdaptor) : ServerA
     }
 }
 
-class NoSuchLessonException(cause: Throwable) : Throwable(cause)
+class NoSuchLessonException(cause: Throwable) : Throwable(cause) {
+    constructor() : this(Throwable())
+}
