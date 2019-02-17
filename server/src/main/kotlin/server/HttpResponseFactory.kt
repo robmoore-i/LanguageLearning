@@ -1,10 +1,23 @@
 package server
 
+import model.JsonEncodable
 import org.http4k.core.Response
 import org.http4k.core.Status
 
 class HttpResponseFactory(private val frontendPort: Int) {
-    fun ok(json: String): Response {
+    private val jsonEncoder = JsonEncoder()
+
+    fun ok(jsonEncodable: JsonEncodable): Response {
+        val json = jsonEncoder.encode(jsonEncodable)
+        return Response(Status.OK)
+                .header("Access-Control-Allow-Origin", "http://localhost:$frontendPort")
+                .header("Access-Control-Allow-Headers", "Content-Type")
+                .header("Content-Type", "application/json; charset=UTF-8")
+                .body(json)
+    }
+
+    fun ok(jsonEncodables: List<JsonEncodable>): Response {
+        val json = jsonEncoder.encode(jsonEncodables)
         return Response(Status.OK)
                 .header("Access-Control-Allow-Origin", "http://localhost:$frontendPort")
                 .header("Access-Control-Allow-Headers", "Content-Type")
