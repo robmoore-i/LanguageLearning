@@ -15,7 +15,8 @@ class HttpRequestHandler(private val serverApi: ServerApi, private val httpRespo
     }
 
     fun handleCoursemetadata(request: Request): Response {
-        val courseName = request.query("course") ?: throw MissingQueryParameter("course")
+        val courseName = request.query("course") ?: return httpResponseFactory.badRequest("MissingQueryParam: course")
+
         val courseMetadata = serverApi.courseMetadata(courseName)
         return httpResponseFactory.ok(courseMetadata)
     }
@@ -33,5 +34,3 @@ class HttpRequestHandler(private val serverApi: ServerApi, private val httpRespo
         }
     }
 }
-
-class MissingQueryParameter(missingParameterName: String) : Throwable("Missing query parameter: $missingParameterName")

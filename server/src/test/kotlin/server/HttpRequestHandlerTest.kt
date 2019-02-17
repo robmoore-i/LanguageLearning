@@ -32,6 +32,8 @@ class HttpRequestHandlerTest {
 
             override fun ok(jsonEncodables: List<JsonEncodable>): Response { return Response(Status.OK) }
 
+            override fun badRequest(cause: String): Response { return Response(Status.BAD_REQUEST) }
+
             override fun notFound(cause: String): Response {
                 notFoundCalledWith = cause
                 return Response(Status.NOT_FOUND)
@@ -46,5 +48,38 @@ class HttpRequestHandlerTest {
         httpRequestHandler.handleLesson(requestForNonExistantLesson)
 
         assertThat(mockResponseFactory.notFoundCalledWith, equalTo("NoSuchLesson"))
+    }
+
+    @Test
+    fun ifCourseMetadataRequestMissingQueryParamReturnsBadRequestWithReasonThatRequestWasMissingQueryParam() {
+        val dummyServerApi = object : ServerApi {
+            override fun courses(): List<Course> { return listOf() }
+
+            override fun courseMetadata(courseName: String): CourseMetadata { return CourseMetadata(mutableListOf()) }
+
+            override fun lesson(courseName: String, lessonName: String): Lesson { return Lesson("", "", 0, listOf()) }
+        }
+
+        val mockResponseFactory = object : ServerResponseFactory {
+            var badRequestCalledWith : String = ""
+
+            override fun ok(jsonEncodable: JsonEncodable): Response { return Response(Status.OK) }
+
+            override fun ok(jsonEncodables: List<JsonEncodable>): Response { return Response(Status.OK) }
+
+            override fun notFound(cause: String): Response { return Response(Status.NOT_FOUND) }
+
+            override fun badRequest(cause: String): Response {
+                badRequestCalledWith = cause
+                return Response(Status.BAD_REQUEST)
+            }
+        }
+
+        val httpRequestHandler = HttpRequestHandler(dummyServerApi, mockResponseFactory)
+        val badCourseMetadataRequest = Request(Method.GET, "...")
+
+        httpRequestHandler.handleCoursemetadata(badCourseMetadataRequest)
+
+        assertThat(mockResponseFactory.badRequestCalledWith, equalTo("MissingQueryParam: course"))
     }
 }

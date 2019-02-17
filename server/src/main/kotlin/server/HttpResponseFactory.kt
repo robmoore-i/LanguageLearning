@@ -33,4 +33,13 @@ class HttpResponseFactory(private val frontendPort: Int) : ServerResponseFactory
                 .header("Content-Type", "application/json; charset=UTF-8")
                 .body(jsonEncodedError)
     }
+
+    override fun badRequest(cause: String): Response {
+        val jsonEncodedError = "{\"cause\":\"$cause\"}"
+        return Response(Status.BAD_REQUEST)
+                .header("Access-Control-Allow-Origin", "http://localhost:$frontendPort")
+                .header("Access-Control-Allow-Headers", "Content-Type")
+                .header("Content-Type", "application/json; charset=UTF-8")
+                .body(jsonEncodedError)
+    }
 }
