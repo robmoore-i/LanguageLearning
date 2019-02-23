@@ -12,7 +12,7 @@ main = do
 tests :: [String]
 tests = [
 
-    makeTest "1 = 1"
+    makeTest "Creates shell commands correctly"
         1
         1
 

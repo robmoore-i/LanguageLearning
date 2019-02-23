@@ -21,12 +21,14 @@ concatUnder = liftM concat . sequence
 createQueryShellCmd :: String -> IO String
 createQueryShellCmd query = concatUnder [pure "echo '", pure query, pure ";' | cypher-shell -u ", neo4jUser, pure " -p ", neo4jPw]
 
-runShellCommand :: String -> IO String
-runShellCommand cmd = readCreateProcess (shell cmd) ""
+defaultCommandRunner :: String -> IO String
+defaultCommandRunner cmd = readCreateProcess (shell cmd) ""
 
--- Given a cypher query (with any double quotes being escaped)
--- Returns a string containing the stdout results
-ioRunQuery :: String -> IO String
-ioRunQuery query = do
+-- Given a method for running commands on the command line
+-- And a cypher query string (with any double quotes being escaped)
+-- Returns an string containing the stdout results
+ioRunQuery :: (String -> IO String) -> String -> IO String
+ioRunQuery commandRunner query = do
     cmd <- createQueryShellCmd query
-    runShellCommand cmd
+    commandRunner cmd
+
