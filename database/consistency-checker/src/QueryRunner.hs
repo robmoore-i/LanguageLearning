@@ -1,4 +1,4 @@
-module ConsistencyChecker where
+module QueryRunner where
 
 import System.Environment
 import Control.Monad
@@ -18,8 +18,9 @@ exampleQuery = "MATCH (c:Course {name: \"Georgian\"})-[r:HAS_TOPIC_LESSON]-(tl) 
 concatUnder :: (Monad m, Traversable t) => t (m [a]) -> m [a]
 concatUnder = liftM concat . sequence
 
-shellQueryCommandBuilder :: String -> IO String
-shellQueryCommandBuilder query = concatUnder [pure "echo '", pure query, pure ";' | cypher-shell -u ", neo4jUser, pure " -p ", neo4jPw]
+shellQueryCommandBuilder :: IO String -> IO String -> String -> IO String
+shellQueryCommandBuilder neo4jUser neo4jPw query = 
+    concatUnder [pure "echo '", pure query, pure ";' | cypher-shell -u ", neo4jUser, pure " -p ", neo4jPw]
 
 shellCommandRunner :: String -> IO String
 shellCommandRunner cmd = readCreateProcess (shell cmd) ""
@@ -34,4 +35,4 @@ shellQueryRunner queryCommandBuiler commandRunner query = do
     commandRunner cmd
 
 defaultShellQueryRunner :: String -> IO String
-defaultShellQueryRunner = shellQueryRunner shellQueryCommandBuilder shellCommandRunner
+defaultShellQueryRunner = shellQueryRunner (shellQueryCommandBuilder neo4jUser neo4jPw) shellCommandRunner
