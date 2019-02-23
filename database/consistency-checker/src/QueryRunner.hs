@@ -18,8 +18,8 @@ exampleQuery = "MATCH (c:Course {name: \"Georgian\"})-[r:HAS_TOPIC_LESSON]-(tl) 
 concatUnder :: (Monad m, Traversable t) => t (m [a]) -> m [a]
 concatUnder = liftM concat . sequence
 
-shellQueryCommand :: String -> IO String
-shellQueryCommand query = concatUnder [pure "echo '", pure query, pure ";' | cypher-shell -u ", neo4jUser, pure " -p ", neo4jPw]
+shellQueryCommandBuilder :: String -> IO String
+shellQueryCommandBuilder query = concatUnder [pure "echo '", pure query, pure ";' | cypher-shell -u ", neo4jUser, pure " -p ", neo4jPw]
 
 shellCommandRunner :: String -> IO String
 shellCommandRunner cmd = readCreateProcess (shell cmd) ""
@@ -29,9 +29,9 @@ shellCommandRunner cmd = readCreateProcess (shell cmd) ""
 -- And a cypher query string (with any double quotes being escaped)
 -- Returns an string containing the stdout results
 shellQueryRunner :: (String -> IO String) -> (String -> IO String) -> String -> IO String
-shellQueryRunner commandRunner queryCommandBuiler query = do
+shellQueryRunner queryCommandBuiler commandRunner query = do
     cmd <- queryCommandBuiler query
     commandRunner cmd
 
 defaultShellQueryRunner :: String -> IO String
-defaultShellQueryRunner = shellQueryRunner shellCommandRunner shellQueryCommand
+defaultShellQueryRunner = shellQueryRunner shellQueryCommandBuilder shellCommandRunner
