@@ -2,114 +2,54 @@ package endpoints
 
 
 import com.fasterxml.jackson.databind.JsonNode
-import environment.EnvironmentLoader
-import logger.ServerLogger
-import neo4j.Neo4jDatabaseAdaptor
-import neo4j.Neo4jDriver
-import org.hamcrest.CoreMatchers
-import org.hamcrest.MatcherAssert
-import org.http4k.client.JavaHttpClient
-import org.http4k.core.Headers
-import org.http4k.core.Method
-import org.http4k.core.Request
+import environment.AppEnvironment
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.MatcherAssert.assertThat
 import org.http4k.core.Response
 import org.http4k.format.Jackson
-import org.http4k.server.Http4kServer
 import org.http4k.unquoted
-import org.junit.After
-import org.junit.Before
-import server.Server
 
-open class EndpointTestCase {
-    private val environmentLoader = EnvironmentLoader(System::getenv)
-    val environment = environmentLoader.getEnvironment()
+abstract class EndpointTestCase(
+    val environment: AppEnvironment,
+    val testDatabaseAdaptor: TestDatabaseAdaptor,
+    private val testServerClient: TestServerClient
+) {
 
-    val neo4jDriver = Neo4jDriver(environment.neo4jUser, environment.neo4jPassword, environment.neo4jPort)
-    private val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(
-        neo4jDriver,
-        environment.imagesPath,
-        environment.extractsPath
-    )
-
-    private val logger = ServerLogger()
-
-    private val server: Http4kServer = Server(
-        environment.serverPort,
-        neo4jDatabaseAdaptor,
-        environment.frontendPort,
-        logger
-    )
-
-    private val client = JavaHttpClient()
-    private val serverUrl = "http://localhost:${environment.serverPort}"
-
-    val json = Jackson
-
-    @After
-    open fun tearDown() {
-        server.stop()
-        neo4jDriver.session().let { session ->
-            session.run("MATCH (n) DETACH DELETE (n)")
-            session.run("MATCH (n) DELETE (n)")
-            session.close()
-        }
-    }
-
-    @Before
-    fun setUp() {
-        server.start()
-    }
+    private val json = Jackson
 
     fun assertLessonHasIndex(lessonMetadata: JsonNode, lessonName: String, index: Int) {
-        MatcherAssert.assertThat(
-            getNodeWithName(lessonMetadata, lessonName)["index"].asInt(),
-            CoreMatchers.equalTo(index)
-        )
+        val lesson = lessonMetadata.first { node -> node["name"].toString().unquoted() == lessonName }
+        assertThat(lesson["index"].asInt(), equalTo(index))
     }
 
-    fun courseMetadataRequestJson(courseName: String): JsonNode {
-        val response = courseMetadataRequest(courseName)
-        return json.parse(response.bodyString())
-    }
-
-    fun courseMetadataRequest(courseName: String): Response {
-        val request = Request(Method.GET, "$serverUrl/coursemetadata?course=$courseName")
-        return client.invoke(request)
-    }
-
-    fun assertHasHeader(response: Response, headerName: String, headerValue: String) {
-        MatcherAssert.assertThat(
-            headerValue(response.headers, headerName),
-            CoreMatchers.equalTo(headerValue)
-        )
+    fun assertHasHeader(response: Response, headerName: String, expectedHeaderValue: String) {
+        val responseHeaderValue = response.headers.first { header -> header.first == headerName }.second!!
+        assertThat(responseHeaderValue, equalTo(expectedHeaderValue))
     }
 
     fun coursesRequest(): Response {
-        val request = Request(Method.GET, "$serverUrl/courses")
-        return client.invoke(request)
+        return testServerClient.courses()
+    }
+
+    fun coursesJson(): JsonNode {
+        return extractJsonBody(coursesRequest())
     }
 
     fun lessonRequest(courseName: String, lessonName: String): Response {
-        val request = Request(
-            Method.POST,
-            "$serverUrl/lesson"
-        ).body("{\"lessonName\":\"$lessonName\",\"courseName\":\"$courseName\"}")
-        return client.invoke(request)
+        return testServerClient.lesson(courseName, lessonName)
     }
 
     fun lessonRequestJson(courseName: String, lessonName: String): JsonNode {
-        return json.parse(lessonRequest(courseName, lessonName).bodyString())
+        return extractJsonBody(lessonRequest(courseName, lessonName))
     }
 
-    fun subquestionWithIndex(subquestions: JsonNode, index: Int): JsonNode {
-        return subquestions.first { rsq -> rsq["index"].asInt() == index }
+    fun courseMetadataRequest(courseName: String): Response {
+        return testServerClient.courseMetadata(courseName)
     }
 
-    private fun headerValue(headers: Headers, headerName: String): String {
-        return headers.first { header -> header.first == headerName }.second!!
+    fun courseMetadataRequestJson(courseName: String): JsonNode {
+        return extractJsonBody(courseMetadataRequest(courseName))
     }
 
-    private fun getNodeWithName(lessonMetadata: JsonNode, nodeName: String): JsonNode {
-        return lessonMetadata.first { node -> node["name"].toString().unquoted() == nodeName }
-    }
+    fun extractJsonBody(response: Response) = json.parse(response.bodyString())
 }

@@ -1,64 +1,27 @@
 package server
 
-import com.fasterxml.jackson.databind.JsonNode
 import model.CourseMetadata
-import org.http4k.core.Request
-import org.http4k.core.Response
-import org.http4k.core.Status.Companion.NOT_FOUND
-import org.http4k.core.Status.Companion.OK
-import org.http4k.format.Jackson
-import org.http4k.unquoted
 
-class ServerApi(
-    private val databaseAdaptor: DatabaseAdaptor,
-    private val frontendPort: Int
-) {
-    private val json = Jackson
+class ServerApi(private val databaseAdaptor: DatabaseAdaptor) {
     private val jsonEncoder = JsonEncoder()
 
-    fun handleCourses(@Suppress("UNUSED_PARAMETER") request: Request): Response {
-        val json = jsonEncoder.encodeCourses(databaseAdaptor.allCourses())
-        return okResponse(json)
+    fun courses(): String {
+        return jsonEncoder.encodeCourses(databaseAdaptor.allCourses())
     }
 
-    fun handleCoursemetadata(request: Request): Response {
-        val courseName = request.query("course") ?: throw MissingQueryParameter("course")
+    fun courseMetadata(courseName: String): String {
         val courseMetadata: CourseMetadata = databaseAdaptor.courseMetadata(courseName)
-        val json = jsonEncoder.encodeCourseMetadata(courseMetadata)
-        return okResponse(json)
+        return jsonEncoder.encodeCourseMetadata(courseMetadata)
     }
 
-    fun handleLesson(request: Request): Response {
-        val jsonNode: JsonNode = json.parse(request.bodyString())
-        val courseName = jsonNode["courseName"].toString().unquoted()
-        val lessonName = jsonNode["lessonName"].toString().unquoted()
-
-        return try {
+    fun lesson(courseName: String, lessonName: String): String {
+        try {
             val lesson = databaseAdaptor.lesson(courseName, lessonName)
-            val jsonEncodedLesson = jsonEncoder.encodeLesson(lesson)
-            okResponse(jsonEncodedLesson)
+            return jsonEncoder.encodeLesson(lesson)
         } catch (error: IndexOutOfBoundsException) {
-            val cause = "NoSuchLesson"
-            val jsonEncodedError = "{\"cause\":\"$cause\"}"
-            notFoundResponse(jsonEncodedError)
+            throw NoSuchLessonException(error)
         }
-    }
-
-    private fun okResponse(json: String): Response {
-        return Response(OK)
-            .header("Access-Control-Allow-Origin", "http://localhost:$frontendPort")
-            .header("Access-Control-Allow-Headers", "Content-Type")
-            .header("Content-Type", "application/json; charset=UTF-8")
-            .body(json)
-    }
-
-    private fun notFoundResponse(json: String): Response {
-        return Response(NOT_FOUND)
-            .header("Access-Control-Allow-Origin", "http://localhost:$frontendPort")
-            .header("Access-Control-Allow-Headers", "Content-Type")
-            .header("Content-Type", "application/json; charset=UTF-8")
-            .body(json)
     }
 }
 
-class MissingQueryParameter(missingParameterName: String) : Throwable("Missing query parameter: $missingParameterName")
+class NoSuchLessonException(cause: Throwable) : Throwable(cause)

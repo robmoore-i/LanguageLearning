@@ -5,17 +5,21 @@ import environment.EnvironmentLoader
 import logger.ServerLogger
 import neo4j.Neo4jDatabaseAdaptor
 import neo4j.Neo4jDriver
-import server.Server
+import server.HttpRequestHandler
+import server.HttpResponseFactory
+import server.HttpServer
+import server.ServerApi
 
 fun main(args: Array<String>) {
     val environmentLoader = EnvironmentLoader(System::getenv)
     val environment = environmentLoader.getEnvironment()
 
-    val logger = ServerLogger()
-
     val neo4jDriver = Neo4jDriver(environment.neo4jUser, environment.neo4jPassword, environment.neo4jPort)
     val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(neo4jDriver, environment.imagesPath, environment.extractsPath)
 
-    val server = Server(environment.serverPort, neo4jDatabaseAdaptor, environment.frontendPort, logger)
-    server.start()
+    val httpRequestHandler = HttpRequestHandler(ServerApi(neo4jDatabaseAdaptor), HttpResponseFactory(environment.frontendPort))
+
+    val httpServer = HttpServer(httpRequestHandler, environment.serverPort, ServerLogger())
+
+    httpServer.start()
 }

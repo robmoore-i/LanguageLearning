@@ -1,16 +1,16 @@
 package endpoints.lesson
 
 import endpoints.EndpointTestCase
+import endpoints.IntegrationEndpointTestCase
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert.assertThat
 import org.http4k.unquoted
 import org.junit.Test
 
-class DifferentCourseSameLessonNameTest : EndpointTestCase() {
+class DifferentCourseSameLessonNameTest : IntegrationEndpointTestCase() {
     @Test
     fun canGetALessonSharingTheNameWithALessonFromADiferentCourse() {
-        neo4jDriver.session().let { session ->
-            val query = """
+        testDatabaseAdaptor.runQuery("""
                 CREATE (ge:Course {name: "Georgian", image: "img.png"})
                 CREATE (fr:Course {name: "French", image: "img.png"})
 
@@ -21,11 +21,7 @@ class DifferentCourseSameLessonNameTest : EndpointTestCase() {
                 CREATE (gehello)-[:HAS_QUESTION {index: 0}]->(getq:Question:TranslationQuestion {given: "Hello", answer: "გამარჯობა"})
 
                 RETURN ge,fr,gehello,frhello,frtq,getq;
-                """
-
-            session.run(query)
-            session.close()
-        }
+                """)
 
         val frenchQuestion = lessonRequestJson("French", "Hello!")["questions"][0]
         assertThat(frenchQuestion["given"].toString().unquoted(), CoreMatchers.equalTo("Hi"))

@@ -1,22 +1,18 @@
 package endpoints.lesson
 
 import endpoints.EndpointTestCase
+import endpoints.IntegrationEndpointTestCase
 import org.junit.Test
 
-class CorsTest : EndpointTestCase() {
+class CorsTest : IntegrationEndpointTestCase() {
 
     @Test
     fun givesAccessControlAllowOriginCorsHeader() {
-        neo4jDriver.session().let { session ->
-            val query = """
+        testDatabaseAdaptor.runQuery("""
                 CREATE (hello:TopicLesson {name: "lesson"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "Georgian", image: "img.png"})
                 CREATE (hello)-[:HAS_QUESTION {index: 0}]->(letterA:Question:MultipleChoiceQuestion {question: "sounds like \"a\" in English", a: "მ",b:"ბ", c:"ა", answer: "c"})
                 RETURN hello,letterA,c;
-                """.trimIndent()
-
-            session.run(query)
-            session.close()
-        }
+                """.trimIndent())
 
         val response = lessonRequest("Georgian", "lesson")
 

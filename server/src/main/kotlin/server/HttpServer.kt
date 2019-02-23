@@ -10,19 +10,17 @@ import org.http4k.server.Jetty
 import org.http4k.server.asServer
 
 /*Created on 13/01/19. */
-class Server(
-    private val port: Int,
-    databaseAdaptor: DatabaseAdaptor,
-    frontendPort: Int,
-    private val logger: ServerLogger
+class HttpServer(
+        httpRequestHandler: HttpRequestHandler,
+        private val port: Int,
+        private val logger: ServerLogger
 ) : Http4kServer {
-    private val serverApi = ServerApi(databaseAdaptor, frontendPort)
 
     private val handler: HttpHandler = ServerFilters.CatchLensFailure.then(
         routes(
-            "/courses" bind Method.GET to loggedResponse(serverApi::handleCourses),
-            "/lesson" bind Method.POST to loggedResponse(serverApi::handleLesson),
-            "/coursemetadata" bind Method.GET to loggedResponse(serverApi::handleCoursemetadata)
+            "/courses" bind Method.GET to loggedResponse(httpRequestHandler::handleCourses),
+            "/lesson" bind Method.POST to loggedResponse(httpRequestHandler::handleLesson),
+            "/coursemetadata" bind Method.GET to loggedResponse(httpRequestHandler::handleCoursemetadata)
         )
     )
 

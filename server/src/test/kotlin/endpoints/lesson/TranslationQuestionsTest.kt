@@ -1,6 +1,7 @@
 package endpoints.lesson
 
 import endpoints.EndpointTestCase
+import endpoints.IntegrationEndpointTestCase
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.hasItem
 import org.hamcrest.MatcherAssert.assertThat
@@ -8,19 +9,14 @@ import org.http4k.unquoted
 import org.junit.Assert.assertFalse
 import org.junit.Test
 
-class TranslationQuestionsTest : EndpointTestCase() {
+class TranslationQuestionsTest : IntegrationEndpointTestCase() {
     @Test
     fun canGetTq() {
-        neo4jDriver.session().let { session ->
-            val query = """
+        testDatabaseAdaptor.runQuery("""
                 CREATE (l:TopicLesson {name: "TQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "Georgian", image: "img.png"})
                 CREATE (l)-[:HAS_QUESTION {index: 0}]->(tq:Question:TranslationQuestion {given: "What are you called?", answer: "შენ რა გქვია?"})
                 RETURN l,tq,c;
-                """
-
-            session.run(query)
-            session.close()
-        }
+                """)
 
         val responseJson = lessonRequestJson("Georgian", "TQ")
         val questions = responseJson["questions"]
@@ -35,16 +31,11 @@ class TranslationQuestionsTest : EndpointTestCase() {
 
     @Test
     fun canGetTqWithMultipleAnswers() {
-        neo4jDriver.session().let { session ->
-            val query = """
+        testDatabaseAdaptor.runQuery("""
                 CREATE (l:TopicLesson {name: "TQ"})<-[:HAS_TOPIC_LESSON {index: 0}]-(c:Course {name: "Georgian", image: "img.png"})
                 CREATE (l)-[:HAS_QUESTION {index: 0}]->(tq:Question:TranslationQuestion {given: "Blue", answers: ["ლურჯი", "ცისფერი"]})
                 RETURN l,tq,c;
-                """
-
-            session.run(query)
-            session.close()
-        }
+                """)
 
         val responseJson = lessonRequestJson("Georgian", "TQ")
         val questions = responseJson["questions"]

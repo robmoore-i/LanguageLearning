@@ -9,4 +9,5 @@ interface DatabaseAdaptor {
     fun allCourses(): List<Course>
     fun courseMetadata(courseName: String): CourseMetadata
     fun lesson(courseName: String, lessonName: String): Lesson
+    fun clearDatabase()
 }

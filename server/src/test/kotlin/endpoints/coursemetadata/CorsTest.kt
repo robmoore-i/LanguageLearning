@@ -1,23 +1,19 @@
 package endpoints.coursemetadata
 
 import endpoints.EndpointTestCase
+import endpoints.IntegrationEndpointTestCase
 import org.junit.Test
 
-class CorsTest : EndpointTestCase() {
+class CorsTest : IntegrationEndpointTestCase() {
     @Test
     fun givesAccessControlAllowOriginCorsHeader() {
-        neo4jDriver.session().let { session ->
-            val query = """
+        testDatabaseAdaptor.runQuery("""
                 CREATE (c:Course {name: "Course", image: "flagGeorgia.svg"})
                 CREATE (c)-[:HAS_TOPIC_LESSON {index: 0}]->(hello:TopicLesson {name: "Hello"})
                 CREATE (c)-[:HAS_TOPIC_LESSON {index: 1}]->(whatAreYouCalled:TopicLesson {name: "What are you called?"})
                 CREATE (c)-[:HAS_TOPIC_LESSON {index: 2}]->(colours:TopicLesson {name: "Colours"})
                 RETURN hello,whatAreYouCalled,colours,c;
-                """.trimIndent()
-
-            session.run(query)
-            session.close()
-        }
+                """.trimIndent())
 
         val response = courseMetadataRequest("Course")
 

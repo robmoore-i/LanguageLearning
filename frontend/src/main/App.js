@@ -19,10 +19,9 @@ import {defaultAnalytics} from './Analytics'
 export function startApp() {
     ReactDOM.render(
         <App
-            // These props aren't used currently. I should find a way to inject them downwards from here.
             server={defaultServer}
-            analytics={defaultAnalytics}
             shuffler={defaultShuffler}
+            analytics={defaultAnalytics}
         />,
         document.getElementById('root')
     )
@@ -35,60 +34,52 @@ export default class App extends Component {
             <div className="App">
                 <BrowserRouter>
                     <Switch>
-                        <Route exact path="/" component={HomeWithAnalytics}/>
-                        <Route exact path="/courses" component={AllCourses}/>
-                        <Route exact path="/courses/:course" component={MatchedLessonMap} />
-                        <Route path="/courses/:course/:lesson" component={MatchedLesson} />
+                        <Route exact path="/" component={this.HomeWithAnalytics}/>
+                        <Route exact path="/courses" component={this.AllCourses}/>
+                        <Route exact path="/courses/:course" component={this.MatchedLessonMap} />
+                        <Route path="/courses/:course/:lesson" component={this.MatchedLesson} />
                     </Switch>
                 </BrowserRouter>
             </div>
         )
     }
-}
 
-const HomeWithAnalytics = () => {
-    return (
-        <Home
-            analytics={defaultAnalytics}
-        />
-    )
-}
+    HomeWithAnalytics = () => {
+        return (
+            <Home
+                analytics={this.props.analytics}
+            />
+        )
+    }
 
-const AllCourses = () => {
-    return (
-        <Courses
-            server={defaultServer}
-            analytics={defaultAnalytics}
-        />
-    )
-}
+    AllCourses = () => {
+        return (
+            <Courses
+                server={this.props.server}
+                analytics={this.props.analytics}
+            />
+        )
+    }
 
-const MatchedLessonMap = ({ match }) => {
-    return (
-        <LessonMap
-            courseName={match.params.course}
-            server={defaultServer}
-            analytics={defaultAnalytics}
-        />
-    )
-}
+    MatchedLessonMap = ({ match }) => {
+        return (
+            <LessonMap
+                courseName={match.params.course}
+                server={this.props.server}
+                analytics={this.props.analytics}
+            />
+        )
+    }
 
-const MatchedLesson = ({ match }) => {
-    return (
-        <Lesson
-            courseName={match.params.course}
-            encodedLessonName={match.params.lesson}
-            server={defaultServer}
-            shuffler={defaultShuffler}
-            analytics={defaultAnalytics}
-        />
-    )
-}
-
-export function encodeUrl(string) {
-    return encodeURIComponent(string.split(" ").join("_"))
-}
-
-export function decodeUrl(url) {
-    return decodeURIComponent(url.split("_").join(" "))
+    MatchedLesson = ({ match }) => {
+        return (
+            <Lesson
+                courseName={match.params.course}
+                encodedLessonName={match.params.lesson}
+                server={this.props.server}
+                shuffler={this.props.shuffler}
+                analytics={this.props.analytics}
+            />
+        )
+    }
 }
