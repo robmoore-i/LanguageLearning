@@ -25,14 +25,14 @@ shellQueryCommandBuilderTests = [
 stubQueryCommandBuilder :: String -> IO String
 stubQueryCommandBuilder query = return $ "building-command:" ++ query
 
-mockQueryCommandRunner :: String -> IO String
-mockQueryCommandRunner query = return $ "running-command:" ++ query
+stubQueryCommandRunner :: String -> IO String
+stubQueryCommandRunner query = return $ "running-command:" ++ query
 
 shellQueryRunnerTests :: [IO String]
 shellQueryRunnerTests = [
 
     ioTest "Runs the shell command built by the command builder"
-        (shellQueryRunner stubQueryCommandBuilder mockQueryCommandRunner "query")
+        (shellQueryRunner stubQueryCommandBuilder stubQueryCommandRunner "query")
         "running-command:building-command:query"
 
     ]
