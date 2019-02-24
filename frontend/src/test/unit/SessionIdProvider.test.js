@@ -1,7 +1,8 @@
 import {SessionIdProvider} from "../../main/SessionIdProvider"
 
+const stubbedRandomSessionId = "totally-random-session-id"
 function stubRandomSessionIdGenerator() {
-    return "totally-random-session-id"
+    return stubbedRandomSessionId
 }
 
 function MockCacheBuilder() {
@@ -79,7 +80,7 @@ it("If sessionId doesn't exists, return a random session id", () => {
 
     let sessionId = sessionIdProvider.getSessionId()
 
-    expect(sessionId).toEqual("totally-random-session-id")
+    expect(sessionId).toEqual(stubbedRandomSessionId)
 })
 
 it("If sessionId doesn't exists, store the generated random session id in localStorage", () => {
@@ -89,7 +90,7 @@ it("If sessionId doesn't exists, store the generated random session id in localS
     sessionIdProvider.getSessionId()
 
     expect(mockCache.localStorage.storeItemCalledWithKey[0]).toEqual("analytics.session")
-    expect(mockCache.localStorage.storeItemCalledWithValue[0]).toEqual("totally-random-session-id")
+    expect(mockCache.localStorage.storeItemCalledWithValue[0]).toEqual(stubbedRandomSessionId)
 })
 
 it("If sessionId doesn't exists, set the new session id timeout to be 5 minutes", () => {
@@ -113,7 +114,7 @@ it("If existing sessionId has timed out, create a generated random session id", 
 
     let sessionId = sessionIdProvider.getSessionId()
 
-    expect(sessionId).toEqual("totally-random-session-id")
+    expect(sessionId).toEqual(stubbedRandomSessionId)
 })
 
 it("If existing sessionId has no corresponding timeout entry, create a new generated random session id", () => {
@@ -122,7 +123,7 @@ it("If existing sessionId has no corresponding timeout entry, create a new gener
 
     let sessionId = sessionIdProvider.getSessionId()
 
-    expect(sessionId).toEqual("totally-random-session-id")
+    expect(sessionId).toEqual(stubbedRandomSessionId)
 })
 
 it("Resets the timeout if the session id hasn't timed out", () => {
