@@ -1,9 +1,9 @@
 export function SessionIdProvider(cache, randomSessionIdGenerator) {
+    const fiveMinutesInMilliseconds = 1000 * 60 * 5
+
     function useNewToken(currentTime) {
         let generatedSessionId = randomSessionIdGenerator()
         cache.localStorage.storeItem("analytics.session", generatedSessionId)
-
-        let fiveMinutesInMilliseconds = 1000 * 60 * 5
         cache.localStorage.storeItem("analytics.session.timeout", currentTime + fiveMinutesInMilliseconds)
 
         return generatedSessionId
@@ -11,18 +11,17 @@ export function SessionIdProvider(cache, randomSessionIdGenerator) {
 
     return {
         getSessionId: () => {
-            let now = Date.now()
+            let currentTime = Date.now()
             if (!cache.localStorage.hasItem("analytics.session")) {
-                return useNewToken(now)
+                return useNewToken(currentTime)
             }
 
             let timeout = cache.localStorage.getItem("analytics.session.timeout")
-            if (timeout === undefined || timeout < now) {
-                return useNewToken(now)
+            if (timeout === undefined || timeout < currentTime) {
+                return useNewToken(currentTime)
             }
 
-            let fiveMinutesInMilliseconds = 1000 * 60 * 5
-            cache.localStorage.storeItem("analytics.session.timeout", now + fiveMinutesInMilliseconds)
+            cache.localStorage.storeItem("analytics.session.timeout", currentTime + fiveMinutesInMilliseconds)
 
             cache.localStorage.getItem("analytics.session")
             return ""
