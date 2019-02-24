@@ -53,16 +53,7 @@ function cacheMockingStoreItem() {
 }
 
 it("Checks localStorage for an existing sessionId", () => {
-    let mockCache = {
-        localStorage: {
-            hasItemCalledWith: undefined,
-            hasItem: (key) => {
-                mockCache.localStorage.hasItemCalledWith = key
-                return false
-            },
-            storeItem: () => {}
-        }
-    }
+    let mockCache = MockCacheBuilder().hasItemReturns(false).build()
     let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
 
     sessionIdProvider.getSessionId()
@@ -71,19 +62,7 @@ it("Checks localStorage for an existing sessionId", () => {
 })
 
 it("If sessionId exists in localStorage, get it", () => {
-    let mockCache = {
-        localStorage: {
-            hasItem: (key) => {
-                return true
-            },
-            getItemCalledWith: undefined,
-            getItem: (key) => {
-                mockCache.localStorage.getItemCalledWith = key
-                return Date.now()
-            },
-            storeItem: () => {}
-        }
-    }
+    let mockCache = MockCacheBuilder().hasItemReturns(true).getItemReturns(Date.now()).build()
     let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
 
     sessionIdProvider.getSessionId()
@@ -92,14 +71,7 @@ it("If sessionId exists in localStorage, get it", () => {
 })
 
 it("If sessionId doesn't exists, return a random session id", () => {
-    let mockCache = {
-        localStorage: {
-            hasItem: (key) => {
-                return false
-            },
-            storeItem: () => {}
-        }
-    }
+    let mockCache = MockCacheBuilder().hasItemReturns(false).build()
     let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
 
     let sessionId = sessionIdProvider.getSessionId()
@@ -108,7 +80,7 @@ it("If sessionId doesn't exists, return a random session id", () => {
 })
 
 it("If sessionId doesn't exists, store the generated random session id in localStorage", () => {
-    let mockCache = cacheMockingStoreItem()
+    let mockCache = MockCacheBuilder().hasItemReturns(false).build()
     let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
 
     sessionIdProvider.getSessionId()
@@ -118,7 +90,7 @@ it("If sessionId doesn't exists, store the generated random session id in localS
 })
 
 it("If sessionId doesn't exists, set the new session id timeout to be 5 minutes", () => {
-    let mockCache = cacheMockingStoreItem()
+    let mockCache = MockCacheBuilder().hasItemReturns(false).build()
     let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
 
     sessionIdProvider.getSessionId()
@@ -131,17 +103,9 @@ it("If sessionId doesn't exists, set the new session id timeout to be 5 minutes"
 })
 
 it("If existing sessionId has timed out, create a generated random session id", () => {
-    let mockCache = {
-        localStorage: {
-            hasItem: () => true,
-            getItem: () => {
-                let fiveSecondsInMilliseconds = 1000 * 5
-                let fiveSecondsAgo = Date.now() - fiveSecondsInMilliseconds
-                return fiveSecondsAgo
-            },
-            storeItem: () => {}
-        }
-    }
+    let fiveSecondsInMilliseconds = 1000 * 5
+    let fiveSecondsAgo = Date.now() - fiveSecondsInMilliseconds
+    let mockCache = MockCacheBuilder().hasItemReturns(true).getItemReturns(fiveSecondsAgo).build()
     let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
 
     let sessionId = sessionIdProvider.getSessionId()
@@ -150,15 +114,7 @@ it("If existing sessionId has timed out, create a generated random session id", 
 })
 
 it("If existing sessionId has no corresponding timeout entry, create a new generated random session id", () => {
-    let mockCache = {
-        localStorage: {
-            hasItem: () => true,
-            getItem: () => {
-                return undefined
-            },
-            storeItem: () => {}
-        }
-    }
+    let mockCache = MockCacheBuilder().hasItemReturns(true).getItemReturns(undefined).build()
     let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
 
     let sessionId = sessionIdProvider.getSessionId()
@@ -167,24 +123,9 @@ it("If existing sessionId has no corresponding timeout entry, create a new gener
 })
 
 it("Resets the timeout if the session id hasn't timed out", () => {
-    let mockCache = {
-        localStorage: {
-            hasItem: (key) => {
-                return true
-            },
-            getItem: () => {
-                let twoMinutesInMilliseconds = 1000 * 60 * 2
-                let inTwoMinutesTime = Date.now() + twoMinutesInMilliseconds
-                return inTwoMinutesTime
-            },
-            storeItemCalledWithKey: [],
-            storeItemCalledWithValue: [],
-            storeItem: (key, value) => {
-                mockCache.localStorage.storeItemCalledWithKey.push(key)
-                mockCache.localStorage.storeItemCalledWithValue.push(value)
-            }
-        }
-    }
+    let twoMinutesInMilliseconds = 1000 * 60 * 2
+    let inTwoMinutesTime = Date.now() + twoMinutesInMilliseconds
+    let mockCache = MockCacheBuilder().hasItemReturns(true).getItemReturns(inTwoMinutesTime).build()
     let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
 
     sessionIdProvider.getSessionId()
