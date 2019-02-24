@@ -32,8 +32,18 @@ export function randomSessionId() {
     return Math.random().toString(36).substr(2, sessionIdLength)
 }
 
-export const defaultSessionIdProvider = {
-    getSessionId: () => {
-        return randomSessionId()
+const cache = {
+    localStorage: {
+        hasItem: (key) => {
+            return window.localStorage.getItem(key) !== null
+        },
+        getItem: (key) => {
+            return window.localStorage.getItem(key)
+        },
+        storeItem: (key, value) => {
+            window.localStorage.setItem(key, value)
+        }
     }
 }
+
+export const defaultSessionIdProvider = SessionIdProvider(cache, randomSessionId)

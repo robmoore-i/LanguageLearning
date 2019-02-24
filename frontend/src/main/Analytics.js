@@ -51,5 +51,4 @@ export class Analytics {
     }
 }
 
-
 export const defaultAnalytics = new Analytics(config.localAnalyticsOrigin, defaultWebSocketFactory, defaultSessionIdProvider)
