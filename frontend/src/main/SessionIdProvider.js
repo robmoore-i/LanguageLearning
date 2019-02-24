@@ -16,7 +16,8 @@ export function SessionIdProvider(cache, randomSessionIdGenerator) {
                 return useNewToken(now)
             }
 
-            if (cache.localStorage.getItem("analytics.session.timeout") < now) {
+            let timeout = cache.localStorage.getItem("analytics.session.timeout")
+            if (timeout === undefined || timeout < now) {
                 return useNewToken(now)
             }
 

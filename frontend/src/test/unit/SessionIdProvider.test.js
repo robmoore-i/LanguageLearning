@@ -116,3 +116,20 @@ it("If existing sessionId has timed out, create a generated random session id", 
 
     expect(sessionId).toEqual("totally-random-session-id")
 })
+
+it("If existing sessionId has no corresponding timeout entry, create a new generated random session id", () => {
+    let mockCache = {
+        localStorage: {
+            hasItem: () => true,
+            getItem: () => {
+                return undefined
+            },
+            storeItem: () => {}
+        }
+    }
+    let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
+
+    let sessionId = sessionIdProvider.getSessionId()
+
+    expect(sessionId).toEqual("totally-random-session-id")
+})
