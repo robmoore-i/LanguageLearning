@@ -32,11 +32,13 @@ function MockCacheBuilder() {
         hasItemReturns: undefined,
         hasItemReturns: (bool) => {
             mockCacheBuilder.hasItemReturns = bool
+            return mockCacheBuilder
         },
 
         getItemReturns: undefined,
         getItemReturns: (bool) => {
             mockCacheBuilder.getItemReturns = bool
+            return mockCacheBuilder
         },
 
         build: () => {
@@ -47,9 +49,7 @@ function MockCacheBuilder() {
 }
 
 function cacheMockingStoreItem() {
-    let mockCacheBuilder = MockCacheBuilder()
-    mockCacheBuilder.hasItemReturns(false)
-    return mockCacheBuilder.build()
+    return MockCacheBuilder().hasItemReturns(false).build()
 }
 
 it("Checks localStorage for an existing sessionId", () => {
