@@ -1,3 +1,5 @@
+import {randomString} from "./random"
+
 export function SessionIdProvider(cache, randomSessionIdGenerator) {
     const fiveMinutesInMilliseconds = 1000 * 60 * 5
 
@@ -27,9 +29,8 @@ export function SessionIdProvider(cache, randomSessionIdGenerator) {
     }
 }
 
-export function randomSessionId() {
-    let sessionIdLength = 10
-    return Math.random().toString(36).substr(2, sessionIdLength)
+function randomSessionId() {
+    return randomString(10)
 }
 
 const cache = {

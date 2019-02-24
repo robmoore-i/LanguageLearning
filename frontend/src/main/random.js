@@ -11,3 +11,7 @@ export function randomCharChoice(str) {
 export function coinFlip() {
     return randomChoice([true, false])
 }
+
+export function randomString(strLength) {
+    return Math.random().toString(36).substr(2, strLength)
+}
