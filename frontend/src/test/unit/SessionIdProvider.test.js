@@ -4,21 +4,52 @@ function stubRandomSessionIdGenerator() {
     return "totally-random-session-id"
 }
 
-function cacheMockingStoreItem() {
-    let mockCache = {
-        localStorage: {
-            hasItem: (key) => {
-                return false
-            },
-            storeItemCalledWithKey: [],
-            storeItemCalledWithValue: [],
-            storeItem: (key, value) => {
-                mockCache.localStorage.storeItemCalledWithKey.push(key)
-                mockCache.localStorage.storeItemCalledWithValue.push(value)
+function MockCacheBuilder() {
+    let mockCacheBuilder = {
+        mockCache: {
+            localStorage: {
+                hasItemCalledWith: undefined,
+                hasItem: (key) => {
+                    mockCacheBuilder.mockCache.localStorage.hasItemCalledWith = key
+                    return mockCacheBuilder.hasItemReturns
+                },
+
+                getItemCalledWith: undefined,
+                getItem: (key) => {
+                    mockCacheBuilder.mockCache.localStorage.getItemCalledWith = key
+                    return mockCacheBuilder.getItemReturns
+                },
+
+                storeItemCalledWithKey: [],
+                storeItemCalledWithValue: [],
+                storeItem: (key, value) => {
+                    mockCacheBuilder.mockCache.localStorage.storeItemCalledWithKey.push(key)
+                    mockCacheBuilder.mockCache.localStorage.storeItemCalledWithValue.push(value)
+                }
             }
+        },
+
+        hasItemReturns: undefined,
+        hasItemReturns: (bool) => {
+            mockCacheBuilder.hasItemReturns = bool
+        },
+
+        getItemReturns: undefined,
+        getItemReturns: (bool) => {
+            mockCacheBuilder.getItemReturns = bool
+        },
+
+        build: () => {
+            return mockCacheBuilder.mockCache
         }
     }
-    return mockCache
+    return mockCacheBuilder
+}
+
+function cacheMockingStoreItem() {
+    let mockCacheBuilder = MockCacheBuilder()
+    mockCacheBuilder.hasItemReturns(false)
+    return mockCacheBuilder.build()
 }
 
 it("Checks localStorage for an existing sessionId", () => {
