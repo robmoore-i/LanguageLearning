@@ -1,4 +1,4 @@
-import {Analytics, AnalyticsC} from '../../main/Analytics'
+import {Analytics} from '../../main/Analytics'
 
 const stubSessionIdProvider = {
     getSessionId: () => "session-id"
