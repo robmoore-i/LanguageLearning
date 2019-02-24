@@ -1,57 +1,5 @@
 import {SessionIdProvider} from "../../main/SessionIdProvider"
 
-const stubbedRandomSessionId = "totally-random-session-id"
-function stubRandomSessionIdGenerator() {
-    return stubbedRandomSessionId
-}
-
-function MockCacheBuilder() {
-    let mockCacheBuilder = {
-        mockCache: {
-            localStorage: {
-                hasItemCalledWith: undefined,
-                hasItem: (key) => {
-                    mockCacheBuilder.mockCache.localStorage.hasItemCalledWith = key
-                    return mockCacheBuilder.hasItemReturnsValue
-                },
-
-                getItemCalls: 0,
-                getItemCalledWith: undefined,
-                getItem: (key) => {
-                    mockCacheBuilder.mockCache.localStorage.getItemCalledWith = key
-                    let item = mockCacheBuilder.getItemReturnsValues[mockCacheBuilder.mockCache.localStorage.getItemCalls]
-                    mockCacheBuilder.mockCache.localStorage.getItemCalls += 1
-                    return item
-                },
-
-                storeItemCalledWithKey: [],
-                storeItemCalledWithValue: [],
-                storeItem: (key, value) => {
-                    mockCacheBuilder.mockCache.localStorage.storeItemCalledWithKey.push(key)
-                    mockCacheBuilder.mockCache.localStorage.storeItemCalledWithValue.push(value)
-                }
-            }
-        },
-
-        hasItemReturnsValue: undefined,
-        hasItemReturns: (bool) => {
-            mockCacheBuilder.hasItemReturnsValue = bool
-            return mockCacheBuilder
-        },
-
-        getItemReturnsValues: [],
-        getItemReturns: (item) => {
-            mockCacheBuilder.getItemReturnsValues.push(item)
-            return mockCacheBuilder
-        },
-
-        build: () => {
-            return mockCacheBuilder.mockCache
-        }
-    }
-    return mockCacheBuilder
-}
-
 it("Checks localStorage for an existing sessionId", () => {
     let mockCache = MockCacheBuilder().hasItemReturns(false).build()
     let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
@@ -147,3 +95,55 @@ it("Returns unexpired tokens unchanged", () => {
 
     expect(sessionId).toEqual("existing-session-id")
 })
+
+const stubbedRandomSessionId = "totally-random-session-id"
+function stubRandomSessionIdGenerator() {
+    return stubbedRandomSessionId
+}
+
+function MockCacheBuilder() {
+    let mockCacheBuilder = {
+        mockCache: {
+            localStorage: {
+                hasItemCalledWith: undefined,
+                hasItem: (key) => {
+                    mockCacheBuilder.mockCache.localStorage.hasItemCalledWith = key
+                    return mockCacheBuilder.hasItemReturnsValue
+                },
+
+                getItemCalls: 0,
+                getItemCalledWith: undefined,
+                getItem: (key) => {
+                    mockCacheBuilder.mockCache.localStorage.getItemCalledWith = key
+                    let item = mockCacheBuilder.getItemReturnsValues[mockCacheBuilder.mockCache.localStorage.getItemCalls]
+                    mockCacheBuilder.mockCache.localStorage.getItemCalls += 1
+                    return item
+                },
+
+                storeItemCalledWithKey: [],
+                storeItemCalledWithValue: [],
+                storeItem: (key, value) => {
+                    mockCacheBuilder.mockCache.localStorage.storeItemCalledWithKey.push(key)
+                    mockCacheBuilder.mockCache.localStorage.storeItemCalledWithValue.push(value)
+                }
+            }
+        },
+
+        hasItemReturnsValue: undefined,
+        hasItemReturns: (bool) => {
+            mockCacheBuilder.hasItemReturnsValue = bool
+            return mockCacheBuilder
+        },
+
+        getItemReturnsValues: [],
+        getItemReturns: (item) => {
+            mockCacheBuilder.getItemReturnsValues.push(item)
+            return mockCacheBuilder
+        },
+
+        build: () => {
+            return mockCacheBuilder.mockCache
+        }
+    }
+    return mockCacheBuilder
+}
