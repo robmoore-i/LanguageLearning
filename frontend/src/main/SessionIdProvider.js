@@ -21,6 +21,9 @@ export function SessionIdProvider(cache, randomSessionIdGenerator) {
                 return useNewToken(now)
             }
 
+            let fiveMinutesInMilliseconds = 1000 * 60 * 5
+            cache.localStorage.storeItem("analytics.session.timeout", now + fiveMinutesInMilliseconds)
+
             cache.localStorage.getItem("analytics.session")
             return ""
         }

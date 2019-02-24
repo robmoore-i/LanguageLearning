@@ -49,7 +49,8 @@ it("If sessionId exists in localStorage, get it", () => {
             getItem: (key) => {
                 mockCache.localStorage.getItemCalledWith = key
                 return Date.now()
-            }
+            },
+            storeItem: () => {}
         }
     }
     let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
@@ -132,4 +133,34 @@ it("If existing sessionId has no corresponding timeout entry, create a new gener
     let sessionId = sessionIdProvider.getSessionId()
 
     expect(sessionId).toEqual("totally-random-session-id")
+})
+
+it("Resets the timeout if the session id hasn't timed out", () => {
+    let mockCache = {
+        localStorage: {
+            hasItem: (key) => {
+                return true
+            },
+            getItem: () => {
+                let twoMinutesInMilliseconds = 1000 * 60 * 2
+                let inTwoMinutesTime = Date.now() + twoMinutesInMilliseconds
+                return inTwoMinutesTime
+            },
+            storeItemCalledWithKey: [],
+            storeItemCalledWithValue: [],
+            storeItem: (key, value) => {
+                mockCache.localStorage.storeItemCalledWithKey.push(key)
+                mockCache.localStorage.storeItemCalledWithValue.push(value)
+            }
+        }
+    }
+    let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
+
+    sessionIdProvider.getSessionId()
+
+    expect(mockCache.localStorage.storeItemCalledWithKey[0]).toEqual("analytics.session.timeout")
+    let unixTimestamp = Date.now()
+    let fiveMinutesInMilliseconds = 1000 * 60 * 5
+    let expectedApproximateTimeout = unixTimestamp + fiveMinutesInMilliseconds
+    expect(expectedApproximateTimeout - mockCache.localStorage.storeItemCalledWithValue[0]).toBeLessThan(20)
 })
