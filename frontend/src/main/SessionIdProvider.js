@@ -14,12 +14,9 @@ export function SessionIdProvider(cache, randomSessionIdGenerator) {
     return {
         getSessionId: () => {
             let currentTime = Date.now()
-            if (!cache.localStorage.hasItem("analytics.session")) {
-                return useNewToken(currentTime)
-            }
 
             let timeout = cache.localStorage.getItem("analytics.session.timeout")
-            if (timeout === undefined || timeout < currentTime) {
+            if (!cache.localStorage.hasItem("analytics.session") || timeout === undefined || timeout < currentTime) {
                 return useNewToken(currentTime)
             }
 
