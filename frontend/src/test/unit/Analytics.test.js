@@ -4,15 +4,9 @@ const stubSessionIdProvider = {
     getSessionId: () => "session-id"
 }
 
-it("On failure to establish connection, messenger gets stubbed", () => {
+it("If connection is never opened, messenger gets stubbed", () => {
     const failingSocketFactory = () => {
-        return {
-            addEventListener: (eventName, f) => {
-                if (eventName === 'error') {
-                    f()
-                }
-            }
-        }
+        return { addEventListener: () => {} }
     }
 
     let analytics = new Analytics("testorigin", failingSocketFactory, stubSessionIdProvider)

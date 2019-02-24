@@ -29,10 +29,6 @@ export class Analytics {
                 analytics.messenger.stub = false
             })
 
-            socket.addEventListener('error', () => {
-                // Stub analytics are used
-            })
-
             window.llsocket = socket
         } catch (error) {
             // Stub analytics are used
