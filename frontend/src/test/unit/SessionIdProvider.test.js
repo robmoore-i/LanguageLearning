@@ -4,6 +4,23 @@ function stubRandomSessionIdGenerator() {
     return "totally-random-session-id"
 }
 
+function cacheMockingStoreItem() {
+    let mockCache = {
+        localStorage: {
+            hasItem: (key) => {
+                return false
+            },
+            storeItemCalledWithKey: [],
+            storeItemCalledWithValue: [],
+            storeItem: (key, value) => {
+                mockCache.localStorage.storeItemCalledWithKey.push(key)
+                mockCache.localStorage.storeItemCalledWithValue.push(value)
+            }
+        }
+    }
+    return mockCache
+}
+
 it("Checks localStorage for an existing sessionId", () => {
     let mockCache = {
         localStorage: {
@@ -59,19 +76,7 @@ it("If sessionId doesn't exists, return a random session id", () => {
 })
 
 it("If sessionId doesn't exists, store the generated random session id in localStorage", () => {
-    let mockCache = {
-        localStorage: {
-            hasItem: (key) => {
-                return false
-            },
-            storeItemCalledWithKey: [],
-            storeItemCalledWithValue: [],
-            storeItem: (key, value) => {
-                mockCache.localStorage.storeItemCalledWithKey.push(key)
-                mockCache.localStorage.storeItemCalledWithValue.push(value)
-            }
-        }
-    }
+    let mockCache = cacheMockingStoreItem()
     let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
 
     sessionIdProvider.getSessionId()
@@ -81,19 +86,7 @@ it("If sessionId doesn't exists, store the generated random session id in localS
 })
 
 it("If sessionId doesn't exists, set the new session id timeout to be 5 minutes", () => {
-    let mockCache = {
-        localStorage: {
-            hasItem: (key) => {
-                return false
-            },
-            storeItemCalledWithKey: [],
-            storeItemCalledWithValue: [],
-            storeItem: (key, value) => {
-                mockCache.localStorage.storeItemCalledWithKey.push(key)
-                mockCache.localStorage.storeItemCalledWithValue.push(value)
-            }
-        }
-    }
+    let mockCache = cacheMockingStoreItem()
     let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
 
     sessionIdProvider.getSessionId()
@@ -102,5 +95,5 @@ it("If sessionId doesn't exists, set the new session id timeout to be 5 minutes"
     let unixTimestamp = Date.now()
     let fiveMinutesInMilliseconds = 1000 * 60 * 5
     let expectedApproximateTimeout = unixTimestamp + fiveMinutesInMilliseconds
-    expect(expectedApproximateTimeout - mockCache.localStorage.storeItemCalledWithValue[1]).toBeLessThan(5)
+    expect(expectedApproximateTimeout - mockCache.localStorage.storeItemCalledWithValue[1]).toBeLessThan(20)
 })
