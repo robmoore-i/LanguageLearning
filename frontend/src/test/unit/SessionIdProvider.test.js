@@ -106,7 +106,8 @@ it("If existing sessionId has timed out, create a generated random session id", 
                 let fiveSecondsInMilliseconds = 1000 * 5
                 let fiveSecondsAgo = Date.now() - fiveSecondsInMilliseconds
                 return fiveSecondsAgo
-            }
+            },
+            storeItem: () => {}
         }
     }
     let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
