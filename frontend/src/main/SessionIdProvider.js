@@ -4,8 +4,10 @@ export function SessionIdProvider(cache, randomSessionIdGenerator) {
             if (!cache.localStorage.hasItem("analytics.session")) {
                 let generatedSessionId = randomSessionIdGenerator()
                 cache.localStorage.storeItem("analytics.session", generatedSessionId)
+
                 let fiveMinutesInMilliseconds = 1000 * 60 * 5
                 cache.localStorage.storeItem("analytics.session.timeout", Date.now() + fiveMinutesInMilliseconds)
+
                 return generatedSessionId
             }
             cache.localStorage.getItem("analytics.session")
