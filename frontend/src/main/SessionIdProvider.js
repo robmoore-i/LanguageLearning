@@ -1,7 +1,8 @@
 export function SessionIdProvider(cache) {
     return {
         getSessionId: () => {
-            cache.localStorage.hasItem("analytics.session.id")
+            cache.localStorage.hasItem("analytics.session")
+            cache.localStorage.getItem("analytics.session")
             return ""
         }
     }

@@ -7,6 +7,27 @@ it("Checks localStorage for an existing sessionId", () => {
             hasItem: (key) => {
                 mockCache.localStorage.hasItemCalledWith = key
                 return false
+            },
+            getItem: () => {}
+        }
+    }
+    let sessionIdProvider = SessionIdProvider(mockCache)
+
+    sessionIdProvider.getSessionId()
+
+    expect(mockCache.localStorage.hasItemCalledWith).toEqual("analytics.session")
+})
+
+it("If sessionId exists, get it", () => {
+    let mockCache = {
+        localStorage: {
+            hasItem: (key) => {
+                return true
+            },
+            getItemCalledWith: undefined,
+            getItem: (key) => {
+                mockCache.localStorage.getItemCalledWith = key
+                return Date.now()
             }
         }
     }
@@ -14,5 +35,5 @@ it("Checks localStorage for an existing sessionId", () => {
 
     sessionIdProvider.getSessionId()
 
-    expect(mockCache.localStorage.hasItemCalledWith).toEqual("analytics.session.id")
+    expect(mockCache.localStorage.getItemCalledWith).toEqual("analytics.session")
 })
