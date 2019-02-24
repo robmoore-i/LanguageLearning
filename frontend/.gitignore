@@ -29,3 +29,6 @@ lighthouse-audits/
 
 # Lock files
 yarn.lock
+
+# Stryker mutation testing
+reports/
