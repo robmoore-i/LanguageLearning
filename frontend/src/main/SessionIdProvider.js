@@ -10,6 +10,7 @@ export function SessionIdProvider(cache, randomSessionIdGenerator) {
 
                 return generatedSessionId
             }
+
             cache.localStorage.getItem("analytics.session")
             return ""
         }
