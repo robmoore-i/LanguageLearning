@@ -97,3 +97,21 @@ it("If sessionId doesn't exists, set the new session id timeout to be 5 minutes"
     let expectedApproximateTimeout = unixTimestamp + fiveMinutesInMilliseconds
     expect(expectedApproximateTimeout - mockCache.localStorage.storeItemCalledWithValue[1]).toBeLessThan(20)
 })
+
+it("If existing sessionId has timed out, create a generated random session id", () => {
+    let mockCache = {
+        localStorage: {
+            hasItem: () => true,
+            getItem: () => {
+                let fiveSecondsInMilliseconds = 1000 * 5
+                let fiveSecondsAgo = Date.now() - fiveSecondsInMilliseconds
+                return fiveSecondsAgo
+            }
+        }
+    }
+    let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
+
+    let sessionId = sessionIdProvider.getSessionId()
+
+    expect(sessionId).toEqual("totally-random-session-id")
+})
