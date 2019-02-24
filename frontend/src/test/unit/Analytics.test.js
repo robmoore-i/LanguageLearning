@@ -1,5 +1,9 @@
 import {Analytics, AnalyticsC} from '../../main/Analytics'
 
+const stubSessionIdProvider = {
+    getSessionId: () => "session-id"
+}
+
 it("On failure to establish connection, messenger gets stubbed", () => {
     const failingSocketFactory = () => {
         return {
@@ -11,7 +15,7 @@ it("On failure to establish connection, messenger gets stubbed", () => {
         }
     }
 
-    let analytics = new Analytics("testorigin", failingSocketFactory)
+    let analytics = new Analytics("testorigin", failingSocketFactory, stubSessionIdProvider)
 
     expect(analytics.messenger.stub).toBe(true)
 })
@@ -27,7 +31,7 @@ it("On successful connection, messenger is not stubbed", () => {
         }
     }
 
-    let analytics = new Analytics("testorigin", succeedingSocketFactory)
+    let analytics = new Analytics("testorigin", succeedingSocketFactory, stubSessionIdProvider)
 
     expect(analytics.messenger.stub).toBe(false)
 })
@@ -49,7 +53,7 @@ it("Sends a semicolon delimited message of timestamp, sessionId and eventName to
         return mockSocket
     }
 
-    let analytics = new Analytics("testorigin", succeedingSocketFactory)
+    let analytics = new Analytics("testorigin", succeedingSocketFactory, stubSessionIdProvider)
     analytics.sessionId = "fake-session-id"
 
     analytics.recordEvent("event")

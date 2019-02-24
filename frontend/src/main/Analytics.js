@@ -19,11 +19,17 @@ function stubMessenger() {
     }
 }
 
+const defaultSessionIdProvider = {
+    getSessionId: () => {
+        return randomSessionId()
+    }
+}
+
 export class Analytics {
-    constructor(analyticsServerOrigin, webSocketFactory) {
+    constructor(analyticsServerOrigin, webSocketFactory, sessionIdProvider) {
         this.ready = false
         this.messenger = stubMessenger()
-        this.sessionId = randomSessionId()
+        this.sessionId = sessionIdProvider.getSessionId()
 
         try {
             let socket = webSocketFactory(analyticsServerOrigin)
@@ -56,4 +62,4 @@ export class Analytics {
 }
 
 
-export const defaultAnalytics = new Analytics(config.localAnalyticsOrigin, defaultWebSocketFactory)
+export const defaultAnalytics = new Analytics(config.localAnalyticsOrigin, defaultWebSocketFactory, defaultSessionIdProvider)
