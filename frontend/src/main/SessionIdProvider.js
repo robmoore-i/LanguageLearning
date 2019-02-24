@@ -1,7 +1,9 @@
-export function SessionIdProvider(cache) {
+export function SessionIdProvider(cache, randomSessionIdGenerator) {
     return {
         getSessionId: () => {
-            cache.localStorage.hasItem("analytics.session")
+            if (!cache.localStorage.hasItem("analytics.session")) {
+                return randomSessionIdGenerator()
+            }
             cache.localStorage.getItem("analytics.session")
             return ""
         }
