@@ -1,13 +1,9 @@
 // Main
-import config from './config'
+import config from "./config"
+import {defaultSessionIdProvider} from "./SessionIdProvider"
 
 function defaultWebSocketFactory(url) {
     return new WebSocket(url)
-}
-
-function randomSessionId() {
-    let sessionIdLength = 10
-    return Math.random().toString(36).substr(2, sessionIdLength)
 }
 
 function stubMessenger() {
@@ -16,12 +12,6 @@ function stubMessenger() {
         send: (msg) => {
             console.log("AnalyticsStubSocket::send => " + msg)
         }
-    }
-}
-
-const defaultSessionIdProvider = {
-    getSessionId: () => {
-        return randomSessionId()
     }
 }
 
