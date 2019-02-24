@@ -52,10 +52,6 @@ function MockCacheBuilder() {
     return mockCacheBuilder
 }
 
-function cacheMockingStoreItem() {
-    return MockCacheBuilder().hasItemReturns(false).build()
-}
-
 it("Checks localStorage for an existing sessionId", () => {
     let mockCache = MockCacheBuilder().hasItemReturns(false).build()
     let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
