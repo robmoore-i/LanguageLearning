@@ -21,6 +21,11 @@ html-tag sort of thing.
 Examples of its Moments might be "Writing Code", "Planning" and "Reading
 Documentation".
 
+First ones I'll do will be "Commuting", "Going out for lunch", "Making lunch"
+and "Eating lunch". These are times when people often do their language
+learning, so by making the learnings relevant to these times, people can
+form their pidgin and practice.
+
 ## Implementation
 
 ### Frontend
