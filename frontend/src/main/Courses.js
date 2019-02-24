@@ -9,8 +9,7 @@ export default class Courses extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            courses: [],
-            loaded: false
+            courses: []
         }
     }
 
@@ -18,8 +17,7 @@ export default class Courses extends Component {
         const setState = this.setState.bind(this) // Bind 'this' reference for use within promise closure.
         this.props.server.fetchCourses().then(courses => {
             setState({
-                courses: courses ? courses : [],
-                loaded: true
+                courses: courses ? courses : []
             })
         })
     }
