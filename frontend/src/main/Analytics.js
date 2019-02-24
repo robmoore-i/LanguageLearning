@@ -17,7 +17,6 @@ function stubMessenger() {
 
 export class Analytics {
     constructor(analyticsServerOrigin, webSocketFactory, sessionIdProvider) {
-        this.ready = false
         this.messenger = stubMessenger()
         this.sessionId = sessionIdProvider.getSessionId()
 
@@ -28,7 +27,6 @@ export class Analytics {
             socket.addEventListener('open', function () {
                 analytics.messenger = socket
                 analytics.messenger.stub = false
-                analytics.ready = true
             })
 
             socket.addEventListener('error', () => {
