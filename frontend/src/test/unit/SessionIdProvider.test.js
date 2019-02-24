@@ -64,11 +64,11 @@ it("If sessionId doesn't exists, store the generated random session id in localS
             hasItem: (key) => {
                 return false
             },
-            storeItemCalledWithKey: undefined,
-            storeItemCalledWithValue: undefined,
+            storeItemCalledWithKey: [],
+            storeItemCalledWithValue: [],
             storeItem: (key, value) => {
-                mockCache.localStorage.storeItemCalledWithKey = key
-                mockCache.localStorage.storeItemCalledWithValue = value
+                mockCache.localStorage.storeItemCalledWithKey.push(key)
+                mockCache.localStorage.storeItemCalledWithValue.push(value)
             }
         }
     }
@@ -76,6 +76,31 @@ it("If sessionId doesn't exists, store the generated random session id in localS
 
     sessionIdProvider.getSessionId()
 
-    expect(mockCache.localStorage.storeItemCalledWithKey).toEqual("analytics.session")
-    expect(mockCache.localStorage.storeItemCalledWithValue).toEqual("totally-random-session-id")
+    expect(mockCache.localStorage.storeItemCalledWithKey[0]).toEqual("analytics.session")
+    expect(mockCache.localStorage.storeItemCalledWithValue[0]).toEqual("totally-random-session-id")
+})
+
+it("If sessionId doesn't exists, set the new session id timeout to be 5 minutes", () => {
+    let mockCache = {
+        localStorage: {
+            hasItem: (key) => {
+                return false
+            },
+            storeItemCalledWithKey: [],
+            storeItemCalledWithValue: [],
+            storeItem: (key, value) => {
+                mockCache.localStorage.storeItemCalledWithKey.push(key)
+                mockCache.localStorage.storeItemCalledWithValue.push(value)
+            }
+        }
+    }
+    let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
+
+    sessionIdProvider.getSessionId()
+
+    expect(mockCache.localStorage.storeItemCalledWithKey[1]).toEqual("analytics.session.timeout")
+    let unixTimestamp = Date.now()
+    let fiveMinutesInMilliseconds = 1000 * 60 * 5
+    let expectedApproximateTimeout = unixTimestamp + fiveMinutesInMilliseconds
+    expect(expectedApproximateTimeout - mockCache.localStorage.storeItemCalledWithValue[1]).toBeLessThan(5)
 })
