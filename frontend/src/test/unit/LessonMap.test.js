@@ -15,10 +15,6 @@ let mockServer = data => {
     return {
         fetchLessonNames: () => {
             return new Promise(resolve => resolve(data))
-        },
-
-        fetchCourseMetadata: () => {
-            return new Promise(resolve => resolve(data))
         }
     }
 }

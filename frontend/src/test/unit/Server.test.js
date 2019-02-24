@@ -51,29 +51,6 @@ it('Returns lesson names as given by server', async () => {
     expect(fetchedLessonNames).toEqual({topicLessonNames: ["A", "B", "C"]})
 })
 
-it('Fetches course metadata as given by server', async () => {
-    let testMetadata = {
-        lessonMetadata: [
-            {name: "A", index: 0},
-            {name: "B", index: 1}
-        ]
-    }
-
-    let mockFetcher = {
-        getJSON: (url) => {
-            return new Promise(resolve => resolve(testMetadata))
-        }
-    }
-    let testServer = TestServer(mockFetcher)
-
-    let fetchedMetadata = undefined
-    await testServer.fetchCourseMetadata("courseName_doesn't_matter").then(metadata => {
-        fetchedMetadata = metadata
-    })
-
-    expect(fetchedMetadata).toEqual(testMetadata)
-})
-
 it('Returns lesson names ordered by index', async () => {
     let testMetadata = {
         lessonMetadata: [
