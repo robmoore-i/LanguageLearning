@@ -9,15 +9,6 @@ it("Checks localStorage for an existing sessionId", () => {
     expect(mockCache.localStorage.hasItemCalledWith).toEqual("analytics.session")
 })
 
-it("If sessionId exists in localStorage, get it", () => {
-    let mockCache = MockCacheBuilder().hasItemReturns(true).getItemReturns(Date.now()).build()
-    let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
-
-    sessionIdProvider.getSessionId()
-
-    expect(mockCache.localStorage.getItemCalledWith).toEqual("analytics.session")
-})
-
 it("If sessionId doesn't exists, return a random session id", () => {
     let mockCache = MockCacheBuilder().hasItemReturns(false).build()
     let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
