@@ -23,8 +23,7 @@ export function SessionIdProvider(cache, randomSessionIdGenerator) {
 
             cache.localStorage.storeItem("analytics.session.timeout", currentTime + fiveMinutesInMilliseconds)
 
-            cache.localStorage.getItem("analytics.session")
-            return ""
+            return cache.localStorage.getItem("analytics.session")
         }
     }
 }

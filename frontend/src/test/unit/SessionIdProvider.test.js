@@ -11,13 +11,16 @@ function MockCacheBuilder() {
                 hasItemCalledWith: undefined,
                 hasItem: (key) => {
                     mockCacheBuilder.mockCache.localStorage.hasItemCalledWith = key
-                    return mockCacheBuilder.hasItemReturns
+                    return mockCacheBuilder.hasItemReturnsValue
                 },
 
+                getItemCalls: 0,
                 getItemCalledWith: undefined,
                 getItem: (key) => {
                     mockCacheBuilder.mockCache.localStorage.getItemCalledWith = key
-                    return mockCacheBuilder.getItemReturns
+                    let item = mockCacheBuilder.getItemReturnsValues[mockCacheBuilder.mockCache.localStorage.getItemCalls]
+                    mockCacheBuilder.mockCache.localStorage.getItemCalls += 1
+                    return item
                 },
 
                 storeItemCalledWithKey: [],
@@ -29,15 +32,15 @@ function MockCacheBuilder() {
             }
         },
 
-        hasItemReturns: undefined,
+        hasItemReturnsValue: undefined,
         hasItemReturns: (bool) => {
-            mockCacheBuilder.hasItemReturns = bool
+            mockCacheBuilder.hasItemReturnsValue = bool
             return mockCacheBuilder
         },
 
-        getItemReturns: undefined,
-        getItemReturns: (bool) => {
-            mockCacheBuilder.getItemReturns = bool
+        getItemReturnsValues: [],
+        getItemReturns: (item) => {
+            mockCacheBuilder.getItemReturnsValues.push(item)
             return mockCacheBuilder
         },
 
@@ -135,4 +138,15 @@ it("Resets the timeout if the session id hasn't timed out", () => {
     let fiveMinutesInMilliseconds = 1000 * 60 * 5
     let expectedApproximateTimeout = unixTimestamp + fiveMinutesInMilliseconds
     expect(expectedApproximateTimeout - mockCache.localStorage.storeItemCalledWithValue[0]).toBeLessThan(20)
+})
+
+it("Returns unexpired tokens unchanged", () => {
+    let twoMinutesInMilliseconds = 1000 * 60 * 2
+    let inTwoMinutesTime = Date.now() + twoMinutesInMilliseconds
+    let mockCache = MockCacheBuilder().hasItemReturns(true).getItemReturns(inTwoMinutesTime).getItemReturns("existing-session-id").build()
+    let sessionIdProvider = SessionIdProvider(mockCache, stubRandomSessionIdGenerator)
+
+    let sessionId = sessionIdProvider.getSessionId()
+
+    expect(sessionId).toEqual("existing-session-id")
 })
