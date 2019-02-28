@@ -1,7 +1,7 @@
 # This app
 
-I combine my favourite parts of Duolingo and Quizlet to create an app for
-pro learners.
+I combine my favourite parts of Duolingo, Quizlet and Drops to create an app
+for learning stuff.
 
 I am in this process also discovering the best ways to learn a language using
 tools. To this end one of the most important goals for the tool is that it is

@@ -1,13 +1,9 @@
 // Main
-import config from './config'
+import config from "./config"
+import {defaultSessionIdProvider} from "./SessionIdProvider"
 
 function defaultWebSocketFactory(url) {
     return new WebSocket(url)
-}
-
-function randomSessionId() {
-    let sessionIdLength = 10
-    return Math.random().toString(36).substr(2, sessionIdLength)
 }
 
 function stubMessenger() {
@@ -20,10 +16,9 @@ function stubMessenger() {
 }
 
 export class Analytics {
-    constructor(analyticsServerOrigin, webSocketFactory) {
-        this.ready = false
+    constructor(analyticsServerOrigin, webSocketFactory, sessionIdProvider) {
         this.messenger = stubMessenger()
-        this.sessionId = randomSessionId()
+        this.sessionId = sessionIdProvider.getSessionId()
 
         try {
             let socket = webSocketFactory(analyticsServerOrigin)
@@ -32,11 +27,6 @@ export class Analytics {
             socket.addEventListener('open', function () {
                 analytics.messenger = socket
                 analytics.messenger.stub = false
-                analytics.ready = true
-            })
-
-            socket.addEventListener('error', () => {
-                // Stub analytics are used
             })
 
             window.llsocket = socket
@@ -55,5 +45,4 @@ export class Analytics {
     }
 }
 
-
-export const defaultAnalytics = new Analytics(config.localAnalyticsOrigin, defaultWebSocketFactory)
+export const defaultAnalytics = new Analytics(config.localAnalyticsOrigin, defaultWebSocketFactory, defaultSessionIdProvider)
