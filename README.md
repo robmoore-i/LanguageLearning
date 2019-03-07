@@ -1,7 +1,14 @@
+# NB - Archived
+
+I am now pretty happy with the things I set out to learn.
+The next iteration of language learning tools is practiced, which is a much
+leaner program.
+
 # This app
 
-I combine my favourite parts of Duolingo, Quizlet and Drops to create an app
-for learning stuff.
+I combine my favourite parts of Duolingo, Quizlet and Drops to create a
+react-app for learning stuff, as well as learning all those things in the
+description.
 
 I am in this process also discovering the best ways to learn a language using
 tools. To this end one of the most important goals for the tool is that it is
@@ -57,7 +64,7 @@ Yarn (1.12)
 Node (10.11)
 Kotlin (1.3)
 
-# Big plans
+# Language-learning plans
 
 ## Adaptive UI
 
