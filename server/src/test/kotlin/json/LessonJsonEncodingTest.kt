@@ -22,7 +22,7 @@ class LessonJsonEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
 
@@ -60,7 +60,7 @@ class LessonJsonEncodingTest {
         val questions = listOf<Question>()
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         assertThat(node["questions"].size(), equalTo(0))
@@ -71,7 +71,7 @@ class LessonJsonEncodingTest {
         val questions = listOf<Question>()
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         assertThat(node["courseName"].toString().unquoted(), equalTo("Georgian"))
@@ -82,7 +82,7 @@ class LessonJsonEncodingTest {
         val questions = listOf<Question>()
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         assertThat(node["name"].toString().unquoted(), equalTo("lesson-name"))
@@ -93,7 +93,7 @@ class LessonJsonEncodingTest {
         val questions = listOf<Question>()
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         assertThat(node["index"].asInt(), equalTo(0))

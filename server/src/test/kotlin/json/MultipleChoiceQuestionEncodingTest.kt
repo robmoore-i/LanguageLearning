@@ -24,7 +24,7 @@ class MultipleChoiceQuestionEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         val mcq = node["questions"][0]
@@ -38,7 +38,7 @@ class MultipleChoiceQuestionEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         val mcq = node["questions"][0]
@@ -52,7 +52,7 @@ class MultipleChoiceQuestionEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         val mcq = node["questions"][0]
@@ -66,7 +66,7 @@ class MultipleChoiceQuestionEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         val mcq = node["questions"][0]
@@ -83,7 +83,7 @@ class MultipleChoiceQuestionEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         val mcq = node["questions"][0]
@@ -100,7 +100,7 @@ class MultipleChoiceQuestionEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         val mcq = node["questions"][0]
@@ -114,7 +114,7 @@ class MultipleChoiceQuestionEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         val mcq = node["questions"][0]
@@ -133,7 +133,7 @@ class MultipleChoiceQuestionEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded) // Should throw here
         println(node)

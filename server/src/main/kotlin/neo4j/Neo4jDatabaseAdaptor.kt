@@ -40,14 +40,6 @@ open class Neo4jDatabaseAdaptor(
         return Lesson.fromNeo4jValuePairs(courseName, lessonName, lessonIndex, valuePairs, this)
     }
 
-    override fun clearDatabase() {
-        neo4jDriver.session().let { session ->
-            session.run("MATCH (n) DETACH DELETE (n)")
-            session.run("MATCH (n) DELETE (n)")
-            session.close()
-        }
-    }
-
     private fun lessonIndex(courseName: String, lessonName: String): Int {
         val queryValuesWithParams = neo4jDriver.queryValuesWithParams(
             "MATCH (c:Course {name: {courseName}})-[r:HAS_TOPIC_LESSON]->(tl:TopicLesson {name: {lessonName}}) RETURN r.index",

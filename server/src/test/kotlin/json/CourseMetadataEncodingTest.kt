@@ -24,7 +24,7 @@ class CourseMetadataEncodingTest {
             )
         )
 
-        val encoded = encoder.encodeCourseMetadata(courseMetadata)
+        val encoded = encoder.encode(courseMetadata)
 
         val node: JsonNode = json.parse(encoded)
 

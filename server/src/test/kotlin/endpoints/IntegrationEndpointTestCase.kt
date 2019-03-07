@@ -13,19 +13,19 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.junit.After
 import org.junit.Before
+import server.DatabaseServingApi
 import server.HttpRequestHandler
 import server.HttpResponseFactory
 import server.HttpServer
-import server.ServerApi
 
 private val environment = EnvironmentLoader(System::getenv).getEnvironment()
 
 private val neo4jDatabaseAdaptor = object : TestDatabaseAdaptor {
     val neo4jDriver = Neo4jDriver(environment.neo4jUser, environment.neo4jPassword, environment.neo4jPort)
     val neo4jDatabaseAdaptor = Neo4jDatabaseAdaptor(
-            neo4jDriver,
-            environment.imagesPath,
-            environment.extractsPath
+        neo4jDriver,
+        environment.imagesPath,
+        environment.extractsPath
     )
 
     override fun allCourses(): List<Course> {
@@ -41,7 +41,11 @@ private val neo4jDatabaseAdaptor = object : TestDatabaseAdaptor {
     }
 
     override fun clearDatabase() {
-        neo4jDatabaseAdaptor.clearDatabase()
+        neo4jDriver.session().let { session ->
+            session.run("MATCH (n) DETACH DELETE (n)")
+            session.run("MATCH (n) DELETE (n)")
+            session.close()
+        }
     }
 
     override fun runQuery(query: String) {
@@ -73,7 +77,7 @@ private val httpServerClient = object : TestServerClient {
     }
 }
 
-private val httpRequestHandler = HttpRequestHandler(ServerApi(neo4jDatabaseAdaptor), HttpResponseFactory(environment.frontendPort))
+private val httpRequestHandler = HttpRequestHandler(DatabaseServingApi(neo4jDatabaseAdaptor), HttpResponseFactory(environment.frontendPort))
 
 private val httpServer: HttpServer = HttpServer(
     httpRequestHandler,

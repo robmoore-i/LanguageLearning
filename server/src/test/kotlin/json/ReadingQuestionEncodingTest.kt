@@ -31,7 +31,7 @@ class ReadingQuestionEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         val rq = node["questions"][0]
@@ -45,7 +45,7 @@ class ReadingQuestionEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         val readingQuestion = node["questions"][0]
@@ -59,7 +59,7 @@ class ReadingQuestionEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         val rq = node["questions"][0]
@@ -73,7 +73,7 @@ class ReadingQuestionEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         val rq = node["questions"][0]
@@ -97,7 +97,7 @@ class ReadingQuestionEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         val rq = node["questions"][0]
@@ -112,7 +112,7 @@ class ReadingQuestionEncodingTest {
         )
         val lesson = Lesson("Georgian", "lesson-name", 0, questions)
 
-        val encoded = encoder.encodeLesson(lesson)
+        val encoded = encoder.encode(lesson)
 
         val node: JsonNode = json.parse(encoded)
         val rq = node["questions"][0]
