@@ -1,8 +1,8 @@
 # NB - Archived
 
 I am now pretty happy with the things I set out to learn.
-The next iteration of language learning tools is practiced, which is a much
-leaner program.
+The next iteration of language learning tools is `practiced` (see repo), which
+is a much leaner program.
 
 # This app
 
